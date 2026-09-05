@@ -494,6 +494,11 @@
       "figure": "94",
       "label": "countries Netflix publishes a chart for. The rest cannot be counted",
       "왜": "자동은 190(발표 수)을 집는다. 그런데 이 기사의 발견은 «셀 수 있는 쪽»이 94뿐이라는 것이다. 남의 발표 수를 우리 카드에 크게 싣지 않는다."
+    },
+    "a-name-fight-and-the-423-titles-that-already-share-one": {
+      "figure": "423",
+      "label": "of 974 Korean titles already share their English name with something else",
+      "왜": "자동은 974(전체)를 집는다. 발견은 «겹치는 쪽»이다 — 소송 한 건 옆에 놓아야 할 수가 423 이다."
     }
   }
 }
