@@ -139,7 +139,12 @@ export function 이름맞추개(명단) {
 }
 
 /* ── 자가시험 ─────────────────────────────────────────── */
-if (process.argv.includes('--자가시험') || process.argv.includes('--selftest')) {
+/* 🔴 [2026-09-06] 직접 실행일 때만 돈다 — find-todays-spike-deep.mjs 가 이 파일을 import 하는데,
+   이 블록이 막지 않아 «부르는 쪽» 자가시험이 한 줄도 안 돌고 exit(0) 되고 있었다.
+   실측: node scripts/find-todays-spike-deep.mjs --자가시험 → 이 파일 시험만 떴다. */
+const 내가직접돌았나 = process.argv[1]
+  && path.resolve(process.argv[1]) === fileURLToPath(import.meta.url);
+if (내가직접돌았나 && (process.argv.includes('--자가시험') || process.argv.includes('--selftest'))) {
   let 셈 = 0;
   const 본다 = (말, 참) => { 셈 += 1; console.log(참 ? '✅' : '🔴', 말); if (!참) process.exitCode = 1; };
 

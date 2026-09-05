@@ -45,6 +45,7 @@
 import sharp from 'sharp';
 import fs from 'node:fs';
 import path from 'node:path';
+import { fileURLToPath } from 'node:url';   /* 🔴 [2026-09-06] 직접 실행 판정에 쓴다 — 남의 자가시험을 삼키지 않으려고 */
 /* 🔴 규칙은 한 곳에 있다. 카드도 **같은 값**을 불러 쓴다 */
 import { 최소분모 } from '../src/lib/school-rules.ts';
 
@@ -257,5 +258,8 @@ async function 본일() {
   console.log(`   ${path.relative(ROOT, 낼방)}`);
 }
 
-if (process.argv.includes('--selftest')) 셀프테스트();
+/* 🔴 [2026-09-06] 직접 실행일 때만 돈다 — make-og-100y-topics.mjs 가 이 파일을 import 한다.
+   실측: node scripts/make-og-100y-topics.mjs --selftest → 이 파일 시험이 대신 떴다. */
+if (process.argv[1] && path.resolve(process.argv[1]) === fileURLToPath(import.meta.url)
+  && process.argv.includes('--selftest')) 셀프테스트();
 else await 본일();
