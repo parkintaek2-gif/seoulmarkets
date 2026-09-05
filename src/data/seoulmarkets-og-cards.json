@@ -7,6 +7,11 @@
     "label 은 45자 안쪽."
   ],
   "chosen": {
+    "korea-air-cargo-china-japan-outgrow-rest-of-asia": {
+      "figure": "10.0%",
+      "label": "total air-cargo growth (2yr) — China +23.8%, Japan +28.3%",
+      "왜": "자동은 「and from Japan 28」로 두 번째 수를 끊었다. 요점 수치(전체 성장률 10.0%)로 바로잡음"
+    },
     "korea-samsung-life-insurer-rumor-not-confirmed": {
       "figure": "October 2",
       "label": "Samsung Life's deadline to say more about the insurer rumor",
