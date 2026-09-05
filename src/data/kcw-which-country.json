@@ -1,5 +1,5 @@
 {
-  "generated": "2026-09-02",
+  "generated": "2026-09-06",
   "source": "Netflix Top 10 (Tudum) weekly country lists for chart places; Wikidata for the companies credited on a title and for cast members recorded as Korean citizens, both retrieved by item number rather than by name",
   "weekFrom": "2021-07-04",
   "weekTo": "2026-08-23",
@@ -8,6 +8,7 @@
   "titleCount": 974,
   "medianCountries": 2,
   "oneCountryOnly": 447,
+  "maxCountries": 93,
   "asked": [
     {
       "asked": "decision to leave netflix country",

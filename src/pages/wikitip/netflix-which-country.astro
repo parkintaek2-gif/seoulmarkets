@@ -28,11 +28,20 @@ import KcwMethodLimits from '../../components/KcwMethodLimits.astro';
    한쪽으로만 난 문은 손님을 여기서 멈추게 하고, 로봇도 그 기사를 여기서 못 찾는다. */
 import KcwRelatedArticles from '../../components/KcwRelatedArticles.astro';
 import data from '../../data/kcw-which-country.json';
+/* 🔴 [2026-09-06] 「넷플릭스가 차트를 내는 나라 수」는 손으로 안 박는다 —
+   우리가 파일을 직접 세어 낸 값을 그대로 쓴다(94). 손으로 박으면 파일이 바뀔 때 거짓이 된다 */
+import 사전 from '../../data/wikitip-tudum-dictionary.json';
 
 const TITLE = 'Which countries had this Korean title on Netflix? What the weekly charts prove';
 const DESC = 'Netflix publishes no catalogue by country, so nobody can list where a title is '
   + 'available. It does publish a weekly top 10 for every country — and a title on that list was '
   + 'watchable there that week. That is a floor, and here it is for the titles people ask about.';
+
+/* 🔴 넷플릭스가 «주간 차트를 내는» 나라 수. 우리가 파일을 세어 낸 값이다 — 손으로 안 박는다.
+   ⚠ data.marketCount(93) 와 다르다: 그것은 «한국 작품이 차트에 든» 나라 수이고,
+     이것은 파일이 다루는 나라 전체다. 두 수를 같은 것으로 쓰면 한 나라가 조용히 사라진다. */
+const 차트나라수 = (사전.files.find((f: any) => f.key.includes('countries'))?.countries) ?? null;
+if (차트나라수 === null) throw new Error('차트를 내는 나라 수를 못 읽었다 — 이 절은 그 수에서 시작한다.');
 
 const 찾은것 = data.asked.filter((a: any) => a.found);
 const 못찾은것 = data.asked.filter((a: any) => !a.found);
@@ -141,6 +150,34 @@ const jsonLd = {
       So a list of three or four countries above is not a small number by the standard of this
       data. It is close to typical. We say that because a short list looks like a disappointment
       if you have nothing to put it next to, and that impression would be ours to correct.
+    </p>
+
+    {/**
+      * 🔴 [2026-09-06] 오늘 커뮤니티 수집에 「I am SOLO 가 넷플릭스로 **190여 개국**에 나간다」가
+      *   올라왔다. 그 꼴의 발표가 자주 나오는데, **차트 기록으로는 확인할 길이 자체가 없다** —
+      *   넷플릭스가 주간 차트를 내는 나라가 94곳뿐이기 때문이다.
+      * ⭐ 이 지면에 그 칸이 없었다. 「몇 나라에서 볼 수 있나」와 「몇 나라 차트에 들었나」를
+      *   손님이 같은 것으로 읽을 수 있는 자리다. 갈라 놓는다.
+      * ⛔ 발표가 틀렸다고 말하지 않는다. 우리는 그것을 «확인할 자료가 없다»고 말할 뿐이다.
+      */}
+    <h2>&ldquo;Available in 190+ countries&rdquo; is a different claim</h2>
+    <p>
+      Announcements often give a country count in the high hundreds &mdash; a show arriving on
+      Netflix &ldquo;in over 190 countries&rdquo;. Nothing on this page can confirm or contradict
+      that, and it is worth being plain about why: <b>Netflix publishes weekly top tens for
+      {' '}{차트나라수} countries.</b> There is no public chart for the rest.
+    </p>
+    <p>
+      So the two numbers are not comparable and never will be. One is where a title can be watched,
+      which the distributor announces. The other is where enough people watched it to reach a
+      published top ten, which is the only part anyone outside the company can count. The widest
+      reach any Korean title has ever managed in the second sense is
+      {' '}<b>{data.maxCountries} of the {차트나라수}</b>.
+    </p>
+    <p class="fine">
+      We are not saying an announcement is wrong. We are saying we have no way to check it, and
+      that a reader who sees 190 in a headline and a small number here is looking at two different
+      measurements rather than a contradiction.
     </p>
   </section>
 

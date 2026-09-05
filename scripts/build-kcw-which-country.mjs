@@ -209,6 +209,10 @@ const 낼것 = {
   titleCount: 작품들.length,
   medianCountries: 가운데,
   oneCountryOnly: 작품들.filter((t) => t.markets === 1).length,
+  /* 🔴 [2026-09-06] 「190여 개국에 나간다」는 발표를 손님이 이 지면의 수와 견줄 수 있게 —
+     ⛔ 견줄 수 있는 것이 아니라는 것을 보이려고 넣는다. 차트를 내는 나라가 94곳뿐이다.
+     차트 뜻으로 «가장 넓게» 간 한국 작품이 몇 나라였나를 함께 낸다. */
+  maxCountries: 작품들.reduce((a, t) => Math.max(a, t.markets ?? 0), 0),
   asked: 물음,
   askedFound: 물음.filter((x) => x.found).length,
   askedMissing: 물음.filter((x) => !x.found).length,
