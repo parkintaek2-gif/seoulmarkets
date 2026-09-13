@@ -576,6 +576,33 @@ export function openapi(baseUrl) {
           },
         },
       },
+      '/ownership': {
+        get: {
+          tags: ['Markets'],
+          operationId: 'getOwnership',
+          summary: 'Substantial-shareholding and officer/major-shareholder ownership filings',
+          description:
+            'DART ownership disclosures for Korean listed companies, as two filing types selected by `kind`. `kind=filings` (default) is substantial-shareholding (5%+) reports (majorstock) — one row per filing, with `holder_name` exactly as filed. `kind=executives` is officer/major-shareholder ownership status (elestock) — one row per filing, with `person_name` exactly as filed and `is_registered_officer` null when the filer is a major shareholder rather than an officer. Names are never romanized or translated; `reason_raw_ko` (filings only) is the original Korean filing reason, not summarized. Not a full float table — only holders required to file. `?filing_id=` returns one filing by its exact DART receipt number; otherwise a filtered, paginated list.',
+          parameters: [
+            { name: 'kind', in: 'query', required: false, schema: { type: 'string', enum: ['filings', 'executives'] }, description: 'Which table: filings (substantial shareholding, default) or executives (officer/major-shareholder ownership).' },
+            { name: 'filing_id', in: 'query', required: false, schema: { type: 'string' }, description: 'Exact DART filing id (rcept_no), e.g. "20250416000481".' },
+            { name: 'ticker', in: 'query', required: false, schema: { type: 'string' }, description: 'Exact KRX ticker (6 characters; some are alphanumeric).' },
+            { name: 'name', in: 'query', required: false, schema: { type: 'string' }, description: 'English or Korean company name. Substring match.' },
+            { name: 'limit', in: 'query', required: false, schema: { type: 'integer' }, description: 'Max rows; capped by plan.' },
+          ],
+          responses: {
+            200: { description: 'Ownership filing rows with source and coverage notes' },
+            400: {
+              description: 'kind was neither "filings" nor "executives".',
+              content: { 'application/json': { schema: ERROR_SCHEMA } },
+            },
+            404: {
+              description: 'filing_id did not match any filed record for the given kind.',
+              content: { 'application/json': { schema: ERROR_SCHEMA } },
+            },
+          },
+        },
+      },
     },
   };
 }

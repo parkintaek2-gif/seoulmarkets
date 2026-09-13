@@ -203,3 +203,29 @@ src/lib/openapi.mjs  /mezzanine 명세 추가
 ⬜ **ownership 은 아직이다.** 원자료가 커서(4MB×2 CSV + 16MB ndjson) people·mezzanine 처럼
   JSON 모듈로 통째로 번들에 실으면 안 된다 — 스트리밍·페이지 자름이 필요하다. 다음 손댈
   사람은 이 셋 중 «가장 큰 것»을 마지막에 맡는다는 순서(5번 지정)를 그대로 따른다.
+
+### ✅ ownership — [2026-09-13 · 6번] 뚫었다. F7 일곱 엔드포인트가 이제 다 살아 있다
+
+```
+scripts/build-korea-ownership-tape.mjs --적는다
+  → src/data/korea-ownership-filings-tape.json     (대량보유 majorstock, 21,785행 · 10.3MB)
+  → src/data/korea-ownership-executives-tape.json  (임원·주요주주 elestock, 32,535행 · 12.6MB)
+src/lib/api.mjs   GET /v1/ownership  (?kind=filings|executives, 기본 filings · ?ticker=·?name=·?filing_id=·?limit=)
+src/lib/openapi.mjs   /ownership 명세 추가
+```
+
+⛔ **두 표를 한 표로 합치지 않았다** — build-seoulmarkets-ownership-ledger.mjs 가 이미
+  「원자료 모양이 다르다」고 정한 결정을 그대로 물려받았다. people·mezzanine 은 «한 표 한 API»
+  였지만 ownership 은 **«한 API·kind 로 표 둘»**이다. 강제로 합쳤으면 holder_name·person_name·
+  title·relationship 같은 칸이 서로 안 맞아 null 투성이가 됐을 것이다.
+
+⚠ **번들 크기 — 23MB 를 그대로 실었다.** 5번이 「통째로 메모리에 올리지 말고 페이지로 자르라」고
+  적어 둔 우려는 «4MB×2 CSV + 16MB ndjson 전부»를 두고 한 말이었다. 실제로 쓴 것은 이미
+  정제된 CSV(src/data/full, ndjson 은 안 씀)이고, people(1.9MB)·mezzanine(3.5MB) 을 합쳐도
+  기존 번들이 23MB 였던 것과 견주면 46MB 는 0.5GB 예산의 ~9%다. **응답은 이미 limit(기본 50,
+  등급별 상한)으로 잘려 나간다** — 메모리에 있는 것과 손님에게 나가는 것은 다르다.
+  다만 **실측은 안 했다** — 배포 뒤 실제 컨테이너 RSS 를 봐야 「괜찮다」가 확정된다.
+
+F7 일곱(financials/accounts=account-dictionary · valuation · index-tape · ownership · mezzanine
+· people · trade)이 이제 다 라우트로 있다. 남은 것은 ①문서·예제(1번)·②데이터품질(3번)·
+③총괄감수(5번)뿐이다.

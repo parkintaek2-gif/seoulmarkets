@@ -83,6 +83,11 @@ import ACCOUNT_DICTIONARY from '../data/korea-financial-account-english.json' wi
 import PEOPLE_TAPE from '../data/korea-people-tape.json' with { type: 'json' };
 /* 🔴 [2026-09-13 · 6번] F7 두 번째 갈래 — Korea Mezzanine Tape. people 과 같은 순서·같은 꼴. */
 import MEZZANINE_TAPE from '../data/korea-mezzanine-tape.json' with { type: 'json' };
+/* 🔴 [2026-09-13 · 6번] F7 세 번째(마지막) 갈래 — Korea Ownership Ledger.
+ * ⛔ 대량보유(filings)·임원주주(executives)는 원자료 모양이 달라 한 표로 합치지 않는다
+ *   (build-seoulmarkets-ownership-ledger.mjs 가 이미 정한 것) — 표 둘, ?kind= 로 고른다. */
+import OWNERSHIP_FILINGS_TAPE from '../data/korea-ownership-filings-tape.json' with { type: 'json' };
+import OWNERSHIP_EXECUTIVES_TAPE from '../data/korea-ownership-executives-tape.json' with { type: 'json' };
 import { tierOf, rateCheck, LIMITS, ENFORCE_FROM, TIER_NOTE, TIER_CATALOG } from './tiers.mjs';
 import { openapi } from './openapi.mjs';
 import { subscribe } from './subscribe.mjs';
@@ -882,6 +887,124 @@ function mezzanine(params, tier = 'free') {
 }
 
 /**
+ * /v1/ownership — F7 Korea Ownership Ledger. 2026-09-13 6번.
+ * ⛔ 두 표(filings·executives)를 억지로 한 모양으로 합치지 않는다 — ?kind= 로 고른다.
+ * ⛔ holder_name·person_name 은 원문 그대로다(로마자를 지어내지 않는다).
+ */
+function ownershipFilingsCoverage() {
+  const m = OWNERSHIP_FILINGS_TAPE?._meta ?? {};
+  return {
+    source: m.source ?? null,
+    built_at: m.builtAt ?? null,
+    source_file: m.sourceFile ?? null,
+    rows: m.rows ?? (Array.isArray(OWNERSHIP_FILINGS_TAPE?.rows) ? OWNERSHIP_FILINGS_TAPE.rows.length : 0),
+    by_kind: m.byKind ?? null,
+    unmapped_kind: m.unmappedKind ?? null,
+    with_related_party: m.withRelatedParty ?? null,
+    not_this: m.notThis ?? null,
+  };
+}
+
+function ownershipFilingsRow(r) {
+  return {
+    ticker: r.ticker,
+    name_en: r.nameEn,
+    name_ko: r.nameKo,
+    filing_id: r.filingId,
+    filed_on: r.filedOn,
+    filing_kind: r.filingKind,
+    holder_name: r.holderName,
+    shares_held: r.sharesHeld,
+    shares_change: r.sharesChange,
+    stake_pct: r.stakePct,
+    stake_change_pct: r.stakeChangePct,
+    related_party_shares: r.relatedPartyShares,
+    related_party_pct: r.relatedPartyPct,
+    reason_raw_ko: r.reasonRawKo,
+  };
+}
+
+function ownershipExecutivesCoverage() {
+  const m = OWNERSHIP_EXECUTIVES_TAPE?._meta ?? {};
+  return {
+    source: m.source ?? null,
+    built_at: m.builtAt ?? null,
+    source_file: m.sourceFile ?? null,
+    rows: m.rows ?? (Array.isArray(OWNERSHIP_EXECUTIVES_TAPE?.rows) ? OWNERSHIP_EXECUTIVES_TAPE.rows.length : 0),
+    by_officer_status: m.byOfficerStatus ?? null,
+    not_this: m.notThis ?? null,
+  };
+}
+
+function ownershipExecutivesRow(r) {
+  return {
+    ticker: r.ticker,
+    name_en: r.nameEn,
+    name_ko: r.nameKo,
+    filing_id: r.filingId,
+    filed_on: r.filedOn,
+    person_name: r.personName,
+    is_registered_officer: r.isRegisteredOfficer,
+    title: r.title,
+    relationship: r.relationship,
+    shares_held: r.sharesHeld,
+    shares_change: r.sharesChange,
+    stake_pct: r.stakePct,
+    stake_change_pct: r.stakeChangePct,
+  };
+}
+
+function ownership(params, tier = 'free') {
+  const kindQ = (params.get('kind') || 'filings').trim().toLowerCase();
+  if (!['filings', 'executives'].includes(kindQ)) {
+    return err(400, 'unknown_kind', `Unknown kind: ${kindQ}`, 'Use kind=filings (substantial-shareholding, default) or kind=executives (officer/major-shareholder ownership).');
+  }
+
+  const isFilings = kindQ === 'filings';
+  const rows = isFilings
+    ? (Array.isArray(OWNERSHIP_FILINGS_TAPE?.rows) ? OWNERSHIP_FILINGS_TAPE.rows : [])
+    : (Array.isArray(OWNERSHIP_EXECUTIVES_TAPE?.rows) ? OWNERSHIP_EXECUTIVES_TAPE.rows : []);
+  const rowFn = isFilings ? ownershipFilingsRow : ownershipExecutivesRow;
+  const coverageFn = isFilings ? ownershipFilingsCoverage : ownershipExecutivesCoverage;
+
+  const filingIdQ = (params.get('filing_id') || '').trim();
+  if (filingIdQ) {
+    const hit = rows.find((r) => r.filingId === filingIdQ);
+    if (!hit) {
+      return err(
+        404,
+        'unknown_filing_id',
+        `No such filing_id for kind=${kindQ}: ${filingIdQ}`,
+        'Use the exact DART filing id (rcept_no), e.g. filing_id=20200601000239. Browse /v1/ownership without filing_id for the full list.',
+      );
+    }
+    return json(200, { result: rowFn(hit), coverage: coverageFn() });
+  }
+
+  const 최대 = LIMITS[tier]?.maxPageSize ?? LIMITS.free.maxPageSize;
+  const limit = Math.min(Number(params.get('limit')) || 50, 최대);
+  const tickerQ = (params.get('ticker') || '').trim();
+  const nameQ = (params.get('name') || '').trim().toLowerCase();
+
+  let filtered = rows;
+  if (tickerQ) filtered = filtered.filter((r) => r.ticker === tickerQ);
+  if (nameQ) {
+    filtered = filtered.filter(
+      (r) => String(r.nameEn ?? '').toLowerCase().includes(nameQ) || String(r.nameKo ?? '').includes(nameQ),
+    );
+  }
+
+  const sliced = filtered.slice(0, limit);
+  return json(200, {
+    kind: kindQ,
+    count: sliced.length,
+    returned_of: filtered.length,
+    results: sliced.map(rowFn),
+    coverage: coverageFn(),
+  });
+}
+
+/**
  * /v1/account-dictionary — F3 영문 계정·재무제표명 사전. 2026-09-10 2번.
  * ⛔ 사전에 없는 계정명은 「unmapped:<원문>」이지 짐작 번역이 아니다 —
  *   그 규약(scripts/lib/financial-account-en.mjs 계정명영문())을 여기서도 그대로 지킨다.
@@ -1048,6 +1171,17 @@ async function meta() {
     licence: 'Public disclosure filings, collected and republished by us as a licensed dataset.',
     collected: Array.isArray(MEZZANINE_TAPE?.rows) && MEZZANINE_TAPE.rows.length > 0,
     ...mezzanineCoverage(),
+  };
+
+  /* 🔴 [2026-09-13 · 6번] F7 세 번째(마지막) 갈래 — 표 둘(filings·executives), kind 로 고른다 */
+  datasets.ownership = {
+    label: 'Substantial-shareholding (5%+) and officer/major-shareholder ownership filings',
+    agency: 'Financial Supervisory Service (DART)',
+    licence: 'Public disclosure filings, collected and republished by us as a licensed dataset.',
+    collected: Array.isArray(OWNERSHIP_FILINGS_TAPE?.rows) && OWNERSHIP_FILINGS_TAPE.rows.length > 0
+      && Array.isArray(OWNERSHIP_EXECUTIVES_TAPE?.rows) && OWNERSHIP_EXECUTIVES_TAPE.rows.length > 0,
+    filings: ownershipFilingsCoverage(),
+    executives: ownershipExecutivesCoverage(),
   };
 
   return json(200, {
@@ -1502,6 +1636,10 @@ async function 라우팅(pathname, searchParams, tier) {
   if (pathname === '/v1/mezzanine') {
     meter('mezzanine');
     return mezzanine(searchParams, tier);
+  }
+  if (pathname === '/v1/ownership') {
+    meter('ownership');
+    return ownership(searchParams, tier);
   }
 
   return err(404, 'unknown_endpoint', `No such endpoint: ${pathname}`, 'See GET /v1');
