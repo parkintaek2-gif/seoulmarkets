@@ -240,6 +240,10 @@ export const 단계들 = [
    *   여기 안 물리면 check-tests-wired.mjs 가 「안 부르는 검사」로 다시 잡는다. */
   "node scripts/build-korea-people-tape.mjs --자가시험",
   "node scripts/build-korea-mezzanine-tape.mjs --자가시험",
+  /* 🔴 [2026-09-13 · 3번] F7 — 「⑤ 데이터 품질」 몫. 일곱 엔드포인트 밑감의
+   *   값 채움률·최신 날짜를 검사로 지킨다. archive-freshness 와 같은 결로
+   *   «실제 검사»를 npm test 관문에 둔다(자가시험은 따로 손으로 돌린다). */
+  "node scripts/check-f7-data-quality.mjs",
 ];
 
 /** 한 단계가 «검사»인가 — 요약에서 갈라 세려고 본다 */
