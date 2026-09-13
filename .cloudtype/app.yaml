@@ -70,6 +70,19 @@ options:
     - name: RAPIDAPI_PROXY_SECRET
       secret: RAPIDAPI_PROXY_SECRET
 
+    # 🔴 [2026-09-13] 페이팔 — 이것이 없으면 /data 의 결제가 통째로 죽는다.
+    #   서버는 PAYPAL_MODE 가 'live' 일 때만 진짜 돈을 받는다(src/lib/paypal.mjs 진짜돈인가).
+    #   ⛔ 값을 여기 적지 않는다. 이름만 적고 값은 스테이지 시크릿에 있다.
+    #   ⚠ 순서 — 스테이지에 시크릿을 «먼저» 넣고 이 줄을 적는다.
+    #     없는 시크릿을 적으면 배포가 Starting 에서 멈춘다(아래 KDI 사고와 같은 함정).
+    #     2026-09-13 에 셋을 먼저 넣은 것을 확인하고 이 줄을 적었다.
+    - name: PAYPAL_CLIENT_ID
+      secret: PAYPAL_CLIENT_ID
+    - name: PAYPAL_SECRET
+      secret: PAYPAL_SECRET
+    - name: PAYPAL_MODE
+      secret: PAYPAL_MODE
+
     # 🔴 KDI Open API 인증키 — **여기 미리 적어 두면 안 된다.** 지웠다.
     #
     # 2026-08-03 20:08 에 `- name: KDI_API_KEY / secret: KDI_API_KEY` 를 넣었다.
