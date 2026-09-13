@@ -433,20 +433,48 @@ const 묶음 = [
           twelve months unless you buy again. We will not put a card on file.
         </p>
 
-        <h2>How to buy</h2>
-        <ol class="buy-steps">
-          <li>Email <a href="mailto:admin@klifedesign.net">admin@klifedesign.net</a> with the dataset
-              name and your organisation.</li>
-          {/* ⛔ [2026-09-11 · 5번] 여기 「(세금계산서)」가 한글로 들어가 있었다 — 제 문안이 낸 것이다.
-              이 사이트는 화면에 한국어를 내지 않는다(사장님 지시: 손님이 영어권이다).
-              뜻은 살리고 글자는 영어로 바꾼다 — 한국 사업자가 무엇을 받는지 그대로 알 수 있다. */}
-          <li>We send an invoice. Korean businesses receive a National Tax Service electronic tax invoice.</li>
-          <li>Pay by bank transfer. Invoiced in KRW.</li>
-          <li>You receive a download link within one business day. Links do not expire.</li>
-        </ol>
+        {/* 🔴 [2026-09-13 · 5번] 사장님: 「Email … invoice … bank transfer …
+              **이런 절차 필요없이 바로 결제할 수 있게 해**」
+            ⛔ 앞 절차는 ① 영어권 손님이 원화 계좌이체를 못 해 «팔 수가 없었고»
+               ② 사람이 메일을 읽고 인보이스를 만들어야 했다 —
+               경영원칙 「사람을 거치는 계획을 세우지 않는다」를 정면으로 어긴다.
+            ✅ 이제 이 자리에서 카드·페이팔로 달러 결제하고 바로 받는다. */}
+        <h2 id="buy">Buy</h2>
+
+        <div id="buyBox" class="buybox">
+          <noscript>
+            <p class="fine">Checkout needs JavaScript. Write to
+              <a href="mailto:admin@klifedesign.net">admin@klifedesign.net</a> and we will invoice you.</p>
+          </noscript>
+
+          <fieldset class="buyrow">
+            <legend>1 · How you pay</legend>
+            <div id="buyCycle" class="chips"></div>
+          </fieldset>
+
+          <fieldset class="buyrow">
+            <legend>2 · Licence</legend>
+            <div id="buyProducts" class="chips"></div>
+          </fieldset>
+
+          <fieldset class="buyrow" id="buyDatasetRow" hidden>
+            <legend>3 · Which dataset</legend>
+            <div id="buyDatasets" class="chips"></div>
+          </fieldset>
+
+          <p id="buyTotal" class="buytotal"></p>
+          <div id="paypalButtons" class="ppbtn"></div>
+          <p id="buyNote" class="fine">Loading checkout…</p>
+          <div id="buyDone" class="buydone" hidden></div>
+        </div>
+
         <p class="fine buy-fine">
-          No account, no subscription, no card on file. A single-dataset licence is a one-time
-          purchase — we do not bill you again unless you ask for the renewing option.
+          Paid in US dollars, from any country. Card or PayPal — no PayPal account needed for cards.
+          No account with us, no card kept on file, and no automatic renewal: an annual licence simply
+          ends after twelve months unless you buy again. The download link never expires.
+          Files arrive as one <code>.tar.gz</code> (7-Zip on Windows; macOS and Linux open it natively).
+          Need an invoice for procurement? Write to{' '}
+          <a href="mailto:admin@klifedesign.net">admin@klifedesign.net</a> — that route still works.
         </p>
 
         <details>
@@ -579,4 +607,208 @@ const 묶음 = [
   .licence-block details { font-size: .85rem; margin-top: .6rem; }
   .licence-block summary { cursor: pointer; font-weight: 600; }
   .licence-block details ul { margin: .5rem 0 0; padding-left: 1.2rem; line-height: 1.6; }
+
 </style>
+
+{/* 🔴 [2026-09-13 · 5번] **is:global 이어야 한다.** Astro 의 <style> 은 스코프돼서
+     빌드할 때 셀렉터에 data-astro-… 속성을 붙인다. 그런데 결제 칩은 «JS 가 만드는»
+     요소라 그 속성이 없어 **스타일이 하나도 안 걸렸다.**
+     2026-09-13 에 화면을 띄워 보고 알았다 — 칩이 그냥 기본 단추로 보였고
+     이름과 밑글이 한 줄로 붙어 「Academic licence — one dataset$79 · One-time」이 됐다.
+     ⛔ 코드로는 성한데 화면에서 안 되는 자리다. 렌더해서 눈으로 봐야만 보인다. */}
+<style is:global>
+  /* 🔴 [2026-09-13 · 5번] 결제 자리. 사장님: 「그릇이 내용물을 결정한다」 —
+       값을 내는 화면이라 특히 또렷해야 한다. 무엇을 고르는 중인지 한눈에 보이게 한다. */
+  .buybox { margin: .6rem 0 1rem; }
+  .buyrow { border: 0; padding: 0; margin: 0 0 .7rem; }
+  .buyrow legend { font-size: .78rem; letter-spacing: .04em; text-transform: uppercase;
+                   color: var(--muted); padding: 0; margin-bottom: .35rem; }
+  .chips { display: flex; flex-wrap: wrap; gap: .4rem; }
+  /* ⚠ [2026-09-13] 눈으로 보고 잡았다 — span 이 인라인이라 이름과 밑글이 «한 줄로 붙어»
+       「Academic licence — one dataset$79 · One-time」처럼 나왔다. block 으로 내린다.
+       align-items 를 안 주면 세로 칩에서 글이 가운데로 몰린다. */
+  .chip { display: flex; flex-direction: column; align-items: flex-start; gap: .15rem; cursor: pointer;
+          border: 1px solid var(--rule, #d8d8d8); border-radius: 8px; padding: .45rem .6rem;
+          font-size: .85rem; line-height: 1.35; background: transparent; text-align: left;
+          min-width: 0; }
+  .chip .cname, .chip .cmeta { display: block; width: 100%; }
+  .chip:hover { border-color: var(--accent, #444); }
+  .chip[aria-pressed="true"] { border-color: var(--accent, #111); border-width: 2px; padding: calc(.45rem - 1px) calc(.6rem - 1px); }
+  .chip .cname { font-weight: 700; }
+  .chip .cmeta { color: var(--muted); font-size: .78rem; }
+  .buytotal { margin: .5rem 0 .4rem; font-size: .95rem; font-weight: 700; min-height: 1.2em; }
+  .ppbtn { max-width: 420px; }
+  .buydone { margin-top: .7rem; padding: .7rem .8rem; border: 1px solid var(--rule, #d8d8d8);
+             border-radius: 8px; font-size: .88rem; line-height: 1.6; }
+  .buydone a { font-weight: 700; }
+  .permo { color: var(--muted); font-weight: 400; font-size: .82rem; white-space: nowrap; }
+  @media (max-width: 640px) { .chip { flex: 1 1 100%; } .ppbtn { max-width: 100%; } }
+</style>
+
+{/* ⛔ 값을 여기 다시 적지 않는다 — 서버가 /api/pay/config 로 내려 주는 «한 곳의 진실»만 쓴다.
+     지면에 값을 또 적으면 언젠가 화면과 청구 금액이 어긋난다. */}
+<script is:inline>
+(function () {
+  var 상자 = document.getElementById('buyBox');
+  if (!상자) return;
+  var 알림 = document.getElementById('buyNote');
+  var 주기칸 = document.getElementById('buyCycle');
+  var 품칸 = document.getElementById('buyProducts');
+  var 셋칸 = document.getElementById('buyDatasets');
+  var 셋줄 = document.getElementById('buyDatasetRow');
+  var 값칸 = document.getElementById('buyTotal');
+  var 단추칸 = document.getElementById('paypalButtons');
+  var 끝칸 = document.getElementById('buyDone');
+  var 설정 = null, 주기 = 'year', 고른품 = null, 고른셋 = null;
+
+  function 글(el, t) { el.textContent = t; }
+  function 살수있나() { return 고른품 && (!고른품.고르기 || 고른셋); }
+  function 달러(v) { return '$' + Number(v).toLocaleString('en-US'); }
+
+  function 칩(이름, 밑글, 누를때) {
+    var b = document.createElement('button');
+    b.type = 'button'; b.className = 'chip'; b.setAttribute('aria-pressed', 'false');
+    var n = document.createElement('span'); n.className = 'cname'; n.textContent = 이름;
+    var m = document.createElement('span'); m.className = 'cmeta'; m.textContent = 밑글;
+    b.appendChild(n); b.appendChild(m);
+    b.addEventListener('click', function () {
+      var 형제 = b.parentNode.querySelectorAll('.chip');
+      for (var i = 0; i < 형제.length; i++) 형제[i].setAttribute('aria-pressed', 'false');
+      b.setAttribute('aria-pressed', 'true');
+      누를때();
+    });
+    return b;
+  }
+
+  /* 고른 주기에 맞는 상품만 낸다. 값은 서버가 준 표 그대로 — 여기서 지어내지 않는다 */
+  function 상품그리기() {
+    품칸.innerHTML = '';
+    고른품 = null; 고른셋 = null;
+    var 품들 = 설정.products || {};
+    Object.keys(품들).forEach(function (k) {
+      var it = 품들[k];
+      if (k === 'trade') return;
+      if (주기 === 'month' && it['기간'] !== 'month') return;
+      if (주기 === 'year' && it['기간'] === 'month') return;
+      품칸.appendChild(칩(it['이름'], 달러(it.usd) + ' · ' + it['기간글'], function () {
+        고른품 = { 코드: it['코드'], 값글: 달러(it.usd), 기간글: it['기간글'], planId: it.planId || null,
+                   고르기: /^(single|academic)(_monthly)?$/.test(it['코드']) };
+        고른셋 = null;
+        var 이전 = 셋칸.querySelectorAll('.chip');
+        for (var i = 0; i < 이전.length; i++) 이전[i].setAttribute('aria-pressed', 'false');
+        다시그리기();
+      }));
+    });
+    다시그리기();
+  }
+
+  function 다시그리기() {
+    끝칸.hidden = true;
+    셋줄.hidden = !(고른품 && 고른품.고르기);
+    값칸.textContent = 고른품 ? ('Total: ' + 고른품.값글 + ' \u2014 ' + 고른품.기간글) : '';
+    단추칸.innerHTML = '';
+    if (!살수있나()) {
+      글(알림, 고른품 && 고른품.고르기 ? 'Choose a dataset to continue.' : 'Choose a licence to continue.');
+      return;
+    }
+    글(알림, '');
+    그리자();
+  }
+
+  function 끝났다(무엇, 링크, 영수증) {
+    글(알림, '');
+    단추칸.innerHTML = '';
+    끝칸.hidden = false; 끝칸.innerHTML = '';
+    var h = document.createElement('p');
+    var st = document.createElement('strong'); st.textContent = 'Thank you \u2014 ' + 무엇;
+    h.appendChild(st); 끝칸.appendChild(h);
+    if (링크) {
+      var a = document.createElement('p');
+      var l = document.createElement('a'); l.href = 링크; l.textContent = 'Download your files (.tar.gz)';
+      a.appendChild(l); 끝칸.appendChild(a);
+    }
+    var f = document.createElement('p'); f.className = 'fine'; f.textContent = 영수증;
+    끝칸.appendChild(f);
+  }
+
+  function 그리자() {
+    if (!window.paypal || !window.paypal.Buttons) { 글(알림, 'Checkout is still loading...'); return; }
+    var 옵션 = { style: { layout: 'vertical', shape: 'rect', label: 주기 === 'month' ? 'subscribe' : 'pay' } };
+
+    if (주기 === 'month') {
+      /* 정기결제는 페이팔이 청구를 맡는다. 우리는 가입했나만 확인한다 */
+      옵션.createSubscription = function (data, actions) {
+        return actions.subscription.create({
+          plan_id: 고른품.planId,
+          custom_id: 고른품.코드 + (고른셋 ? ':' + 고른셋.코드 : ''),
+        });
+      };
+      옵션.onApprove = function (data) {
+        끝났다('your subscription is active.',
+          '/api/download?order=' + encodeURIComponent(data.subscriptionID) +
+          '&product=' + encodeURIComponent(고른품.코드) +
+          (고른셋 ? '&dataset=' + encodeURIComponent(고른셋.코드) : ''),
+          'Subscription ' + data.subscriptionID +
+          '. Cancel any time in your PayPal account. Trouble? admin@klifedesign.net');
+      };
+    } else {
+      옵션.createOrder = function () {
+        return fetch('/api/pay/order', {
+          method: 'POST', headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ product: 고른품.코드, dataset: 고른셋 ? 고른셋.코드 : null }),
+        }).then(function (r) { return r.json(); })
+          .then(function (j) { if (!j.ok) throw new Error(j.error || 'order failed'); return j.id; });
+      };
+      옵션.onApprove = function (data) {
+        글(알림, 'Confirming your payment...');
+        return fetch('/api/pay/capture', {
+          method: 'POST', headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ orderID: data.orderID, product: 고른품.코드, dataset: 고른셋 ? 고른셋.코드 : null }),
+        }).then(function (r) { return r.json(); })
+          .then(function (j) {
+            if (!j.ok) throw new Error(j.error || 'not confirmed');
+            끝났다('payment received.', j.downloadUrl,
+              'Keep this link \u2014 it does not expire. Order ' + data.orderID +
+              '. Receipt ' + (j.receipt || '') + '. Trouble? admin@klifedesign.net');
+          });
+      };
+    }
+
+    옵션.onError = function (err) {
+      /* 조용히 실패하지 않는다 — 손님이 무엇을 해야 하는지 말해 준다 */
+      글(알림, 'Payment could not be completed. Nothing was charged. Please try again, or write to admin@klifedesign.net.');
+      if (window.console) console.error('[pay]', err);
+    };
+    window.paypal.Buttons(옵션).render('#paypalButtons');
+  }
+
+  fetch('/api/pay/config').then(function (r) { return r.json(); }).then(function (c) {
+    설정 = c;
+    if (!c.enabled || !c.clientId) {
+      글(알림, 'Card checkout is not available right now. Write to admin@klifedesign.net and we will invoice you.');
+      return;
+    }
+    var 주기들 = [['year', 'Annual', 'Billed once. Cheaper per month.'],
+                  ['month', 'Monthly', 'Recurring. Cancel any time.']];
+    주기들.forEach(function (t, i) {
+      var b = 칩(t[1], t[2], function () { 주기 = t[0]; 상품그리기(); });
+      if (i === 0) b.setAttribute('aria-pressed', 'true');
+      주기칸.appendChild(b);
+    });
+
+    (c.datasets || []).forEach(function (d) {
+      셋칸.appendChild(칩(d['이름'], d['설명'], function () { 고른셋 = { 코드: d['코드'] }; 다시그리기(); }));
+    });
+
+    var sdk = document.createElement('script');
+    /* 정기결제를 쓰려면 vault=true & intent=subscription 이 필요하다 */
+    sdk.src = 'https://www.paypal.com/sdk/js?client-id=' + encodeURIComponent(c.clientId) +
+              '&currency=USD&vault=true&intent=subscription&components=buttons&locale=en_US';
+    sdk.onload = function () { 상품그리기(); };
+    sdk.onerror = function () { 글(알림, 'Checkout could not load. Write to admin@klifedesign.net.'); };
+    document.head.appendChild(sdk);
+  }).catch(function () {
+    글(알림, 'Checkout is unavailable. Write to admin@klifedesign.net and we will invoice you.');
+  });
+})();
+</script>

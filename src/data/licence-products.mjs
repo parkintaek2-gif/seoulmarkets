@@ -50,6 +50,34 @@ export const 상품 = {
     기간글: 'Per year, billed annually',
     월참고: '249.00',
   },
+
+  /* 🔴 [2026-09-13] 월 정기결제 — 사장님: 「구독료를 월, 연, 일인지 명확히 해라」
+       ⛔ 앞서는 월간을 «참고 숫자»로만 적고 실제로는 못 팔았다. 이제 진짜로 판다.
+       ⚠ 연으로 사면 $990, 달로 나눠 내면 $99×12 = $1,188 이다. 나눠 내는 값이 «더 비싸다» —
+         그것이 정상이고, 화면에도 그렇게 보이게 둔다. 숨기면 나중에 항의가 된다.
+       ⚠ planId 는 페이팔에 만들어 둔 요금제다(2026-09-13 생성).
+         값을 고치려면 페이팔에서 «새 요금제»를 만들고 여기 id 를 바꾼다 —
+         옛 요금제의 값을 고치면 이미 가입한 손님에게도 적용된다. */
+  single_monthly: {
+    코드: 'single_monthly',
+    이름: 'Single dataset — monthly',
+    설명: 'One dataset, complete, with every release while you subscribe. Cancel any time.',
+    usd: '99.00',
+    기간: 'month',
+    기간글: 'Per month, recurring',
+    planId: 'P-2KG0517585759370JNKTC6LI',
+    같은것: 'single',
+  },
+  all_monthly: {
+    코드: 'all_monthly',
+    이름: 'All six datasets — monthly',
+    설명: 'Every dataset, with every release while you subscribe. Cancel any time.',
+    usd: '299.00',
+    기간: 'month',
+    기간글: 'Per month, recurring',
+    planId: 'P-6KH32877FB069642WNKTC6LI',
+    같은것: 'all',
+  },
   trade: {
     코드: 'trade',
     이름: 'Korea trade dataset',

@@ -20,24 +20,17 @@ import { 경로후보 } from './src/lib/url-path.mjs';
 import { 센다, flush할때되면, 유입표, 현황 as 유입현황 } from './src/lib/traffic.mjs';
 /* 🔴 [2026-09-13 · 5번] 달러 결제 — 사장님: 「페이팔 결제붙여」·「이런 절차 필요없이 바로 결제」 */
 import * as 페이팔 from './src/lib/paypal.mjs';
-import { 상품찾기 } from './src/data/licence-products.mjs';
+import { 상품, 상품찾기 } from './src/data/licence-products.mjs';
+import { 데이터셋목록, 데이터셋찾기, 줄파일들, 골라야하나 } from './src/data/licence-datasets.mjs';
+import { 묶기 } from './src/lib/tar-gz.mjs';
 
-/**
- * 산 사람에게 무엇을 주나. ⛔ 여기 없는 상품은 «빈 목록»을 낸다 —
- * 「돈은 받았는데 줄 것이 없다」를 조용히 넘기지 않고 화면에 그대로 말한다.
- * ⚠ 파일 이름에 날짜가 박혀 있다. 새 판이 나오면 여기를 같이 고친다.
- */
-function 산파일들(코드) {
-  const 여섯 = [
-    '/data/full/korea-people-panel-2026-09-11.csv',
-    '/data/full/korea-mezzanine-book-2026-09-11.csv',
-    '/data/full/korea-ownership-ledger-filings-2026-09-11.csv',
-    '/data/full/korea-ownership-ledger-executives-2026-09-11.csv',
-  ];
-  if (코드 === 'all') return 여섯;
-  if (코드 === 'single' || 코드 === 'academic') return 여섯;   /* 고르기는 다음 단계 — 지금은 같은 묶음 */
-  if (코드 === 'trade') return ['/data/full/korea-trade-dataset.csv'];
-  return [];
+/** 산 파일들을 한 묶음(.tar.gz)으로. ⛔ 실패하면 던진다 — 빈 묶음을 조용히 주지 않는다 */
+function 묶음만들기(경로들) { return 묶기(경로들, ROOT.replace(/[\\/]$/, '')); }
+
+/** 묶음 파일 이름에 넣을 날짜. ⚠ 이 PC 는 이미 KST 다 — toISOString() 을 쓰지 않는다 */
+function 오늘글(날 = new Date()) {
+  const 두 = (n) => String(n).padStart(2, '0');
+  return `${날.getFullYear()}-${두(날.getMonth() + 1)}-${두(날.getDate())}`;
 }
 
 const ROOT = fileURLToPath(new URL('./dist/', import.meta.url));
@@ -469,6 +462,13 @@ const handle = async (req, res) => {
      *   ⛔ 열쇠가 없으면 결제 자리를 아예 안 연다 — 되는 척하지 않는다
      *   ⚠ 이 세 자리는 색인되면 안 된다(X-Robots-Tag: noindex)
      */
+    /* 화면이 «결제 단추를 낼지 말지»를 알아야 한다. ⛔ 시크릿은 여기 안 담긴다(paypal.mjs 가 막는다) */
+    if (pathname === '/api/pay/config') {
+      res.writeHead(200, { ...BASE_HEADERS, 'Content-Type': 'application/json; charset=utf-8', 'X-Robots-Tag': 'noindex' });
+      res.end(JSON.stringify({ ...페이팔.화면에낼것(), products: 상품, datasets: 데이터셋목록 }));
+      return;
+    }
+
     if (pathname === '/api/pay/order' || pathname === '/api/pay/capture') {
       const 헤더 = { ...BASE_HEADERS, 'Content-Type': 'application/json; charset=utf-8', 'X-Robots-Tag': 'noindex' };
       if (!페이팔.켜졌나()) {
@@ -484,9 +484,17 @@ const handle = async (req, res) => {
         res.end(JSON.stringify({ ok: false, error: 'unknown product' }));
         return;
       }
+      /* ⛔ single·academic 은 «어느 데이터셋»인지 골라야 한다.
+           안 고르고 사면 결제 뒤에 줄 것이 없다 — 그 전에 막는다. */
+      const 골른것 = 입력.dataset ? 데이터셋찾기(입력.dataset) : null;
+      if (골라야하나(품.코드) && !골른것) {
+        res.writeHead(400, 헤더);
+        res.end(JSON.stringify({ ok: false, error: 'choose a dataset first' }));
+        return;
+      }
       try {
         if (pathname === '/api/pay/order') {
-          const id = await 페이팔.주문만들기(품);
+          const id = await 페이팔.주문만들기(품, 골른것 ? 골른것.코드 : null);
           res.writeHead(200, 헤더);
           res.end(JSON.stringify({ ok: true, id }));
           return;
@@ -500,7 +508,8 @@ const handle = async (req, res) => {
         }
         /* ⭐ DB 가 없다. «누가 샀나»를 우리가 저장하지 않고 페이팔에 되묻는다(paypal.mjs 머리글).
              그래서 손님에게 주는 것은 «주문번호가 든 주소» 하나뿐이고, 그 주소는 만료되지 않는다. */
-        const 받는곳 = '/api/download?order=' + encodeURIComponent(입력.orderID) + '&product=' + encodeURIComponent(품.코드);
+        const 받는곳 = '/api/download?order=' + encodeURIComponent(입력.orderID) + '&product=' + encodeURIComponent(품.코드)
+          + (골른것 ? '&dataset=' + encodeURIComponent(골른것.코드) : '');
         res.writeHead(200, 헤더);
         res.end(JSON.stringify({ ok: true, downloadUrl: 받는곳, receipt: 결과.결제번호 }));
         return;
@@ -536,14 +545,29 @@ const handle = async (req, res) => {
         .end('This order is not paid, or the payment could not be confirmed.');
       return;
     }
-    const 줄것 = 산파일들(품.코드);
+    const 줄것 = 줄파일들(품.코드, parsed.searchParams.get('dataset'));
     if (!줄것.length) {
       res.writeHead(503, { ...헤더, 'Content-Type': 'text/plain; charset=utf-8' })
-        .end('Paid, but this dataset is not yet packaged. Write to admin@klifedesign.net with your order id and we will send it.');
+        .end('Paid, but we could not work out which dataset to send. Write to admin@klifedesign.net with your order id and we will sort it out.');
       return;
     }
-    /* ⚠ 지금은 파일 «목록»을 낸다. 묶음(zip)은 다음 단계다 —
-         못 하는 것을 되는 척하지 않고, 산 사람이 바로 받을 수 있게 주소를 그대로 준다. */
+    /* 묶음(.tar.gz)으로 한 번에 준다 — 손님이 파일을 하나씩 누르지 않아도 된다.
+       ⛔ 만드는 데 실패하면 «조용히» 빈 파일을 주지 않는다. 목록으로 떨어뜨린다. */
+    if (parsed.searchParams.get('as') !== 'list') {
+      try {
+        const 몸 = await 묶음만들기(줄것);
+        res.writeHead(200, {
+          ...헤더,
+          'Content-Type': 'application/gzip',
+          'Content-Disposition': 'attachment; filename="seoulmarkets-' + 품.코드 + '-' + 오늘글() + '.tar.gz"',
+          'Content-Length': String(몸.length),
+        });
+        res.end(몸);
+        return;
+      } catch (e) {
+        console.error('[download] tar.gz failed, falling back to list —', e?.message ?? e);
+      }
+    }
     res.writeHead(200, { ...헤더, 'Content-Type': 'application/json; charset=utf-8' });
     res.end(JSON.stringify({ ok: true, product: 품.코드, files: 줄것 }));
     return;

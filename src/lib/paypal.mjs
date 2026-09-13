@@ -69,7 +69,7 @@ export function _토큰비우기() { 토큰 = null; }
  * 주문을 만든다. ⛔ 금액은 «서버가 정한 상품표»에서만 온다.
  * @param 상품 licence-products.mjs 의 한 줄
  */
-export async function 주문만들기(상품, 부르기 = fetch) {
+export async function 주문만들기(상품, 데이터셋코드 = null, 부르기 = fetch) {
   if (!상품 || !상품.usd) throw new Error('unknown product');
   const t = await 토큰받기();
   const r = await 부르기(밑주소() + '/v2/checkout/orders', {
@@ -79,7 +79,9 @@ export async function 주문만들기(상품, 부르기 = fetch) {
       intent: 'CAPTURE',
       purchase_units: [{
         reference_id: 상품.코드,
-        description: ('SeoulMarkets — ' + 상품.이름).slice(0, 127),
+        /* ⭐ 무엇을 샀는지 페이팔 쪽에도 남긴다 — 나중에 따질 때 우리 기록이 아니라 «그쪽 기록»이 근거가 된다 */
+        custom_id: (상품.코드 + (데이터셋코드 ? ':' + 데이터셋코드 : '')).slice(0, 127),
+        description: ('SeoulMarkets — ' + 상품.이름 + (데이터셋코드 ? ' (' + 데이터셋코드 + ')' : '')).slice(0, 127),
         amount: { currency_code: 'USD', value: 상품.usd },
       }],
       application_context: { brand_name: 'SeoulMarkets', shipping_preference: 'NO_SHIPPING', user_action: 'PAY_NOW' },
