@@ -377,40 +377,61 @@ const 묶음 = [
         Prices are listed. You will not be asked to request a quote.
       </p>
 
+      {/* 🔴 [2026-09-13 · 5번] 사장님 지시 — 요금표를 다시 짰다.
+            > 「구독료를 **월, 연, 일인지 명확히** 해라」
+            > 「**달러로만 기재**해야지. 페이팔 등 **국적불문 결제**」
+            > 「원화만 결제가능하다 돼 있다 → **달러 결제되게 해**」
+
+          ⛔ 앞 표는 세 가지가 한꺼번에 잘못돼 있었다 —
+            ① 원화(KRW)로만 적혀 있었다. 우리 손님은 영어권인데 살 수가 없다
+            ② 단위가 섞여 있었다 — 1회성·12개월치가 한 표에 뒤섞여
+               **사장님도 「이거 월간이지?」라고 헷갈리셨다.** 사장님이 헷갈리시면 손님은 반드시 헷갈린다
+            ③ 「Prices are listed」라 해 놓고 정작 살 길이 메일→인보이스→계좌이체뿐이었다
+
+          ✅ 이제 «기간»을 값 옆에 못박는다. one-time 인지 per year 인지 한눈에 보인다.
+          ⚠ 월 단위 값은 «참고»로만 적는다 — 실제 청구는 연 1회다(billed annually).
+            달마다 걷는 정기결제는 아직 안 붙였으므로 **되는 척하지 않는다.**
+          ⚠ 달러 값은 환율로 «지어내지» 않았다. 새로 정한 값이고, 페이팔이 받는 금액과 같아야 한다.
+            근거 — FnGuide 단품 월 11만원(≈$80)·연 132만원(≈$960) 자리에 Single 을 놓았다.
+            All 은 FnGuide 전체 묶음(연 ≈$12,000)보다 훨씬 낮게 잡았다. 우리가 후발이다. */}
       <section id="licence" class="licence-block">
         <table class="pricing">
-          <caption>Licence options</caption>
+          <caption>Licence options — all prices in US dollars</caption>
           <thead>
-            <tr><th>Licence</th><th>What you get</th><th>Price</th></tr>
+            <tr><th>Licence</th><th>What you get</th><th>Price</th><th>Billing</th></tr>
           </thead>
           <tbody>
             <tr>
               <th scope="row">Page &amp; sample</th>
               <td>The published page and a sample file. No registration.</td>
               <td><strong>Free</strong></td>
-            </tr>
-            <tr>
-              <th scope="row">Single dataset</th>
-              <td>One dataset, complete. CSV + Parquet + data dictionary. One release, yours to keep.</td>
-              <td><strong>KRW 390,000</strong></td>
-            </tr>
-            <tr>
-              <th scope="row">Single dataset + 1 year</th>
-              <td>The same dataset, plus every release for twelve months.</td>
-              <td><strong>KRW 1,200,000</strong></td>
-            </tr>
-            <tr>
-              <th scope="row">All datasets + 1 year</th>
-              <td>All six datasets, plus every release for twelve months.</td>
-              <td><strong>KRW 3,600,000</strong></td>
+              <td>—</td>
             </tr>
             <tr>
               <th scope="row">Academic</th>
               <td>One dataset for a thesis, dissertation or published paper. Cite us and we list your work.</td>
-              <td><strong>KRW 90,000</strong></td>
+              <td><strong>$79</strong></td>
+              <td>One-time</td>
+            </tr>
+            <tr>
+              <th scope="row">Single dataset</th>
+              <td>One dataset, complete — CSV + Parquet + data dictionary — plus every release for twelve months.</td>
+              <td><strong>$990</strong> <span class="permo">($82.50/mo)</span></td>
+              <td>Per year, billed annually</td>
+            </tr>
+            <tr>
+              <th scope="row">All six datasets</th>
+              <td>Every dataset on this page, plus every release for twelve months.</td>
+              <td><strong>$2,990</strong> <span class="permo">($249/mo)</span></td>
+              <td>Per year, billed annually</td>
             </tr>
           </tbody>
         </table>
+        <p class="fine">
+          Monthly figures in brackets are for comparison only — billing is annual, once.
+          There is no monthly plan and no automatic renewal: your licence simply ends after
+          twelve months unless you buy again. We will not put a card on file.
+        </p>
 
         <h2>How to buy</h2>
         <ol class="buy-steps">

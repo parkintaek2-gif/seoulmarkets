@@ -18,6 +18,27 @@ import { handleApi } from './src/lib/api.mjs';
 import { 등록 as 댓글등록, 목록 as 댓글목록 } from './src/lib/comments.mjs';
 import { 경로후보 } from './src/lib/url-path.mjs';
 import { 센다, flush할때되면, 유입표, 현황 as 유입현황 } from './src/lib/traffic.mjs';
+/* 🔴 [2026-09-13 · 5번] 달러 결제 — 사장님: 「페이팔 결제붙여」·「이런 절차 필요없이 바로 결제」 */
+import * as 페이팔 from './src/lib/paypal.mjs';
+import { 상품찾기 } from './src/data/licence-products.mjs';
+
+/**
+ * 산 사람에게 무엇을 주나. ⛔ 여기 없는 상품은 «빈 목록»을 낸다 —
+ * 「돈은 받았는데 줄 것이 없다」를 조용히 넘기지 않고 화면에 그대로 말한다.
+ * ⚠ 파일 이름에 날짜가 박혀 있다. 새 판이 나오면 여기를 같이 고친다.
+ */
+function 산파일들(코드) {
+  const 여섯 = [
+    '/data/full/korea-people-panel-2026-09-11.csv',
+    '/data/full/korea-mezzanine-book-2026-09-11.csv',
+    '/data/full/korea-ownership-ledger-filings-2026-09-11.csv',
+    '/data/full/korea-ownership-ledger-executives-2026-09-11.csv',
+  ];
+  if (코드 === 'all') return 여섯;
+  if (코드 === 'single' || 코드 === 'academic') return 여섯;   /* 고르기는 다음 단계 — 지금은 같은 묶음 */
+  if (코드 === 'trade') return ['/data/full/korea-trade-dataset.csv'];
+  return [];
+}
 
 const ROOT = fileURLToPath(new URL('./dist/', import.meta.url));
 const PORT = Number(process.env.PORT) || 3000;
@@ -217,7 +238,9 @@ const handle = async (req, res) => {
    *   사장님 지시: 「우리 자체 댓글 서비스를 만들어라... 모든 유닛이 이용하도록」.
    *   3자 위젯(Giscus 등)을 안 쓰는 이유는 comments.mjs 머리글 참고 — IP·쿠키 정책 충돌. */
   /* 🔴 [2026-09-09 · 1번] `/v1/keys` — 셀프 발급 API 열쇠(P6). 같은 이유로 POST 허용 목록에 더한다. */
-  const POST허용 = req.method === 'POST' && (parsed.pathname === '/v1/subscribe' || parsed.pathname === '/api/comments' || parsed.pathname === '/v1/keys');
+  /* 🔴 [2026-09-13 · 5번] 결제 두 자리도 POST 다 — 여기 안 넣으면 405 로 막혀 «살 수가 없다» */
+  const POST허용 = req.method === 'POST' && (parsed.pathname === '/v1/subscribe' || parsed.pathname === '/api/comments' || parsed.pathname === '/v1/keys'
+    || parsed.pathname === '/api/pay/order' || parsed.pathname === '/api/pay/capture');
   if (req.method !== 'GET' && req.method !== 'HEAD' && !POST허용) {
     res.writeHead(405, { ...BASE_HEADERS, Allow: 'GET, HEAD' }).end('Method Not Allowed');
     return;
@@ -434,6 +457,96 @@ const handle = async (req, res) => {
         return;
       }
     }
+
+    /* ══ 달러 결제 (페이팔) ═══════════════════════════════════════════════
+     * 사장님 지시 (2026-09-13):
+     *   「**페이팔 결제붙여**」 · 「**달러 결제되게 해**」 · 「페이팔 등 **국적불문 결제**」
+     *   「Email … invoice … bank transfer … **이런 절차 필요없이 바로 결제**할 수 있게 해」
+     *
+     * 🔴 돈이 새지 않게 지키는 것 —
+     *   ⛔ 금액을 손님에게서 받지 않는다. «상품 코드»만 받고 값은 서버가 정한다
+     *   ⛔ 「샀어요」라는 브라우저 말을 믿지 않는다. 페이팔에 다시 물어 확인한다
+     *   ⛔ 열쇠가 없으면 결제 자리를 아예 안 연다 — 되는 척하지 않는다
+     *   ⚠ 이 세 자리는 색인되면 안 된다(X-Robots-Tag: noindex)
+     */
+    if (pathname === '/api/pay/order' || pathname === '/api/pay/capture') {
+      const 헤더 = { ...BASE_HEADERS, 'Content-Type': 'application/json; charset=utf-8', 'X-Robots-Tag': 'noindex' };
+      if (!페이팔.켜졌나()) {
+        res.writeHead(503, 헤더);
+        res.end(JSON.stringify({ ok: false, error: 'payments are not configured' }));
+        return;
+      }
+      let 입력 = {};
+      try { 입력 = JSON.parse(본문 ?? '{}'); } catch { 입력 = {}; }
+      const 품 = 상품찾기(입력.product);
+      if (!품) {
+        res.writeHead(400, 헤더);
+        res.end(JSON.stringify({ ok: false, error: 'unknown product' }));
+        return;
+      }
+      try {
+        if (pathname === '/api/pay/order') {
+          const id = await 페이팔.주문만들기(품);
+          res.writeHead(200, 헤더);
+          res.end(JSON.stringify({ ok: true, id }));
+          return;
+        }
+        const 결과 = await 페이팔.승인확인(입력.orderID, 품);
+        if (!결과.ok) {
+          console.error('[pay] capture rejected —', 결과.왜);
+          res.writeHead(402, 헤더);
+          res.end(JSON.stringify({ ok: false, error: 'payment not confirmed' }));
+          return;
+        }
+        /* ⭐ DB 가 없다. «누가 샀나»를 우리가 저장하지 않고 페이팔에 되묻는다(paypal.mjs 머리글).
+             그래서 손님에게 주는 것은 «주문번호가 든 주소» 하나뿐이고, 그 주소는 만료되지 않는다. */
+        const 받는곳 = '/api/download?order=' + encodeURIComponent(입력.orderID) + '&product=' + encodeURIComponent(품.코드);
+        res.writeHead(200, 헤더);
+        res.end(JSON.stringify({ ok: true, downloadUrl: 받는곳, receipt: 결과.결제번호 }));
+        return;
+      } catch (e) {
+        console.error('[pay] ' + pathname + ' —', e?.message ?? e);
+        res.writeHead(502, 헤더);
+        res.end(JSON.stringify({ ok: false, error: 'payment provider error' }));
+        return;
+      }
+    }
+  }
+
+  /* ── 산 파일 내려받기 ────────────────────────────────────────────────
+   * ⭐ 저장소가 없다. 「이 주문이 정말 결제됐나」를 «페이팔에 되물어» 가른다.
+   *    그래서 링크가 만료되지 않는다 — 지면에 적어 둔 「Links do not expire」 그대로다.
+   * ⛔ 결제 확인 전에는 파일 이름조차 알려 주지 않는다.
+   * ⚠ 색인되면 안 된다. noindex 를 붙인다.
+   */
+  if (pathname === '/api/download') {
+    const 헤더 = { ...BASE_HEADERS, 'X-Robots-Tag': 'noindex, nofollow' };
+    const 품 = 상품찾기(parsed.searchParams.get('product'));
+    const 주문 = parsed.searchParams.get('order');
+    if (!페이팔.켜졌나() || !품 || !주문) {
+      res.writeHead(400, { ...헤더, 'Content-Type': 'text/plain; charset=utf-8' }).end('Bad request');
+      return;
+    }
+    let 확인 = { ok: false, 왜: 'unchecked' };
+    try { 확인 = await 페이팔.산주문인가(주문, 품); }
+    catch (e) { console.error('[download] ' + (e?.message ?? e)); 확인 = { ok: false, 왜: 'provider error' }; }
+    if (!확인.ok) {
+      console.error('[download] refused —', 확인.왜);
+      res.writeHead(402, { ...헤더, 'Content-Type': 'text/plain; charset=utf-8' })
+        .end('This order is not paid, or the payment could not be confirmed.');
+      return;
+    }
+    const 줄것 = 산파일들(품.코드);
+    if (!줄것.length) {
+      res.writeHead(503, { ...헤더, 'Content-Type': 'text/plain; charset=utf-8' })
+        .end('Paid, but this dataset is not yet packaged. Write to admin@klifedesign.net with your order id and we will send it.');
+      return;
+    }
+    /* ⚠ 지금은 파일 «목록»을 낸다. 묶음(zip)은 다음 단계다 —
+         못 하는 것을 되는 척하지 않고, 산 사람이 바로 받을 수 있게 주소를 그대로 준다. */
+    res.writeHead(200, { ...헤더, 'Content-Type': 'application/json; charset=utf-8' });
+    res.end(JSON.stringify({ ok: true, product: 품.코드, files: 줄것 }));
+    return;
   }
 
   /* ── 유입 맥박(/traffic-pulse.json) — 인증 없이 «총계만» ─────────────
