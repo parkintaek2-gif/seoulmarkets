@@ -1,7 +1,7 @@
 {
  "_meta": {
   "출처": "DART 전자공시 — 임원 현황 (2025 사업보고서)",
-  "만든때": "2026-10-11 08:12:11",
+  "만든때": "2026-10-11 08:19:32",
   "회사수": 2769,
   "대표수": 3589,
   "로마자못옮김": 33,
@@ -364,7 +364,7 @@
   "101670": [
    {
     "ticker": "101670",
-    "nameKo": "전   웅",
+    "nameKo": "전웅",
     "nameRoman": "Jeon Ung",
     "romanIsConventional": true,
     "title": "대표이사",
@@ -414,7 +414,7 @@
   "101930": [
    {
     "ticker": "101930",
-    "nameKo": "이   인",
+    "nameKo": "이인",
     "nameRoman": "Lee In",
     "romanIsConventional": true,
     "title": "대표\n이사",
@@ -612,7 +612,7 @@
   "103140": [
    {
     "ticker": "103140",
-    "nameKo": "류   진",
+    "nameKo": "류진",
     "nameRoman": "Ryu Jin",
     "romanIsConventional": true,
     "title": "대표이사\n 회장",
@@ -695,7 +695,7 @@
    },
    {
     "ticker": "103590",
-    "nameKo": "황   수",
+    "nameKo": "황수",
     "nameRoman": "Hwang Su",
     "romanIsConventional": true,
     "title": "사장",
@@ -2615,7 +2615,7 @@
   "129260": [
    {
     "ticker": "129260",
-    "nameKo": "박동호(*2)",
+    "nameKo": "박동호",
     "nameRoman": "Park Dong-ho",
     "romanIsConventional": true,
     "title": "사장",
@@ -2626,7 +2626,7 @@
    },
    {
     "ticker": "129260",
-    "nameKo": "최우일(*1)",
+    "nameKo": "최우일",
     "nameRoman": "Choi U-il",
     "romanIsConventional": true,
     "title": "부사장",
@@ -5553,7 +5553,7 @@
    },
    {
     "ticker": "192820",
-    "nameKo": "최 경",
+    "nameKo": "최경",
     "nameRoman": "Choi Gyeong",
     "romanIsConventional": true,
     "title": "대표이사\n부회장",
@@ -5696,7 +5696,7 @@
   "196170": [
    {
     "ticker": "196170",
-    "nameKo": "전태연\n주1)",
+    "nameKo": "전태연",
     "nameRoman": "Jeon Tae-yeon",
     "romanIsConventional": true,
     "title": "사장",
@@ -5931,7 +5931,7 @@
   "199550": [
    {
     "ticker": "199550",
-    "nameKo": "주 홍",
+    "nameKo": "주홍",
     "nameRoman": "Joo Hong",
     "romanIsConventional": true,
     "title": "대표이사",
@@ -6702,7 +6702,7 @@
   "210980": [
    {
     "ticker": "210980",
-    "nameKo": "김도현\n(주1)",
+    "nameKo": "김도현",
     "nameRoman": "Kim Do-hyeon",
     "romanIsConventional": true,
     "title": "사장",
@@ -6965,7 +6965,7 @@
   "214430": [
    {
     "ticker": "214430",
-    "nameKo": "정  한",
+    "nameKo": "정한",
     "nameRoman": "Jung Han",
     "romanIsConventional": true,
     "title": "대표이사",
@@ -8618,7 +8618,7 @@
   "239340": [
    {
     "ticker": "239340",
-    "nameKo": "김남현\n(주1)",
+    "nameKo": "김남현",
     "nameRoman": "Kim Nam-hyeon",
     "romanIsConventional": true,
     "title": "대표이사",
@@ -10321,7 +10321,7 @@
   "271560": [
    {
     "ticker": "271560",
-    "nameKo": "이승준(*)",
+    "nameKo": "이승준",
     "nameRoman": "Lee Seung-jun",
     "romanIsConventional": true,
     "title": "사장",
@@ -10701,7 +10701,7 @@
   "279570": [
    {
     "ticker": "279570",
-    "nameKo": "최우형\n주3)",
+    "nameKo": "최우형",
     "nameRoman": "Choi U-hyeong",
     "romanIsConventional": true,
     "title": "대표이사",
@@ -11273,7 +11273,7 @@
   "290660": [
    {
     "ticker": "290660",
-    "nameKo": "백명훈\n(*주2)",
+    "nameKo": "백명훈(",
     "nameRoman": null,
     "romanIsConventional": null,
     "title": "대표이사",
@@ -11773,7 +11773,7 @@
   "298380": [
    {
     "ticker": "298380",
-    "nameKo": "이상훈\n(주3)",
+    "nameKo": "이상훈",
     "nameRoman": "Lee Sang-hun",
     "romanIsConventional": true,
     "title": "대표\n이사",
@@ -12468,7 +12468,7 @@
   "311390": [
    {
     "ticker": "311390",
-    "nameKo": "한기수(*)",
+    "nameKo": "한기수",
     "nameRoman": "Han Gi-su",
     "romanIsConventional": true,
     "title": "대표이사",
@@ -12877,7 +12877,7 @@
   "318010": [
    {
     "ticker": "318010",
-    "nameKo": "이\n병\n욱",
+    "nameKo": "이병욱",
     "nameRoman": "Lee Byeong-uk",
     "romanIsConventional": true,
     "title": "대표\n이사",
@@ -13133,7 +13133,7 @@
   "322970": [
    {
     "ticker": "322970",
-    "nameKo": "윤태종\n(*)",
+    "nameKo": "윤태종",
     "nameRoman": "Yoon Tae-jong",
     "romanIsConventional": true,
     "title": "대표이사",
@@ -13546,7 +13546,7 @@
   "334890": [
    {
     "ticker": "334890",
-    "nameKo": "도병운\n(*1)",
+    "nameKo": "도병운",
     "nameRoman": "Do Byeong-un",
     "romanIsConventional": true,
     "title": "대표이사",
@@ -13557,7 +13557,7 @@
    },
    {
     "ticker": "334890",
-    "nameKo": "도병운\n(*1)",
+    "nameKo": "도병운",
     "nameRoman": "Do Byeong-un",
     "romanIsConventional": true,
     "title": "대표이사",
@@ -13996,7 +13996,7 @@
   "346010": [
    {
     "ticker": "346010",
-    "nameKo": "조경종\n(주1)",
+    "nameKo": "조경종",
     "nameRoman": "Cho Gyeong-jong",
     "romanIsConventional": true,
     "title": "대표이사",
@@ -15729,7 +15729,7 @@
   "382800": [
    {
     "ticker": "382800",
-    "nameKo": "박\n상\n순",
+    "nameKo": "박상순",
     "nameRoman": "Park Sang-sun",
     "romanIsConventional": true,
     "title": "대표\n이사",
@@ -17477,7 +17477,7 @@
   "443250": [
    {
     "ticker": "443250",
-    "nameKo": "송인상\n(주1)",
+    "nameKo": "송인상",
     "nameRoman": "Song In-sang",
     "romanIsConventional": true,
     "title": "대표이사",
@@ -18430,7 +18430,7 @@
   "458650": [
    {
     "ticker": "458650",
-    "nameKo": "박채원(주1)",
+    "nameKo": "박채원",
     "nameRoman": "Park Chae-won",
     "romanIsConventional": true,
     "title": "대표이사",
@@ -18621,7 +18621,7 @@
   "462020": [
    {
     "ticker": "462020",
-    "nameKo": "한 웅",
+    "nameKo": "한웅",
     "nameRoman": "Han Ung",
     "romanIsConventional": true,
     "title": "대표이사",
@@ -20410,7 +20410,7 @@
   "950170": [
    {
     "ticker": "950170",
-    "nameKo": "구철모\n(주1)",
+    "nameKo": "구철모",
     "nameRoman": "Koo Cheol-mo",
     "romanIsConventional": true,
     "title": "대표이사 회장",
@@ -20458,7 +20458,7 @@
   "950200": [
    {
     "ticker": "950200",
-    "nameKo": "홍 수",
+    "nameKo": "홍수",
     "nameRoman": "Hong Su",
     "romanIsConventional": true,
     "title": "대표이사",
@@ -20993,7 +20993,7 @@
   "000500": [
    {
     "ticker": "000500",
-    "nameKo": "정  현",
+    "nameKo": "정현",
     "nameRoman": "Jung Hyeon",
     "romanIsConventional": true,
     "title": "부사장",
@@ -21084,7 +21084,7 @@
   "000670": [
    {
     "ticker": "000670",
-    "nameKo": "김 기 호",
+    "nameKo": "김기호",
     "nameRoman": "Kim Gi-ho",
     "romanIsConventional": true,
     "title": "대표이사\n사장",
@@ -21310,7 +21310,7 @@
   "000910": [
    {
     "ticker": "000910",
-    "nameKo": "이 건 영",
+    "nameKo": "이건영",
     "nameRoman": "Lee Geon-yeong",
     "romanIsConventional": true,
     "title": "대표이사\n회 장",
@@ -21321,7 +21321,7 @@
    },
    {
     "ticker": "000910",
-    "nameKo": "이 우 선",
+    "nameKo": "이우선",
     "nameRoman": "Lee U-seon",
     "romanIsConventional": true,
     "title": "대표이사\n부사장",
@@ -21482,7 +21482,7 @@
   "001070": [
    {
     "ticker": "001070",
-    "nameKo": "설 범",
+    "nameKo": "설범",
     "nameRoman": "Seol Beom",
     "romanIsConventional": true,
     "title": "대표이사\n회장",
@@ -22245,7 +22245,7 @@
    },
    {
     "ticker": "001820",
-    "nameKo": "박   진",
+    "nameKo": "박진",
     "nameRoman": "Park Jin",
     "romanIsConventional": true,
     "title": "대표이사",
@@ -22535,7 +22535,7 @@
   "002210": [
    {
     "ticker": "002210",
-    "nameKo": "유영일\n(*)\n(**)\n(****)",
+    "nameKo": "유영일",
     "nameRoman": "Yoo Yeong-il",
     "romanIsConventional": true,
     "title": "대표이사",
@@ -22722,7 +22722,7 @@
   "002460": [
    {
     "ticker": "002460",
-    "nameKo": "이 종 원",
+    "nameKo": "이종원",
     "nameRoman": "Lee Jong-won",
     "romanIsConventional": true,
     "title": "회장",
@@ -22733,7 +22733,7 @@
    },
    {
     "ticker": "002460",
-    "nameKo": "임 기 영",
+    "nameKo": "임기영",
     "nameRoman": "Lim Gi-yeong",
     "romanIsConventional": true,
     "title": "사장",
@@ -23009,7 +23009,7 @@
   "002840": [
    {
     "ticker": "002840",
-    "nameKo": "홍창식\n(*1)",
+    "nameKo": "홍창식",
     "nameRoman": "Hong Chang-sik",
     "romanIsConventional": true,
     "title": "회장",
@@ -23020,7 +23020,7 @@
    },
    {
     "ticker": "002840",
-    "nameKo": "강신우\n(*1)",
+    "nameKo": "강신우",
     "nameRoman": "Kang Sin-u",
     "romanIsConventional": true,
     "title": "전무",
@@ -23814,7 +23814,7 @@
   "003780": [
    {
     "ticker": "003780",
-    "nameKo": "최 원 석",
+    "nameKo": "최원석",
     "nameRoman": "Choi Won-seok",
     "romanIsConventional": true,
     "title": "대표이사\n부사장",
@@ -23968,7 +23968,7 @@
   "004170": [
    {
     "ticker": "004170",
-    "nameKo": "박 주 형",
+    "nameKo": "박주형",
     "nameRoman": "Park Ju-hyeong",
     "romanIsConventional": true,
     "title": "대표이사",
@@ -24020,7 +24020,7 @@
   "004250": [
    {
     "ticker": "004250",
-    "nameKo": "양창영\n(*1)",
+    "nameKo": "양창영",
     "nameRoman": "Yang Chang-yeong",
     "romanIsConventional": true,
     "title": "대표이사",
@@ -24031,7 +24031,7 @@
    },
    {
     "ticker": "004250",
-    "nameKo": "심일식\n(*1)",
+    "nameKo": "심일식",
     "nameRoman": "Shim Il-sik",
     "romanIsConventional": true,
     "title": "대표이사",
@@ -24192,7 +24192,7 @@
   "004450": [
    {
     "ticker": "004450",
-    "nameKo": "고기영(주1)",
+    "nameKo": "고기영",
     "nameRoman": "Ko Gi-yeong",
     "romanIsConventional": true,
     "title": "대표이사",
@@ -25206,7 +25206,7 @@
   "005850": [
    {
     "ticker": "005850",
-    "nameKo": "정 문 호",
+    "nameKo": "정문호",
     "nameRoman": "Jung Mun-ho",
     "romanIsConventional": true,
     "title": "대표이사\n경영리더",
@@ -25217,7 +25217,7 @@
    },
    {
     "ticker": "005850",
-    "nameKo": "이 성 엽",
+    "nameKo": "이성엽",
     "nameRoman": "Lee Seong-yeop",
     "romanIsConventional": true,
     "title": "대표이사\n부회장",
@@ -25391,7 +25391,7 @@
   "006040": [
    {
     "ticker": "006040",
-    "nameKo": "박상진(*1)",
+    "nameKo": "박상진",
     "nameRoman": "Park Sang-jin",
     "romanIsConventional": true,
     "title": "부사장",
@@ -25402,7 +25402,7 @@
    },
    {
     "ticker": "006040",
-    "nameKo": "김세훈(*1)",
+    "nameKo": "김세훈",
     "nameRoman": "Kim Se-hun",
     "romanIsConventional": true,
     "title": "부사장",
@@ -25413,7 +25413,7 @@
    },
    {
     "ticker": "006040",
-    "nameKo": "장인성(*1)",
+    "nameKo": "장인성",
     "nameRoman": "Jang In-seong",
     "romanIsConventional": true,
     "title": "부사장",
@@ -25850,7 +25850,7 @@
    },
    {
     "ticker": "006840",
-    "nameKo": "고 준",
+    "nameKo": "고준",
     "nameRoman": "Ko Jun",
     "romanIsConventional": true,
     "title": "부사장",
@@ -26202,7 +26202,7 @@
   "007610": [
    {
     "ticker": "007610",
-    "nameKo": "권   혁",
+    "nameKo": "권혁",
     "nameRoman": "Kwon Hyeok",
     "romanIsConventional": true,
     "title": "대표이사",
@@ -26278,7 +26278,7 @@
   "007770": [
    {
     "ticker": "007770",
-    "nameKo": "윤 성 진",
+    "nameKo": "윤성진",
     "nameRoman": "Yoon Seong-jin",
     "romanIsConventional": true,
     "title": "대표이사",
@@ -26830,7 +26830,7 @@
   "009180": [
    {
     "ticker": "009180",
-    "nameKo": "고정한\n(주1)",
+    "nameKo": "고정한",
     "nameRoman": "Ko Jeong-han",
     "romanIsConventional": true,
     "title": "대표이사",
@@ -27150,7 +27150,7 @@
   "009580": [
    {
     "ticker": "009580",
-    "nameKo": "이 도 균",
+    "nameKo": "이도균",
     "nameRoman": "Lee Do-gyun",
     "romanIsConventional": true,
     "title": "사장",
@@ -29028,7 +29028,7 @@
   "013810": [
    {
     "ticker": "013810",
-    "nameKo": "이   열",
+    "nameKo": "이열",
     "nameRoman": "Lee Yeol",
     "romanIsConventional": true,
     "title": "대표이사",
@@ -30257,7 +30257,7 @@
   "018290": [
    {
     "ticker": "018290",
-    "nameKo": "정   철",
+    "nameKo": "정철",
     "nameRoman": "Jung Cheol",
     "romanIsConventional": true,
     "title": "공동대표이사",
@@ -30725,7 +30725,7 @@
    },
    {
     "ticker": "020180",
-    "nameKo": "이재원(*1)",
+    "nameKo": "이재원",
     "nameRoman": "Lee Jae-won",
     "romanIsConventional": true,
     "title": "대표이사",
@@ -30801,7 +30801,7 @@
   "020760": [
    {
     "ticker": "020760",
-    "nameKo": "최 호 연",
+    "nameKo": "최호연",
     "nameRoman": "Choi Ho-yeon",
     "romanIsConventional": true,
     "title": "대표이사",
@@ -31586,7 +31586,7 @@
   "025000": [
    {
     "ticker": "025000",
-    "nameKo": "양 준 영",
+    "nameKo": "양준영",
     "nameRoman": "Yang Jun-yeong",
     "romanIsConventional": true,
     "title": "대표이사\n회장",
@@ -31597,7 +31597,7 @@
    },
    {
     "ticker": "025000",
-    "nameKo": "이 찬 수",
+    "nameKo": "이찬수",
     "nameRoman": "Lee Chan-su",
     "romanIsConventional": true,
     "title": "대표이사\n부사장",
@@ -31608,7 +31608,7 @@
    },
    {
     "ticker": "025000",
-    "nameKo": "박 승 구",
+    "nameKo": "박승구",
     "nameRoman": "Park Seung-gu",
     "romanIsConventional": true,
     "title": "대표이사\n사장",
@@ -31806,7 +31806,7 @@
   "025860": [
    {
     "ticker": "025860",
-    "nameKo": "김 창 수",
+    "nameKo": "김창수",
     "nameRoman": "Kim Chang-su",
     "romanIsConventional": true,
     "title": "대표이사",
@@ -32030,7 +32030,7 @@
   "027050": [
    {
     "ticker": "027050",
-    "nameKo": "유학수\n(*1)",
+    "nameKo": "유학수",
     "nameRoman": "Yoo Hak-su",
     "romanIsConventional": true,
     "title": "대표이사",
@@ -32130,7 +32130,7 @@
   "027830": [
    {
     "ticker": "027830",
-    "nameKo": "김영훈*",
+    "nameKo": "김영훈",
     "nameRoman": "Kim Yeong-hun",
     "romanIsConventional": true,
     "title": "대표이사",
@@ -32450,7 +32450,7 @@
   "030350": [
    {
     "ticker": "030350",
-    "nameKo": "조  철",
+    "nameKo": "조철",
     "nameRoman": "Cho Cheol",
     "romanIsConventional": true,
     "title": "대표이사",
@@ -32807,7 +32807,7 @@
    },
    {
     "ticker": "032350",
-    "nameKo": "백 현",
+    "nameKo": "백현",
     "nameRoman": "Baek Hyeon",
     "romanIsConventional": true,
     "title": "대표이사\n사장",
@@ -34561,7 +34561,7 @@
   "037460": [
    {
     "ticker": "037460",
-    "nameKo": "이 태 훈",
+    "nameKo": "이태훈",
     "nameRoman": "Lee Tae-hun",
     "romanIsConventional": true,
     "title": "대표이사",
@@ -34572,7 +34572,7 @@
    },
    {
     "ticker": "037460",
-    "nameKo": "박 두 진",
+    "nameKo": "박두진",
     "nameRoman": "Park Du-jin",
     "romanIsConventional": true,
     "title": "대표이사",
@@ -35565,7 +35565,7 @@
   "041960": [
    {
     "ticker": "041960",
-    "nameKo": "문성철\n(주2)",
+    "nameKo": "문성철",
     "nameRoman": "Moon Seong-cheol",
     "romanIsConventional": true,
     "title": "대표이사\n사장",
@@ -35576,7 +35576,7 @@
    },
    {
     "ticker": "041960",
-    "nameKo": "양경훈\n(주1)",
+    "nameKo": "양경훈",
     "nameRoman": "Yang Gyeong-hun",
     "romanIsConventional": true,
     "title": "대표이사\n회장",
@@ -36719,7 +36719,7 @@
   "048910": [
    {
     "ticker": "048910",
-    "nameKo": "정  욱",
+    "nameKo": "정욱",
     "nameRoman": "Jung Uk",
     "romanIsConventional": true,
     "title": "대표이사",
@@ -37045,7 +37045,7 @@
   "050120": [
    {
     "ticker": "050120",
-    "nameKo": "안경환\n(*1,2)",
+    "nameKo": "안경환\n(,2)",
     "nameRoman": null,
     "romanIsConventional": null,
     "title": "대표\n이사",
@@ -37875,7 +37875,7 @@
   "053980": [
    {
     "ticker": "053980",
-    "nameKo": "김선기\n(*)",
+    "nameKo": "김선기",
     "nameRoman": "Kim Seon-gi",
     "romanIsConventional": true,
     "title": "대표\n이사",
@@ -38179,7 +38179,7 @@
   "056080": [
    {
     "ticker": "056080",
-    "nameKo": "박성주\n (주1)",
+    "nameKo": "박성주",
     "nameRoman": "Park Seong-ju",
     "romanIsConventional": true,
     "title": "대표이사",
@@ -38407,7 +38407,7 @@
   "058480": [
    {
     "ticker": "058480",
-    "nameKo": "황   호",
+    "nameKo": "황호",
     "nameRoman": "Hwang Ho",
     "romanIsConventional": true,
     "title": "대표이사",
@@ -39280,7 +39280,7 @@
   "064760": [
    {
     "ticker": "064760",
-    "nameKo": "신 히데오",
+    "nameKo": "신히데오",
     "nameRoman": "Shin Hi-de-o",
     "romanIsConventional": true,
     "title": "대표이사\n회장",
@@ -40686,7 +40686,7 @@
    },
    {
     "ticker": "069920",
-    "nameKo": "정재영\n\n주2), 주3)",
+    "nameKo": "정재영,",
     "nameRoman": null,
     "romanIsConventional": null,
     "title": "대표\n이사",
@@ -42677,7 +42677,7 @@
   "085660": [
    {
     "ticker": "085660",
-    "nameKo": "차원태(주1)",
+    "nameKo": "차원태",
     "nameRoman": "Cha Won-tae",
     "romanIsConventional": true,
     "title": "부회장",
@@ -42688,7 +42688,7 @@
    },
    {
     "ticker": "085660",
-    "nameKo": "오상훈\n (주4)",
+    "nameKo": "오상훈",
     "nameRoman": "Oh Sang-hun",
     "romanIsConventional": true,
     "title": "대표이사",
@@ -42699,7 +42699,7 @@
    },
    {
     "ticker": "085660",
-    "nameKo": "최석윤\n (주5)",
+    "nameKo": "최석윤",
     "nameRoman": "Choi Seok-yun",
     "romanIsConventional": true,
     "title": "부회장",
@@ -43796,7 +43796,7 @@
   "092230": [
    {
     "ticker": "092230",
-    "nameKo": "양 준 영",
+    "nameKo": "양준영",
     "nameRoman": "Yang Jun-yeong",
     "romanIsConventional": true,
     "title": "대표이사\n회장",
@@ -44448,7 +44448,7 @@
   "095910": [
    {
     "ticker": "095910",
-    "nameKo": "홍성민\n주1)",
+    "nameKo": "홍성민",
     "nameRoman": "Hong Seong-min",
     "romanIsConventional": true,
     "title": "대표이사",
@@ -44459,7 +44459,7 @@
    },
    {
     "ticker": "095910",
-    "nameKo": "홍문교\n주2)",
+    "nameKo": "홍문교",
     "nameRoman": "Hong Mun-gyo",
     "romanIsConventional": true,
     "title": "대표이사",
@@ -44720,7 +44720,7 @@
   "097780": [
    {
     "ticker": "097780",
-    "nameKo": "김상엽\n(*주1)",
+    "nameKo": "김상엽(",
     "nameRoman": null,
     "romanIsConventional": null,
     "title": "대표이사",
