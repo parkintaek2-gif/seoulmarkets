@@ -25,6 +25,7 @@
 import fs from 'node:fs';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
+import { 대표자가르기 } from '../src/lib/japan-exec-title.mjs';
 
 const 뿌리 = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
 const 자료방 = path.join(뿌리, 'archive', 'raw', 'japan-edinet-financials');
@@ -192,6 +193,34 @@ export function 한줄(d, 명부 = new Map()) {
     pbr_못낸까닭: 주가 !== null && bps
       ? 'BPS basis (consolidated or parent-only) is not stated in the filing'
       : null,
+    /* 🔴 [2026-10-10 23:5x · 5번] 유가증권보고서 표지의 **대표자**.
+     *   「who is the ceo of …」가 일본 회사로 이미 10.3위에 뜬다 — 그 답이 여기 있었는데
+     *   재무 아홉 칸만 뽑고 버리고 있었다.
+     * ⛔ **세 가지를 구별한다** — 받았는데 있다 / 받았는데 서류에 없다 / 아직 안 받았다.
+     *   셋을 다 null 로 뭉개면 커버리지를 못 센다. `_meta.대표자` 가 셋을 따로 적는다.
+     * ⛔ 이름을 로마자로 옮기지 않는다 — 한자의 읽기는 규칙으로 정해지지 않는다. */
+    ...대표자칸(d),
+  };
+}
+
+/**
+ * 대표자 네 칸. ⛔ 「아직 안 받았다」와 「서류에 없다」를 섞지 않는다 —
+ * `rep_상태` 가 그것을 적는다(`있다`·`서류에없다`·`안받음`).
+ */
+export function 대표자칸(d) {
+  if (!d || !('representative_raw' in d)) {
+    return { rep_상태: '안받음', rep_raw: null, rep_name: null, rep_title: null, rep_title_en: null };
+  }
+  if (!d.representative_raw) {
+    return { rep_상태: '서류에없다', rep_raw: null, rep_name: null, rep_title: null, rep_title_en: null };
+  }
+  const r = 대표자가르기(d.representative_raw);
+  return {
+    rep_상태: '있다',
+    rep_raw: r.원문,
+    rep_name: r.이름,
+    rep_title: r.직위,
+    rep_title_en: r.직위영문,
   };
 }
 
@@ -200,6 +229,21 @@ const 내가진입점 = process.argv[1] && fileURLToPath(import.meta.url) === pa
 if (내가진입점 && (process.argv.includes('--자가시험') || process.argv.includes('--selftest'))) {
   const 잰다 = [];
   const 검 = (이름, 참) => 잰다.push([이름, !!참]);
+
+  /* 🔴 [2026-10-10] 대표자 — 세 갈래를 섞지 않는다 */
+  검('🔴 받았고 있으면 «있다»이고 이름까지 갈린다',
+    대표자칸({ representative_raw: '代表取締役社長　　大久保　昇' }).rep_상태 === '있다'
+    && 대표자칸({ representative_raw: '代表取締役社長　　大久保　昇' }).rep_name === '大久保 昇');
+  검('🔴🔴 칸이 «없는» 것은 «안받음» — 「그 회사에 대표자가 없다」가 아니다',
+    대표자칸({ sec_code: '1' }).rep_상태 === '안받음');
+  검('🔴 칸이 있는데 null 이면 «서류에없다» — 되받기가 다시 집지 않게',
+    대표자칸({ representative_raw: null }).rep_상태 === '서류에없다');
+  검('⛔ 셋 다 rep_name 은 null 로 두되 상태로 구별한다',
+    대표자칸({ sec_code: '1' }).rep_name === null
+    && 대표자칸({ representative_raw: null }).rep_name === null);
+  검('⛔ 빈 입력에도 안 죽는다', 대표자칸(null).rep_상태 === '안받음');
+  검('⛔ 로마자로 옮기지 않는다',
+    !/[A-Za-z]/.test(대표자칸({ representative_raw: '代表取締役社長　大久保　昇' }).rep_name));
 
   /* 🔴 HTML 기호가 든 이름 — 라이브에 「MITSUI &amp;amp; CO.」로 나갔던 자리 */
   검('&amp; 를 & 로 푼다', 엔티티풀기('MITSUI &amp; CO., LTD.') === 'MITSUI & CO., LTD.');
@@ -354,6 +398,15 @@ if (내가진입점) {
       지은때: new Date().toLocaleString('ko-KR'),
       단위: '엔(JPY)',
       메모: '같은 회사는 가장 최근 결산 한 줄만 둔다. 빈 칸은 null 이고 0 으로 메꾸지 않았다.',
+      /* ⛔ 「대표자가 몇 줄에 있나」를 세 갈래로 적는다. 하나로 뭉치면
+         「아직 안 받았다」가 「그 회사는 대표자가 없다」로 읽힌다 */
+      대표자: {
+        있다: 줄들.filter((r) => r.rep_상태 === '있다').length,
+        서류에없다: 줄들.filter((r) => r.rep_상태 === '서류에없다').length,
+        안받음: 줄들.filter((r) => r.rep_상태 === '안받음').length,
+        이름까지가름: 줄들.filter((r) => r.rep_name).length,
+        메모: '«안받음»은 되받기가 아직 그 서류를 안 집은 것이다 — 그 회사에 대표자가 없다는 뜻이 아니다',
+      },
     },
     rows: 줄들,
   }, null, 1), 'utf8');
