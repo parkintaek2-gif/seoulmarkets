@@ -36,6 +36,7 @@ import { SITE_URL } from '../../consts';
 import fin from '../../data/korea-financials-tape.json';
 import ppl from '../../data/korea-people-tape.json';
 import 임원표 from '../../data/korea-executives-tape.json';
+import 개황표 from '../../data/korea-company-profile-tape.json';
 import { 직위영문 } from '../../lib/exec-title-en.mjs';
 import { 주소표만들기 } from '../../lib/company-slug.mjs';
 import { 재무줄, 사람줄, 늘어난비, 시장말, 낼만한가 } from '../../lib/company-page.mjs';
@@ -60,6 +61,10 @@ export async function getStaticPaths() {
   }
   const 사람표 = new Map<string, any>();
   for (const p of 사람들) 사람표.set(String(p.ticker), p);
+
+  /* 설립일 — 종목코드로 찾는다. ⛔ 없는 회사는 안 그린다(지어내지 않는다) */
+  const 설립표 = new Map<string, string>();
+  for (const r of (개황표 as any).rows ?? []) if (r?.code && r?.founded_on) 설립표.set(String(r.code), r.founded_on);
 
   const 회사머리 = [...묶음.entries()].map(([code, rs]) => ({ code, ...rs[0] }));
   const 주소표 = 주소표만들기(회사머리);
@@ -104,6 +109,9 @@ export async function getStaticPaths() {
            이 지면에 그 답이 한 줄도 없었다. DART 임원 공시에서 «대표»만 담는다.
            ⛔ 없으면 빈 배열이다 — 그때는 아래에서 그 칸을 안 그린다 */
         대표들: (임원표.byTicker as any)[h.code] ?? [],
+        /* 🔴 [2026-10-11 · 5번] 설립일 — DART 기업개황에 3,931/3,931 이 처음부터 있었다.
+           받아 두고 묶음에 안 담아 이 지면이 모르고 있었다. ⛔ 없으면 null — 안 그린다 */
+        설립일: 설립표.get(h.code) ?? null,
         같은업종,
         업종회사수: (업종별.get(h.sector || 'Unclassified') ?? []).length,
       },
@@ -112,7 +120,7 @@ export async function getStaticPaths() {
   return 길;
 }
 
-const { code, nameEn, nameKo, market, sector, sectorSlug, 줄들, 흑자기록, 사람, 대표들, 같은업종, 업종회사수 } = Astro.props as any;
+const { code, nameEn, nameKo, market, sector, sectorSlug, 줄들, 흑자기록, 사람, 대표들, 설립일, 같은업종, 업종회사수 } = Astro.props as any;
 
 const 마지막 = 줄들[줄들.length - 1] ?? null;
 const 처음해 = 줄들[0]?.year ?? null;
@@ -300,6 +308,28 @@ const jsonLd = {
           Market capitalisation is what buyers are betting the company is worth. It is not something
           the company produced, so we never present it as output or productivity.
         </p>
+      </section>
+    )}
+
+    {/* 🔴 [2026-10-11 03:5x · 5번] 설립일 — DART 기업개황에 3,931/3,931 이 처음부터 있었다.
+        「when was X founded」·「how old is X」는 흔한 물음이고, 우리가 셈하거나 고르는 것이 없다.
+        ⛔ 햇수를 계산해서 쓰지 않는다 — 공시가 적은 날 하나만 그대로 옮긴다. */}
+    {설립일 && (
+      <section>
+        <h2>When it was founded</h2>
+        <p class="note">
+          The incorporation date on the company's registration record, as filed with Korea's
+          Financial Supervisory Service. This is when the company was legally formed — not when
+          it first listed, and not when the business it grew out of began trading.
+        </p>
+        <table>
+          <tbody>
+            <tr>
+              <th scope="row">Incorporated</th>
+              <td><time datetime={설립일}>{설립일}</time></td>
+            </tr>
+          </tbody>
+        </table>
       </section>
     )}
 

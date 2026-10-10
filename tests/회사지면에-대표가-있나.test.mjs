@@ -120,6 +120,31 @@ test('회사 지면이 「누가 이끄나」에 답한다', async (t) => {
     assert.equal(샌것, 0, '구조화 데이터에 생년월로 보이는 네 자리 수가 들어 있습니다');
   });
 
+  /* 🔴 [2026-10-11 03:5x] 설립일 — DART 기업개황에 3,931/3,931 이 처음부터 있었는데
+     묶음에 안 담아 지면이 모르고 있었다. 대만에서 같은 모양을 찾고 나서야 봤다.
+     ⛔ 「칸이 있다」와 「값이 있다」와 「지면에 닿는다」는 셋 다 다른 물음이다. */
+  await t.test('🔴 설립일이 지면에 닿는다', () => {
+    const 다 = fs.readdirSync(회사방).filter((f) => f.endsWith('.html'));
+    const 있음 = 다.filter((f) => fs.readFileSync(path.join(회사방, f), 'utf8').includes('When it was founded')).length;
+    assert.ok(있음 / 다.length > 0.8,
+      `회사 지면 ${다.length}장 가운데 ${있음}장에만 설립일이 있습니다.\n`
+      + '  묶음을 다시 지으십시오 — node scripts/build-korea-company-profile-tape.mjs --적는다');
+  });
+
+  await t.test('⛔⛔ 설립일 칸이 «설립일 말고는» 아무것도 안 낸다 — 개황에 사업자번호·주소가 같이 있다', () => {
+    const 다 = fs.readdirSync(회사방).filter((f) => f.endsWith('.html')).slice(0, 300);
+    const 샌것 = [];
+    for (const f of 다) {
+      const 글 = fs.readFileSync(path.join(회사방, f), 'utf8');
+      const i = 글.indexOf('When it was founded');
+      if (i < 0) continue;
+      const 칸 = 글.slice(i, i + 1200);
+      /* 사업자번호 10자리·법인번호 13자리가 그 칸 안에 보이면 샌 것이다 */
+      if (/\b\d{3}-?\d{2}-?\d{5}\b/.test(칸) || /\b\d{6}-?\d{7}\b/.test(칸)) 샌것.push(f);
+    }
+    assert.deepEqual(샌것.slice(0, 5), [], `설립일 칸에 번호가 샌 지면: ${샌것.length}장`);
+  });
+
   await t.test('⛔⛔ 생년월이 지면에 새지 않는다 — 공시에 있어도 낼 까닭이 없다', () => {
     const 다 = fs.readdirSync(회사방).filter((f) => f.endsWith('.html')).slice(0, 400);
     const 샌것 = [];
