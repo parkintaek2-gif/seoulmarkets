@@ -1,0 +1,26 @@
+{
+  "site": "sc-domain:kculturewire.com",
+  "dimension": "query+page",
+  "window": {
+    "from": "2026-09-08",
+    "to": "2026-10-06",
+    "days": 28
+  },
+  "rowLimit": 25000,
+  "rows": [
+    {
+      "key": "may 14",
+      "page": "https://www.kculturewire.com/born-on/05-14",
+      "impressions": 1,
+      "clicks": 0,
+      "position": 1
+    },
+    {
+      "key": "اريد كوريين",
+      "page": "https://www.kculturewire.com/born-on/10-22",
+      "impressions": 1,
+      "clicks": 0,
+      "position": 7
+    }
+  ]
+}

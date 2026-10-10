@@ -1,5 +1,5 @@
-# 잰날 2026-10-06
-# 오늘셈 3
+# 잰날 2026-10-10
+# 오늘셈 47
 # ⛔ 이 파일을 지우면 「오늘 새로 난 지면」을 하루 동안 못 센다
 https://klifemap.ai/
 https://klifemap.ai/content
@@ -119,6 +119,49 @@ https://klifemap.ai/ilju/sinyu.html
 https://klifemap.ai/ilju/imsul.html
 https://klifemap.ai/ilju/gyehae.html
 https://klifemap.ai/today
+https://klifemap.ai/content/ttigh-wonsungi-dwaeji
+https://klifemap.ai/content/ttigh-wonsungi-gae
+https://klifemap.ai/content/ttigh-wonsungi-dak
+https://klifemap.ai/content/ttigh-wonsungi-wonsungi
+https://klifemap.ai/content/ttigh-yang-dwaeji
+https://klifemap.ai/content/ttigh-yang-gae
+https://klifemap.ai/content/ttigh-yang-dak
+https://klifemap.ai/content/ttigh-yang-wonsungi
+https://klifemap.ai/content/ttigh-yang-yang
+https://klifemap.ai/content/ttigh-mal-dwaeji
+https://klifemap.ai/content/ttigh-mal-gae
+https://klifemap.ai/content/ttigh-mal-dak
+https://klifemap.ai/content/ttigh-mal-wonsungi
+https://klifemap.ai/content/taekil-moving-2027-01
+https://klifemap.ai/content/taekil-opening-2027-01
+https://klifemap.ai/content/taekil-wedding-2027-01
+https://klifemap.ai/content/taekil-surgery-2027-01
+https://klifemap.ai/content/ttigh-mal-yang
+https://klifemap.ai/content/taekil-contract-2027-01
+https://klifemap.ai/content/ttigh-mal-mal
+https://klifemap.ai/content/ttigh-baem-dwaeji
+https://klifemap.ai/content/ttigh-baem-gae
+https://klifemap.ai/content/ttigh-baem-dak
+https://klifemap.ai/content/ttigh-baem-wonsungi
+https://klifemap.ai/content/ttigh-baem-yang
+https://klifemap.ai/content/ttigh-baem-mal
+https://klifemap.ai/content/ttigh-baem-baem
+https://klifemap.ai/content/ttigh-yong-dwaeji
+https://klifemap.ai/content/ttigh-yong-gae
+https://klifemap.ai/content/ttigh-yong-dak
+https://klifemap.ai/content/ttigh-yong-wonsungi
+https://klifemap.ai/content/ttigh-yong-yang
+https://klifemap.ai/content/ttigh-yong-mal
+https://klifemap.ai/content/ttigh-yong-baem
+https://klifemap.ai/content/ttigh-yong-yong
+https://klifemap.ai/content/ttigh-tokki-dwaeji
+https://klifemap.ai/content/ttigh-tokki-gae
+https://klifemap.ai/content/ttigh-tokki-dak
+https://klifemap.ai/content/ttigh-tokki-wonsungi
+https://klifemap.ai/content/ttigh-tokki-yang
+https://klifemap.ai/content/ttigh-tokki-mal
+https://klifemap.ai/content/ttigh-tokki-baem
+https://klifemap.ai/content/ttigh-tokki-yong
 https://klifemap.ai/content/ttigh-tokki-tokki
 https://klifemap.ai/content/ttigh-horangi-dwaeji
 https://klifemap.ai/content/ttigh-horangi-gae
@@ -3007,6 +3050,10 @@ https://klifemap.ai/content/myth-samjae
 https://klifemap.ai/content/taekil-moving-2026-08
 https://klifemap.ai/content/gyeok-jeonggwan
 https://klifemap.ai/content/myth-wonjinsal
+https://klifemap.ai/all
+https://klifemap.ai/all?lang=en
+https://klifemap.ai/all?lang=ja
+https://klifemap.ai/all?lang=zh
 https://klifemap.ai/born
 https://klifemap.ai/born?lang=en
 https://klifemap.ai/born?lang=ja
