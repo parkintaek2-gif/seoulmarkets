@@ -59,9 +59,39 @@ export function 들어올수있나({ 로그인, 메일보냄 } = {}) {
  * 낸 돈이 «우리에게 들어오나».
  * ⛔ enabled:true 를 「받는다」로 읽지 않는다 — 심사용 테스트 열쇠로도 참이 된다.
  */
-export function 돈이들어오나({ 토스, 페이팔 } = {}) {
+/**
+ * 열쇠 없이도 재는 길 — `/api/health` 의 `checks.optional.payments`.
+ *
+ * ── 🔴 왜 (2026-10-11 03:4x · 5번) ──────────────────────────────────
+ * 어제(10-10) 돈길을 **열쇠 없이 재게** 하려고 `klifemap/observability.js` 에
+ * `checks.optional.payments` 를 신설하고 배포까지 했다. 라이브에서 돌고 있다 —
+ * ```
+ *   {"toss":"live","tossDetail":"client:37 secret:37","paypal":"configured",…}
+ * ```
+ * 그런데 **이 자는 그것을 안 읽어** 오늘 03:40 점검에서도 「열쇠가 없어 못 봤다」를 냈다.
+ * ⭐ 어제 `check-klifemap-health.mjs` 는 따라갔는데 **이 자를 안 따라갔다.**
+ *   「하나를 고치면 인용한 곳까지 따라간다」를 내가 어겼다.
+ * ⛔ 열쇠로 본 것이 있으면 그쪽이 먼저다 — health 는 **설정이 있나**만 말하고
+ *   테스트 열쇠인지까지는 모른다. health 는 «열쇠가 없을 때의 눈»이다.
+ *
+ * @returns {{enabled:boolean, live:boolean|null}|null} 못 읽으면 null
+ */
+export function 건강에서돈길(건강, 어느쪽) {
+  const p = 건강?.checks?.optional?.payments;
+  if (!p) return null;
+  const v = String(p[어느쪽] ?? '');
+  if (!v) return null;
+  /* toss: 'live' | 'test' | 'off' · paypal: 'configured' | 'off' — 저쪽 말을 그대로 읽는다 */
+  if (v === 'off' || v === 'missing') return { enabled: false, live: null };
+  return { enabled: true, live: v === 'live' ? true : (v === 'test' ? false : null) };
+}
+
+export function 돈이들어오나({ 토스, 페이팔, 건강 } = {}) {
   const 막힌것 = [];
   const 못잰것 = [];
+  /* 열쇠에 막혔으면 health 가 대신 말해 준다(2026-10-11) — ⛔ 열쇠로 본 것이 있으면 그쪽이 먼저다 */
+  if (열쇠에막혔나(토스)) { const h = 건강에서돈길(건강, 'toss'); if (h) 토스 = { ok: true, ...h, _출처: 'health' }; }
+  if (열쇠에막혔나(페이팔)) { const h = 건강에서돈길(건강, 'paypal'); if (h) 페이팔 = { ok: true, ...h, _출처: 'health' }; }
   /* 🔴🔴 [2026-10-10 · 5번] 401 을 「꺼졌다」로 읽어 사장님께 「매출 0」이라 올렸다.
      ⛔ 「못 봤다」와 「꺼졌다」는 다른 말이다. 섞으면 멀쩡한 것을 고치러 가게 되고,
        진짜로 꺼진 날 아무도 안 믿는다 */
@@ -297,6 +327,12 @@ async function 잰다() {
   /* ⚠ 우리 주소로만 찔러 본다 — 손님 주소로 메일을 보내지 않는다 */
   const 메일보냄 = await 물어본다('/api/auth/email/send', { email: 'u5@klifedesign.net' });
 
+  /* 🔴 [2026-10-11 · 5번] 열쇠가 없을 때의 눈 — 어제 신설한 `checks.optional.payments`.
+     ⛔ 어제 health 자만 따라가고 이 자를 안 따라가서, 라이브가 「toss live」를 내는데도
+       이 점검이 「열쇠가 없어 못 봤다」를 계속 내고 있었다 */
+  const 건강 = await fetch(사이트 + '/api/health', { signal: AbortSignal.timeout(15000) })
+    .then((r) => (r.ok ? r.json() : null)).catch(() => null);
+
   /* 🔴 여기가 새로 붙은 자리 — 설정만 읽지 않고 «손님이 되어» 결제창까지 눌러 본다.
      ⚠ 브라우저를 띄우므로 30~60초가 든다. --빨리 를 주면 건너뛰되 «못 쟀다»로 적는다. */
   const 창 = process.argv.includes('--빨리')
@@ -304,7 +340,7 @@ async function 잰다() {
     : await 손님으로결제창까지_두번();
 
   const 답 = 팔리나({
-    토스, 페이팔, 로그인, 메일보냄, 로그인지면: 로그인지면글, 목록무인증, 결제무인증,
+    토스, 페이팔, 건강, 로그인, 메일보냄, 로그인지면: 로그인지면글, 목록무인증, 결제무인증,
     결제수단그려짐: 창.결제수단그려짐, 결제창틀높이: 창.결제창틀높이,
   });
   const 때 = new Date();
@@ -312,9 +348,21 @@ async function 잰다() {
   console.log('■ klifemap 결제 점검 — ' + 때.toLocaleString('ko-KR'));
   console.log('   ⭐ 재는 것은 「서버가 떠 있나」가 아니라 «손님이 살 수 있나»다\n');
   console.log('   들어오는 문   ' + (답.열린문.length ? 답.열린문.join(' · ') : '🔴 «하나도 없다»'));
-  console.log('   토스          ' + (토스 ? ('enabled=' + 토스.enabled + ' · live=' + 토스.live +
-    ' · key=' + String(토스.clientKey ?? '').slice(0, 8) + '…') : '못 쟀다'));
-  console.log('   페이팔        ' + (페이팔 ? ('enabled=' + 페이팔.enabled) : '못 쟀다'));
+  /* ⛔ 열쇠에 막힌 응답의 `enabled=undefined` 를 그대로 찍으면 사람이 «꺼졌다»로 읽는다.
+     그때는 health 가 본 것을 적고 **어디서 본 것인지 밝힌다**(2026-10-11) */
+  const 토스건강 = 건강에서돈길(건강, 'toss');
+  const 페이팔건강 = 건강에서돈길(건강, 'paypal');
+  console.log('   토스          ' + (열쇠에막혔나(토스)
+    ? (토스건강
+      ? `${토스건강.live === true ? 'live' : 토스건강.enabled ? '켜짐' : '꺼짐'} (열쇠 없이 /api/health 로 봤다)`
+      : '⬜ 못 쟀다 — 열쇠도 health 도 없다')
+    : (토스 ? ('enabled=' + 토스.enabled + ' · live=' + 토스.live
+      + ' · key=' + String(토스.clientKey ?? '').slice(0, 8) + '…') : '못 쟀다')));
+  console.log('   페이팔        ' + (열쇠에막혔나(페이팔)
+    ? (페이팔건강
+      ? `${페이팔건강.enabled ? '켜짐' : '꺼짐'} (열쇠 없이 /api/health 로 봤다)`
+      : '⬜ 못 쟀다 — 열쇠도 health 도 없다')
+    : (페이팔 ? ('enabled=' + 페이팔.enabled) : '못 쟀다')));
   console.log('   인증메일      ' + (메일보냄
     ? (메일보냄.simulated === true ? '🔴 simulated — «보낸 척»만 한다' : '나간다')
     : '못 쟀다'));
@@ -518,6 +566,32 @@ function 자가시험() {
     돈이들어오나(열쇠막힘).국내막힘, false);
   검('⛔ 403 도 같이 본다', 열쇠에막혔나({ 상태: 403 }), true);
   검('⛔ 200 은 열쇠 막힘이 아니다', 열쇠에막혔나({ 상태: 200, ok: true }), false);
+
+  /* 🔴 [2026-10-11] 열쇠 없이 재는 눈 — 감은 **라이브가 실제로 내는 값**에서 떠 왔다
+     {"toss":"live","tossDetail":"client:37 secret:37","paypal":"configured",…} */
+  const 라이브건강 = { checks: { optional: { payments: { toss: 'live', paypal: 'configured' } } } };
+  검('🔴 health 가 toss live 라고 하면 켜진 것으로 읽는다',
+    JSON.stringify(건강에서돈길(라이브건강, 'toss')), JSON.stringify({ enabled: true, live: true }));
+  검('🔴 paypal configured 도 켜진 것이다 — live 인지까지는 모른다(null)',
+    JSON.stringify(건강에서돈길(라이브건강, 'paypal')), JSON.stringify({ enabled: true, live: null }));
+  검('🔴 test 면 켜졌지만 live 는 아니다',
+    JSON.stringify(건강에서돈길({ checks: { optional: { payments: { toss: 'test' } } } }, 'toss')),
+    JSON.stringify({ enabled: true, live: false }));
+  검('⛔ off 는 꺼진 것이다',
+    JSON.stringify(건강에서돈길({ checks: { optional: { payments: { toss: 'off' } } } }, 'toss')),
+    JSON.stringify({ enabled: false, live: null }));
+  검('⛔ 그 칸이 없으면 null — 「꺼졌다」가 아니라 못 쟀다', 건강에서돈길({ checks: {} }, 'toss'), null);
+  검('⛔ 빈 입력에도 안 죽는다', 건강에서돈길(null, 'toss'), null);
+  /* 🔴🔴 어제 이 자를 안 따라가서 라이브가 live 를 내는데도 「못 봤다」를 내고 있었다 */
+  검('🔴🔴 열쇠에 막혀도 health 가 말하면 «못 쟀다»가 아니다',
+    돈이들어오나({ 토스: { 상태: 401 }, 페이팔: { 상태: 401 }, 건강: 라이브건강 }).못잰것.length, 0);
+  검('🔴 그때 「팔린다」로 읽는다',
+    돈이들어오나({ 토스: { 상태: 401 }, 페이팔: { 상태: 401 }, 건강: 라이브건강 }).들어오나, true);
+  검('⛔ health 도 없으면 그대로 «못 쟀다» — 지어내지 않는다',
+    돈이들어오나({ 토스: { 상태: 401 }, 페이팔: { 상태: 401 } }).못잰것.length, 2);
+  검('⛔ health 가 off 라고 하면 «막혔다»로 읽는다',
+    돈이들어오나({ 토스: { 상태: 401 }, 건강: { checks: { optional: { payments: { toss: 'off' } } } } })
+      .막힌것.some((x) => x.includes('토스')), true);
   검('⛔ 열쇠와 상관없이 «정말 꺼진 것»은 그대로 잡는다 — 덜 잡으면 진짜 사고를 놓친다',
     돈이들어오나({ 토스: { ok: true, enabled: false, 상태: 200 },
       페이팔: { ok: true, enabled: true, 상태: 200 } }).국내막힘, true);
