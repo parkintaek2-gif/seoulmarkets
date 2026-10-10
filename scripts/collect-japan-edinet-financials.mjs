@@ -171,6 +171,37 @@ export function 영문명뽑기(글) {
   return null;
 }
 
+/**
+ * **대표자의 직위·이름** — 유가증권보고서 표지에 한 줄로 들어 있다.
+ *
+ * ── 🔴 왜 (2026-10-10 23:2x · 5번) ──────────────────────────────────
+ * 오늘 19:49 에 「일본은 대표자 칸이 없어 못 한다」고 적었다. **틀렸다.**
+ * 코드리스트(`japan-jpx-companies`)만 보고 내린 판단이었고, 유가증권보고서 쪽은
+ * 재 보지 않았다. 한 건 받아 열어 보니 1,938행 가운데 이 한 줄이 있었다 —
+ * ```
+ * jpcrp_cor:TitleAndNameOfRepresentativeCoverPage
+ *   代表者の役職氏名、表紙  =  「代表取締役社長　　大久保　昇」   (우치다요코 8057)
+ * ```
+ * ⭐ 「없다」를 말하기 전에 **그 자료를 열어 봤는지** 묻는다.
+ *
+ * ⛔ **여기서 직위와 이름을 가르지 않는다.** 가른 꼴은 한 건만 보고 정하면 좁게 박힌다 —
+ *   「代表取締役社長兼CEO」·공동대표·전각 공백이 몇 칸인지 다 모른다.
+ *   원문을 그대로 담아 두고, 자료가 쌓인 뒤 **실측해서** 가른다.
+ *   ⚠ 여기서 버리면 영영 못 가른다. 담아 두는 것이 먼저다.
+ * ⛔ 로마자로 옮기지 않는다. 한자의 읽기는 규칙으로 정해지지 않는다 —
+ *   「昇」이 Noboru 인지 Shō 인지는 그 사람만 안다. 지어내면 사람 이름을 틀리게 박는다.
+ */
+export function 대표자뽑기(글) {
+  for (const 줄 of String(글 || '').split(/\r?\n/)) {
+    const c = 줄가르기(줄);
+    if (c[0] !== 'jpcrp_cor:TitleAndNameOfRepresentativeCoverPage') continue;
+    const v = String(c[8] ?? '').trim();
+    if (!v || v === '－' || v === '-') return null;
+    return v;
+  }
+  return null;
+}
+
 export function 쓸만한가(값) {
   return Object.values(값 || {}).some((v) => typeof v === 'number' && Number.isFinite(v));
 }
@@ -292,6 +323,20 @@ if (내가진입점 && (process.argv.includes('--자가시험') || process.argv.
     뽑을것.filter((x) => !['shares', 'per'].includes(x.칸)).every((x) => /_jpy$/.test(x.칸)));
   검('주식수는 돈이 아니라 통화를 안 붙인다', 뽑을것.some((x) => x.칸 === 'shares'));
 
+  /* 🔴 [2026-10-10 23:2x] 대표자 — 감은 **실측한 CSV 줄에서 떠 왔다**(우치다요코 8057, docID S100Z6XO).
+     지어낸 꼴로 시험하면 본 실행에서만 어긋난다 — 오늘 다른 자에서 그렇게 당했다. */
+  const 대표줄 = ['"jpcrp_cor:TitleAndNameOfRepresentativeCoverPage"', '"代表者の役職氏名、表紙"',
+    '"FilingDateInstant"', '""', '""', '""', '""', '""', '"代表取締役社長　　大久保　昇"'].join('\t');
+  검('🔴 표지의 대표자 원문을 집는다', 대표자뽑기(대표줄) === '代表取締役社長　　大久保　昇');
+  검('⛔ 원문을 «가르지 않는다» — 직위와 이름이 붙은 그대로다',
+    /代表取締役社長/.test(대표자뽑기(대표줄)) && /大久保/.test(대표자뽑기(대표줄)));
+  검('⛔ 없으면 null — 빈 글자로 채우지 않는다', 대표자뽑기(머리) === null);
+  검('⛔ 「－」는 값이 아니다', 대표자뽑기(
+    ['"jpcrp_cor:TitleAndNameOfRepresentativeCoverPage"', '"x"', '"x"', '""', '""', '""', '""', '""', '"－"'].join('\t')) === null);
+  검('⛔ 빈 입력에도 안 죽는다', 대표자뽑기('') === null && 대표자뽑기(null) === null);
+  검('⛔⛔ 로마자로 옮기지 않는다 — 한자의 읽기는 규칙으로 정해지지 않는다',
+    !/[A-Za-z]/.test(대표자뽑기(대표줄)));
+
   const 진 = 잰다.filter(([, v]) => !v);
   for (const [이름, v] of 잰다) console.log(`${v ? '✅' : '🔴'} ${이름}`);
   console.log(진.length ? `\n🔴 ${진.length}/${잰다.length} 떨어졌다` : `\n✅ 자가시험 ${잰다.length} 통과`);
@@ -372,6 +417,7 @@ if (내가진입점) {
         const 씨 = fs.readFileSync(csv, 'utf16le');
         const { 값, 근거 } = 뽑기(씨);
         const 영문명 = 영문명뽑기(씨);
+        const 대표자원문 = 대표자뽑기(씨);
         fs.rmSync(임시, { recursive: true, force: true });
         fs.rmSync(`${임시}.zip`, { force: true });
 
@@ -387,6 +433,9 @@ if (내가진입점) {
           edinet_code: d.edinetCode,
           name: d.filerName,
           name_en: 영문명,   /* 서류가 스스로 적어 낸 영문명. 없으면 null */
+          /* 표지의 「代表者の役職氏名」 **원문 그대로**. 가르지도, 옮기지도 않는다 —
+             위 대표자뽑기() 머리말에 까닭을 적었다. 없으면 null(0 이나 빈 글자가 아니다) */
+          representative_raw: 대표자원문,
           doc_description: d.docDescription,
           period_end: d.periodEnd ?? null,
           ...값,
