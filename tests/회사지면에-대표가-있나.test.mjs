@@ -66,6 +66,60 @@ test('회사 지면이 「누가 이끄나」에 답한다', async (t) => {
       + '  본인이 쓰는 표기와 다를 수 있습니다 — 그 사실을 숨기면 안 됩니다.');
   });
 
+  /* 🔴 [2026-10-10 23:1x] **본문에 답을 넣는 것만으로는 그 물음에 안 걸린다.**
+   *   「who is the ceo of …」가 이미 10.3위로 뜨는데 제목·설명에는 CEO 라는 말이 없었다.
+   *   제목은 「earnings results」로 4~8위를 먹고 있어 손대지 않고, 설명과 구조화 데이터에 넣었다. */
+  await t.test('🔴 설명(description)이 대표 이름을 낸다 — 스니펫이 그 물음의 답이 되게', () => {
+    const 다 = fs.readdirSync(회사방).filter((f) => f.endsWith('.html')).slice(0, 400);
+    let 칸있고설명도있다 = 0; let 칸있는데설명없다 = 0;
+    for (const f of 다) {
+      const 글 = fs.readFileSync(path.join(회사방, f), 'utf8');
+      if (!글.includes('Who runs it')) continue;
+      const m = /<meta name="description" content="([^"]*)"/.exec(글);
+      if (m && /Representative director \(CEO\):/.test(m[1])) 칸있고설명도있다 += 1;
+      else 칸있는데설명없다 += 1;
+    }
+    assert.ok(칸있고설명도있다 > 0 && 칸있는데설명없다 === 0,
+      `대표 칸은 있는데 설명에 안 들어간 지면 ${칸있는데설명없다}장 (들어간 것 ${칸있고설명도있다}장).\n`
+      + '  설명을 만드는 자리와 칸을 그리는 자리가 어긋났습니다.');
+  });
+
+  /* ⚠ 설명에 넣는 것만으로는 모자란다 — 구글은 160자쯤에서 자른다. 앞 문장이 길어지거나
+     회사 이름이 길면 대표 줄이 «잘리는 쪽»으로 조용히 밀린다. 자리까지 재야 한다 */
+  await t.test('🔴 대표 줄이 설명 앞 160자 안에 있다 — 뒤로 밀리면 스니펫에서 잘린다', () => {
+    const 다 = fs.readdirSync(회사방).filter((f) => f.endsWith('.html'));
+    let 안 = 0; const 밖 = [];
+    for (const f of 다) {
+      const m = /<meta name="description" content="([^"]*)"/.exec(fs.readFileSync(path.join(회사방, f), 'utf8'));
+      const i = m ? m[1].indexOf('Representative director (CEO):') : -1;
+      if (i < 0) continue;
+      if (i < 160) 안 += 1; else 밖.push(`${f}(${i}자)`);
+    }
+    assert.ok(안 > 0, '대표 줄이 든 설명을 하나도 못 찾았습니다 — 이 검사가 헛돌고 있습니다');
+    assert.deepEqual(밖.slice(0, 5), [],
+      `대표 줄이 160자 뒤로 밀린 지면 ${밖.length}장 — 설명 앞 문장이 길어졌습니다`);
+  });
+
+  await t.test('🔴 구조화 데이터가 같은 사실을 기계에도 낸다 — 구글은 본문 글자가 아니라 이 칸을 본다', () => {
+    const 다 = fs.readdirSync(회사방).filter((f) => f.endsWith('.html')).slice(0, 200);
+    let 잰것 = 0; let 샌것 = 0; const 빠진것 = [];
+    for (const f of 다) {
+      const 글 = fs.readFileSync(path.join(회사방, f), 'utf8');
+      if (!글.includes('Who runs it')) continue;
+      잰것 += 1;
+      const 덩이 = [...글.matchAll(/<script type="application\/ld\+json"[^>]*>([\s\S]*?)<\/script>/g)];
+      const 회사 = 덩이.map((x) => { try { return JSON.parse(x[1]); } catch { return null; } })
+        .find((j) => j && j['@type'] === 'Corporation');
+      if (!회사?.employee?.length) { 빠진것.push(f); continue; }
+      /* ⛔⛔ 여기에도 생년월이 새면 안 된다 — 사람 눈에만 안 보일 뿐 같이 나간다 */
+      if (/19\d\d/.test(JSON.stringify(회사.employee))) 샌것 += 1;
+    }
+    assert.ok(잰것 > 0, '대표 칸이 있는 지면을 하나도 못 찾았습니다 — 이 검사가 헛돌고 있습니다');
+    assert.deepEqual(빠진것.slice(0, 5), [],
+      `대표 칸은 있는데 Corporation.employee 가 없는 지면 ${빠진것.length}장`);
+    assert.equal(샌것, 0, '구조화 데이터에 생년월로 보이는 네 자리 수가 들어 있습니다');
+  });
+
   await t.test('⛔⛔ 생년월이 지면에 새지 않는다 — 공시에 있어도 낼 까닭이 없다', () => {
     const 다 = fs.readdirSync(회사방).filter((f) => f.endsWith('.html')).slice(0, 400);
     const 샌것 = [];
