@@ -92,6 +92,25 @@ test('대만 회사 지면이 「누가 이끄나」에 답한다', async (t) =>
     assert.ok(회사?.employee?.length, 'Corporation.employee 가 없습니다');
   });
 
+  /* 🔴 [2026-10-11 03:1x] 설립일·상장일이 묶음 1,095줄에서 «전부 null» 이었다 —
+     수집기가 서기 8자리를 민국 7자리 자로 읽고 있었다. 칸이 있어도 값이 없으면 지면은 빈다.
+     ⛔ 「칸이 있다」를 「값이 있다」로 읽지 않는다 — 둘을 따로 잰다. */
+  await t.test('🔴 설립일·상장일이 자료에 «값으로» 있다 (칸만 있는 것과 다르다)', () => {
+    const rows = 묶음.rows ?? [];
+    const 설립 = rows.filter((r) => r.founded_on).length;
+    const 상장 = rows.filter((r) => r.listed_on).length;
+    assert.ok(설립 / rows.length > 0.9 && 상장 / rows.length > 0.9,
+      `설립일 ${설립}/${rows.length} · 상장일 ${상장}/${rows.length}.\n`
+      + '  TWSE 는 出表日期를 민국 7자리로, 成立/上市日期를 서기 8자리로 줍니다 —\n'
+      + '  하나의 자로 읽으면 둘 가운데 하나가 통째로 빕니다.');
+  });
+
+  await t.test('🔴 그 날이 지면에도 닿는다', () => {
+    const 있음 = 지면들.filter((f) => fs.readFileSync(path.join(회사방, f), 'utf8').includes('Listed on the exchange')).length;
+    assert.ok(있음 / 지면들.length > 0.9,
+      `지면 ${지면들.length}장 가운데 ${있음}장에만 상장일이 있습니다 — 지면이 회사줄의 listedOn 을 안 받습니다`);
+  });
+
   await t.test('🔴 대표 줄이 설명 앞 160자 안에 있다 — 뒤로 밀리면 스니펫에서 잘린다', () => {
     let 안 = 0; const 밖 = [];
     for (const f of 지면들) {

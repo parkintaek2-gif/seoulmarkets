@@ -319,6 +319,15 @@ const jsonLd = {
         <div class="scroll">
           <table>
             <tbody>
+              {/* 🔴 [2026-10-11 03:1x · 5번] 이 둘이 묶음 1,095줄에서 «전부 null» 이었다 —
+                  수집기가 서기 8자리를 민국 7자리 자로 읽고 있었다. 값이 들어오자 그릴 것이 생겼다.
+                  ⭐ 「when was X founded」·「when did X list」는 흔한 물음이다. 공시가 적은 날이다 */}
+              {회사.foundedOn && (
+                <tr><th>Founded</th><td><time datetime={회사.foundedOn}>{회사.foundedOn}</time></td></tr>
+              )}
+              {회사.listedOn && (
+                <tr><th>Listed on the exchange</th><td><time datetime={회사.listedOn}>{회사.listedOn}</time></td></tr>
+              )}
               <tr><th>Shares outstanding</th><td>{num(회사.shares)}</td></tr>
               <tr><th>Paid-in capital</th><td>{회사.paidIn == null ? '—' : `TWD ${bn(회사.paidIn)}bn`}</td></tr>
               {/* ⛔ Chair 줄은 「Who runs it」 칸으로 옮겼다(2026-10-11) — 거기서 總經理와 나란히 놓는다.
