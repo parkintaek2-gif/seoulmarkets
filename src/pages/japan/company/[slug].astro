@@ -31,7 +31,7 @@ import Base from '../../../layouts/Base.astro';
 import { SITE_URL } from '../../../consts';
 import tape from '../../../data/japan-financials-tape.json';
 import { 주소표만들기 } from '../../../lib/company-slug.mjs';
-import { 재무줄, 시장줄, 낼만한가, 업종주소, 이웃고르기 } from '../../../lib/japan-company-page.mjs';
+import { 재무줄, 시장줄, 대표줄, 낼만한가, 업종주소, 이웃고르기 } from '../../../lib/japan-company-page.mjs';
 
 export async function getStaticPaths() {
   const 행들 = ((tape as any).rows as any[]).filter((r) => 낼만한가(r));
@@ -59,6 +59,8 @@ export async function getStaticPaths() {
         sectorSlug: 업종 === 'Unclassified' ? null : 업종주소(업종),
         줄: 재무줄(r),
         시장: 시장줄(r),
+        /* ⛔ 재무줄() 은 흰 목록이라 대표자를 안 넘긴다 — 따로 넘긴다(2026-10-11) */
+        대표: 대표줄(r),
         /* 🔴 [2026-10-04] 여기가 `.slice(0, 12)` 였다 — 3,702장이 «모두 같은 12개»를
            가리켜 나머지 3,286장은 들어오는 길이 하나뿐이었다. 이웃을 가리키게 바꿨다. */
         같은업종: 이웃고르기(한벌, 한벌.findIndex((x) => x.code === String(r.code)), 12),
@@ -68,7 +70,7 @@ export async function getStaticPaths() {
   });
 }
 
-const { code, nameEn, nameJa, sector, sectorSlug, 줄, 시장, 같은업종, 업종회사수 } = Astro.props as any;
+const { code, nameEn, nameJa, sector, sectorSlug, 줄, 시장, 대표, 같은업종, 업종회사수 } = Astro.props as any;
 
 const bn = (n: number | null) =>
   n == null ? '—' : n.toLocaleString('en-GB', { maximumFractionDigits: 1 });
@@ -124,7 +126,15 @@ const title = 긴제목.length <= 60
 const 설명줄 = 줄 && 줄.revenue != null
   ? `${nameEn} (${code}) reported JPY ${bn(줄.revenue)}bn of revenue in the financial year ended ${결산 ?? 줄.year}.`
   : `${nameEn} (${code}) — financials as filed with Japan's Financial Services Agency.`;
-const description = `${설명줄} Revenue, operating profit, net profit, assets and equity as filed through EDINET, with the ratios computed from those figures.`;
+/* 🔴 [2026-10-11 00:5x · 5번] **「who is the ceo of …」가 일본 회사로 이미 10.3위에 뜬다.**
+ *   실제 질의를 전수로 보니 그 꼴이 일본 쪽에서 먼저 오고 있었다
+ *   (`who is the ceo of hokkaidosenko.co.jp` — 4노출 10.3위). 답은 유가증권보고서
+ *   표지에 있었는데 우리는 재무 아홉 칸만 뽑고 버리고 있었다.
+ * ⛔ 제목은 건드리지 않는다 — 「earnings results」로 4~8위를 먹는 꼴이라 잃을 것이 크다.
+ * ⭐ 「CEO」라는 말을 **앞쪽**에 둔다. 일본 직위는 「社長」이라 그대로 옮기면 CEO 가 안 나온다.
+ * ⛔ 이름은 한자 그대로다. 로마자를 지어내지 않는다(아래 지면에 그 까닭을 적는다). */
+const 대표설명 = 대표?.name ? ` CEO (representative director): ${대표.name}.` : '';
+const description = `${설명줄}${대표설명} Revenue, operating profit, net profit, assets and equity as filed through EDINET, with the ratios computed from those figures.`;
 
 const jsonLd = {
   '@context': 'https://schema.org',
@@ -135,6 +145,17 @@ const jsonLd = {
   tickerSymbol: code,
   url: `${SITE_URL}/japan/company/${Astro.params.slug}`,
   ...(sector ? { industry: sector } : {}),
+  /* 사람이 읽는 칸과 **같은 사실**을 기계도 읽게 둔다 — 구글이 그 물음에 답할 때
+     보는 것은 본문 글자가 아니라 이 칸이다. ⛔ 못 옮긴 직위는 비운다 */
+  ...(대표?.name
+    ? {
+      employee: [{
+        '@type': 'Person',
+        name: 대표.name,
+        ...(대표.titleEn ? { jobTitle: 대표.titleEn } : {}),
+      }],
+    }
+    : {}),
 };
 ---
 
@@ -236,6 +257,37 @@ const jsonLd = {
         <p class="warn">
           Market capitalisation is what buyers are betting the company is worth. It is not something
           the company produced, so we never present it as output or productivity.
+        </p>
+      </section>
+    )}
+
+    {대표?.name && (
+      <section>
+        <h2>Who runs it</h2>
+        <p class="note">
+          The representative named on the cover of the company's annual securities report
+          (有価証券報告書), filed with Japan's Financial Services Agency through EDINET. In Japan
+          this is the office a CEO holds. The report names one representative on its cover.
+        </p>
+        <table>
+          <tbody>
+            <tr>
+              <th scope="row">Name</th>
+              <td lang="ja">{대표.name}</td>
+            </tr>
+            <tr>
+              <th scope="row">Title</th>
+              <td>{대표.titleEn ?? '—'}{대표.title ? <> <span lang="ja" class="note">({대표.title})</span></> : null}</td>
+            </tr>
+          </tbody>
+        </table>
+        {/* 🔴 로마자를 «지어내지 않는다». 한자의 읽기는 규칙으로 정해지지 않는다 —
+            「昇」이 Noboru 인지 Shō 인지는 그 사람만 안다. 못 읽는 것을 못 읽는다고 적는다.
+            ⛔ 이 줄을 지우고 로마자를 채워 넣지 마십시오. 사람 이름을 틀리게 박는 일이다. */}
+        <p class="warn">
+          The name is printed as it was filed, in Japanese. We do not romanise it — a kanji
+          name can be read several ways and only the person knows which one is theirs.
+          Writing a guess here would put the wrong name on this page.
         </p>
       </section>
     )}
