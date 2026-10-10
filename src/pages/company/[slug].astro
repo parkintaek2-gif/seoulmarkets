@@ -35,6 +35,8 @@ import Base from '../../layouts/Base.astro';
 import { SITE_URL } from '../../consts';
 import fin from '../../data/korea-financials-tape.json';
 import ppl from '../../data/korea-people-tape.json';
+import 임원표 from '../../data/korea-executives-tape.json';
+import { 직위영문 } from '../../lib/exec-title-en.mjs';
 import { 주소표만들기 } from '../../lib/company-slug.mjs';
 import { 재무줄, 사람줄, 늘어난비, 시장말, 낼만한가 } from '../../lib/company-page.mjs';
 /* 🔴 [2026-10-04] 이웃고르기 — 일본 쪽에서 쓰던 것을 그대로 쓴다. 같은 흠이 여기도 있었다 */
@@ -98,6 +100,10 @@ export async function getStaticPaths() {
           해마다늘었나: 해마다늘었나(rs, 'net_profit_krw'),
         },
         사람: 사람줄(사람표.get(h.code)),
+        /* 🔴 [2026-10-10 · 5번] 「who is the ceo of …」가 이미 10.3위로 뜨는데
+           이 지면에 그 답이 한 줄도 없었다. DART 임원 공시에서 «대표»만 담는다.
+           ⛔ 없으면 빈 배열이다 — 그때는 아래에서 그 칸을 안 그린다 */
+        대표들: (임원표.byTicker as any)[h.code] ?? [],
         같은업종,
         업종회사수: (업종별.get(h.sector || 'Unclassified') ?? []).length,
       },
@@ -106,7 +112,7 @@ export async function getStaticPaths() {
   return 길;
 }
 
-const { code, nameEn, nameKo, market, sector, sectorSlug, 줄들, 흑자기록, 사람, 같은업종, 업종회사수 } = Astro.props as any;
+const { code, nameEn, nameKo, market, sector, sectorSlug, 줄들, 흑자기록, 사람, 대표들, 같은업종, 업종회사수 } = Astro.props as any;
 
 const 마지막 = 줄들[줄들.length - 1] ?? null;
 const 처음해 = 줄들[0]?.year ?? null;
@@ -266,6 +272,52 @@ const jsonLd = {
           Market capitalisation is what buyers are betting the company is worth. It is not something
           the company produced, so we never present it as output or productivity.
         </p>
+      </section>
+    )}
+
+    {대표들 && 대표들.length > 0 && (
+      <section>
+        <h2>Who runs it</h2>
+        {/* 🔴 [2026-10-10 · 5번] 「who is the ceo of …」 질의를 노리는 칸이다.
+            그런데 한국 공시의 직위는 「부회장」·「사장」이라 영문으로 옮겨도 CEO 가
+            안 나오는 회사가 많다. 여기 적힌 사람은 모두 «대표이사»이므로
+            그 뜻을 한 줄로 밝힌다 — 손님이 찾는 말이 지면에 있어야 한다. */}
+        <p class="note">
+          Registered representative directors — in Korea this is the office a CEO holds. Filed
+          with the Financial Supervisory Service (DART). A Korean company can register more
+          than one, and the title beside each name is the rank they carry inside the company.
+        </p>
+        <div class="scroll">
+          <table>
+            <thead>
+              <tr><th>Name</th><th>Title</th><th>Board seat</th><th>Years in post</th></tr>
+            </thead>
+            <tbody>
+              {대표들.map((p: any) => (
+                <tr>
+                  <td>{p.nameRoman ?? p.nameKo}{p.nameRoman ? ` (${p.nameKo})` : ''}</td>
+                  <td>{직위영문(p.title) ?? p.title ?? '—'}</td>
+                  <td>{p.boardType === '사내이사' ? 'Inside director'
+                    : p.boardType === '사외이사' ? 'Outside director'
+                      : p.boardType === '기타비상무이사' ? 'Other non-executive director' : '—'}</td>
+                  <td>{p.tenure ?? '—'}</td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+        {대표들.some((p: any) => p.nameRoman) && (
+          <p class="warn">
+            Roman spellings are ours, converted from the Korean filing. The person may spell
+            their own name differently in English. The Korean name in brackets is what was filed.
+          </p>
+        )}
+        {대표들.some((p: any) => !p.nameRoman) && (
+          <p class="note">
+            Some names are shown in Korean only. Those are filed for non-Korean directors, and
+            converting them to Roman letters through Korean spelling rules would give the wrong name.
+          </p>
+        )}
       </section>
     )}
 
