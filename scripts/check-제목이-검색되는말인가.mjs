@@ -128,11 +128,16 @@ export function H1읽기(글) {
 
 export function 제목과H1이맞나(제목, h1) {
   if (!제목 || !h1) return { 갈래: '못쟀다', 말: 'title 이나 h1 을 못 읽었다' };
-  const 알맹이 = (s) => 낱말로(s).filter((w) => !흔한말.has(w)).map(어간);
-  const t = new Set(알맹이(제목));
-  const h = 알맹이(h1);
+  /* 🔴 [2026-10-11 05:5x · 5번] **견주기는 어간으로, 보여 주기는 «원래 낱말»로.**
+   *   여기서 어간만 들고 다니다가 「larg 가 빠졌다」고 말하고 있었다 — 사람이 못 알아듣는다.
+   *   ⚠ 이 자가 npm test 에 안 물려 있어서 **자가시험이 깨진 채로 한 달을 갔다.**
+   *     「어느 낱말이 빠졌는지 이름으로 댄다」가 줄곧 빨강이었는데 아무도 안 봤다.
+   *   ⭐ 안 불리는 검사는 문장일 뿐이다 — 이 줄이 그 산 증거다. */
+  const 알맹이낱말 = (s) => 낱말로(s).filter((w) => !흔한말.has(w));
+  const t = new Set(알맹이낱말(제목).map(어간));
+  const h = 알맹이낱말(h1);
   if (!h.length) return { 갈래: '못쟀다', 말: 'h1 에 견줄 알맹이 낱말이 없다' };
-  const 빠진것 = [...new Set(h.filter((w) => !t.has(w)))];
+  const 빠진것 = [...new Set(h.filter((w) => !t.has(어간(w))))];
   if (빠진것.length) {
     return { 갈래: '어긋남', 말: `h1 의 낱말이 title 에 없다: ${빠진것.join(' · ')}`, 빠진것 };
   }

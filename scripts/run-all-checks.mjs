@@ -76,6 +76,10 @@ export const 단계들 = [
    *   있고 받는 자는 안 걸려 있어서, 오늘 결함 둘(세고 버리기·덮어쓰기)이 아무 검사에도
    *   안 잡혔다. 소급이 안 되는 항목의 수집기는 반드시 걸어 둔다. */
   "node scripts/collect-news-desk.mjs --자가시험",
+  /* 🔴 [2026-10-11 · 5번] 한국 거시 셋(GDP·물가·기준금리)을 ECOS 에서 받는 자.
+   *   10-05 에 check-all-selftests.mjs 목록에 넣었는데 그쪽은 「collect- 는 받지 않는다」가
+   *   규칙이라 **그 파일의 자가시험이 엿새 동안 깨진 채**였다. 수집기 자가시험은 여기가 자리다. */
+  "node scripts/collect-korea-macro-ecos.mjs --자가시험",
   /* 🔴 [2026-09-09 · 5번] 백년지도에는 check-100y-phone 이 있는데 KCW 에는 «없었다».
    *   그래서 /read-in 이 폰에서 122px 밀린 채 배포까지 나갔고, /esports-nations 는
    *   그 전부터 11px 밀리고 있었다. 손님은 폰으로 온다 — 이 자를 관문에 둔다. */
