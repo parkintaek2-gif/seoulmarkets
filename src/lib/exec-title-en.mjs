@@ -31,6 +31,12 @@ export const 조각 = [
   ['공동대표이사', 'Co-Representative Director (CEO)'],
   ['각자대표이사', 'Representative Director (CEO)'],
   ['대표이사', 'Representative Director (CEO)'],
+  /* 🔴 [2026-10-11] 전수로 재 보고 보탠 조각 — 이것들이 없어 한글이 지면에 나갔다 */
+  ['대표집행임원', 'Representative Executive Officer (CEO)'],
+  ['집행임원', 'Executive Officer'],
+  ['공동대표', 'Co-Representative'],
+  ['상무보', 'Deputy Managing Director'],
+  ['총괄', 'Group'],
   ['사내이사', 'Inside Director'],
   ['사외이사', 'Outside Director'],
   ['부회장', 'Vice Chairman'],
@@ -56,9 +62,32 @@ export const 조각 = [
  * @returns {string|null} 못 옮기면 null — 짐작해서 채우지 않는다
  */
 export function 직위영문(직위) {
-  /* ⚠ 공백·쉼표·괄호·빗금을 걷어 낸다.
-     자료에 「대표이사 (사장)」·「사장, 대표이사」·「대표이사/사장」이 섞여 있다 */
-  const s = String(직위 ?? '').replace(/[\s,·ㆍ()[\]/、]/g, '');
+  /* 🔴 [2026-10-11 08:0x · 5번] **영문 지면에 한국어 직위가 41칸 나갔다.**
+   *   어젯밤 이 자를 쓰고 지면에 `직위영문(title) ?? title` 로 걸었더니, 못 옮긴 것이
+   *   «한글 그대로» 손님에게 나갔다. `check-seoulmarkets-korean-leak` 이 잡았다.
+   *   못 옮긴 꼴을 전수로 재 보니 3,589명 가운데 86줄이고, 걸리는 까닭이 셋이었다 —
+   * ```
+   *   대표이사(각자대표) · 각자 대표이사(미디어부문)   괄호 «안쪽» 덧말
+   *   대표이사주3)                                    각주 표시
+   *   대표집행임원 · 상무보 · 공동대표 · 총괄부회장     사전에 없던 조각
+   * ```
+   *   ⚠ 괄호를 **글자만** 지우고 안쪽을 남겨 「각자」가 떠다니고 있었다.
+   *     「대표이사 (사장)」은 안쪽이 직위라 남겨야 하고, 「(미디어부문)」은 버려야 한다 —
+   *     ⇒ 괄호 안쪽을 먼저 떼어 보고, 그래도 안 되면 괄호만 지운 꼴로 다시 푼다. */
+  const 민 = String(직위 ?? '').replace(/주\d+\)/g, '');          /* 각주 표시를 걷는다 */
+  const 괄호뗀것 = 민.replace(/[([][^)\]]*[)\]]/g, '');
+  const 풀기 = (글) => {
+    const s = String(글).replace(/[\s,·ㆍ()[\]/、]/g, '');
+    return s ? 떼어내기(s) : null;
+  };
+  /* ① **안쪽을 살려** 먼저 푼다 — 「대표이사 (사장)」은 괄호 안이 직위다
+     ② 안 되면 괄호를 통째로 버리고 다시 — 「대표이사(각자대표)」·「(미디어부문)」은 덧말이다
+     ⚠ 순서를 거꾸로 두었다가 ①을 잃었다. 자가시험이 바로 잡았다 */
+  return 풀기(민) ?? 풀기(괄호뗀것);
+}
+
+/** 조각을 앞에서부터 떼어 낸다. ⛔ 모르는 글자가 남으면 null — 반쪽을 내지 않는다 */
+function 떼어내기(s) {
   if (!s) return null;
 
   const 난것 = [];

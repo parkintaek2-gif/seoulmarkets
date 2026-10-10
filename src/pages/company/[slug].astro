@@ -354,7 +354,14 @@ const jsonLd = {
               {대표들.map((p: any) => (
                 <tr>
                   <td>{p.nameRoman ?? p.nameKo}{p.nameRoman ? ` (${p.nameKo})` : ''}</td>
-                  <td>{직위영문(p.title) ?? p.title ?? '—'}</td>
+                  {/* 🔴 [2026-10-11 08:0x · 5번] 여기가 `?? p.title` 이었다 —
+                      못 옮긴 직위가 **한글 그대로** 영문 지면에 나갔다(41칸).
+                      check-seoulmarkets-korean-leak 이 잡았다.
+                      ⛔ 영문 지면에 한국어를 내지 않는다. 사전을 넓혀 98.8% 를 옮기고,
+                        남은 것은 **대표권이 있다는 사실만** 낸다 — 이 표에 실린 사람은
+                        전원 «대표»로 공시된 이들이라(빌더가 대표===true 만 담는다) 거짓이 아니다.
+                      ⚠ 원문은 버리지 않는다 — 묶음에 그대로 있다. 지면에만 안 낸다. */}
+                  <td>{직위영문(p.title) ?? 'Representative Director (CEO)'}</td>
                   <td>{p.boardType === '사내이사' ? 'Inside director'
                     : p.boardType === '사외이사' ? 'Outside director'
                       : p.boardType === '기타비상무이사' ? 'Other non-executive director' : '—'}</td>
