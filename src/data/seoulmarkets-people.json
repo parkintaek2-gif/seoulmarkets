@@ -1,5 +1,5 @@
 {
-  "builtOn": "2026-10-04",
+  "builtOn": "2026-10-10",
   "builtFrom": "korea-people-panel-2026-09-11.csv",
   "source": "Workforce figures that Korean listed companies file with the Financial Supervisory Service, joined to KRX daily closing prices. We collect the filings ourselves and publish them as our licensed file. This page counts the same file we sell, so the free figures and the paid figures cannot disagree.",
   "rows": 2924,
