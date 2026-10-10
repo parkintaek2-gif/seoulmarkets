@@ -64,6 +64,13 @@ export const 단계들 = [
   "node --test tests/" + "*.test.mjs",
   "node scripts/deploy.mjs --selftest",
   "node scripts/check-comment-close.mjs",
+  /* 🔴 [2026-10-11 · 5번] **칸은 있는데 값이 한 줄도 없는 자리**를 찾는다.
+   *   새벽에 대만 설립일·상장일이 1,095줄 «전부» null 인 것을 손으로 찾았다 —
+   *   수집기가 서기 8자리를 민국 7자리 자로 읽고 있었고, 지면은 조용히 빈 채로 나갔다.
+   *   그것을 보는 자가 없었다. 소음은 재 봤다 — 143개 묶음에 걸리는 것이 0개다
+   *   (일본 pbr·market 둘은 `_못낸까닭` 짝 칸으로 밝혀 둬서 안 운다). */
+  "node scripts/check-묶음에-죽은칸이-있나.mjs --자가시험",
+  "node scripts/check-묶음에-죽은칸이-있나.mjs",
   "node scripts/count-newsdesk.mjs --자가시험",
   /* 🔴 [2026-09-09 · 5번] 신문 제목 수집기가 여기 «없었다». 세는 자(count-newsdesk)만 걸려
    *   있고 받는 자는 안 걸려 있어서, 오늘 결함 둘(세고 버리기·덮어쓰기)이 아무 검사에도
