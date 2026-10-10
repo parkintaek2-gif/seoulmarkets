@@ -54,6 +54,7 @@ export async function getStaticPaths() {
         nameEn: String(r.name_en).trim(),
         nameZh: String(r.name || '').trim(),
         chairman: r.chairman || null,
+        president: r.president || null,   /* 總經理 — 대만에서 CEO 자리에 가장 가깝다(2026-10-11) */
         줄: 재무줄(r),
         회사: 회사줄(r),
         기간: 분기말(r),
@@ -73,7 +74,7 @@ export async function getStaticPaths() {
 }
 
 const {
-  code, nameEn, nameZh, chairman, 줄, 회사, 기간, 덮는기간, 시장, 어긋났나,
+  code, nameEn, nameZh, chairman, president, 줄, 회사, 기간, 덮는기간, 시장, 어긋났나,
   업종, 업종한자, 업종주소값, 같은갈래, 갈래회사수,
 } = Astro.props as any;
 
@@ -108,7 +109,16 @@ const title = `${nameEn} (${code}) — reported financials (Taiwan)`;
 const 설명줄 = 줄 && 줄.revenue != null
   ? `${nameEn} (${code}) reported TWD ${bn(줄.revenue)}bn of revenue over ${덮는기간?.길게 ?? 'the period covered by its latest filing'}.`
   : `${nameEn} (${code}) — financials as filed with the Taiwan Stock Exchange.`;
-const description = `${설명줄} Revenue, operating profit, net profit, assets, liabilities and equity as filed through the TWSE open data service, with the ratios computed from those figures.`;
+/* 🔴 [2026-10-11 01:5x · 5번] **「who is the ceo of …」가 우리 지면으로 10.3위에 뜬다.**
+ *   대만 지면에는 「Chair」 한 줄이 이미 있었는데 **CEO 라는 말이 없어** 그 질의에 안 걸렸다.
+ *   그리고 總經理(대만에서 CEO 자리에 가장 가까운 것)는 받아 두고 담지도 않고 있었다.
+ * ⛔ 제목은 건드리지 않는다.
+ * ⛔ **둘 중 누가 CEO 인지 우리가 정하지 않는다** — 회사마다 다르고 공시가 말해 주지 않는다.
+ *   「董事長이 CEO다」라고 적으면 틀린 회사가 많다. 둘을 나란히 놓고 그 사실을 적는다. */
+const 대표설명 = chairman || president
+  ? ` ${[chairman && `Chairman ${chairman}`, president && `president ${president}`].filter(Boolean).join(', ')}.`
+  : '';
+const description = `${설명줄}${대표설명} Revenue, operating profit, net profit, assets, liabilities and equity as filed through the TWSE open data service, with the ratios computed from those figures.`;
 
 const jsonLd = {
   '@context': 'https://schema.org',
@@ -118,6 +128,16 @@ const jsonLd = {
   alternateName: nameZh || undefined,
   tickerSymbol: code,
   url: `${SITE_URL}/taiwan/company/${Astro.params.slug}`,
+  /* 사람이 읽는 칸과 **같은 사실**을 기계도 읽게 둔다. ⛔ 직위는 공시가 적은 그대로 —
+     둘 중 누구를 CEO 로 올릴지 우리가 고르지 않는다 */
+  ...(chairman || president
+    ? {
+      employee: [
+        chairman && { '@type': 'Person', name: chairman, jobTitle: 'Chairman of the Board' },
+        president && { '@type': 'Person', name: president, jobTitle: 'President (General Manager)' },
+      ].filter(Boolean),
+    }
+    : {}),
 };
 ---
 
@@ -262,6 +282,37 @@ const jsonLd = {
       </section>
     )}
 
+    {(chairman || president) && (
+      <section>
+        <h2>Who runs it</h2>
+        <p class="note">
+          The Taiwan Stock Exchange names two officers in a listed company's filing: the chairman
+          of the board (董事長) and the president, also called the general manager (總經理).
+          Which of the two acts as chief executive — the CEO — differs from company to company,
+          and the filing does not say. We print both rather than choosing one.
+        </p>
+        <div class="scroll">
+          <table>
+            <tbody>
+              {chairman && (
+                <tr><th>Chairman of the board (董事長)</th><td lang="zh-Hant">{chairman}</td></tr>
+              )}
+              {president && (
+                <tr><th>President / general manager (總經理)</th><td lang="zh-Hant">{president}</td></tr>
+              )}
+            </tbody>
+          </table>
+        </div>
+        {/* 🔴 로마자를 «지어내지 않는다». 중국어 이름은 병음·웨이드자일스·본인 표기가 다 다르다 —
+            일본 지면과 같은 까닭이다. ⛔ 이 줄을 지우고 로마자를 채워 넣지 마십시오. */}
+        <p class="warn">
+          Names are printed as they were filed, in Chinese. We do not romanise them — a Chinese
+          name can be spelled several ways in the Latin alphabet and only the person knows which
+          one is theirs. Writing a guess here would put the wrong name on this page.
+        </p>
+      </section>
+    )}
+
     {회사 && (
       <section>
         <h2>The company itself</h2>
@@ -270,7 +321,8 @@ const jsonLd = {
             <tbody>
               <tr><th>Shares outstanding</th><td>{num(회사.shares)}</td></tr>
               <tr><th>Paid-in capital</th><td>{회사.paidIn == null ? '—' : `TWD ${bn(회사.paidIn)}bn`}</td></tr>
-              {chairman && <tr><th>Chair</th><td>{chairman}</td></tr>}
+              {/* ⛔ Chair 줄은 「Who runs it」 칸으로 옮겼다(2026-10-11) — 거기서 總經理와 나란히 놓는다.
+                  여기 두면 「누가 이끄나」를 묻는 손님이 자본금 표 안에서 한 줄을 찾아야 한다 */}
               {회사.website && (
                 <tr>
                   <th>Company site</th>
