@@ -154,12 +154,41 @@ function 자가시험() {
   return 실패.length === 0;
 }
 
+/**
+ * 브라우저가 보내는 헤더 한 벌.
+ *
+ * 🔴 [2026-10-11 00:5x · 5번] **UA 만으로는 이제 안 된다 — curl 도 403 이다.**
+ *   위 2026-09-13 주석이 「curl 은 200」이라고 적어 두었는데 한 달 만에 거짓이 됐다.
+ *   오늘 날이 바뀌며 신선도 자가 「41일 지남」으로 울어 알았다.
+ *   ⭐ 자에 «날짜 박힌 사실»을 적을 때는 그것이 뒤집힐 수 있다고 봐야 한다.
+ *     토스 실키에서 똑같이 당했다(그때는 한 달 묵은 글이 거짓을 찍고 있었다).
+ *
+ * 🔴 **무엇이 결정적인지 좁혀서 적는다** — 다음에 또 깨질 때 어디를 볼지 알게.
+ * ```
+ *   UA 만                                 403
+ *   UA + Accept                           403
+ *   UA + Accept-Language                  403
+ *   UA + Sec-Fetch-Dest/Mode/Site         200   ← 이것이다
+ * ```
+ *   Cloudflare 가 **Sec-Fetch-* 가 없는 요청**을 봇으로 본다. 나머지는 곁들이다.
+ * ⛔ 이 셋을 지우지 마십시오. 지우면 조용히 403 으로 돌아가고,
+ *   이 자료는 **월 단위라 그달이 지나면 되받을 수 없다.**
+ */
+const 브라우저헤더 = [
+  '-H', 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8',
+  '-H', 'Accept-Language: en-US,en;q=0.9',
+  '-H', 'Sec-Fetch-Dest: document',
+  '-H', 'Sec-Fetch-Mode: navigate',
+  '-H', 'Sec-Fetch-Site: none',
+  '-H', 'Upgrade-Insecure-Requests: 1',
+];
+
 /** curl 로 받는다(node fetch 는 이 사이트에서 403 — 위 「Node fetch」 주석 참고). 실패하면 던진다. */
 function curl글자(url) {
-  return execFileSync('curl', ['-sS', '-A', UA, '-f', url], { maxBuffer: 1024 * 1024 * 20 }).toString('utf8');
+  return execFileSync('curl', ['-sS', '-A', UA, ...브라우저헤더, '-f', url], { maxBuffer: 1024 * 1024 * 20 }).toString('utf8');
 }
 function curl바이너리(url) {
-  return execFileSync('curl', ['-sS', '-A', UA, '-f', url], { maxBuffer: 1024 * 1024 * 20 });
+  return execFileSync('curl', ['-sS', '-A', UA, ...브라우저헤더, '-f', url], { maxBuffer: 1024 * 1024 * 20 });
 }
 
 /* ── 돌리기 ─────────────────────────────────────────────────────────── */
