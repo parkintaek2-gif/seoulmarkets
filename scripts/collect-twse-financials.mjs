@@ -274,6 +274,14 @@ export function 기본줄(r) {
     paid_in_capital_twd: 수읽기(r.實收資本額),
     shares: 수읽기(r.已發行普通股數或TDR原股發行股數),
     chairman: String(r.董事長 ?? '').trim() || null,
+    /* 🔴 [2026-10-11 01:5x · 5번] **總經理를 버리고 있었다.**
+     *   「who is the ceo of …」가 우리 회사 지면으로 이미 10.3위에 뜨는데,
+     *   대만 지면에는 「Chair」 한 줄뿐이고 **CEO 라는 말이 없었다.**
+     *   대만에서 CEO 자리에 가장 가까운 것은 **總經理**(President / General Manager)다.
+     *   자료에 처음부터 있었다 — 받아 두고 안 담았을 뿐이다.
+     * ⛔ 이름은 한자 그대로 담는다. 로마자를 지어내지 않는다 —
+     *   중국어 이름은 병음·웨이드자일스·본인 표기가 다 다르다(일본과 같은 까닭). */
+    president: String(r.總經理 ?? '').trim() || null,
     website: String(r.網址 ?? '').trim() || null,
   };
 }
