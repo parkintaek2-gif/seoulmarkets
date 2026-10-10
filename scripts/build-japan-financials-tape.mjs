@@ -159,7 +159,17 @@ export function 한줄(d, 명부 = new Map()) {
        서류 안 `jpdei_cor:FilerNameInEnglishDEI` 가 그 자리를 메운다.
        ⛔ 그래도 없으면 null 로 둔다 — 지면이 종목코드를 쓴다. 우리가 음차해 짓지 않는다. */
     name_en: 엔티티풀기(d.name_en) || 엔티티풀기(딸림.name_en) || null,
+    /* 🔴🔴 [2026-10-11 04:5x · 5번] **이 칸은 3,702줄 «전부» null 이다.** 빈 채로 두되
+     *   까닭을 적는다 — 다음 사람이 「왜 없지」 하고 또 파지 않게.
+     *   EDINET 코드리스트에는 **시장 구분(프라임·스탠다드·그로스)이 없다.** 실측 —
+     *     listingStatus 는 3,818건이 전부 `"上場"`(상장) 하나다. 상장 여부일 뿐이다.
+     *   ⛔ JPX 자체 파일에는 있지만 **상업이용 금지**라 안 쓴다(이 파일 머리말 참고).
+     *   ⇒ 「못 낸다」를 짝 칸으로 적는다. `pbr`·`pbr_못낸까닭` 과 같은 꼴이다.
+     * ⚠ 지금 이 칸을 읽는 곳은 없다(스크리너의 r.market 은 «한국» 줄이다). */
     market: 딸림.market ?? null,
+    market_못낸까닭: 딸림.market
+      ? null
+      : 'The EDINET code list does not state which market segment (Prime, Standard or Growth) a company trades on',
     sector: 딸림.sector ?? null,
     year: 결산해(d.period_end),
     period_end: d.period_end ?? null,
