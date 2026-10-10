@@ -114,23 +114,32 @@ export function 빠진것찾기(이미있는것: Url[], { 읽기 = fs.readdirSyn
  *   lastmod 를 통째로 무시하게 만들 뻔했다.
  * ⛔ 못 읽으면 안 붙인다 — undefined 를 내면 템플릿이 lastmod 줄을 아예 뺀다.
  */
-export function 지은때읽기(값: any): Date | null {
+export function 지은때읽기(값: any, 이제: Date = new Date()): Date | null {
   const s = String(값 ?? '').trim();
   if (!s) return null;
-  /* ① ISO 꼴 — uae 의 builtAt 이 이렇다 */
+  /* ⛔ **미래 날은 안 쓴다.** 구글은 미래 lastmod 를 믿지 않는다 —
+     그러면 「언제 바뀌었나」 신호가 통째로 죽는다. 아래 두 꼴 다 이것을 지난다 */
+  const 쓸만한가 = (d: Date) => (Number.isFinite(d.getTime()) && d.getTime() <= 이제.getTime() ? d : null);
+  /* ① ISO 꼴 — uae 의 builtAt 이 이렇다. 이미 UTC 라 그 날의 UTC 자정은 그 시각보다 앞이다 */
   const iso = /^(\d{4})-(\d{2})-(\d{2})(?:[T ]|$)/.exec(s);
-  if (iso) {
-    const d = new Date(`${iso[1]}-${iso[2]}-${iso[3]}T00:00:00Z`);
-    return Number.isFinite(d.getTime()) ? d : null;
-  }
-  /* ② 한국어 꼴 — 「2026. 9. 26. 오후 6:06:37」. ⛔ Date.parse 에 맡기지 않는다 */
+  if (iso) return 쓸만한가(new Date(`${iso[1]}-${iso[2]}-${iso[3]}T00:00:00Z`));
+  /* ② 한국어 꼴 — 「2026. 9. 26. 오후 6:06:37」. ⛔ Date.parse 에 맡기지 않는다
+   *
+   * 🔴🔴 [2026-10-11 02:4x · 5번] **이 줄이 사이트맵에 «미래 시각»을 찍고 있었다.**
+   *   한국 날짜를 `T00:00:00Z`(UTC 자정)로 만들고 있었다. 그런데 한국시간 10-11 02:00 은
+   *   UTC 로 10-10 17:00 이다 — **UTC 자정 10-11 은 여섯 시간 뒤, 아직 오지 않은 시각**이다.
+   *   실측: 지금 UTC 2026-10-10 17:46 · 사이트맵 lastmod 2026-10-11T00:00:00.000Z
+   *         일본 3,736장 · 대만 1,090장이 미래를 가리키고 있었다.
+   *   ⚠ **새벽(00~09시 KST)에 타래를 지을 때만** 생긴다. 낮에 지으면 안 생겨서 안 보였다.
+   *     오늘 새벽 일본·대만 지면을 고쳐 내면서 처음 드러났다.
+   *   ⇒ 한국 날짜는 **한국시간 자정**(`+09:00`)으로 읽는다. 그 시각은 언제나 지나간 때다.
+   * ⭐ 사장님 「시각은 한국시간(KST)·toISOString() 금지」와 같은 뿌리다 — 시계가 섞인 것이다. */
   const ko = /^(\d{4})\.\s*(\d{1,2})\.\s*(\d{1,2})\./.exec(s);
   if (ko) {
     const 해 = Number(ko[1]); const 달 = Number(ko[2]); const 날 = Number(ko[3]);
     if (달 < 1 || 달 > 12 || 날 < 1 || 날 > 31) return null;
     const p = (n: number) => String(n).padStart(2, '0');
-    const d = new Date(`${해}-${p(달)}-${p(날)}T00:00:00Z`);
-    return Number.isFinite(d.getTime()) ? d : null;
+    return 쓸만한가(new Date(`${해}-${p(달)}-${p(날)}T00:00:00+09:00`));
   }
   return null;                     /* ⛔ 모르는 꼴은 지어내지 않는다 */
 }
