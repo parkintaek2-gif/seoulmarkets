@@ -24,12 +24,16 @@
 
 import { execFileSync } from 'node:child_process';
 
-/** 유닛 = 여러 주소를 한 자리로 묶는다 */
-const 유닛 = [
-  { 이름: '3번 백년지도',      주소: ['100yearmap.com', 'www.100yearmap.com'] },
-  { 이름: '6번 SeoulMarkets',  주소: ['seoulmarkets.com', 'www.seoulmarkets.com'] },
-  { 이름: '5번 K Culture Wire',주소: ['kculturewire.com', 'www.kculturewire.com'] },
-];
+/**
+ * 유닛 = 여러 주소를 한 자리로 묶는다.
+ * 🔴 [2026-10-10 21:1x] 이름표를 여기 «또» 적지 않는다 — 두 곳에 적어 오늘 담당이 뒤바뀌었다
+ *   (「6번 SeoulMarkets」·「5번 K Culture Wire」가 사장님께 가는 방송에 찍히고 있었다).
+ *   정본은 `src/lib/유닛자리표.mjs` 하나다. KLifeMap 은 이 곳간에 안 들어오므로 뺀다.
+ */
+import { 자리표 } from '../src/lib/유닛자리표.mjs';
+
+const 유닛 = 자리표.filter((x) => x.이름 !== 'KLifeMap')
+  .map((x) => ({ 이름: `${x.유닛} ${x.이름}`, 주소: x.호스트 }));
 /**
  * KLifeMap 은 이 곳간에 안 들어온다 — 제 서버가 따로 센다.
  * [2026-08-21 19:20] 4번이 밖에서 읽는 자를 냈다: klifemap/tools/klifemap-visitors.mjs

@@ -39,12 +39,17 @@ const 뿌리 = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
  * 네 사이트를 다 담고 있어서 한 번 재면 여섯 자리 것이 같이 나온다. 그 갈라 붙이는 표다.
  * ⚠ `127.0.0.1`·`localhost` 는 우리가 만든 것이니 **누구 것도 아니다** — 아래에 안 넣는다.
  */
-export const 자리표 = [
-  { 유닛: '3번', 이름: '백년지도', 호스트: ['100yearmap.com', 'www.100yearmap.com'] },
-  { 유닛: '1·4번', 이름: 'KLifeMap', 호스트: ['klifemap.ai', 'www.klifemap.ai'] },
-  { 유닛: '5번', 이름: 'K Culture Wire', 호스트: ['kculturewire.com', 'www.kculturewire.com'] },
-  { 유닛: '6번', 이름: 'SeoulMarkets', 호스트: ['seoulmarkets.com', 'www.seoulmarkets.com'] },
-];
+/**
+ * 🔴🔴 [2026-10-10 21:1x · 5번] **이 표가 묵어 담당이 뒤바뀌어 나가고 있었다.**
+ * 「6번 SeoulMarkets」·「5번 K Culture Wire」로 적혀 있었다 — 지금 분장과 반대다.
+ * 게다가 같은 표가 `유닛별-방문자.mjs` 에도 «따로» 있었다. 두 곳에 적으면 한 곳만 고쳐진다.
+ * ⇒ 이제 `src/lib/유닛자리표.mjs` 한 곳에서 가져온다. 까닭은 그 파일에 적었다.
+ */
+/* ⚠ `export { x } from '…'` 는 «재수출»이라 이 파일 안에서는 못 쓴다 —
+   들여와서 다시 내보낸다. 처음에 재수출만 했다가 자리표가 없다고 터졌다 */
+import { 자리표 as 자리표원본 } from '../src/lib/유닛자리표.mjs';
+
+export const 자리표 = 자리표원본;
 
 /** 우리가 만든 것이라 아무 유닛 것도 아닌 호스트 */
 export const 우리것 = ['127.0.0.1', 'localhost', 'parkintaek2-gif.github.io'];

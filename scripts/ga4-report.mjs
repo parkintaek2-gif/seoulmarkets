@@ -53,12 +53,35 @@ export const 갈래 = 'https://www.googleapis.com/auth/analytics.readonly';
  *   처음엔 따로 찍혀서 kculturewire 가 60·42 두 줄로 나뉘어 있었다. 그러면 작아 보인다.
  * ⛔ 우리가 띄운 개발 서버(localhost·127.0.0.1)는 **손님이 아니다.** 갈라 내고 합계에서 뺀다.
  */
-export const 유닛 = [
-  { 이름: '3번 100yearmap', 자: /(^|\.)100yearmap\.com$/i },
-  { 이름: '5번 K Culture Wire', 자: /(^|\.)kculturewire\.com$/i },
-  { 이름: '1·4번 KLifeMap', 자: /(^|\.)klifemap\.(ai|net)$/i },
-  { 이름: '6번 SeoulMarkets', 자: /(^|\.)seoulmarkets\.com$/i },
-];
+/**
+ * 🔴🔴 [2026-10-10 21:2x · 5번] **같은 이름표가 «네 곳»에 흩어져 있었다.**
+ *
+ * 22시 방문자 방송이 담당을 뒤바꿔 내고 있었다 — 「6번 SeoulMarkets」·「5번 K Culture Wire」.
+ * 지금 분장과 반대다(5번이 SeoulMarkets 개발·감수, 2번이 분담, 콘텐트는 1번).
+ * 3·4·6번은 사장님이 2026-10-04 에 「원래 안쓰잖아」라고 하신 자리다.
+ *
+ * ⛔ 고치려고 보니 같은 표가 **네 곳**에 있었다 — `broadcast-visitors-dwell.mjs` ·
+ *   `유닛별-방문자.mjs` · 여기 · 그리고 그 결과가 `src/data/real-readers.json` 에 굳어
+ *   방송에 다시 찍혔다. 두 곳을 고치고 돌렸더니 **둘째 표가 그대로 옛 이름**이었다.
+ * ⭐ 흩어진 표는 반드시 어긋난다. 한 곳만 고쳐지고 나머지는 조용히 거짓이 된다.
+ * ⇒ 정본은 `src/lib/유닛자리표.mjs` 하나다. 까닭도 거기 적었다.
+ *
+ * ⚠ 여기는 «정규식»으로 호스트를 가리므로 자리표의 호스트 목록을 식으로 바꿔 쓴다.
+ *   klifemap 은 .ai 와 .net 둘 다 받아 왔다 — 그 꼬리를 잃지 않게 함께 적는다.
+ */
+import { 자리표 } from '../src/lib/유닛자리표.mjs';
+
+const 식으로 = (호스트들, 덧꼬리 = []) => {
+  const 뿌리 = [...new Set(호스트들.map((h) => h.replace(/^www\./, '')))];
+  const 다 = [...뿌리, ...덧꼬리].map((h) => h.replace(/\./g, '\\.'));
+  return new RegExp(`(^|\\.)(${다.join('|')})$`, 'i');
+};
+/* ⚠ 덧꼬리도 «날글»로 준다 — 식으로() 가 안에서 점을 피한다.
+   처음에 미리 피해서 줬다가 두 번 피해져 klifemap.net 이 안 잡혔다 */
+export const 유닛 = 자리표.map((x) => ({
+  이름: `${x.유닛} ${x.이름}`,
+  자: 식으로(x.호스트, x.이름 === 'KLifeMap' ? ['klifemap.net'] : []),
+}));
 export const 손님아님 = /^(localhost|127\.0\.0\.1|\[?::1\]?|.*\.github\.io)$/i;
 
 /**
