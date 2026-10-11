@@ -1,4 +1,4 @@
-{"_state":true,"읽은날":"20261011","읽은때":"2026. 10. 11. 오후 12:10:04","건수":2277}
+{"_state":true,"읽은날":"20261011","읽은때":"2026. 10. 11. 오후 1:10:04","건수":2277}
 {"ts":"20261007","source":"우리 마켓데이터(재무·밸류에이션)","sourceId":"mkt:900250:2025:20261007","entity":{"market":"KOSDAQ","code":"900250"},"kind":"실적","direction":0,"strength":2,"horizon":90,"evidence":"차이나크리스탈신소재홀딩스 [적자·고마진] PBR 18.06 · ROE -0.4% · 매출 -31.9%(2024→2025)","model":"read-market-data/1.0"}
 {"ts":"20261007","source":"우리 마켓데이터(재무·밸류에이션)","sourceId":"mkt:049800:2025:20261007","entity":{"market":"KOSPI","code":"049800"},"kind":"실적","direction":0,"strength":2,"horizon":90,"evidence":"(주)우진플라임 [저PBR·유동성주의] PBR 0.36 · PER 17.3 · ROE 2.1% · 매출 1.0%(2024→2025)","model":"read-market-data/1.0"}
 {"ts":"20261007","source":"우리 마켓데이터(재무·밸류에이션)","sourceId":"mkt:023600:2025:20261007","entity":{"market":"KOSDAQ","code":"023600"},"kind":"실적","direction":0,"strength":2,"horizon":90,"evidence":"삼보판지(주) [저PBR·저PER] PBR 0.22 · PER 4.5 · ROE 4.7% · 매출 -3.3%(2024→2025)","model":"read-market-data/1.0"}
