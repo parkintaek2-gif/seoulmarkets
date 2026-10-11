@@ -122,3 +122,15 @@ twse-financials	臺灣證券交易所(TWSE) OpenAPI — openapi.twse.com.tw/v1 (
 mohw-health-workforce-2nd-survey	보건복지부 「제2차 보건의료인력 실태조사」결과 발표 보도자료 (mohw.go.kr, 2026-09-29)	🟢	[2026-09-30 · 1번] 정부 부처가 직접 낸 보도자료 원문(공공누리 표시 없이 정부 보도자료실 공개 게시, 통상 출처표시 조건의 공공저작물)을 그대로 인용·가공해 쓴다 — 위 kosis 줄과 같은 결로 출처표시(부처명·보도일·URL)를 지면에 반드시 적는다. ⛔ raw 표를 그대로 파는 것이 아니라 가공한 지면(/100y/health-workforce-activity-rate · /100y/health-workforce-growth-2013-2023)으로 낸다. ⚠ KOSIS 원표(2013~2023 2차 조사분)는 2026-09-30 현재 미게시 확인(OpenAPI 직접 검색) — 게시되면 대조해 다시 확인한다. 보수(연평균 임금) 수치는 원문 내 자체 불일치로 대조 못 해 지면에서 뺐다.
 
 (안-씀)amro-areo	AMRO(아세안+3 거시경제조사기구) ASEAN+3 Regional Economic Outlook — 14개 경제권 성장·물가 전망 (사장님 2026-10-06 지시로 살펴봄)	🔴	amro-asia.org/terms-of-use 원문 — 「AMRO encourages users to print, download, or copy information, documents and materials from the website exclusively for personal and non-commercial use」·「Users are restricted from reselling, redistributing or creating derivative works for commercial purposes without the express, written consent of AMRO」. 우리는 상업 사이트라 표를 싣는 것은 「상업 목적의 2차 저작물」이다. ⇒ 2026-10-06 12:20 enquiry@amro-asia.org 로 서면 허락을 물었다(id 1a10f39dcdea8b55) — 허락 범위·기계가 읽는 꼴·표기 문구·조건과 담당 넷. ⛔ 답이 올 때까지 «안 쓴다». 그래서 (안-씀) 을 붙였다. 허락이 오면 표를 떼고 🟢 로 고친다. ⭐ 정기성과 결은 좋다 — AREO 연간 + 분기 갱신(2026년 6·7·10월 실측) · 14개 경제권을 영문으로. ⚠ 기사로 수치 몇 개를 출처·링크와 함께 다루는 것은 보도의 영역이라 표를 옮기는 것과 다르다. ■ 🔴 **[2026-10-06 20:26 · 사장님 판정]** 「**메일로 보낸 건 이미 한 작업이니 그냥 둬라**」 ⇒ (안-씀) 표시를 **그대로 둔다.** 되돌리지 않는다. AMRO 답장이 오면 그때 다시 본다.
+# 🔴 [2026-10-11 09:46 · 5번] ECOS ORG_NAME null 셋 — **재문의 보냄.** 09-22 건이 19일째 무응답이라
+#   같은 주소(simt@bok.or.kr)로 다시 물었다(메시지 id 1a1286d1447d1013).
+#   ⭐ 오늘 ECOS StatisticTableList 를 **다시 조회**했다 — 151Y001·181Y012·181Y015 는 여전히 null,
+#     901Y124 는 "은행연합회(☎ 02-3705-5022)", 817Y002 는 "한국은행" 으로 또렷하다.
+#   ⛔ null 을 「한국은행이겠지」로 읽지 않는다. 재 보고 안 되면 안 된다고 적는 것도 결과다.
+#   ⛔ **무응답을 허락으로 읽지 않는다.** 두 번 물었고 두 번 다 날짜를 적었다.
+#   🔴 그런데 그 사이에도 손님 지면 둘이 이 자료를 내고 있다 —
+#     /data/bank-loan-delinquency · /data/mortgage-balance-gender-gap
+#     앞엣것은 901Y124 하나로 서 있어 빼면 지면이 통째로 빈다. 트래픽이 걸린 결정이라
+#     2026-10-11 09:06 에 사장님께 올렸다(세션간-메모). 답이 오기 전에 내 판단으로 안 내린다.
+saudi-openfigi-companies	OpenFIGI (Bloomberg 가 여는 공개 금융상품 식별자)	⬜	⬜ [2026-10-11 09:4x · 5번] **아직 약관을 원문으로 안 읽었다.** 받아만 두고 판정을 안 적어 check-licence-register 가 울고 있었다. ⛔ 「Bloomberg 가 개방형 표준으로 냈으니 괜찮겠지」로 적지 않는다 — 그것은 짐작이다. ✅ 지금 걸림은 없다 — **손님 지면이 이 자료를 쓰지 않는다**(src/pages 를 훑어 확인했다. 걸린 것은 country-trade-profiles·gsc-* 로 이름만 닮은 다른 자료였다). ⛔ 지면에 내기 «전»에 openfigi.com 약관을 읽고 이 줄을 고친다. 그 전에는 쌓아 두기만 한다.
+inflow-daily	우리가 센 것 — 우리 서버가 받은 요청을 날마다 모은 유입 집계	🟢	✅ [2026-10-11 09:5x · 5번] **남의 자료가 아니다.** 우리 서버(server.mjs)가 받은 요청을 우리가 세어 쌓은 것이라 약관을 받을 곳이 없다. ⇒ 쓰는 데 걸림이 없다. ⛔ 다만 **손님 개인정보는 담지 않는다** — 키가 「호스트⏎경로⏎유입도메인⏎봇여부⏎봇종류」뿐이고 IP·쿠키·사람 식별값은 모으지 않는다(archive/raw/traffic 의 「설명」 칸에 그 말이 박혀 있고 check-로그에-개인정보가-찍히나.mjs 가 잰다). ⛔ 집계를 손님 지면에 그대로 내지 않는다 — 어느 글로 누가 들어왔는지는 우리 운영 자료다. ⚠ 진짜 자리는 운영(R2)이고 이 폴더는 손으로 내려받은 사본이다.
