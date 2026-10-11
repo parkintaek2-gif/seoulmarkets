@@ -54,7 +54,7 @@ work24	고용24 / 워크넷 — 직업코드·RIASEC (3번 2026-09-10 재판정)
 wikidata	Wikidata (CC0)	🟢	Wikidata 는 CC0 — 다만 이 줄은 5번이 «약관 지면을 다시 읽고» 근거 주소를 넣어야 한다
 star-pageviews	위키백과 열람수 API	🟢	CC0 — 조문을 읽었다(2026-09-10). dumps.wikimedia.org/legal.html: 「Analytics Datasets All Analytics datasets are available under the Creative Commons Zero (CC0) public domain dedication, unless otherwise specified.」 열람수는 Analytics dataset 이다. ⚠ CC BY-SA 는 «문서 본문»에 걸리는 것이고 열람수 «수»에는 걸리지 않는다 — 내가 CC BY-SA 로 짐작했던 것이 틀렸다(안전한 쪽으로 틀렸다). 본문을 인용하면 그때는 CC BY-SA 를 따른다
 kpop-agencies	우리가 만든 소속사 명부	🟢	우리가 만든 파일이다
-newsdesk-korean-press	신문 제목 (제목만)	⬜	제목만 받되 조문을 안 읽었다 — 5번이 잰다
+newsdesk-korean-press	신문 첫 화면 제목 (매일경제·동아일보·스타뉴스·텐아시아)	🟡	🟡 [2026-10-11 12:0x · 5번] **잰 것과 못 잰 것을 갈라 적는다.** ✅ 받아도 되나(robots) — 셋은 재서 열려 있다: rss.donga.com 은 「User-agent: *」에 Disallow 목록이 있으나 우리가 받는 /national.xml 꼴은 거기 없다 · www.starnewskorea.com 은 「User-Agent: *」 묶음이 「Allow: /」이고 우리가 받는 첫 화면은 Disallow 가 아니다(319줄짜리라 앞 25줄만 보면 Googlebot 묶음만 보인다 — 267줄째를 봐야 한다) · tenasia.hankyung.com 은 「User-agent: * / Allow: /」다. ⬜ www.mk.co.kr 은 **robots 를 못 읽었다** — Cloudflare 가 사람 확인 화면을 돌려준다. ⚠ 내 curl 은 /rss/ 에 403 을 받았는데 수집기는 오늘도 177건을 받는다 — 내가 못 받은 것을 「막혔다」로 읽지 않는다. ✅ 내도 되나 — **지면에 가는 것은 우리가 센 수뿐이다.** 2026-10-11 제목 162개(12자 이상)를 dist 17,058개 파일에서 찾아 **0곳**이었다. 지면에 가는 조각은 로마자 낱말 하나씩(LG·AI·kg·ETF)으로, 회사 이름과 단위 약어다. 제목 원문·본문·사진·링크는 안 나간다. ⛔ **저작권 조문(각 매체 이용약관)은 아직 안 읽었다** — robots 는 「받아도 되나」이고 저작권은 「내도 되나」라 다른 자다. 지금은 제목을 안 내므로 걸림이 없다. ⛔ 제목을 «한 줄이라도» 지면에 내려면 그 전에 네 곳 약관을 읽고 이 줄을 고친다. ✅ 그것을 글로만 두지 않는다 — scripts/check-남의신문제목이-지면에-났나.mjs 가 날마다 잰다.
 community-desk	커뮤니티·SNS (에펨코리아·루리웹·인벤·Reddit·구글트렌드)	⬜	robots 는 재서 골랐다(collect-community-desk.mjs 머리). 저작권 조문은 안 읽었다
 traffic	우리 사이트 방문 기록 (우리 것)	🟢	우리가 만든 자료다
 apikeys	우리 API 열쇠 기록 (우리 것)	🟢	우리가 만든 자료다
