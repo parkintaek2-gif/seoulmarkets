@@ -48,6 +48,7 @@ export const 돌릴것 = [
   /* 🔴 [2026-10-11 12:0x · 5번] 남의 신문 제목이 우리 지면에 그대로 나는지 잰다.
      ⚠ 여기는 «자가시험»만 문다 — 본 실행은 dist 가 있어야 해서 run-all-checks 에 따로 물려 있다. */
   ['check-남의신문제목이-지면에-났나.mjs', '--자가시험'],
+  ['check-영문스니펫이-영어로-읽히나.mjs', '--자가시험'],
   ['check-daily-shipping.mjs', '--자가시험'],
   ['check-demand-covered.mjs', '--자가시험'],
   ['check-dist-ready.mjs', '--자가시험'],

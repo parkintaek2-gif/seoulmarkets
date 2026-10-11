@@ -150,8 +150,24 @@ if (!적힌) {
 }
 const 뒤짐 = 뒤진분(적힌, 지금UTC(지금));   /* ⭐ 같은 시계(UTC)로 뺀다 */
 
-console.log(`유입 흘려쓰기 검사 — 오늘치 ${날} · 마지막 갱신 ${j.갱신}`);
-console.log(`  지금과의 차 ${뒤짐}분 (한계 ${한계}분)`);
+/* 🔴 [2026-10-11 12:0x · 5번] **이 줄에 속았다 — 어느 시계인지 안 적혀 있었다.**
+   화면에 「마지막 갱신 2026. 10. 11. 오전 3:03:34」가 뜨는데 그때 한국은 «낮 12시»였다.
+   나는 아홉 시간 멎은 줄 알고 들여다봤다. 속은 멀쩡했다 — 위 `뒤진분` 이 UTC 끼리 바르게 뺀다.
+   ⭐ 이 파일 머리에 2026-08-22 의 교훈이 적혀 있다 — 「시각을 다룰 때는 어느 시계인지 먼저 적는다」.
+     그 교훈을 «셈»에는 넣었는데 «화면»에는 안 넣었다. 화면도 사람이 읽는 자리다.
+   ⛔ 적힌 값을 KST 로 고쳐 적지 않는다 — 그것은 서버가 적은 글이고, 바꾸면 원본과 어긋난다.
+     어느 시계인지 밝히고, 한국시간을 «옆에» 함께 적는다. */
+const KST로 = (t) => {
+  if (!t) return '못 읽음';
+  const ms = Date.UTC(t.year, t.month - 1, t.day, t.hour, t.minute, t.second) + 9 * 60 * 60 * 1000;
+  const d = new Date(ms);
+  const p = (n) => String(n).padStart(2, '0');
+  return `${d.getUTCFullYear()}-${p(d.getUTCMonth() + 1)}-${p(d.getUTCDate())} ${p(d.getUTCHours())}:${p(d.getUTCMinutes())}:${p(d.getUTCSeconds())}`;
+};
+console.log(`유입 흘려쓰기 검사 — 오늘치 ${날}`);
+console.log(`  마지막 갱신 ${j.갱신}  ← **서버 시계(UTC)** 다. 한국시간이 아니다`);
+console.log(`               한국시간으로는 ${KST로(적힌)} 다`);
+console.log(`  지금과의 차 ${뒤짐}분 (한계 ${한계}분) — 같은 시계(UTC)끼리 뺀 것이다`);
 if (뒤짐 > 한계) {
   console.log(`❌ ${뒤짐}분 뒤졌다 — 세던 것이 또 새고 있다`);
   console.log('   ⭐ 볼 곳 둘: traffic.mjs 의 FLUSH_MS · server.mjs 의 종료 신호 흘려쓰기.');

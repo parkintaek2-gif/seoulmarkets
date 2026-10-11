@@ -115,10 +115,19 @@ const 설명줄 = 줄 && 줄.revenue != null
  * ⛔ 제목은 건드리지 않는다.
  * ⛔ **둘 중 누가 CEO 인지 우리가 정하지 않는다** — 회사마다 다르고 공시가 말해 주지 않는다.
  *   「董事長이 CEO다」라고 적으면 틀린 회사가 많다. 둘을 나란히 놓고 그 사실을 적는다. */
-const 대표설명 = chairman || president
-  ? ` ${[chairman && `Chairman ${chairman}`, president && `president ${president}`].filter(Boolean).join(', ')}.`
+/* 🔴🔴 [2026-10-11 12:1x · 5번] **이 두 이름을 «설명»에 넣은 것이 틀렸다.**
+ *   오늘 새벽에 넣을 때 스니펫 값을 안 쟀다. 재 보니 대만 지면 1,056장의 구글 스니펫에
+ *   「Chairman 楊基寬, president 蘇宏...」처럼 **영어 손님이 못 읽는 글자**가 들어 있다.
+ *   (일본 지면 3,699장도 같은 꼴이었다 — 그쪽 까닭을 japan/company/[slug].astro 에 적었다.
+ *    한국 지면 2,521장은 로마자가 있어 0장이다.)
+ * ⛔ 한자를 우리가 로마자로 옮기지 «않는다» — 대만은 병음·웨이드자일·본인 여권 표기가
+ *   제각각이라 우리가 고르면 그 사람의 이름이 아니게 된다. TWSE 자료에 영문 표기가 없다.
+ * ✅ 두 이름은 **본문 「Who runs it」 절에 그대로** 둔다 — 거기서는 한자가 사실 그 자체다.
+ * ✅ 설명의 그 자리에는 영어로 읽히면서 질의에 맞는 사실을 넣는다 — 영업이익이다. */
+const 영업설명 = 줄 && 줄.operating != null
+  ? ` Operating profit TWD ${bn(줄.operating)}bn.`
   : '';
-const description = `${설명줄}${대표설명} Revenue, operating profit, net profit, assets, liabilities and equity as filed through the TWSE open data service, with the ratios computed from those figures.`;
+const description = `${설명줄}${영업설명} Revenue, operating profit, net profit, assets, liabilities and equity as filed through the TWSE open data service, with the ratios computed from those figures.`;
 
 const jsonLd = {
   '@context': 'https://schema.org',

@@ -132,9 +132,32 @@ const 설명줄 = 줄 && 줄.revenue != null
  *   표지에 있었는데 우리는 재무 아홉 칸만 뽑고 버리고 있었다.
  * ⛔ 제목은 건드리지 않는다 — 「earnings results」로 4~8위를 먹는 꼴이라 잃을 것이 크다.
  * ⭐ 「CEO」라는 말을 **앞쪽**에 둔다. 일본 직위는 「社長」이라 그대로 옮기면 CEO 가 안 나온다.
- * ⛔ 이름은 한자 그대로다. 로마자를 지어내지 않는다(아래 지면에 그 까닭을 적는다). */
-const 대표설명 = 대표?.name ? ` CEO (representative director): ${대표.name}.` : '';
-const description = `${설명줄}${대표설명} Revenue, operating profit, net profit, assets and equity as filed through EDINET, with the ratios computed from those figures.`;
+ * ⛔ 이름은 한자 그대로다. 로마자를 지어내지 않는다(아래 지면에 그 까닭을 적는다).
+ *
+ * 🔴🔴 [2026-10-11 12:1x · 5번] **그 「한자 그대로」를 «설명»에 넣은 것이 틀렸다.**
+ *   오늘 아침에 이 줄을 넣을 때 스니펫 값을 안 쟀다. 재 보니 —
+ * ```
+ *   SeoulMarkets 가 구글 앞장에 뜬 질의 51개 · 노출 110회 · 클릭 «0»   (GSC 2026-10-06)
+ *   그중 노출이 많은 쪽이 거의 다 일본 회사 지면이다 —
+ *     komatsu matere co.,ltd. earnings results   4.4위 · 10회 · 0클릭
+ *     denyo co., ltd. earnings results          10.0위 ·  8회 · 0클릭
+ *     stella chemifa corporation earnings results 8.0위 ·  8회 · 0클릭
+ *   그 지면들의 스니펫 둘째 문장이 「CEO (representative director): 中 山 大 輔.」다
+ * ```
+ *   ⇒ 영어로 찾은 사람이 **답 자리에서 못 읽는 글자**를 본다.
+ *   ⚠ 클릭 0 의 «까닭»이라고 단정하지 않는다 — 110회는 그렇게 말하기엔 적은 수다.
+ *     다만 영문 지면의 스니펫이 영어로 읽혀야 하는 것은 그와 따로 맞다.
+ *   ⛔ 그렇다고 한자를 우리가 로마자로 옮기지 «않는다» — 같은 한자도 읽는 법이 여럿이라
+ *     (「中山」은 なかやま 일 수도 ちゅうざん 일 수도 있다) 지어내면 **거짓 이름**이 된다.
+ *     자료를 전수로 재 보니 3,699명 가운데 로마자 표기가 있는 사람은 «없다» —
+ *     EDINET 은 회사 영문명(name_en)은 주지만 사람 영문명은 안 준다.
+ *   ✅ 그래서 이름은 **본문 표에만** 둔다. 거기에는 왜 한자인지도 영어로 적혀 있다.
+ *   ✅ 설명의 그 자리에는 영어로 읽히면서 «질의에 맞는» 사실을 넣는다 —
+ *     찾는 말이 「earnings results」이니 영업이익이 그 자리다. */
+const 영업설명 = 줄 && 줄.operating != null
+  ? ` Operating profit JPY ${bn(줄.operating)}bn.`
+  : '';
+const description = `${설명줄}${영업설명} Revenue, operating profit, net profit, assets and equity as filed through EDINET, with the ratios computed from those figures.`;
 
 const jsonLd = {
   '@context': 'https://schema.org',

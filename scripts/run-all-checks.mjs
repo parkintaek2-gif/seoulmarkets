@@ -280,6 +280,8 @@ export const 단계들 = [
      내고 있다 — 그 「0곳」은 «오늘의 사실»이지 규칙이 아니라 날마다 재야 한다. */
   "node scripts/check-남의신문제목이-지면에-났나.mjs --자가시험",
   "node scripts/check-남의신문제목이-지면에-났나.mjs",
+  "node scripts/check-영문스니펫이-영어로-읽히나.mjs --자가시험",
+  "node scripts/check-영문스니펫이-영어로-읽히나.mjs",
   "node scripts/check-sitemap-page-coverage.mjs --자가시험",
   "node scripts/check-sitemap-page-coverage.mjs",
   /* ⚠ 자가시험만 문다 — 라이브 재기는 네트워크가 필요하고 «며칠치 기록»이 있어야 판정된다.
