@@ -1,5 +1,35 @@
 #!/usr/bin/env node
 /**
+ * 🔴🔴🔴 [2026-10-11 11:5x · 5번] **이 자를 돌리지 마십시오. 약관이 막습니다.**
+ *
+ *   오늘 hkex.com.hk/global/exchange/terms-of-use 를 **원문으로 읽었습니다.** 실측 인용 —
+ *     「you are not permitted to, directly or indirectly and **whether or not for gain**:
+ *       (i) distribute, display, copy, modify, download, publish, post, transmit or
+ *       otherwise make available or exploit the Information」
+ *     「create or compile derivative works (including … systematic retrieval to create
+ *       collections, compilations, databases or directories) from the Information」
+ *     「You are not permitted to conduct … any text or data mining or **web scraping** …
+ *       for any purpose, including the development, training, fine-tuning or validation
+ *       of artificial intelligence」
+ *
+ *   ⇒ 받는 것(web scraping)도, 쌓는 것(compilations, databases)도, 내는 것(distribute)도 막혀 있습니다.
+ *   ⛔ 「비상업이면 되겠지」가 아닙니다 — **whether or not for gain** 이라고 적혀 있습니다.
+ *   ⛔ 「가공해서 내면 되겠지」도 아닙니다 — derivative works 가 그 자리입니다.
+ *
+ *   ✅ 지금 손님 지면은 이 자료를 쓰지 않습니다(0곳 확인). 쌓아 두기만 했습니다.
+ *   ⚠ 홍콩을 내려면 ① HKEX 에서 정식 라이선스를 받거나 ② 다른 출처를 찾습니다.
+ *     hongkong-openfigi-companies 는 **다른 출처**라 걸림이 없습니다(🟢) — 이름만 닮았습니다.
+ *
+ *   ⭐ 겪은 것 — 이 자료는 **약관을 읽기 «전»에** 받아 둔 것입니다.
+ *     우리 저장소에서 되풀이되는 사고입니다(고용24 492건 · 주식발행정보 152,396행).
+ *     받기 전에 읽는 것이 싸게 먹힙니다. docs/라이선스-대장.tsv 에 적어 두었습니다.
+ */
+if (!process.argv.includes('--약관을-읽었고-라이선스가-있다')) {
+  console.error('⛔ HKEX 약관이 수집·재배포·2차 가공을 모두 막습니다 — 위 머리글을 읽으십시오.');
+  console.error('   docs/라이선스-대장.tsv 의 hongkong-hkex-* 줄에 원문 인용이 있습니다.');
+  process.exit(1);
+}
+/**
  * collect-hongkong-hkex-disclosures.mjs — 홍콩 상장사 공시 중 **주가에 영향을 줄 만한 것만** 고른다.
  * `collect-uae-adx-disclosures.mjs`(5번이 먼저 보기로 짚어 준 자)와 같은 생각 — 미국 Form 8-K
  * "중대사건"(material event)만 신고하게 하는 방식에 우리 실측 분류를 맞춰 본다.
