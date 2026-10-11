@@ -147,9 +147,16 @@ const 설명줄 = 마지막 && 마지막.revenue != null
  *   ✅ 설명 둘째 자리에 대표 이름을 놓는다 — 스니펫이 그 물음의 답이 되게.
  * ⛔ 직위는 설명에 안 넣는다(「Representative Director (CEO)」가 길어 뒤가 잘린다). 본문에 있다.
  * ⛔ 두 명까지만 — 한국은 공동대표가 흔한데 넷을 늘어놓으면 설명이 이름 목록이 된다. */
+/* 🔴 [2026-10-11 11:1x · 5번] 여기가 `nameRoman ?? nameKo` 였다 — 로마자가 없는 열 사람에게
+   구글 스니펫이 「Representative director (CEO): 다이중치우 (중국).」으로 나갔다(실측).
+   영어권 손님이 **읽을 수 없는 글자**라 그 자리가 답이 되지 못하고, 스니펫만 깨져 보인다.
+   ⛔ 숨기는 것이 아니다 — 본문 표에는 그대로 두고 «왜 한글인지»까지 영어로 밝힌다.
+     설명은 한 줄짜리 요약이라, 답할 수 없는 것을 답인 척 끼워 넣지 않는 것이 맞다.
+   ⚠ 「한글이면 뺀다」가 아니라 «로마자로 적혔나»로 가른다 — 공시가 영문 표기를 내 주면
+     그날로 이 열 사람도 저절로 설명에 오른다. */
 const 대표이름들 = (대표들 ?? [])
-  .map((p: any) => p.nameRoman ?? p.nameKo)
-  .filter(Boolean)
+  .map((p: any) => p.nameRoman)
+  .filter((n: any) => typeof n === 'string' && /^[A-Za-z]/.test(n))
   .slice(0, 2);
 const 대표줄 = 대표이름들.length
   ? ` Representative director (CEO): ${대표이름들.join(', ')}.`
@@ -173,8 +180,10 @@ const jsonLd = {
       employee: (대표들 as any[]).slice(0, 4).map((p: any) => ({
         '@type': 'Person',
         name: p.nameRoman ?? p.nameKo,
-        /* 로마자가 «우리가 옮긴 것»이므로 공시된 한글 이름을 같이 둔다 — 맞대어 볼 수 있게 */
-        ...(p.nameRoman && p.nameKo ? { alternateName: p.nameKo } : {}),
+        /* 로마자가 «우리가 옮긴 것»이므로 공시된 한글 이름을 같이 둔다 — 맞대어 볼 수 있게.
+           ⛔ [2026-10-11 11:0x] 둘이 같은 글자면 넣지 않는다 — 공시가 처음부터 로마자로 적은
+             열두 사람에게 `alternateName` 이 `name` 과 똑같이 박혀 뜻 없는 칸이 된다. */
+        ...(p.nameRoman && p.nameKo && p.nameRoman !== p.nameKo ? { alternateName: p.nameKo } : {}),
         /* ⛔ 못 옮긴 직위는 비운다. 「Representative Director」로 채우면 지어낸 것이 된다 */
         ...(직위영문(p.title) ? { jobTitle: 직위영문(p.title) } : {}),
       })),
@@ -353,7 +362,10 @@ const jsonLd = {
             <tbody>
               {대표들.map((p: any) => (
                 <tr>
-                  <td>{p.nameRoman ?? p.nameKo}{p.nameRoman ? ` (${p.nameKo})` : ''}</td>
+                  {/* 🔴 [2026-10-11 11:0x · 5번] 괄호 조건이 `p.nameRoman` 뿐이었다 —
+                      공시가 처음부터 로마자로 적은 열두 사람은 둘이 «같은 글자»라
+                      「TANIYAMA KEN (TANIYAMA KEN)」으로 나간다. 같으면 한 번만 적는다. */}
+                  <td>{p.nameRoman ?? p.nameKo}{p.nameRoman && p.nameKo && p.nameRoman !== p.nameKo ? ` (${p.nameKo})` : ''}</td>
                   {/* 🔴 [2026-10-11 08:0x · 5번] 여기가 `?? p.title` 이었다 —
                       못 옮긴 직위가 **한글 그대로** 영문 지면에 나갔다(41칸).
                       check-seoulmarkets-korean-leak 이 잡았다.
@@ -371,10 +383,21 @@ const jsonLd = {
             </tbody>
           </table>
         </div>
-        {대표들.some((p: any) => p.nameRoman) && (
+        {/* 🔴 [2026-10-11 11:0x · 5번] 이 문단이 **로마자가 붙은 모두에게** 「우리가 옮겼다」고
+            말하고 있었는데, 스물한 명은 «회사가 공시에 직접 적어 낸» 글자다
+            (「진광(CHEN GUANG)」·「TANIYAMA KEN」). 그들까지 우리 가공이라고 적으면 거짓이고,
+            의심할 까닭이 없는 표기를 손님이 의심하게 만든다.
+            ⇒ `romanIsOurs` 로 갈라 각자에게 맞는 말만 한다. 사실과 우리 가공을 섞지 않는다. */}
+        {대표들.some((p: any) => p.nameRoman && p.romanIsOurs) && (
           <p class="warn">
             Roman spellings are ours, converted from the Korean filing. The person may spell
             their own name differently in English. The Korean name in brackets is what was filed.
+          </p>
+        )}
+        {대표들.some((p: any) => p.nameRoman && p.romanIsOurs === false) && (
+          <p class="note">
+            Some Roman spellings here are not ours — the company filed them itself, either
+            beside the Korean name or in place of one. Those are the spellings the company uses.
           </p>
         )}
         {대표들.some((p: any) => !p.nameRoman) && (

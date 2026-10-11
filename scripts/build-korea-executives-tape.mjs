@@ -61,6 +61,13 @@ export function 한줄바꾸기(o) {
     /* ⛔ 못 옮기면 null 이다. 지어내지 않는다 */
     nameRoman: r.로마자,
     romanIsConventional: r.로마자 ? r.관례인가 : null,
+    /* 🔴 [2026-10-11 11:0x · 5번] **우리가 옮긴 것과 회사가 적은 것을 가른다.**
+       지면이 로마자 아래에 「Roman spellings are ours, converted from the Korean filing」이라고
+       적는데, 21명은 **회사가 공시에 직접 적어 낸 글자**다(「진광(CHEN GUANG)」·「TANIYAMA KEN」).
+       그들까지 「우리가 옮겼다」고 적으면 거짓이고, 손님이 우리 표기를 의심할 까닭이 없는
+       자리에서 의심하게 만든다. ⇒ 사실과 우리 가공을 섞지 않는다(강령 ①).
+       ⛔ 못 옮긴 사람은 null 이다 — false(= 회사가 적었다)로 적으면 「없다」와 구별이 안 된다. */
+    romanIsOurs: r.로마자 ? (r.우리가옮겼나 ?? null) : null,
     title: String(o.직위 ?? '').trim() || null,
     duty: String(o.담당 ?? '').trim() || null,
     /* ⚠ 사내이사·사외이사 같은 구분은 «사실»이라 담는다 */
@@ -108,6 +115,16 @@ function 자가시험() {
   검('로마자를 붙인다', r.nameRoman === 'Lim Yeong-hyeon');
   검('🔴 관례 표기인지 함께 적는다 — 지면이 「우리가 옮긴 것」이라 밝힐 수 있게',
     r.romanIsConventional === true);
+  /* 🔴 [2026-10-11 11:0x · 5번] **지면이 「Roman spellings are ours」라고 적는 근거가 이 칸이다.**
+     스물한 명은 회사가 공시에 직접 적어 낸 로마자라 우리 가공이 아니다 — 섞으면 거짓이 된다.
+     ⛔ 못 옮긴 사람은 null 이다. false(= 회사가 적었다)로 적으면 「없다」와 구별이 안 된다. */
+  검('🔴 우리가 옮긴 것인지 칸으로 말한다', r.romanIsOurs === true);
+  const 다른이름으로 = (이름) => 한줄바꾸기({ ...보기, 이름 });
+  검('🔴 회사가 적어 낸 로마자는 false', 다른이름으로('진광(CHEN GUANG)').romanIsOurs === false);
+  검('🔴 그때 로마자는 회사가 적은 그대로다', 다른이름으로('진광(CHEN GUANG)').nameRoman === 'CHEN GUANG');
+  검('🔴 처음부터 로마자로 적힌 이름도 false', 다른이름으로('TANIYAMA KEN').romanIsOurs === false);
+  검('⛔ 못 옮긴 사람은 null — 「회사가 적었다」와 섞지 않는다',
+    다른이름으로('다이중치우\n(중국)').romanIsOurs === null);
   검('직위·담당을 담는다', r.title === '대표이사' && r.duty === '총괄');
   검('재직을 해로 적는다', r.tenure === '34 years', `— ${r.tenure}`);
 
