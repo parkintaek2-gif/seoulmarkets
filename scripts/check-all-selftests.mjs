@@ -49,6 +49,7 @@ export const 돌릴것 = [
      ⚠ 여기는 «자가시험»만 문다 — 본 실행은 dist 가 있어야 해서 run-all-checks 에 따로 물려 있다. */
   ['check-남의신문제목이-지면에-났나.mjs', '--자가시험'],
   ['check-영문스니펫이-영어로-읽히나.mjs', '--자가시험'],
+  ['유입-곳간에-내려받는다.mjs', '--자가시험'],
   ['check-daily-shipping.mjs', '--자가시험'],
   ['check-demand-covered.mjs', '--자가시험'],
   ['check-dist-ready.mjs', '--자가시험'],
