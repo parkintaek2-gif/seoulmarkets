@@ -50,7 +50,7 @@ const 사이트 = (() => {
 const puppeteer = createRequire(import.meta.url)('puppeteer-core');
 let b = null;
 try {
-  b = await puppeteer.connect({ browserURL: (process.env.KLM_CHROME_PORT ? 'http://127.0.0.1:' + process.env.KLM_CHROME_PORT : 'http://127.0.0.1:9222'), defaultViewport: null });
+  b = await puppeteer.connect({ browserURL: (process.env.KLM_CHROME_PORT ? 'http://127.0.0.1:' + process.env.KLM_CHROME_PORT : 'http://127.0.0.1:9223'), defaultViewport: null });
 } catch (e) {
   console.log('⚠ 크롬(9222)에 못 붙었다 — ' + String(e.message).slice(0, 60));
   process.exit(0);                        /* ⛔ 못 한 것으로 막지 않는다 */

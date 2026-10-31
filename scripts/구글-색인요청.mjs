@@ -145,7 +145,7 @@ if (!것들.length) {
   console.log('⛔ 쓰는 법: node scripts/구글-색인요청.mjs <주소> [주소...]');
   process.exit(1);
 }
-const b = await puppeteer.connect({ browserURL: (process.env.KLM_CHROME_PORT ? 'http://127.0.0.1:' + process.env.KLM_CHROME_PORT : 'http://127.0.0.1:9222'), defaultViewport: null });
+const b = await puppeteer.connect({ browserURL: (process.env.KLM_CHROME_PORT ? 'http://127.0.0.1:' + process.env.KLM_CHROME_PORT : 'http://127.0.0.1:9223'), defaultViewport: null });
 const p = await b.newPage();
 const 잠깐 = (ms) => new Promise((r) => setTimeout(r, ms));
 const { 묶음, 못구함 } = 속성별묶기(것들);
