@@ -321,4 +321,20 @@ export function 자가시험() {
 }
 
 if (process.argv.includes('--자가시험')) process.exit(자가시험() ? 0 : 1);
-if (process.argv[1] && pathToFileURL(process.argv[1]).href === import.meta.url) await 본일();
+/* 🔴 [2026-11-05 · 5번] **막혔을 때 통째로 터뜨리지 않는다.**
+   NSE 는 자동 접속을 막는다(`net::ERR_HTTP2_PROTOCOL_ERROR`). 그것이 터져 나오면
+   날마다 도는 거두기 로그가 글 더미가 되고, 뒤에 붙는 일이 있으면 그것까지 선다.
+   ⛔ 「막혔다」를 「고장」으로 적지 않는다. 한 줄로 적고 0 으로 끝낸다 —
+     ⚠ 다만 **거뒀다고 적지 않는다.** 못 거둔 것은 못 거뒀다고 남는다. */
+if (process.argv[1] && pathToFileURL(process.argv[1]).href === import.meta.url) {
+  try {
+    await 본일();
+  } catch (e) {
+    const 말 = String(e && e.message ? e.message : e);
+    const 막힌것 = /ERR_HTTP2_PROTOCOL_ERROR|ERR_CONNECTION|403|429|timeout|Navigation/i.test(말);
+    console.log(막힌것
+      ? `⬜ 인도 NSE 가 막았다 — 못 거뒀다. 0 으로 안 채운다 (${말.slice(0, 90)})`
+      : `🔴 인도 NSE 거두기가 깨졌다 — ${말.slice(0, 160)}`);
+    process.exit(막힌것 ? 0 : 1);
+  }
+}
