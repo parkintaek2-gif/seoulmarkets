@@ -23,7 +23,7 @@ import { 던지기 as 투표던지기, 집계 as 투표집계 } from './src/lib/
 import { 경로후보 } from './src/lib/url-path.mjs';
 import { 센다, flush할때되면, 유입표, 현황 as 유입현황, 우리점검머리글 } from './src/lib/traffic.mjs';
 import { 못닿는주소인가 } from './src/lib/mail-guard.mjs';
-import { 끊나 as 침입을끊나 } from './src/lib/침입막기.mjs';
+import { 끊나 as 침입을끊나, 끝났다 as 침입끝났다 } from './src/lib/침입막기.mjs';
 /* 🔴 [2026-09-13 · 5번] 달러 결제 — 사장님: 「페이팔 결제붙여」·「이런 절차 필요없이 바로 결제」 */
 import * as 페이팔 from './src/lib/paypal.mjs';
 import * as 계정 from './src/lib/accounts.mjs';
@@ -1545,6 +1545,11 @@ const server = createServer((req, res) => {
         방문.부속기록(req.headers.host, 방문.주소뽑기(req));
       }
     } catch { /* 집계 때문에 사이트가 죽는 일은 없어야 한다 */ }
+
+    /* 🔴 [2026-11-05 · 사장님 「아무도 못뚫는」] 못 찾은 주소를 «서로 다른 주소의 수»로 센다.
+       목록에 없는 주소를 하나씩 두드려 보는 쪽은 여기서 자국이 남는다.
+       ⛔ 응답이 이미 나간 뒤다 — 손님을 한 톨도 늦추지 않는다. */
+    침입끝났다(req, res);
   });
 
   /* 🔴🔴 [2026-11-05 · 사장님] **침입을 스스로 알아보고 문에서 끊는다.**

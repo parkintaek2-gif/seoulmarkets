@@ -51,6 +51,18 @@ export const 세지않는이름 = [
   'perplexitybot', 'oai-searchbot', 'chatgpt-user', 'gptbot', 'claudebot',
   'facebookexternalhit', 'twitterbot', 'slackbot', 'kakaotalk',
 ];
+
+export const 스캐너이름 = [
+  'sqlmap', 'nikto', 'nmap', 'masscan', 'zgrab', 'dirbuster', 'gobuster',
+  'ffuf', 'feroxbuster', 'wpscan', 'acunetix', 'nessus', 'openvas', 'arachni',
+  'w3af', 'xsstrike', 'commix', 'hydra', 'havij', 'netsparker', 'appscan',
+  'nuclei', 'wfuzz', 'dirsearch', 'whatweb', 'joomscan',
+];
+
+export const 훑기창분 = 360;
+export const 훑기한도 = 20;
+export const 열쇠두드림창분 = 10;
+export const 열쇠두드림한도 = 12;
 /* 규칙 끝 */
 
 /** ⛔ 우리 자신은 안 끊는다 */
@@ -66,6 +78,8 @@ export function 재본다({ 주소 = '', 물음 = '', 이름 = '' } = {}) {
   let 점 = 0;
   const 전체 = String(주소) + '?' + String(물음);
   if (세지않는이름.some((w) => String(이름).toLowerCase().includes(w))) return { 점: 0, 까닭: [] };
+  const 이름소문자 = String(이름).toLowerCase();
+  for (const w of 스캐너이름) if (이름소문자.includes(w)) { 점 += 10; 까닭.push('스캐너 — ' + w); break; }
   for (const 자 of 탐침) if (자.test(주소)) { 점 += 10; 까닭.push('탐침 주소'); break; }
   for (const x of 공격글자) if (x.자.test(전체)) { 점 += x.점; 까닭.push(x.이름); }
   return { 점, 까닭 };
@@ -113,6 +127,52 @@ export function 쌓는다(ip, 점, 까닭, 지금 = Date.now()) {
   if (기록.length > 300) 기록.shift();
   console.log(`[침입막기] 끊었다 ${가린다(ip)} · ${분}분 · ${횟수}번째 · ${난것.까닭.join(', ')}`);
   return 난것;
+}
+
+/* ── 훑기 재는 자 ──────────────────────────────────────────────────
+ * 🔴 [2026-11-05] 위 규칙들은 «내가 아는 수법»만 잡는다. 목록에 없는 주소를
+ *   하나씩 두드려 보는 쪽은 404 를 받으며 마음껏 훑고 다녔다.
+ * [자국] 훑는 쪽은 **서로 다른 주소**에서 404 를 잔뜩 받는다. 손님도 404 를
+ *   받지만 «같은 주소»를 다시 받는다(그림 하나가 빠진 지면).
+ *   ⇒ 수가 아니라 «서로 다른 주소의 수»를 센다. 이것이 둘을 가른다. */
+const 헛디딤 = new Map();
+
+/** 응답이 끝난 뒤에 부른다. 끊어야 하면 그 내용을 돌려준다 */
+export function 헛디딤본다(ip, 상태, 주소, 이름 = '', 지금 = Date.now()) {
+  if (우리인가(ip)) return null;
+  if (세지않는이름.some((w) => String(이름).toLowerCase().includes(w))) return null;
+  const n = Number(상태);
+  if (n !== 404 && n !== 401 && n !== 403) return null;
+
+  const 것 = 헛디딤.get(ip) || { 주소들: new Set(), 시작: 지금, 열쇠실패: 0, 열쇠시작: 지금 };
+  if (n === 404) {
+    if (지금 - 것.시작 > 훑기창분 * 60 * 1000) { 것.주소들 = new Set(); 것.시작 = 지금; }
+    것.주소들.add(String(주소).slice(0, 200));
+  } else {
+    if (지금 - 것.열쇠시작 > 열쇠두드림창분 * 60 * 1000) { 것.열쇠실패 = 0; 것.열쇠시작 = 지금; }
+    것.열쇠실패 += 1;
+  }
+  헛디딤.set(ip, 것);
+  if (헛디딤.size > 5000) 헛디딤.delete(헛디딤.keys().next().value);
+
+  if (것.주소들.size >= 훑기한도) {
+    것.주소들 = new Set(); 것.시작 = 지금;
+    return 쌓는다(ip, 10, ['훑기 — 못 찾은 주소 ' + 훑기한도 + '곳'], 지금);
+  }
+  if (것.열쇠실패 >= 열쇠두드림한도) {
+    것.열쇠실패 = 0; 것.열쇠시작 = 지금;
+    return 쌓는다(ip, 10, ['열쇠 두드리기 ' + 열쇠두드림한도 + '번'], 지금);
+  }
+  return null;
+}
+
+/** 응답이 끝난 뒤에 부르는 입구 — 서버가 res.on('finish') 에서 부른다 */
+export function 끝났다(req, res) {
+  try {
+    const ip = String(req.headers['x-forwarded-for'] || '').split(',')[0].trim()
+      || req.socket?.remoteAddress || 'unknown';
+    헛디딤본다(ip, res.statusCode, String(req.url || '').split('?')[0], req.headers['user-agent'] || '');
+  } catch { /* 세다가 터져도 사이트는 돈다 */ }
 }
 
 export function 셈() {
@@ -166,8 +226,43 @@ export function 자가시험() {
   본다('🔴 ⛔ 우리 자신은 안 끊는다', 쌓는다('127.0.0.1', 100, ['탐침 주소'], 때) === null);
   본다('⛔ 주소를 통째로 안 적는다', 가린다('203.0.113.9') === '203.0.x.x');
   본다('⛔ 빈 것에 안 터진다', 재본다({}).점 === 0 && 끊나({ headers: {} }) === false);
+  본다('스캐너 이름을 잡는다 — sqlmap', 재본다({ 주소: '/', 이름: 'sqlmap/1.7.2#stable' }).점 >= 끊는점수);
+  본다('🔴 ⛔ 보통 브라우저 이름은 0 이다',
+    재본다({ 주소: '/ko/review/x', 이름: 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) Chrome/153.0.0.0 Safari/537.36' }).점 === 0);
+  본다('🔴 서로 다른 주소로 404 를 스무 곳 받으면 끊는다', (() => {
+    쌓임.clear(); 끊김.clear(); 헛디딤.clear();
+    const t = Date.now();
+    let 난것 = null;
+    for (let i = 0; i < 훑기한도; i++) 난것 = 헛디딤본다('203.0.113.40', 404, '/없는곳' + i, '', t + i) || 난것;
+    return !!난것;
+  })());
+  본다('🔴 ⛔ «같은» 주소를 백 번 받아도 안 끊는다 — 그림 빠진 지면을 보는 손님이다', (() => {
+    쌓임.clear(); 끊김.clear(); 헛디딤.clear();
+    const t = Date.now();
+    for (let i = 0; i < 100; i++) 헛디딤본다('203.0.113.41', 404, '/img/없는그림.png', '', t + i);
+    return !끊겼나('203.0.113.41', t + 200);
+  })());
+  본다('🔴 ⛔ 구글이 404 를 많이 받아도 안 끊는다', (() => {
+    쌓임.clear(); 끊김.clear(); 헛디딤.clear();
+    const t = Date.now();
+    for (let i = 0; i < 50; i++) 헛디딤본다('66.249.66.1', 404, '/옛글' + i, 'Googlebot/2.1', t + i);
+    return !끊겼나('66.249.66.1', t + 100);
+  })());
+  본다('🔴 열쇠를 거듭 두드리면 끊는다', (() => {
+    쌓임.clear(); 끊김.clear(); 헛디딤.clear();
+    const t = Date.now();
+    let 난것 = null;
+    for (let i = 0; i < 열쇠두드림한도; i++) 난것 = 헛디딤본다('203.0.113.42', 401, '/api/x', '', t + i) || 난것;
+    return !!난것;
+  })());
+  본다('🔴 ⛔ 200 으로 잘 받는 것은 세지 않는다', (() => {
+    쌓임.clear(); 끊김.clear(); 헛디딤.clear();
+    const t = Date.now();
+    for (let i = 0; i < 100; i++) 헛디딤본다('203.0.113.43', 200, '/지면' + i, '', t + i);
+    return !끊겼나('203.0.113.43', t + 200);
+  })());
 
-  쌓임.clear(); 끊김.clear(); 기록.length = 0;
+  쌓임.clear(); 끊김.clear(); 기록.length = 0; 헛디딤.clear();
   const 빨강 = 것.filter((x) => !x.참);
   console.log(`■ 침입막기(세 사이트) 자가시험 ${것.length - 빨강.length}/${것.length}`);
   for (const x of 것) console.log(`  ${x.참 ? '✅' : '🔴'} ${x.이름}`);
