@@ -1578,6 +1578,10 @@ if (내가실행됐다) {
   const 검사들 = ['check-kcw-frontmatter.mjs', 'check-kcw-video-lists.mjs',
     'check-kcw-article-backlinks.mjs', 'check-kcw-names-in-title.mjs', 'check-no-riot.mjs', 'check-kcw-my-files-only.mjs',
     'check-kcw-title-cutoff.mjs',
+    /* 🔴 [2026-11-05] 막는 자가 두 벌이다(케이라이프맵·세 사이트). 한쪽만 고치면
+       나머지 쪽이 그 수법에 그대로 열려 있고, 두 벌 다 자가시험은 초록이라 아무도 모른다.
+       ⭐ 「하나를 고치면 인용한 곳까지 따라간다」를 기억이 아니라 검사가 하게 한다. */
+    'check-침입막기-쌍둥이.mjs',
   /* ⚠ 2026-09-01 — `check-title-change-cooldown` 을 더했다. 오늘 나는 «1페이지에 떠 있는데
      클릭 0» 인 지면 422장을 재고 작품 지면 133장의 제목을 바로 고치려 했다. 자리에 가 보니
      앞선 세션이 「9/05 전에 고치지 말라」를 **주석으로만** 적어 두었더라.

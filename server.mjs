@@ -23,6 +23,7 @@ import { 던지기 as 투표던지기, 집계 as 투표집계 } from './src/lib/
 import { 경로후보 } from './src/lib/url-path.mjs';
 import { 센다, flush할때되면, 유입표, 현황 as 유입현황, 우리점검머리글 } from './src/lib/traffic.mjs';
 import { 못닿는주소인가 } from './src/lib/mail-guard.mjs';
+import { 끊나 as 침입을끊나 } from './src/lib/침입막기.mjs';
 /* 🔴 [2026-09-13 · 5번] 달러 결제 — 사장님: 「페이팔 결제붙여」·「이런 절차 필요없이 바로 결제」 */
 import * as 페이팔 from './src/lib/paypal.mjs';
 import * as 계정 from './src/lib/accounts.mjs';
@@ -1545,6 +1546,18 @@ const server = createServer((req, res) => {
       }
     } catch { /* 집계 때문에 사이트가 죽는 일은 없어야 한다 */ }
   });
+
+  /* 🔴🔴 [2026-11-05 · 사장님] **침입을 스스로 알아보고 문에서 끊는다.**
+     「AI의 침입을 막을 수 있는 건 AI뿐이라고 난 생각한다. 보안에 문제가 생기지 않게
+       예방조치, 누가 침입을 시도하면 바로 알아서 막을 수 있는 조치를 해라」
+     ⛔ 무엇에 걸렸는지 알려 주지 않는다 — 알려 주면 그것만 피해서 다시 온다.
+     ⛔ 구글·손님은 안 끊는다(src/lib/침입막기.mjs 자가시험이 그것을 지킨다).
+     🔴 탈이 나면 환경변수 `침입막기=끈다` 로 코드를 안 고치고 끌 수 있다. */
+  if (침입을끊나(req)) {
+    res.writeHead(403, { ...BASE_HEADERS, 'Content-Type': 'text/plain; charset=utf-8' });
+    res.end('Forbidden');
+    return;
+  }
 
   handle(req, res).catch((err) => {
     console.error(`[500] ${req.method} ${req.url} —`, err?.message ?? err);
