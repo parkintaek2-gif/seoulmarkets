@@ -88,15 +88,51 @@ export function 자가시험() {
   return 빨강.length === 0;
 }
 
+/**
+ * 어느 포트의 크롬에 붙나 — 🔴 [2026-11-05 · 사장님]
+ *   「대부분 네가 열어놓고 안 닫는 것 같다. 사용 후 탭을 바로 닫아」
+ *   이 자는 9222 만 두드리고 있었다. 그런데 작업용 크롬이 **9223** 으로 옮겨 간 뒤로
+ *   언제나 「못 붙었다」만 내고 한 탭도 못 치웠다. 그 사이 탭이 다시 225개까지 쌓였다.
+ *   ⛔ 포트를 하나만 적지 않는다 — 한 자리가 바뀌면 치우는 일이 통째로 멈춘다.
+ */
+export const 두드릴포트 = process.env.KLM_CHROME_PORT ? [Number(process.env.KLM_CHROME_PORT)] : [9223, 9222];
+
+/** 붙을 수 있는 포트와 그 탭 목록을 찾아 온다. 못 붙으면 null — ⛔ 0 으로 적지 않는다 */
+export async function 붙는다() {
+  for (const 포트 of 두드릴포트) {
+    const r = await fetch(`http://127.0.0.1:${포트}/json/list`, { signal: AbortSignal.timeout(4000) }).catch(() => null);
+    if (r && r.ok) {
+      const 탭들 = await r.json().catch(() => null);
+      if (탭들) return { 포트, 탭들 };
+    }
+  }
+  return null;
+}
+
+/** 남의 자(두 시간 점검 등)가 불러 쓰는 입구 — 닫은 수와 남은 수를 돌려준다. 못 붙으면 null */
+export async function 치운다() {
+  const 붙음 = await 붙는다();
+  if (!붙음) return null;
+  const 닫을것 = 닫을것고르기(붙음.탭들);
+  let 닫힘 = 0;
+  for (const t of 닫을것) {
+    const x = await fetch(`http://127.0.0.1:${붙음.포트}/json/close/${t.id}`).catch(() => null);
+    if (x && x.ok) 닫힘++;
+  }
+  const 뒤 = await 붙는다();
+  return { 포트: 붙음.포트, 닫힘, 남은수: 뒤 ? 뒤.탭들.filter((t) => t.type === 'page').length : null };
+}
+
 /* ── 진입점 ───────────────────────────────────────────────────────── */
 const 내가진입점 = process.argv[1] && fileURLToPath(import.meta.url) === path.resolve(process.argv[1]);
 if (내가진입점) {
   if (process.argv.includes('--자가시험')) process.exit(자가시험() ? 0 : 1);
   const 닫는다 = process.argv.includes('--닫는다');
 
-  const r = await fetch('http://127.0.0.1:9222/json/list').catch(() => null);
-  if (!r || !r.ok) { console.log('🔴 크롬 9222 에 못 붙었다'); process.exit(1); }
-  const 탭들 = await r.json();
+  const 붙음 = await 붙는다();
+  if (!붙음) { console.log(`🔴 크롬에 못 붙었다 (${두드릴포트.join('·')})`); process.exit(1); }
+  const { 포트, 탭들 } = 붙음;
+  console.log(`■ 크롬 ${포트} 에 붙었다`);
   const 쪽 = 탭들.filter((t) => t.type === 'page');
   const 닫을것 = 닫을것고르기(탭들);
 
@@ -113,11 +149,11 @@ if (내가진입점) {
   let 닫힘 = 0; let 탈 = 0;
   for (const t of 닫을것) {
     try {
-      const x = await fetch(`http://127.0.0.1:9222/json/close/${t.id}`);
+      const x = await fetch(`http://127.0.0.1:${포트}/json/close/${t.id}`);
       x.ok ? 닫힘++ : 탈++;
     } catch { 탈++; }
   }
   console.log(`\n✅ 닫았다 ${닫힘}개 · 못 닫은 것 ${탈}개`);
-  const r2 = await fetch('http://127.0.0.1:9222/json/list').catch(() => null);
-  if (r2 && r2.ok) console.log(`   지금 남은 탭 ${(await r2.json()).filter((t) => t.type === 'page').length}개`);
+  const 뒤 = await 붙는다();
+  if (뒤) console.log(`   지금 남은 탭 ${뒤.탭들.filter((t) => t.type === 'page').length}개`);
 }
