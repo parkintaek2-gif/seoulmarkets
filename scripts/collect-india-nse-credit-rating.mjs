@@ -164,7 +164,17 @@ export function 갈무리한다(줄들, 갈래이름, 오늘 = new Date()) {
 async function 받아온다() {
   const require = createRequire('file:///C:/Users/User/Documents/GitHub/klifemap/package.json');
   const puppeteer = require('puppeteer-core');
-  const b = await puppeteer.connect({ browserURL: (process.env.KLM_CHROME_PORT ? 'http://127.0.0.1:' + process.env.KLM_CHROME_PORT : 'http://127.0.0.1:9222'), defaultViewport: null });
+  /* 🔴 [2026-11-05 · 사장님 「에마켓츠는 방치중인가?」]
+     ⛔ 9222 하나만 보고 있었다. 공용 크롬이 9223 으로 서 있으면 이 거두기는 «그 자리에서 죽는다» —
+       그래서 인도 신용등급이 조용히 멈춰 있었다. 「걸어 뒀다」를 「돌고 있다」로 읽은 자리다.
+     ⇒ 두 자리를 차례로 두드린다. 둘 다 없으면 무엇이 없는지 적고 멈춘다. */
+  const 두드릴것 = process.env.KLM_CHROME_PORT ? [process.env.KLM_CHROME_PORT] : [9222, 9223];
+  let b = null, 마지막탈 = null;
+  for (const 포트 of 두드릴것) {
+    try { b = await puppeteer.connect({ browserURL: 'http://127.0.0.1:' + 포트, defaultViewport: null }); break; }
+    catch (e) { 마지막탈 = e; }
+  }
+  if (!b) throw new Error('공용 크롬에 못 붙었다 (' + 두드릴것.join('·') + ') — ' + (마지막탈 ? 마지막탈.message.slice(0, 120) : ''));
   const page = await b.newPage();          /* ⭐ 언제나 «새 탭» */
   try {
     await page.goto(지면, { waitUntil: 'domcontentloaded', timeout: 60000 });
