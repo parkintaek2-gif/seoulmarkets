@@ -162,5 +162,27 @@ if (나인가) {
     [path.join(뿌리, 'scripts', '시킨다-중부매일-기사.mjs'), '--회차', 회차, '--글', path.relative(뿌리, 글길)],
     { cwd: 뿌리, encoding: 'utf8', timeout: 6 * 60 * 1000, stdio: 'inherit' });
   if (r.status !== 0) { console.log('🔴 되돌리지 못했다 — 위 까닭을 본다'); process.exit(1); }
+
+  /* 🔴🔴 [2026-11-06 · 5번] **되돌리고 끝내면 다시 쓴 기사가 영영 안 온다.**
+     [무슨 일이] 여기 「다음 거둠에서 다시 받는다」고 적어 두었는데 **그 말이 거짓이었다.**
+       거두는 자는 그 회차에 자국이 있으면 건너뛴다. 다시 쓴 글은 제목이 대개 같으므로
+       「다른 기사다」에도 안 걸린다. ⇒ 되돌린 기사는 한 번도 안 거둬졌다.
+       그래서 사흘에 12건이 막힌 채 버려졌고 사장님은 그 기사를 한 건도 못 받으셨다.
+     ⇒ 자국에 «되돌림» 토막을 적어 그 회차의 문을 다시 연다. 거두는 자가 이 토막을 읽는다.
+     ⛔ 자국을 지우지 않는다 — 기록이다. 덧붙이기만 한다. */
+  try {
+    const 자국방 = path.join(뿌리, 'docs', '고정업무-마커', '중부매일-스포츠-보낸자국');
+    const 오늘 = new Date().toLocaleDateString('sv-SE');
+    const 자국 = path.join(자국방, `${오늘}_${회차}시.txt`);
+    const 토막 = `${new Date().toLocaleString('ko-KR')}\n[되돌림] ${회차}시 — 막힌 기사를 회차에 되돌렸다\n`
+      + `받는곳 (안 보냄)\n까닭 ${String(까닭).slice(0, 120)}\n`
+      + `기다림 다시 쓴 글을 거두려고 이 회차의 문을 다시 연다\n`;
+    if (fs.existsSync(자국)) fs.appendFileSync(자국, `\n${토막}`, 'utf8');
+    else fs.writeFileSync(자국, 토막, 'utf8');
+    console.log(`✔ 자국에 «되돌림»을 적었다 — 거두는 자가 ${회차}시를 다시 연다`);
+  } catch (e) {
+    console.log('🔴 자국에 «되돌림»을 못 적었다 — ' + String(e && e.message ? e.message : e).slice(0, 80));
+    console.log(`   ⛔ 그러면 다시 쓴 글을 못 거둔다. 손으로 --다시=${회차} 를 준다`);
+  }
   console.log(`✅ ${회차}시 회차에 되돌렸다. 다음 거둠에서 다시 받는다.`);
 }
