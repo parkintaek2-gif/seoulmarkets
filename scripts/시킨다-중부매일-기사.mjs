@@ -130,7 +130,26 @@ if (내가진입점) {
      탭을 닫는 `finally` 가 안 돌아 탭이 남는다 — 그것이 오늘 PC 를 누른 까닭이다. */
   const 해본다 = async () => {
     await page.setViewport({ width: 1400, height: 950 });
-    await page.goto(`https://claude.ai/scheduled-task/${TRIG}`, { waitUntil: 'domcontentloaded', timeout: 90000 });
+    /* 🔴🔴 [2026-11-06 · 5번] **한 번 열어 보고 그만두지 않는다.**
+       [무슨 일이] 이 goto 가 90초를 넘겨 터지면 이 자가 그대로 죽었다. 그 바람에
+         거두는 자가 막힌 기사를 회차에 «되돌리는» 자리에서 「🔴 되돌리지 못했다」만 찍고
+         기사를 버렸다. 같은 명령을 손으로 한 번 더 치니 바로 열렸다 — 고장이 아니라 «때»였다.
+       ⇒ 세 번까지 다시 연다. 그래도 안 열리면 그때 터뜨린다 — 조용히 넘어가지 않는다. */
+    {
+      let 마지막탈 = null;
+      for (let 번 = 1; 번 <= 3; 번 += 1) {
+        try {
+          await page.goto(`https://claude.ai/scheduled-task/${TRIG}`, { waitUntil: 'domcontentloaded', timeout: 90000 });
+          마지막탈 = null;
+          break;
+        } catch (e) {
+          마지막탈 = e;
+          console.log(`⚠ 회차 지면을 못 열었다 (${번}/3) — ${String(e && e.message ? e.message : e).slice(0, 60)}`);
+          await 잠깐(5000);
+        }
+      }
+      if (마지막탈) throw 마지막탈;
+    }
     for (let i = 0; i < 20; i++) { await 잠깐(2000); if (await page.evaluate(() => /지금 실행/.test(document.body.innerText))) break; }
     await 잠깐(2000);
 
