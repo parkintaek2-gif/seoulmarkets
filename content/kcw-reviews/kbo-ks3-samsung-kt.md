@@ -29,6 +29,9 @@ sources:
   - org: "네이버 스포츠"
     api: "경기 전 정보 — 한국시리즈 4차전 11월 7일 14시 대구, 선발 장찬희·로건"
     url: "https://m.sports.naver.com/game/77771107KTSS02026/preview"
+  - org: "중부매일"
+    api: "원문 기사 — 경기 흐름과 수훈 선수"
+    url: "https://www.jbnews.com/news/articleView.html?idxno=1515337"
 tags: ["KBO", "한국시리즈", "삼성 라이온즈", "KT 위즈", "후라도", "구자욱", "김성윤", "박승규", "소형준", "힐리어드", "이승민", "김태훈"]
 author: "K Culture Wire"
 ---
