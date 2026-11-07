@@ -66,7 +66,7 @@ while (!끝()) {
   if (g) {
     const 회 = Number(String(g.statusInfo ?? '').match(/(\d+)회/)?.[1] ?? 0);
     console.log(지금(), g.statusCode, g.statusInfo, `${g.awayTeamName} ${g.awayTeamScore}:${g.homeTeamScore} ${g.homeTeamName}`);
-    const 끝났나 = ['RESULT', 'CANCEL'].includes(g.statusCode);
+    const 끝났나 = ['RESULT', 'ENDED', 'CANCEL'].includes(g.statusCode);
     if (!끝났나 && 회 >= 8 && !시킨것().includes(`${경기}\t미리쓰기`)) {
       시킨다('미리쓰기', `[사장님 지시 — 지금 바로] 한국시리즈 ${차전}차전 기사를 미리 써 두십시오. 사장님 말씀 그대로: 「경기 끝나자마자 기사 받을 수 있게 조치해라. 사진은 찾지마라.」
 
