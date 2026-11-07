@@ -220,3 +220,481 @@ Node.js v26.3.1
 
 📈 이력에 12줄 쌓았다 — docs/색인요청-이력.tsv
 ⛔ 「요청했다」는 우리가 한 일이다. 색인됐는지는 사흘 뒤에 다시 잰다.
+■ 목록 지면이 받고 있는 검색어 20개
+   회사 이름표 2,703개로 맞춰 본다
+
+   ✅ 노출  45 · 6.2위  「daoudata」 → /company/daou-data
+   ✅ 노출  13 · 3.6위  「gemvax」 → /company/gemvax-and-kael
+   ✅ 노출   5 · 3.2위  「neoimmunetech」 → /company/neoimmunetech
+   ✅ 노출   5 · 16.8위  「boditech med」 → /company/boditech-med
+   ✅ 노출   5 · 6.6위  「d&d pharmatech」 → /company/d-and-d-pharmatech
+   ✅ 노출   5 · 2.2위  「fine semitech」 → /company/fine-semitech
+   ⬜ 못 찾음  노출   4  「"al ansari financial services" -site:alansari.ae -site:facebook.com -site:instagram.com -site:threads.com -site:threads.net -site:linkedin.com -site:x.com -site:twitter.com -site:tiktok.com -site:youtube.com -site:youtu.be -site:reddit.com -site:t.me -site:telegram.me -site:telegram.org -site:pinterest.com -site:vimeo.com」
+   ✅ 노출   4 · 10.3위  「curiox biosystems」 → /company/curiox-biosystems
+   ⬜ 못 찾음  노출   4  「fulin plastic industry (cayman) holding co., ltd. analyst price target disagreement」
+   ✅ 노출   4 · 4.8위  「gigalane」 → /company/gigalane
+   ✅ 노출   4 · 7.0위  「ligachem」 → /company/ligachem-biosciences
+   ⬜ 못 찾음  노출   4  「nkgen」
+   ⬜ 못 찾음  노출   3  「"al ansari financial services pjsc" -site:alansari.ae -site:facebook.com -site:instagram.com -site:threads.com -site:threads.net -site:linkedin.com -site:x.com -site:twitter.com -site:tiktok.com -site:youtube.com -site:youtu.be -site:reddit.com -site:t.me -site:telegram.me -site:telegram.org -site:pinterest.com -site:vimeo.com」
+   ⬜ 못 찾음  노출   3  「applied biocode」
+   ✅ 노출   3 · 3.7위  「dongwoon anatech」 → /company/dongwoon-anatech
+   ✅ 노출   3 · 4.0위  「geneone」 → /company/geneone-life-science
+   ✅ 노출   3 · 8.7위  「geneone life science」 → /company/geneone-life-science
+   ⬜ 못 찾음  노출   3  「lianyou metals」
+   ✅ 노출   3 · 61.3위  「shinwon」 → /company/shinwon
+   ✅ 노출   3 · 23.3위  「tomocube」 → /company/tomocube
+
+■ 수요가 이미 있는 낱장 14장 — 다 실물로 200 을 봤다
+⛔ 이 자는 지면을 만들지 않는다. 색인 줄에 세울 차례를 정할 뿐이다.
+📈 적었다 — docs/수요지면.tsv
+🔴 닫혔다  /school  아래 2,525장  — 크롤링됨 - 현재 색인이 생성되지 않음
+🔴 닫혔다  /taiwan/companies  아래 1,057장  — 크롤링됨 - 현재 색인이 생성되지 않음
+🔴 닫혔다  /university  아래 420장  — 크롤링됨 - 현재 색인이 생성되지 않음
+🔴 닫혔다  /major  아래 300장  — 크롤링됨 - 현재 색인이 생성되지 않음
+🔴 닫혔다  /region  아래 250장  — 크롤링됨 - 현재 색인이 생성되지 않음
+🔴 닫혔다  /age  아래 101장  — 크롤링됨 - 현재 색인이 생성되지 않음
+✅ 열렸다  /uae/companies  아래 104장  
+🔴 닫혔다  /work  아래 100장  — 크롤링됨 - 현재 색인이 생성되지 않음
+🔴 닫혔다  /rankings  아래 60장  — Google에는 아직 알려지지 않은 URL입니다.
+🔴 닫혔다  /all  아래 50장  — 크롤링됨 - 현재 색인이 생성되지 않음
+🔴 닫혔다  /research  아래 40장  — 크롤링됨 - 현재 색인이 생성되지 않음
+🔴 닫혔다  /articles  아래 900장  — 크롤링됨 - 현재 색인이 생성되지 않음
+🔴 닫혔다  /person  아래 800장  — 크롤링됨 - 현재 색인이 생성되지 않음
+🔴 닫혔다  /actors  아래 300장  — 크롤링됨 - 현재 색인이 생성되지 않음
+🔴 닫혔다  /data  아래 120장  — 크롤링됨 - 현재 색인이 생성되지 않음
+🔴 닫혔다  /all-ten  아래 60장  — 크롤링됨 - 현재 색인이 생성되지 않음
+🔴 닫혔다  /all  아래 1,295장  — 크롤링됨 - 현재 색인이 생성되지 않음
+
+■ 닫힌 문 16개 · 오늘 요청할 것 18개
+   /taiwan/companies  (아래 1,057장)
+   /all-ten  (아래 60장)
+   /all  (아래 50장)
+   /research  (아래 40장)
+   /company/daou-data  (아래 0.005장)
+   /company/gemvax-and-kael  (아래 0.001장)
+   /company/neoimmunetech  (아래 0.001장)
+   /company/boditech-med  (아래 0.001장)
+   /company/d-and-d-pharmatech  (아래 0.001장)
+   /company/fine-semitech  (아래 0.001장)
+   /company/curiox-biosystems  (아래 0장)
+   /company/gigalane  (아래 0장)
+   /company/ligachem-biosciences  (아래 0장)
+   /company/dongwoon-anatech  (아래 0장)
+   /company/geneone-life-science  (아래 0장)
+   /company/geneone-life-science  (아래 0장)
+   /company/shinwon  (아래 0장)
+   /company/tomocube  (아래 0장)
+✅ /taiwan/companies — 우선순위 크롤링 대기열에 추가
+⛔ /all-ten — 할당량을 초과하여 이 요청을 처리할 수 없습니다. 내일 다시 제출해 주세요.
+⛔ 하루 한도다. 나머지는 내일 이 자가 다시 한다.
+
+📈 이력에 2줄 쌓았다 — docs/색인요청-이력.tsv
+⛔ 「요청했다」는 우리가 한 일이다. 색인됐는지는 사흘 뒤에 다시 잰다.
+■ 목록 지면이 받고 있는 검색어 20개
+   회사 이름표 2,703개로 맞춰 본다
+
+   ✅ 노출  45 · 6.2위  「daoudata」 → /company/daou-data
+   ✅ 노출  13 · 3.6위  「gemvax」 → /company/gemvax-and-kael
+   ✅ 노출   5 · 3.2위  「neoimmunetech」 → /company/neoimmunetech
+   ✅ 노출   5 · 16.8위  「boditech med」 → /company/boditech-med
+   ✅ 노출   5 · 6.6위  「d&d pharmatech」 → /company/d-and-d-pharmatech
+   ✅ 노출   5 · 2.2위  「fine semitech」 → /company/fine-semitech
+   ⬜ 못 찾음  노출   4  「"al ansari financial services" -site:alansari.ae -site:facebook.com -site:instagram.com -site:threads.com -site:threads.net -site:linkedin.com -site:x.com -site:twitter.com -site:tiktok.com -site:youtube.com -site:youtu.be -site:reddit.com -site:t.me -site:telegram.me -site:telegram.org -site:pinterest.com -site:vimeo.com」
+   ✅ 노출   4 · 10.3위  「curiox biosystems」 → /company/curiox-biosystems
+   ⬜ 못 찾음  노출   4  「fulin plastic industry (cayman) holding co., ltd. analyst price target disagreement」
+   ✅ 노출   4 · 4.8위  「gigalane」 → /company/gigalane
+   ✅ 노출   4 · 7.0위  「ligachem」 → /company/ligachem-biosciences
+   ⬜ 못 찾음  노출   4  「nkgen」
+   ⬜ 못 찾음  노출   3  「"al ansari financial services pjsc" -site:alansari.ae -site:facebook.com -site:instagram.com -site:threads.com -site:threads.net -site:linkedin.com -site:x.com -site:twitter.com -site:tiktok.com -site:youtube.com -site:youtu.be -site:reddit.com -site:t.me -site:telegram.me -site:telegram.org -site:pinterest.com -site:vimeo.com」
+   ⬜ 못 찾음  노출   3  「applied biocode」
+   ✅ 노출   3 · 3.7위  「dongwoon anatech」 → /company/dongwoon-anatech
+   ✅ 노출   3 · 4.0위  「geneone」 → /company/geneone-life-science
+   ✅ 노출   3 · 8.7위  「geneone life science」 → /company/geneone-life-science
+   ⬜ 못 찾음  노출   3  「lianyou metals」
+   ✅ 노출   3 · 61.3위  「shinwon」 → /company/shinwon
+   ✅ 노출   3 · 23.3위  「tomocube」 → /company/tomocube
+
+■ 수요가 이미 있는 낱장 14장 — 다 실물로 200 을 봤다
+⛔ 이 자는 지면을 만들지 않는다. 색인 줄에 세울 차례를 정할 뿐이다.
+📈 적었다 — docs/수요지면.tsv
+node:events:487
+      throw er; // Unhandled 'error' event
+      ^
+
+SocketError: other side closed
+    at TLSSocket.onHttp2SocketEnd (node:internal/deps/undici/undici:8758:26)
+    at TLSSocket.emit (node:events:521:24)
+    at endReadableNT (node:internal/streams/readable:1744:12)
+    at process.processTicksAndRejections (node:internal/process/task_queues:90:21)
+Emitted 'error' event on ClientHttp2Stream instance at:
+    at emitErrorNT (node:internal/streams/destroy:170:8)
+    at emitErrorCloseNT (node:internal/streams/destroy:129:3)
+    at process.processTicksAndRejections (node:internal/process/task_queues:90:21) {
+  code: 'UND_ERR_SOCKET',
+  socket: {
+    localAddress: '192.168.219.103',
+    localPort: 3934,
+    remoteAddress: '34.8.247.175',
+    remotePort: 443,
+    remoteFamily: 'IPv4',
+    timeout: undefined,
+    bytesWritten: 662,
+    bytesRead: 394623
+  }
+}
+
+Node.js v26.3.1
+🔴 닫혔다  /school  아래 2,525장  — 크롤링됨 - 현재 색인이 생성되지 않음
+✅ 열렸다  /taiwan/companies  아래 1,057장  
+🔴 닫혔다  /university  아래 420장  — 크롤링됨 - 현재 색인이 생성되지 않음
+🔴 닫혔다  /major  아래 300장  — 크롤링됨 - 현재 색인이 생성되지 않음
+🔴 닫혔다  /region  아래 250장  — 크롤링됨 - 현재 색인이 생성되지 않음
+🔴 닫혔다  /age  아래 101장  — 크롤링됨 - 현재 색인이 생성되지 않음
+✅ 열렸다  /uae/companies  아래 104장  
+🔴 닫혔다  /work  아래 100장  — 크롤링됨 - 현재 색인이 생성되지 않음
+🔴 닫혔다  /rankings  아래 60장  — Google에는 아직 알려지지 않은 URL입니다.
+🔴 닫혔다  /all  아래 50장  — 크롤링됨 - 현재 색인이 생성되지 않음
+🔴 닫혔다  /research  아래 40장  — 크롤링됨 - 현재 색인이 생성되지 않음
+🔴 닫혔다  /articles  아래 900장  — 크롤링됨 - 현재 색인이 생성되지 않음
+🔴 닫혔다  /person  아래 800장  — 크롤링됨 - 현재 색인이 생성되지 않음
+🔴 닫혔다  /actors  아래 300장  — 크롤링됨 - 현재 색인이 생성되지 않음
+🔴 닫혔다  /data  아래 120장  — 크롤링됨 - 현재 색인이 생성되지 않음
+🔴 닫혔다  /all-ten  아래 60장  — 크롤링됨 - 현재 색인이 생성되지 않음
+🔴 닫혔다  /all  아래 1,295장  — 크롤링됨 - 현재 색인이 생성되지 않음
+
+■ 닫힌 문 15개 · 오늘 요청할 것 16개
+   /all  (아래 50장)
+   /research  (아래 40장)
+   /company/daou-data  (아래 0.005장)
+   /company/gemvax-and-kael  (아래 0.001장)
+   /company/neoimmunetech  (아래 0.001장)
+   /company/boditech-med  (아래 0.001장)
+   /company/d-and-d-pharmatech  (아래 0.001장)
+   /company/fine-semitech  (아래 0.001장)
+   /company/curiox-biosystems  (아래 0장)
+   /company/gigalane  (아래 0장)
+   /company/ligachem-biosciences  (아래 0장)
+   /company/dongwoon-anatech  (아래 0장)
+   /company/geneone-life-science  (아래 0장)
+   /company/geneone-life-science  (아래 0장)
+   /company/shinwon  (아래 0장)
+   /company/tomocube  (아래 0장)
+✅ /all — 우선순위 크롤링 대기열에 추가
+✅ /research — 우선순위 크롤링 대기열에 추가
+✅ /company/daou-data — 우선순위 크롤링 대기열에 추가
+✅ /company/gemvax-and-kael — 우선순위 크롤링 대기열에 추가
+✅ /company/neoimmunetech — 우선순위 크롤링 대기열에 추가
+✅ /company/boditech-med — 우선순위 크롤링 대기열에 추가
+✅ /company/d-and-d-pharmatech — 우선순위 크롤링 대기열에 추가
+✅ /company/fine-semitech — 우선순위 크롤링 대기열에 추가
+✅ /company/curiox-biosystems — 우선순위 크롤링 대기열에 추가
+✅ /company/gigalane — 우선순위 크롤링 대기열에 추가
+✅ /company/ligachem-biosciences — 우선순위 크롤링 대기열에 추가
+⛔ /company/dongwoon-anatech — 할당량을 초과하여 이 요청을 처리할 수 없습니다. 내일 다시 제출해 주세요.
+⛔ 하루 한도다. 나머지는 내일 이 자가 다시 한다.
+
+📈 이력에 12줄 쌓았다 — docs/색인요청-이력.tsv
+⛔ 「요청했다」는 우리가 한 일이다. 색인됐는지는 사흘 뒤에 다시 잰다.
+■ 목록 지면이 받고 있는 검색어 20개
+   회사 이름표 2,703개로 맞춰 본다
+
+   ✅ 노출  45 · 6.2위  「daoudata」 → /company/daou-data
+   ✅ 노출  13 · 3.6위  「gemvax」 → /company/gemvax-and-kael
+   ✅ 노출   5 · 3.2위  「neoimmunetech」 → /company/neoimmunetech
+   ✅ 노출   5 · 16.8위  「boditech med」 → /company/boditech-med
+   ✅ 노출   5 · 6.6위  「d&d pharmatech」 → /company/d-and-d-pharmatech
+   ✅ 노출   5 · 2.2위  「fine semitech」 → /company/fine-semitech
+   ⬜ 못 찾음  노출   4  「"al ansari financial services" -site:alansari.ae -site:facebook.com -site:instagram.com -site:threads.com -site:threads.net -site:linkedin.com -site:x.com -site:twitter.com -site:tiktok.com -site:youtube.com -site:youtu.be -site:reddit.com -site:t.me -site:telegram.me -site:telegram.org -site:pinterest.com -site:vimeo.com」
+   ✅ 노출   4 · 10.3위  「curiox biosystems」 → /company/curiox-biosystems
+   ⬜ 못 찾음  노출   4  「fulin plastic industry (cayman) holding co., ltd. analyst price target disagreement」
+   ✅ 노출   4 · 4.8위  「gigalane」 → /company/gigalane
+   ✅ 노출   4 · 7.0위  「ligachem」 → /company/ligachem-biosciences
+   ⬜ 못 찾음  노출   4  「nkgen」
+   ⬜ 못 찾음  노출   3  「"al ansari financial services pjsc" -site:alansari.ae -site:facebook.com -site:instagram.com -site:threads.com -site:threads.net -site:linkedin.com -site:x.com -site:twitter.com -site:tiktok.com -site:youtube.com -site:youtu.be -site:reddit.com -site:t.me -site:telegram.me -site:telegram.org -site:pinterest.com -site:vimeo.com」
+   ⬜ 못 찾음  노출   3  「applied biocode」
+   ✅ 노출   3 · 3.7위  「dongwoon anatech」 → /company/dongwoon-anatech
+   ✅ 노출   3 · 4.0위  「geneone」 → /company/geneone-life-science
+   ✅ 노출   3 · 8.7위  「geneone life science」 → /company/geneone-life-science
+   ⬜ 못 찾음  노출   3  「lianyou metals」
+   ✅ 노출   3 · 61.3위  「shinwon」 → /company/shinwon
+   ✅ 노출   3 · 23.3위  「tomocube」 → /company/tomocube
+
+■ 수요가 이미 있는 낱장 14장 — 다 실물로 200 을 봤다
+⛔ 이 자는 지면을 만들지 않는다. 색인 줄에 세울 차례를 정할 뿐이다.
+📈 적었다 — docs/수요지면.tsv
+🔴 닫혔다  /school  아래 2,525장  — 크롤링됨 - 현재 색인이 생성되지 않음
+✅ 열렸다  /taiwan/companies  아래 1,057장  
+🔴 닫혔다  /university  아래 420장  — 크롤링됨 - 현재 색인이 생성되지 않음
+🔴 닫혔다  /major  아래 300장  — 크롤링됨 - 현재 색인이 생성되지 않음
+🔴 닫혔다  /region  아래 250장  — 크롤링됨 - 현재 색인이 생성되지 않음
+🔴 닫혔다  /age  아래 101장  — 크롤링됨 - 현재 색인이 생성되지 않음
+✅ 열렸다  /uae/companies  아래 104장  
+🔴 닫혔다  /work  아래 100장  — 크롤링됨 - 현재 색인이 생성되지 않음
+🔴 닫혔다  /rankings  아래 60장  — Google에는 아직 알려지지 않은 URL입니다.
+🔴 닫혔다  /all  아래 50장  — 크롤링됨 - 현재 색인이 생성되지 않음
+🔴 닫혔다  /research  아래 40장  — 크롤링됨 - 현재 색인이 생성되지 않음
+🔴 닫혔다  /articles  아래 900장  — 크롤링됨 - 현재 색인이 생성되지 않음
+🔴 닫혔다  /person  아래 800장  — 크롤링됨 - 현재 색인이 생성되지 않음
+🔴 닫혔다  /actors  아래 300장  — 크롤링됨 - 현재 색인이 생성되지 않음
+🔴 닫혔다  /data  아래 120장  — 크롤링됨 - 현재 색인이 생성되지 않음
+🔴 닫혔다  /all-ten  아래 60장  — 크롤링됨 - 현재 색인이 생성되지 않음
+🔴 닫혔다  /all  아래 1,295장  — 크롤링됨 - 현재 색인이 생성되지 않음
+
+■ 닫힌 문 15개 · 오늘 요청할 것 4개
+   /company/geneone-life-science  (아래 0장)
+   /company/geneone-life-science  (아래 0장)
+   /company/shinwon  (아래 0장)
+   /company/tomocube  (아래 0장)
+C:\Users\User\Documents\GitHub\klifemap\node_modules\puppeteer-core\lib\cjs\puppeteer\util\Deferred.js:60
+            this.#timeoutError = new Errors_js_1.TimeoutError(opts.message);
+                                 ^
+
+TimeoutError: Navigation timeout of 60000 ms exceeded
+    at new Deferred (C:\Users\User\Documents\GitHub\klifemap\node_modules\puppeteer-core\lib\cjs\puppeteer\util\Deferred.js:60:34)
+    at Deferred.create (C:\Users\User\Documents\GitHub\klifemap\node_modules\puppeteer-core\lib\cjs\puppeteer\util\Deferred.js:21:16)
+    at new LifecycleWatcher (C:\Users\User\Documents\GitHub\klifemap\node_modules\puppeteer-core\lib\cjs\puppeteer\cdp\LifecycleWatcher.js:69:60)
+    at CdpFrame.goto (C:\Users\User\Documents\GitHub\klifemap\node_modules\puppeteer-core\lib\cjs\puppeteer\cdp\Frame.js:149:29)
+    at CdpFrame.<anonymous> (C:\Users\User\Documents\GitHub\klifemap\node_modules\puppeteer-core\lib\cjs\puppeteer\util\decorators.js:109:27)
+    at CdpPage.goto (C:\Users\User\Documents\GitHub\klifemap\node_modules\puppeteer-core\lib\cjs\puppeteer\api\Page.js:574:43)
+    at file:///C:/Users/User/Documents/GitHub/dataeconomics/scripts/auto-index-request.mjs:283:17
+
+Node.js v26.3.1
+■ 목록 지면이 받고 있는 검색어 20개
+   회사 이름표 2,703개로 맞춰 본다
+
+   ✅ 노출  45 · 6.2위  「daoudata」 → /company/daou-data
+   ✅ 노출  13 · 3.6위  「gemvax」 → /company/gemvax-and-kael
+   ✅ 노출   5 · 3.2위  「neoimmunetech」 → /company/neoimmunetech
+   ✅ 노출   5 · 16.8위  「boditech med」 → /company/boditech-med
+   ✅ 노출   5 · 6.6위  「d&d pharmatech」 → /company/d-and-d-pharmatech
+   ✅ 노출   5 · 2.2위  「fine semitech」 → /company/fine-semitech
+   ⬜ 못 찾음  노출   4  「"al ansari financial services" -site:alansari.ae -site:facebook.com -site:instagram.com -site:threads.com -site:threads.net -site:linkedin.com -site:x.com -site:twitter.com -site:tiktok.com -site:youtube.com -site:youtu.be -site:reddit.com -site:t.me -site:telegram.me -site:telegram.org -site:pinterest.com -site:vimeo.com」
+   ✅ 노출   4 · 10.3위  「curiox biosystems」 → /company/curiox-biosystems
+   ⬜ 못 찾음  노출   4  「fulin plastic industry (cayman) holding co., ltd. analyst price target disagreement」
+   ✅ 노출   4 · 4.8위  「gigalane」 → /company/gigalane
+   ✅ 노출   4 · 7.0위  「ligachem」 → /company/ligachem-biosciences
+   ⬜ 못 찾음  노출   4  「nkgen」
+   ⬜ 못 찾음  노출   3  「"al ansari financial services pjsc" -site:alansari.ae -site:facebook.com -site:instagram.com -site:threads.com -site:threads.net -site:linkedin.com -site:x.com -site:twitter.com -site:tiktok.com -site:youtube.com -site:youtu.be -site:reddit.com -site:t.me -site:telegram.me -site:telegram.org -site:pinterest.com -site:vimeo.com」
+   ⬜ 못 찾음  노출   3  「applied biocode」
+   ✅ 노출   3 · 3.7위  「dongwoon anatech」 → /company/dongwoon-anatech
+   ✅ 노출   3 · 4.0위  「geneone」 → /company/geneone-life-science
+   ✅ 노출   3 · 8.7위  「geneone life science」 → /company/geneone-life-science
+   ⬜ 못 찾음  노출   3  「lianyou metals」
+   ✅ 노출   3 · 61.3위  「shinwon」 → /company/shinwon
+   ✅ 노출   3 · 23.3위  「tomocube」 → /company/tomocube
+
+■ 수요가 이미 있는 낱장 14장 — 다 실물로 200 을 봤다
+⛔ 이 자는 지면을 만들지 않는다. 색인 줄에 세울 차례를 정할 뿐이다.
+📈 적었다 — docs/수요지면.tsv
+🔴 닫혔다  /school  아래 2,525장  — 크롤링됨 - 현재 색인이 생성되지 않음
+✅ 열렸다  /taiwan/companies  아래 1,057장  
+🔴 닫혔다  /university  아래 420장  — 크롤링됨 - 현재 색인이 생성되지 않음
+🔴 닫혔다  /major  아래 300장  — 크롤링됨 - 현재 색인이 생성되지 않음
+🔴 닫혔다  /region  아래 250장  — 크롤링됨 - 현재 색인이 생성되지 않음
+🔴 닫혔다  /age  아래 101장  — 크롤링됨 - 현재 색인이 생성되지 않음
+✅ 열렸다  /uae/companies  아래 104장  
+🔴 닫혔다  /work  아래 100장  — 크롤링됨 - 현재 색인이 생성되지 않음
+🔴 닫혔다  /rankings  아래 60장  — Google에는 아직 알려지지 않은 URL입니다.
+🔴 닫혔다  /all  아래 50장  — 크롤링됨 - 현재 색인이 생성되지 않음
+🔴 닫혔다  /research  아래 40장  — 크롤링됨 - 현재 색인이 생성되지 않음
+🔴 닫혔다  /articles  아래 900장  — 크롤링됨 - 현재 색인이 생성되지 않음
+🔴 닫혔다  /person  아래 800장  — 크롤링됨 - 현재 색인이 생성되지 않음
+🔴 닫혔다  /actors  아래 300장  — 크롤링됨 - 현재 색인이 생성되지 않음
+🔴 닫혔다  /data  아래 120장  — 크롤링됨 - 현재 색인이 생성되지 않음
+🔴 닫혔다  /all-ten  아래 60장  — 크롤링됨 - 현재 색인이 생성되지 않음
+🔴 닫혔다  /all  아래 1,295장  — 크롤링됨 - 현재 색인이 생성되지 않음
+
+■ 닫힌 문 15개 · 오늘 요청할 것 4개
+   /company/geneone-life-science  (아래 0장)
+   /company/geneone-life-science  (아래 0장)
+   /company/shinwon  (아래 0장)
+   /company/tomocube  (아래 0장)
+C:\Users\User\Documents\GitHub\klifemap\node_modules\puppeteer-core\lib\cjs\puppeteer\util\Deferred.js:60
+            this.#timeoutError = new Errors_js_1.TimeoutError(opts.message);
+                                 ^
+
+TimeoutError: Navigation timeout of 60000 ms exceeded
+    at new Deferred (C:\Users\User\Documents\GitHub\klifemap\node_modules\puppeteer-core\lib\cjs\puppeteer\util\Deferred.js:60:34)
+    at Deferred.create (C:\Users\User\Documents\GitHub\klifemap\node_modules\puppeteer-core\lib\cjs\puppeteer\util\Deferred.js:21:16)
+    at new LifecycleWatcher (C:\Users\User\Documents\GitHub\klifemap\node_modules\puppeteer-core\lib\cjs\puppeteer\cdp\LifecycleWatcher.js:69:60)
+    at CdpFrame.goto (C:\Users\User\Documents\GitHub\klifemap\node_modules\puppeteer-core\lib\cjs\puppeteer\cdp\Frame.js:149:29)
+    at CdpFrame.<anonymous> (C:\Users\User\Documents\GitHub\klifemap\node_modules\puppeteer-core\lib\cjs\puppeteer\util\decorators.js:109:27)
+    at CdpPage.goto (C:\Users\User\Documents\GitHub\klifemap\node_modules\puppeteer-core\lib\cjs\puppeteer\api\Page.js:574:43)
+    at file:///C:/Users/User/Documents/GitHub/dataeconomics/scripts/auto-index-request.mjs:283:17
+
+Node.js v26.3.1
+■ 목록 지면이 받고 있는 검색어 20개
+   회사 이름표 2,703개로 맞춰 본다
+
+   ✅ 노출  45 · 6.2위  「daoudata」 → /company/daou-data
+   ✅ 노출  13 · 3.6위  「gemvax」 → /company/gemvax-and-kael
+   ✅ 노출   5 · 3.2위  「neoimmunetech」 → /company/neoimmunetech
+   ✅ 노출   5 · 16.8위  「boditech med」 → /company/boditech-med
+   ✅ 노출   5 · 6.6위  「d&d pharmatech」 → /company/d-and-d-pharmatech
+   ✅ 노출   5 · 2.2위  「fine semitech」 → /company/fine-semitech
+   ⬜ 못 찾음  노출   4  「"al ansari financial services" -site:alansari.ae -site:facebook.com -site:instagram.com -site:threads.com -site:threads.net -site:linkedin.com -site:x.com -site:twitter.com -site:tiktok.com -site:youtube.com -site:youtu.be -site:reddit.com -site:t.me -site:telegram.me -site:telegram.org -site:pinterest.com -site:vimeo.com」
+   ✅ 노출   4 · 10.3위  「curiox biosystems」 → /company/curiox-biosystems
+   ⬜ 못 찾음  노출   4  「fulin plastic industry (cayman) holding co., ltd. analyst price target disagreement」
+   ✅ 노출   4 · 4.8위  「gigalane」 → /company/gigalane
+   ✅ 노출   4 · 7.0위  「ligachem」 → /company/ligachem-biosciences
+   ⬜ 못 찾음  노출   4  「nkgen」
+   ⬜ 못 찾음  노출   3  「"al ansari financial services pjsc" -site:alansari.ae -site:facebook.com -site:instagram.com -site:threads.com -site:threads.net -site:linkedin.com -site:x.com -site:twitter.com -site:tiktok.com -site:youtube.com -site:youtu.be -site:reddit.com -site:t.me -site:telegram.me -site:telegram.org -site:pinterest.com -site:vimeo.com」
+   ⬜ 못 찾음  노출   3  「applied biocode」
+   ✅ 노출   3 · 3.7위  「dongwoon anatech」 → /company/dongwoon-anatech
+   ✅ 노출   3 · 4.0위  「geneone」 → /company/geneone-life-science
+   ✅ 노출   3 · 8.7위  「geneone life science」 → /company/geneone-life-science
+   ⬜ 못 찾음  노출   3  「lianyou metals」
+   ✅ 노출   3 · 61.3위  「shinwon」 → /company/shinwon
+   ✅ 노출   3 · 23.3위  「tomocube」 → /company/tomocube
+
+■ 수요가 이미 있는 낱장 14장 — 다 실물로 200 을 봤다
+⛔ 이 자는 지면을 만들지 않는다. 색인 줄에 세울 차례를 정할 뿐이다.
+📈 적었다 — docs/수요지면.tsv
+node:events:487
+      throw er; // Unhandled 'error' event
+      ^
+
+SocketError: other side closed
+    at TLSSocket.onHttp2SocketEnd (node:internal/deps/undici/undici:8758:26)
+    at TLSSocket.emit (node:events:521:24)
+    at endReadableNT (node:internal/streams/readable:1744:12)
+    at process.processTicksAndRejections (node:internal/process/task_queues:90:21)
+Emitted 'error' event on ClientHttp2Stream instance at:
+    at emitErrorNT (node:internal/streams/destroy:170:8)
+    at emitErrorCloseNT (node:internal/streams/destroy:129:3)
+    at process.processTicksAndRejections (node:internal/process/task_queues:90:21) {
+  code: 'UND_ERR_SOCKET',
+  socket: {
+    localAddress: '192.168.219.100',
+    localPort: 1429,
+    remoteAddress: '34.8.247.175',
+    remotePort: 443,
+    remoteFamily: 'IPv4',
+    timeout: undefined,
+    bytesWritten: 662,
+    bytesRead: 394659
+  }
+}
+
+Node.js v26.3.1
+🔴 닫혔다  /school  아래 2,525장  — 크롤링됨 - 현재 색인이 생성되지 않음
+✅ 열렸다  /taiwan/companies  아래 1,057장  
+🔴 닫혔다  /university  아래 420장  — 크롤링됨 - 현재 색인이 생성되지 않음
+🔴 닫혔다  /major  아래 300장  — 크롤링됨 - 현재 색인이 생성되지 않음
+🔴 닫혔다  /region  아래 250장  — 크롤링됨 - 현재 색인이 생성되지 않음
+🔴 닫혔다  /age  아래 101장  — 크롤링됨 - 현재 색인이 생성되지 않음
+✅ 열렸다  /uae/companies  아래 104장  
+🔴 닫혔다  /work  아래 100장  — 크롤링됨 - 현재 색인이 생성되지 않음
+🔴 닫혔다  /rankings  아래 60장  — Google에는 아직 알려지지 않은 URL입니다.
+🔴 닫혔다  /all  아래 50장  — 크롤링됨 - 현재 색인이 생성되지 않음
+🔴 닫혔다  /research  아래 40장  — 크롤링됨 - 현재 색인이 생성되지 않음
+🔴 닫혔다  /articles  아래 900장  — 크롤링됨 - 현재 색인이 생성되지 않음
+🔴 닫혔다  /person  아래 800장  — 크롤링됨 - 현재 색인이 생성되지 않음
+🔴 닫혔다  /actors  아래 300장  — 크롤링됨 - 현재 색인이 생성되지 않음
+🔴 닫혔다  /data  아래 120장  — 크롤링됨 - 현재 색인이 생성되지 않음
+🔴 닫혔다  /all-ten  아래 60장  — 크롤링됨 - 현재 색인이 생성되지 않음
+🔴 닫혔다  /all  아래 1,295장  — 크롤링됨 - 현재 색인이 생성되지 않음
+
+■ 닫힌 문 15개 · 오늘 요청할 것 4개
+   /company/geneone-life-science  (아래 0장)
+   /company/geneone-life-science  (아래 0장)
+   /company/shinwon  (아래 0장)
+   /company/tomocube  (아래 0장)
+file:///C:/Users/User/Documents/GitHub/klifemap/node_modules/puppeteer-core/lib/puppeteer/util/Deferred.js:57
+            this.#timeoutError = new TimeoutError(opts.message);
+                                 ^
+
+TimeoutError: Navigation timeout of 60000 ms exceeded
+    at new Deferred (file:///C:/Users/User/Documents/GitHub/klifemap/node_modules/puppeteer-core/lib/puppeteer/util/Deferred.js:57:34)
+    at Deferred.create (file:///C:/Users/User/Documents/GitHub/klifemap/node_modules/puppeteer-core/lib/puppeteer/util/Deferred.js:18:16)
+    at new LifecycleWatcher (file:///C:/Users/User/Documents/GitHub/klifemap/node_modules/puppeteer-core/lib/puppeteer/cdp/LifecycleWatcher.js:70:46)
+    at CdpFrame.goto (file:///C:/Users/User/Documents/GitHub/klifemap/node_modules/puppeteer-core/lib/puppeteer/cdp/Frame.js:152:29)
+    at CdpFrame.<anonymous> (file:///C:/Users/User/Documents/GitHub/klifemap/node_modules/puppeteer-core/lib/puppeteer/util/decorators.js:101:27)
+    at CdpPage.goto (file:///C:/Users/User/Documents/GitHub/klifemap/node_modules/puppeteer-core/lib/puppeteer/api/Page.js:582:43)
+    at file:///C:/Users/User/Documents/GitHub/dataeconomics/scripts/auto-index-request.mjs:283:17
+
+Node.js v26.3.1
+■ 목록 지면이 받고 있는 검색어 20개
+   회사 이름표 2,703개로 맞춰 본다
+
+   ✅ 노출  45 · 6.2위  「daoudata」 → /company/daou-data
+   ✅ 노출  13 · 3.6위  「gemvax」 → /company/gemvax-and-kael
+   ✅ 노출   5 · 3.2위  「neoimmunetech」 → /company/neoimmunetech
+   ✅ 노출   5 · 16.8위  「boditech med」 → /company/boditech-med
+   ✅ 노출   5 · 6.6위  「d&d pharmatech」 → /company/d-and-d-pharmatech
+   ✅ 노출   5 · 2.2위  「fine semitech」 → /company/fine-semitech
+   ⬜ 못 찾음  노출   4  「"al ansari financial services" -site:alansari.ae -site:facebook.com -site:instagram.com -site:threads.com -site:threads.net -site:linkedin.com -site:x.com -site:twitter.com -site:tiktok.com -site:youtube.com -site:youtu.be -site:reddit.com -site:t.me -site:telegram.me -site:telegram.org -site:pinterest.com -site:vimeo.com」
+   ✅ 노출   4 · 10.3위  「curiox biosystems」 → /company/curiox-biosystems
+   ⬜ 못 찾음  노출   4  「fulin plastic industry (cayman) holding co., ltd. analyst price target disagreement」
+   ✅ 노출   4 · 4.8위  「gigalane」 → /company/gigalane
+   ✅ 노출   4 · 7.0위  「ligachem」 → /company/ligachem-biosciences
+   ⬜ 못 찾음  노출   4  「nkgen」
+   ⬜ 못 찾음  노출   3  「"al ansari financial services pjsc" -site:alansari.ae -site:facebook.com -site:instagram.com -site:threads.com -site:threads.net -site:linkedin.com -site:x.com -site:twitter.com -site:tiktok.com -site:youtube.com -site:youtu.be -site:reddit.com -site:t.me -site:telegram.me -site:telegram.org -site:pinterest.com -site:vimeo.com」
+   ⬜ 못 찾음  노출   3  「applied biocode」
+   ✅ 노출   3 · 3.7위  「dongwoon anatech」 → /company/dongwoon-anatech
+   ✅ 노출   3 · 4.0위  「geneone」 → /company/geneone-life-science
+   ✅ 노출   3 · 8.7위  「geneone life science」 → /company/geneone-life-science
+   ⬜ 못 찾음  노출   3  「lianyou metals」
+   ✅ 노출   3 · 61.3위  「shinwon」 → /company/shinwon
+   ✅ 노출   3 · 23.3위  「tomocube」 → /company/tomocube
+
+■ 수요가 이미 있는 낱장 14장 — 다 실물로 200 을 봤다
+⛔ 이 자는 지면을 만들지 않는다. 색인 줄에 세울 차례를 정할 뿐이다.
+📈 적었다 — docs/수요지면.tsv
+node:events:487
+      throw er; // Unhandled 'error' event
+      ^
+
+SocketError: other side closed
+    at TLSSocket.onHttp2SocketEnd (node:internal/deps/undici/undici:8758:26)
+    at TLSSocket.emit (node:events:521:24)
+    at endReadableNT (node:internal/streams/readable:1744:12)
+    at process.processTicksAndRejections (node:internal/process/task_queues:90:21)
+Emitted 'error' event on ClientHttp2Stream instance at:
+    at emitErrorNT (node:internal/streams/destroy:170:8)
+    at emitErrorCloseNT (node:internal/streams/destroy:129:3)
+    at process.processTicksAndRejections (node:internal/process/task_queues:90:21) {
+  code: 'UND_ERR_SOCKET',
+  socket: {
+    localAddress: '192.168.219.100',
+    localPort: 3727,
+    remoteAddress: '34.8.247.175',
+    remotePort: 443,
+    remoteFamily: 'IPv4',
+    timeout: undefined,
+    bytesWritten: 662,
+    bytesRead: 394632
+  }
+}
+
+Node.js v26.3.1
+🔴 닫혔다  /school  아래 2,525장  — 크롤링됨 - 현재 색인이 생성되지 않음
+✅ 열렸다  /taiwan/companies  아래 1,057장  
+🔴 닫혔다  /university  아래 420장  — 크롤링됨 - 현재 색인이 생성되지 않음
+🔴 닫혔다  /major  아래 300장  — 크롤링됨 - 현재 색인이 생성되지 않음
+🔴 닫혔다  /region  아래 250장  — 크롤링됨 - 현재 색인이 생성되지 않음
+🔴 닫혔다  /age  아래 101장  — 크롤링됨 - 현재 색인이 생성되지 않음
+✅ 열렸다  /uae/companies  아래 104장  
+🔴 닫혔다  /work  아래 100장  — 크롤링됨 - 현재 색인이 생성되지 않음
+🔴 닫혔다  /rankings  아래 60장  — Google에는 아직 알려지지 않은 URL입니다.
+🔴 닫혔다  /all  아래 50장  — 크롤링됨 - 현재 색인이 생성되지 않음
+🔴 닫혔다  /research  아래 40장  — 크롤링됨 - 현재 색인이 생성되지 않음
+🔴 닫혔다  /articles  아래 900장  — 크롤링됨 - 현재 색인이 생성되지 않음
+🔴 닫혔다  /person  아래 800장  — 크롤링됨 - 현재 색인이 생성되지 않음
+🔴 닫혔다  /actors  아래 300장  — 크롤링됨 - 현재 색인이 생성되지 않음
+🔴 닫혔다  /data  아래 120장  — 크롤링됨 - 현재 색인이 생성되지 않음
+🔴 닫혔다  /all-ten  아래 60장  — 크롤링됨 - 현재 색인이 생성되지 않음
+🔴 닫혔다  /all  아래 1,295장  — 크롤링됨 - 현재 색인이 생성되지 않음
+
+■ 닫힌 문 15개 · 오늘 요청할 것 4개
+   /company/geneone-life-science  (아래 0장)
+   /company/geneone-life-science  (아래 0장)
+   /company/shinwon  (아래 0장)
+   /company/tomocube  (아래 0장)
+✅ /company/geneone-life-science — 우선순위 크롤링 대기열에 추가
+✅ /company/geneone-life-science — 우선순위 크롤링 대기열에 추가
+✅ /company/shinwon — 우선순위 크롤링 대기열에 추가
+✅ /company/tomocube — 우선순위 크롤링 대기열에 추가
+
+📈 이력에 4줄 쌓았다 — docs/색인요청-이력.tsv
+⛔ 「요청했다」는 우리가 한 일이다. 색인됐는지는 사흘 뒤에 다시 잰다.
