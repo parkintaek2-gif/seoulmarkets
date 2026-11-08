@@ -97,30 +97,52 @@ export function 자가시험() {
  */
 export const 두드릴포트 = process.env.KLM_CHROME_PORT ? [Number(process.env.KLM_CHROME_PORT)] : [9223, 9222];
 
-/** 붙을 수 있는 포트와 그 탭 목록을 찾아 온다. 못 붙으면 null — ⛔ 0 으로 적지 않는다 */
-export async function 붙는다() {
+/** 한 포트에 붙어 탭 목록을 받아 온다. 못 붙으면 null */
+export async function 한포트(포트) {
+  const r = await fetch(`http://127.0.0.1:${포트}/json/list`, { signal: AbortSignal.timeout(4000) }).catch(() => null);
+  if (!r || !r.ok) return null;
+  const 탭들 = await r.json().catch(() => null);
+  return 탭들 ? { 포트, 탭들 } : null;
+}
+
+/**
+ * 🔴 [2026-11-08 · 5번] **붙는 포트를 «전부» 돌려준다.**
+ *   옛 붙는다() 는 «먼저 답한 포트 하나»에서 멈췄다. 목록이 [9223, 9222] 라서
+ *   9223 이 늘 먼저 답했고, 그 바람에 **9222 는 한 번도 쓸린 적이 없다.**
+ *   그 사이 결제 자물쇠가 남긴 checkout 탭이 15개까지 쌓여 크롬이 9.1GB 를 먹었다.
+ *   ⛔ 「붙었다」에서 멈추지 않는다 — 돌고 있는 크롬은 늘 둘 이상이다.
+ */
+export async function 붙는것들() {
+  const 것 = [];
   for (const 포트 of 두드릴포트) {
-    const r = await fetch(`http://127.0.0.1:${포트}/json/list`, { signal: AbortSignal.timeout(4000) }).catch(() => null);
-    if (r && r.ok) {
-      const 탭들 = await r.json().catch(() => null);
-      if (탭들) return { 포트, 탭들 };
-    }
+    const x = await 한포트(포트);
+    if (x) 것.push(x);
   }
-  return null;
+  return 것;
+}
+
+/** 옛 이름 — 하나만 쓰던 자리가 남아 있어 그대로 둔다. 첫 포트를 돌려준다 */
+export async function 붙는다() {
+  const 것 = await 붙는것들();
+  return 것[0] ?? null;
 }
 
 /** 남의 자(두 시간 점검 등)가 불러 쓰는 입구 — 닫은 수와 남은 수를 돌려준다. 못 붙으면 null */
 export async function 치운다() {
-  const 붙음 = await 붙는다();
-  if (!붙음) return null;
-  const 닫을것 = 닫을것고르기(붙음.탭들);
+  const 것들 = await 붙는것들();
+  if (!것들.length) return null;
   let 닫힘 = 0;
-  for (const t of 닫을것) {
-    const x = await fetch(`http://127.0.0.1:${붙음.포트}/json/close/${t.id}`).catch(() => null);
-    if (x && x.ok) 닫힘++;
+  const 포트들 = [];
+  for (const 붙음 of 것들) {
+    포트들.push(붙음.포트);
+    for (const t of 닫을것고르기(붙음.탭들)) {
+      const x = await fetch(`http://127.0.0.1:${붙음.포트}/json/close/${t.id}`).catch(() => null);
+      if (x && x.ok) 닫힘++;
+    }
   }
-  const 뒤 = await 붙는다();
-  return { 포트: 붙음.포트, 닫힘, 남은수: 뒤 ? 뒤.탭들.filter((t) => t.type === 'page').length : null };
+  const 뒤 = await 붙는것들();
+  const 남은수 = 뒤.reduce((a, z) => a + z.탭들.filter((t) => t.type === 'page').length, 0);
+  return { 포트: 포트들.join('·'), 포트들, 닫힘, 남은수 };
 }
 
 /* ── 진입점 ───────────────────────────────────────────────────────── */
@@ -129,31 +151,31 @@ if (내가진입점) {
   if (process.argv.includes('--자가시험')) process.exit(자가시험() ? 0 : 1);
   const 닫는다 = process.argv.includes('--닫는다');
 
-  const 붙음 = await 붙는다();
-  if (!붙음) { console.log(`🔴 크롬에 못 붙었다 (${두드릴포트.join('·')})`); process.exit(1); }
-  const { 포트, 탭들 } = 붙음;
-  console.log(`■ 크롬 ${포트} 에 붙었다`);
-  const 쪽 = 탭들.filter((t) => t.type === 'page');
-  const 닫을것 = 닫을것고르기(탭들);
+  const 것들 = await 붙는것들();
+  if (!것들.length) { console.log(`🔴 크롬에 못 붙었다 (${두드릴포트.join('·')})`); process.exit(1); }
 
-  console.log(`■ 탭 ${쪽.length}개 · 닫을 것 ${닫을것.length}개 · 남길 것 ${쪽.length - 닫을것.length}개`);
-  const 갈래 = {};
-  for (const t of 닫을것) {
-    const k = (t.url || '').replace(/^(https?:\/\/[^/]+).*$/, '$1') || 'about:blank';
-    갈래[k] = (갈래[k] ?? 0) + 1;
+  let 통닫힘 = 0; let 통탈 = 0;
+  for (const { 포트, 탭들 } of 것들) {
+    const 쪽 = 탭들.filter((t) => t.type === 'page');
+    const 닫을것 = 닫을것고르기(탭들);
+    console.log(`\n■ 크롬 ${포트} — 탭 ${쪽.length}개 · 닫을 것 ${닫을것.length}개 · 남길 것 ${쪽.length - 닫을것.length}개`);
+    const 갈래 = {};
+    for (const t of 닫을것) {
+      const k = (t.url || '').replace(new RegExp('^(https?://[^/]+).*$'), '$1') || 'about:blank';
+      갈래[k] = (갈래[k] ?? 0) + 1;
+    }
+    for (const [k, v] of Object.entries(갈래).sort((a, z) => z[1] - a[1])) console.log(`   ${String(v).padStart(4)}  ${k}`);
+    if (!닫는다) continue;
+    for (const t of 닫을것) {
+      try {
+        const x = await fetch(`http://127.0.0.1:${포트}/json/close/${t.id}`);
+        x.ok ? 통닫힘++ : 통탈++;
+      } catch { 통탈++; }
+    }
   }
-  for (const [k, v] of Object.entries(갈래).sort((a, z) => z[1] - a[1])) console.log(`   ${String(v).padStart(4)}  ${k}`);
 
   if (!닫는다) { console.log('\n⬜ 보기만 했다 — --닫는다 를 붙여야 실제로 닫는다'); process.exit(0); }
-
-  let 닫힘 = 0; let 탈 = 0;
-  for (const t of 닫을것) {
-    try {
-      const x = await fetch(`http://127.0.0.1:${포트}/json/close/${t.id}`);
-      x.ok ? 닫힘++ : 탈++;
-    } catch { 탈++; }
-  }
-  console.log(`\n✅ 닫았다 ${닫힘}개 · 못 닫은 것 ${탈}개`);
-  const 뒤 = await 붙는다();
-  if (뒤) console.log(`   지금 남은 탭 ${뒤.탭들.filter((t) => t.type === 'page').length}개`);
+  console.log(`\n✅ 닫았다 ${통닫힘}개 · 못 닫은 것 ${통탈}개`);
+  const 뒤 = await 붙는것들();
+  for (const { 포트, 탭들 } of 뒤) console.log(`   크롬 ${포트} 에 남은 탭 ${탭들.filter((t) => t.type === 'page').length}개`);
 }
