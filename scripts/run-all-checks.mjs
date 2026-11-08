@@ -200,6 +200,10 @@ export const 단계들 = [
   "node scripts/deploy-key.mjs --자가시험",
   "node scripts/report-key.mjs --자가시험",
   "node scripts/find-first.mjs --자가시험",
+  /* 🔴 [2026-11-09 · 5번] 살아 있는데 사이트맵에 없는 화면을 잡는다.
+     `/rankings` 가 구글에 「알려지지 않은 URL」로 찍혀 원인을 찾다
+     62개가 한꺼번에 빠져 있는 것을 발견했다. 같은 일이 네 번째였다. */
+  "node scripts/check-100y-사이트맵-빠진화면.mjs",
   "node scripts/check-100y-age-axis-transfer.mjs",
   "node scripts/check-100y-kosis-transfer.mjs",
   "node scripts/check-100y-university-transfer.mjs",
