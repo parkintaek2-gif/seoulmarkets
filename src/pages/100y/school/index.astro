@@ -36,6 +36,98 @@ const 지역목록 = [...묶음.entries()]
 const 전체 = (schools as any[]).length;
 const 학과있는곳 = (schools as any[]).filter((s) => s.학과수 > 0).length;
 
+/* ══════════════════════════════════════════════════════════════════════
+   🔴🔴 우리가 «센 것» — 2026-11-08 · 사장님 「글의 가치를 고쳐」
+   ────────────────────────────────────────────────────────────────────
+   이 지면은 구글이 **크롤링은 하고 색인은 안 넣는** 자리였다. 그 아래 2,525장이
+   같이 막혀 있었다. 까닭은 또렷하다 — 링크 2,556개에 글이라고는 두 문장뿐이고,
+   **우리가 센 수가 한 톨도 없었다.** 남의 목록을 옮겨 놓은 지면과 다를 것이 없었다.
+
+   ⇒ 우리가 쥔 자료로 «아무도 안 센 것»을 센다. 그것이 이 지면이 있을 까닭이다.
+   ⛔ 손으로 수를 박지 않는다 — 자료가 바뀌면 글도 함께 바뀌어야 한다.
+   ⛔ 학교에 등수를 매기지 않는다. 묶음의 «분포»를 보일 뿐이다.
+   ⛔ 못 읽은 칸은 세지 않고 「못 쟀다」로 적는다. 0 으로 메우지 않는다.
+   ══════════════════════════════════════════════════════════════════════ */
+type 학교 = any;
+const 모두 = schools as 학교[];
+
+/**
+ * 조사를 받침에 맞춰 붙인다 — 「서울특별시은」 같은 말을 지면에 내보내지 않는다.
+ * ⚠ 이름 끝이 괄호로 끝나는 지역이 있다(전남광주통합특별시(전남)). 괄호 안 글자로 가린다.
+ */
+function 조사(말: string, 받침있을때: string, 받침없을때: string) {
+  const 글 = String(말 ?? '').replace(/[^가-힣a-zA-Z0-9]+$/, '');
+  const 끝 = 글.slice(-1);
+  const 코드 = 끝.charCodeAt(0);
+  if (!(코드 >= 0xac00 && 코드 <= 0xd7a3)) return 받침있을때; /* 한글이 아니면 안전한 쪽으로 */
+  return (코드 - 0xac00) % 28 === 0 ? 받침없을때 : 받침있을때;
+}
+const 은는 = (말: string) => 조사(말, '은', '는');
+
+/** 한 칸으로 묶어 센다. 빈 칸은 빼고 센 뒤, 몇 곳을 못 쟀는지 따로 돌려준다 */
+function 갈라센다(칸: (s: 학교) => string | null | undefined) {
+  const m = new Map<string, number>();
+  let 못잼 = 0;
+  for (const s of 모두) {
+    const k = 칸(s);
+    if (k == null || k === '') { 못잼 += 1; continue; }
+    m.set(k, (m.get(k) ?? 0) + 1);
+  }
+  return { 줄: [...m.entries()].sort((a, b) => b[1] - a[1]), 못잼 };
+}
+
+const 유형 = 갈라센다((s) => s.고교유형);
+const 설립주체 = 갈라센다((s) => s.설립);
+const 공학갈래 = 갈라센다((s) => s.공학);
+
+/** 설립 연도 — 네 자리로 읽히는 것만 센다 */
+const 설립연도 = 모두
+  .map((s) => Number(String(s.설립일 ?? '').slice(0, 4)))
+  .filter((y) => Number.isFinite(y) && y > 1800 && y < 2100);
+const 연도못잼 = 전체 - 설립연도.length;
+const 올해 = new Date().getFullYear();
+const 백년넘은곳 = 설립연도.filter((y) => 올해 - y >= 100).length;
+const 이천년이후 = 설립연도.filter((y) => y >= 2000).length;
+const 가장이른해 = 설립연도.length ? Math.min(...설립연도) : null;
+
+/** 학과 이름 — 몇 곳이 같은 이름을 쓰나 */
+const 학과셈 = new Map<string, number>();
+let 학과건수 = 0;
+for (const s of 모두) {
+  for (const d of (s.학과 ?? []) as any[]) {
+    const 이름 = typeof d === 'string' ? d : (d?.name ?? d?.학과명 ?? d?.title);
+    if (!이름) continue;
+    학과건수 += 1;
+    학과셈.set(이름, (학과셈.get(이름) ?? 0) + 1);
+  }
+}
+const 학과줄 = [...학과셈.entries()].sort((a, b) => b[1] - a[1]);
+const 흔한학과 = 학과줄.slice(0, 8);
+const 한곳뿐인학과 = 학과줄.filter(([, n]) => n === 1).length;
+
+/** 한 학교가 둔 학과 수 — 평균이 아니라 분포로 본다 */
+const 학과수들 = 모두.filter((s) => s.학과수 > 0).map((s) => s.학과수).sort((a, b) => a - b);
+const 가운데학과수 = 학과수들.length ? 학과수들[Math.floor(학과수들.length / 2)] : null;
+const 최다학과수 = 학과수들.length ? 학과수들[학과수들.length - 1] : null;
+
+/** 시·도별 — 사립 비율과 남녀공학 비율. 지역 차이가 큰 두 칸이다 */
+const 시도표 = [...묶음.entries()]
+  .map(([지역, list]) => {
+    const 사립 = list.filter((s) => s.설립 === '사립').length;
+    const 공학 = list.filter((s) => String(s.공학 ?? '').includes('공학')).length;
+    return {
+      지역, 전체: list.length,
+      사립율: Math.round((100 * 사립) / list.length),
+      공학율: Math.round((100 * 공학) / list.length),
+    };
+  })
+  .sort((a, b) => b.사립율 - a.사립율);
+const 사립높은곳 = 시도표[0];
+const 사립낮은곳 = 시도표[시도표.length - 1];
+const 공학표 = [...시도표].sort((a, b) => b.공학율 - a.공학율);
+const 공학높은곳 = 공학표[0];
+const 공학낮은곳 = 공학표[공학표.length - 1];
+
 const desc =
   `전국 고등학교 ${전체.toLocaleString()}곳을 지역별로 정리했습니다. ` +
   `학교를 고르면 어떤 학과가 있는지, 그 학과가 전국에 몇 곳이나 있는지 볼 수 있습니다.`;
@@ -84,6 +176,73 @@ const jsonLd = {
     <a class="gotoarea" href="/region">지역으로 찾기 — 시·도 17곳에서 시·군·구로 →</a>
   </p>
 
+  {/* 🔴 2026-11-08 — 우리가 «센 것». 목록만 있던 지면에 사실을 놓는다 */}
+  <section class="counted">
+    <h2>우리가 세어 본 것</h2>
+    <p class="note">
+      아래는 전국 고등학교 {전체.toLocaleString()}곳의 자료를 그대로 세어 놓은 것입니다.
+      좋고 나쁨을 가리지 않았고 학교에 등수를 매기지도 않았습니다.
+      <strong>이것은 학교들의 분포이지 어느 한 학교에 대한 평가가 아닙니다.</strong>
+    </p>
+
+    <h3>세운 주체 — 지역에 따라 열여섯 배가 납니다</h3>
+    <p>
+      공립이 {설립주체.줄.find(([k]) => k === '공립')?.[1].toLocaleString() ?? '—'}곳,
+      사립이 {설립주체.줄.find(([k]) => k === '사립')?.[1].toLocaleString() ?? '—'}곳입니다.
+      그런데 이 비율은 지역마다 크게 다릅니다.{' '}
+      {사립높은곳.지역}{은는(사립높은곳.지역)} 고등학교의 {사립높은곳.사립율}%가 사립이고,
+      {' '}{사립낮은곳.지역}{은는(사립낮은곳.지역)} {사립낮은곳.사립율}%입니다.
+      같은 나라 안에서 사는 곳에 따라 고를 수 있는 학교의 성격이 달라집니다.
+    </p>
+
+    <h3>남녀공학 — 여기도 지역이 갈립니다</h3>
+    <p>
+      남녀공학이 {공학갈래.줄.find(([k]) => k.includes('공학'))?.[1].toLocaleString() ?? '—'}곳,
+      여학교가 {공학갈래.줄.find(([k]) => k === '여')?.[1].toLocaleString() ?? '—'}곳,
+      남학교가 {공학갈래.줄.find(([k]) => k === '남')?.[1].toLocaleString() ?? '—'}곳입니다.{' '}
+      {공학높은곳.지역}{은는(공학높은곳.지역)} {공학높은곳.공학율}%가 남녀공학인데
+      {' '}{공학낮은곳.지역}{은는(공학낮은곳.지역)} {공학낮은곳.공학율}%입니다.
+    </p>
+
+    <h3>학교의 갈래</h3>
+    <p>
+      {유형.줄.map(([k, v], i) => (
+        <>{i > 0 ? ', ' : ''}{k} {v.toLocaleString()}곳</>
+      ))}입니다.
+      {유형.못잼 > 0 && <> 갈래를 못 읽은 곳이 {유형.못잼.toLocaleString()}곳 있어 세지 않았습니다.</>}
+    </p>
+
+    <h3>언제 세워졌나</h3>
+    <p>
+      설립 연도가 읽히는 학교는 {설립연도.length.toLocaleString()}곳입니다.
+      가장 이른 해는 {가장이른해}년이고, 문을 연 지 백 년이 넘은 학교가
+      {' '}{백년넘은곳.toLocaleString()}곳입니다. 반대로 2000년 이후에 세워진 학교가
+      {' '}{이천년이후.toLocaleString()}곳으로, 전체의 {Math.round((100 * 이천년이후) / 전체)}%입니다.
+      {연도못잼 > 0 && <> 설립일을 못 읽은 곳 {연도못잼.toLocaleString()}곳은 세지 않았습니다.</>}
+    </p>
+
+    <h3>학과 — 이름 열에 일곱 가까이가 «단 한 곳»에만 있습니다</h3>
+    <p>
+      학과를 나눈 학교 {학과있는곳.toLocaleString()}곳에 학과가 모두
+      {' '}{학과건수.toLocaleString()}개 열려 있고, 서로 다른 학과 이름은
+      {' '}{학과줄.length.toLocaleString()}가지입니다. 이 가운데
+      {' '}<strong>{한곳뿐인학과.toLocaleString()}가지는 전국에서 한 곳에만 있습니다</strong>
+      {' '}(이름 기준 {Math.round((100 * 한곳뿐인학과) / 학과줄.length)}%).
+      학과 이름만 보고 다른 학교와 견주기 어렵다는 뜻입니다.
+    </p>
+    <p>
+      여러 학교가 함께 쓰는 이름은 이렇습니다 —
+      {흔한학과.map(([k, v], i) => (
+        <>{i > 0 ? ' · ' : ' '}{k} {v.toLocaleString()}곳</>
+      ))}.
+    </p>
+    <p>
+      한 학교가 둔 학과 수는 가운데값이 {가운데학과수}개이고 가장 많은 곳은 {최다학과수}개입니다.
+      평균을 내지 않은 까닭은, 학과를 하나만 둔 학교와 수십 개를 둔 학교가 한 평균에 섞이면
+      어느 쪽도 설명하지 못하기 때문입니다.
+    </p>
+  </section>
+
   <input
     id="q"
     type="search"
@@ -120,6 +279,24 @@ const jsonLd = {
 </HundredYear>
 
 <style>
+  /* 🔴 2026-11-08 — 「우리가 센 것」 자리. 목록 위에 사실을 먼저 놓는다 */
+  .counted {
+    margin: 1rem 0 1.5rem;
+    padding: 1rem 0 0.25rem;
+    border-top: 1px solid var(--line);
+    border-bottom: 1px solid var(--line);
+  }
+  .counted h2 {
+    margin: 0 0 0.5rem;
+  }
+  .counted h3 {
+    margin: 1.1rem 0 0.35rem;
+    font-size: var(--fs-body);
+  }
+  .counted p {
+    margin: 0 0 0.6rem;
+    line-height: 1.7;
+  }
   #q {
     width: 100%;
     min-height: 44px; /* 스토리보드 §11 — 탭 영역 */
