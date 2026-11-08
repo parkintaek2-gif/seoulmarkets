@@ -1,0 +1,68 @@
+{
+  "site": "sc-domain:100yearmap.com",
+  "dimension": "query+page",
+  "window": {
+    "from": "2026-10-04",
+    "to": "2026-11-01",
+    "days": 28
+  },
+  "rowLimit": 25000,
+  "rows": [
+    {
+      "key": "경기 국제 통상 고등학교",
+      "page": "https://100yearmap.com/school/7530989",
+      "impressions": 1,
+      "clicks": 0,
+      "position": 57
+    },
+    {
+      "key": "대학 학과",
+      "page": "https://100yearmap.com/college-major",
+      "impressions": 1,
+      "clicks": 0,
+      "position": 44
+    },
+    {
+      "key": "용인예술과학대학교 수준",
+      "page": "https://100yearmap.com/university/0000520",
+      "impressions": 1,
+      "clicks": 0,
+      "position": 100
+    },
+    {
+      "key": "은평구 고등학교",
+      "page": "https://100yearmap.com/report/area/%EC%84%9C%EC%9A%B8%ED%8A%B9%EB%B3%84%EC%8B%9C-%EC%9D%80%ED%8F%89%EA%B5%AC",
+      "impressions": 1,
+      "clicks": 0,
+      "position": 15
+    },
+    {
+      "key": "작업치료학과 대학 순위",
+      "page": "https://100yearmap.com/college-major/%EC%9E%91%EC%97%85%EC%B9%98%EB%A3%8C%EA%B3%BC",
+      "impressions": 1,
+      "clicks": 0,
+      "position": 66
+    },
+    {
+      "key": "장안대학교 수준",
+      "page": "https://100yearmap.com/university/0000527",
+      "impressions": 1,
+      "clicks": 0,
+      "position": 19
+    },
+    {
+      "key": "졸업생 진로 현황",
+      "page": "https://100yearmap.com/school/7531158",
+      "impressions": 1,
+      "clicks": 0,
+      "position": 3
+    },
+    {
+      "key": "천안 상업 고등학교",
+      "page": "https://100yearmap.com/school/8140358",
+      "impressions": 1,
+      "clicks": 0,
+      "position": 69
+    }
+  ]
+}

@@ -1,0 +1,1482 @@
+{
+  "site": "sc-domain:seoulmarkets.com",
+  "dimension": "query",
+  "window": {
+    "from": "2026-10-04",
+    "to": "2026-11-01",
+    "days": 28
+  },
+  "rowLimit": 25000,
+  "rows": [
+    {
+      "key": "deepnoid",
+      "impressions": 1,
+      "clicks": 1,
+      "position": 2
+    },
+    {
+      "key": "kidaristudio",
+      "impressions": 1,
+      "clicks": 1,
+      "position": 10
+    },
+    {
+      "key": "kostecsys",
+      "impressions": 2,
+      "clicks": 1,
+      "position": 5.5
+    },
+    {
+      "key": "neoimmunetech",
+      "impressions": 5,
+      "clicks": 1,
+      "position": 3.2
+    },
+    {
+      "key": "t&r biofab",
+      "impressions": 2,
+      "clicks": 1,
+      "position": 20
+    },
+    {
+      "key": "toolgen",
+      "impressions": 1,
+      "clicks": 1,
+      "position": 27
+    },
+    {
+      "key": "\"al ansari financial services pjsc\" -site:alansari.ae -site:facebook.com -site:instagram.com -site:threads.com -site:threads.net -site:linkedin.com -site:x.com -site:twitter.com -site:tiktok.com -site:youtube.com -site:youtu.be -site:reddit.com -site:t.me -site:telegram.me -site:telegram.org -site:pinterest.com -site:vimeo.com",
+      "impressions": 3,
+      "clicks": 0,
+      "position": 5.666666666666667
+    },
+    {
+      "key": "\"al ansari financial services\" -site:alansari.ae -site:facebook.com -site:instagram.com -site:threads.com -site:threads.net -site:linkedin.com -site:x.com -site:twitter.com -site:tiktok.com -site:youtube.com -site:youtu.be -site:reddit.com -site:t.me -site:telegram.me -site:telegram.org -site:pinterest.com -site:vimeo.com",
+      "impressions": 4,
+      "clicks": 0,
+      "position": 7.75
+    },
+    {
+      "key": "\"credit saison\" -site:saisoncard.co.jp",
+      "impressions": 2,
+      "clicks": 0,
+      "position": 28.5
+    },
+    {
+      "key": "\"dong suh\" | \"dong suh foods corporation\"",
+      "impressions": 1,
+      "clicks": 0,
+      "position": 4
+    },
+    {
+      "key": "\"eirgenix\"",
+      "impressions": 1,
+      "clicks": 0,
+      "position": 3
+    },
+    {
+      "key": "\"gc biopharma\"",
+      "impressions": 1,
+      "clicks": 0,
+      "position": 19
+    },
+    {
+      "key": "\"grand korea\"",
+      "impressions": 1,
+      "clicks": 0,
+      "position": 10
+    },
+    {
+      "key": "\"hanmi pharm\"",
+      "impressions": 1,
+      "clicks": 0,
+      "position": 6
+    },
+    {
+      "key": "\"hiroca\"",
+      "impressions": 2,
+      "clicks": 0,
+      "position": 2
+    },
+    {
+      "key": "\"lx international\"",
+      "impressions": 1,
+      "clicks": 0,
+      "position": 15
+    },
+    {
+      "key": "\"machvision\"",
+      "impressions": 1,
+      "clicks": 0,
+      "position": 3
+    },
+    {
+      "key": "\"meiloon industrial co.\" | \"meiloon industrial\" | \"meiloon\"",
+      "impressions": 1,
+      "clicks": 0,
+      "position": 5
+    },
+    {
+      "key": "\"quintain steel\"",
+      "impressions": 1,
+      "clicks": 0,
+      "position": 1
+    },
+    {
+      "key": "\"sbi investment korea\" acquisition or acquires or investment or invests or \"portfolio company\" -site:crunchbase.com -site:pitchbook.com -site:mergr.com -site:tracxn.com -site:cbinsights.com -site:zoominfo.com -site:dealroom.co -site:mergermarket.com -site:capitaliq.com -site:northdata.com -site:grokipedia.com -site:owler.com -site:linkedin.com -site:facebook.com -site:instagram.com -site:twitter.com -site:x.com -site:reddit.com -site:youtube.com -site:tiktok.com -site:pinterest.com -site:quora.com -site:wikipedia.org -site:glassdoor.com -site:indeed.com -site:jooble.org -site:expertini.com -site:jobly.fi",
+      "impressions": 1,
+      "clicks": 0,
+      "position": 8
+    },
+    {
+      "key": "\"sesoda corp.\" | \"sesoda\"",
+      "impressions": 1,
+      "clicks": 0,
+      "position": 4
+    },
+    {
+      "key": "\"surplusglobal\" after:2026-10-11",
+      "impressions": 2,
+      "clicks": 0,
+      "position": 9.5
+    },
+    {
+      "key": "\"syncmold\" | \"syncmold enterprise\" | \"syncmold enterprise corp\"",
+      "impressions": 1,
+      "clicks": 0,
+      "position": 5
+    },
+    {
+      "key": "\"taiwan sakura\"",
+      "impressions": 1,
+      "clicks": 0,
+      "position": 4
+    },
+    {
+      "key": "\"tatung company\"",
+      "impressions": 1,
+      "clicks": 0,
+      "position": 7
+    },
+    {
+      "key": "\"tung ho steel\" | \"tung ho steel enterprise\"",
+      "impressions": 1,
+      "clicks": 0,
+      "position": 2
+    },
+    {
+      "key": "\"tyntek\" | \"tyntek corporation\"",
+      "impressions": 1,
+      "clicks": 0,
+      "position": 2
+    },
+    {
+      "key": "\"young optics\" | \"young optics inc.\"",
+      "impressions": 1,
+      "clicks": 0,
+      "position": 3
+    },
+    {
+      "key": "\"zeng hsing industrial co.\" | \"zeng hsing industrial\" | \"zeng hsing\"",
+      "impressions": 1,
+      "clicks": 0,
+      "position": 6
+    },
+    {
+      "key": "006600",
+      "impressions": 1,
+      "clicks": 0,
+      "position": 58
+    },
+    {
+      "key": "2025년 결산(일본 4월~12월, 기타 1월~12월) 공시 매출 영업이익 순이익 영업이익률 억원 토요탄소 토카이카본 mersen sgl카본 sec카본 레조낙 gti heg gil mcc sumco sasol",
+      "impressions": 2,
+      "clicks": 0,
+      "position": 7
+    },
+    {
+      "key": "3198 最新ニュース 3198 企業動向 3198 株価ニュース",
+      "impressions": 1,
+      "clicks": 0,
+      "position": 9
+    },
+    {
+      "key": "^vkospi stock price",
+      "impressions": 4,
+      "clicks": 0,
+      "position": 1
+    },
+    {
+      "key": "adnoc logistic and services",
+      "impressions": 1,
+      "clicks": 0,
+      "position": 87
+    },
+    {
+      "key": "aica japan",
+      "impressions": 1,
+      "clicks": 0,
+      "position": 43
+    },
+    {
+      "key": "alchip",
+      "impressions": 1,
+      "clicks": 0,
+      "position": 28
+    },
+    {
+      "key": "alps alpine co., ltd. earnings results",
+      "impressions": 4,
+      "clicks": 0,
+      "position": 7
+    },
+    {
+      "key": "applied biocode",
+      "impressions": 3,
+      "clicks": 0,
+      "position": 7
+    },
+    {
+      "key": "asia seed co. ltd",
+      "impressions": 1,
+      "clicks": 0,
+      "position": 80
+    },
+    {
+      "key": "asian market data",
+      "impressions": 6,
+      "clicks": 0,
+      "position": 77.33333333333333
+    },
+    {
+      "key": "biggest company in korea",
+      "impressions": 1,
+      "clicks": 0,
+      "position": 74
+    },
+    {
+      "key": "biggest korean companies",
+      "impressions": 1,
+      "clicks": 0,
+      "position": 76
+    },
+    {
+      "key": "biggest south korean companies",
+      "impressions": 1,
+      "clicks": 0,
+      "position": 74
+    },
+    {
+      "key": "boditech",
+      "impressions": 1,
+      "clicks": 0,
+      "position": 14
+    },
+    {
+      "key": "boditech med",
+      "impressions": 5,
+      "clicks": 0,
+      "position": 16.8
+    },
+    {
+      "key": "caregen",
+      "impressions": 1,
+      "clicks": 0,
+      "position": 9
+    },
+    {
+      "key": "chuo seisakusho ltd",
+      "impressions": 2,
+      "clicks": 0,
+      "position": 15
+    },
+    {
+      "key": "curiox biosystems",
+      "impressions": 4,
+      "clicks": 0,
+      "position": 10.25
+    },
+    {
+      "key": "d&d pharmatech",
+      "impressions": 5,
+      "clicks": 0,
+      "position": 6.6
+    },
+    {
+      "key": "dae-il corporation",
+      "impressions": 1,
+      "clicks": 0,
+      "position": 87
+    },
+    {
+      "key": "daewoong",
+      "impressions": 1,
+      "clicks": 0,
+      "position": 60
+    },
+    {
+      "key": "daisho",
+      "impressions": 1,
+      "clicks": 0,
+      "position": 71
+    },
+    {
+      "key": "daoudata",
+      "impressions": 74,
+      "clicks": 0,
+      "position": 6.297297297297297
+    },
+    {
+      "key": "denyo co., ltd. earnings results",
+      "impressions": 6,
+      "clicks": 0,
+      "position": 10
+    },
+    {
+      "key": "dh autolead",
+      "impressions": 2,
+      "clicks": 0,
+      "position": 8
+    },
+    {
+      "key": "dic corporation earnings results",
+      "impressions": 3,
+      "clicks": 0,
+      "position": 4.666666666666666
+    },
+    {
+      "key": "dohwa",
+      "impressions": 1,
+      "clicks": 0,
+      "position": 60
+    },
+    {
+      "key": "dongwoon anatech",
+      "impressions": 3,
+      "clicks": 0,
+      "position": 3.6666666666666665
+    },
+    {
+      "key": "eikei university",
+      "impressions": 1,
+      "clicks": 0,
+      "position": 50
+    },
+    {
+      "key": "eiken chemical",
+      "impressions": 1,
+      "clicks": 0,
+      "position": 46
+    },
+    {
+      "key": "eluon",
+      "impressions": 1,
+      "clicks": 0,
+      "position": 1
+    },
+    {
+      "key": "emaar development pjsc\" (\"gambl\" or \"betting\" or \"lottery\" or \"loto\" or \"hawala\")",
+      "impressions": 1,
+      "clicks": 0,
+      "position": 15
+    },
+    {
+      "key": "esg uae",
+      "impressions": 1,
+      "clicks": 0,
+      "position": 60
+    },
+    {
+      "key": "evaluate the respiratory pharmaceuticals company kyorin on all cause mortality",
+      "impressions": 1,
+      "clicks": 0,
+      "position": 8
+    },
+    {
+      "key": "exicon co ltd",
+      "impressions": 1,
+      "clicks": 0,
+      "position": 29
+    },
+    {
+      "key": "ferrotec holdings corporation earnings results",
+      "impressions": 2,
+      "clicks": 0,
+      "position": 8
+    },
+    {
+      "key": "fine semitech",
+      "impressions": 5,
+      "clicks": 0,
+      "position": 2.2
+    },
+    {
+      "key": "fukutome",
+      "impressions": 2,
+      "clicks": 0,
+      "position": 47
+    },
+    {
+      "key": "fulin plastic industry (cayman) holding co., ltd. analyst price target disagreement",
+      "impressions": 4,
+      "clicks": 0,
+      "position": 8.25
+    },
+    {
+      "key": "gemvax",
+      "impressions": 13,
+      "clicks": 0,
+      "position": 3.6153846153846154
+    },
+    {
+      "key": "geneone",
+      "impressions": 3,
+      "clicks": 0,
+      "position": 4
+    },
+    {
+      "key": "geneone life science",
+      "impressions": 3,
+      "clicks": 0,
+      "position": 8.666666666666668
+    },
+    {
+      "key": "gigalane",
+      "impressions": 4,
+      "clicks": 0,
+      "position": 4.75
+    },
+    {
+      "key": "guyoung",
+      "impressions": 1,
+      "clicks": 0,
+      "position": 5
+    },
+    {
+      "key": "hachijuni nagano bank ltd",
+      "impressions": 1,
+      "clicks": 0,
+      "position": 63
+    },
+    {
+      "key": "handok",
+      "impressions": 1,
+      "clicks": 0,
+      "position": 41
+    },
+    {
+      "key": "hanon systems",
+      "impressions": 1,
+      "clicks": 0,
+      "position": 62
+    },
+    {
+      "key": "hanwha",
+      "impressions": 1,
+      "clicks": 0,
+      "position": 96
+    },
+    {
+      "key": "hanwool corporation",
+      "impressions": 1,
+      "clicks": 0,
+      "position": 42
+    },
+    {
+      "key": "helixmith",
+      "impressions": 2,
+      "clicks": 0,
+      "position": 8
+    },
+    {
+      "key": "helixmith engensis news october 2026",
+      "impressions": 1,
+      "clicks": 0,
+      "position": 6
+    },
+    {
+      "key": "how much money has hokkaidosenko.co.jp raised",
+      "impressions": 1,
+      "clicks": 0,
+      "position": 5
+    },
+    {
+      "key": "how much money has kawaden.co.jp raised",
+      "impressions": 3,
+      "clicks": 0,
+      "position": 3.6666666666666665
+    },
+    {
+      "key": "hpsp",
+      "impressions": 1,
+      "clicks": 0,
+      "position": 58
+    },
+    {
+      "key": "hwacheon",
+      "impressions": 2,
+      "clicks": 0,
+      "position": 47.5
+    },
+    {
+      "key": "ilyang",
+      "impressions": 1,
+      "clicks": 0,
+      "position": 7
+    },
+    {
+      "key": "imports and exports of south korea",
+      "impressions": 1,
+      "clicks": 0,
+      "position": 68
+    },
+    {
+      "key": "in krw",
+      "impressions": 1,
+      "clicks": 0,
+      "position": 5
+    },
+    {
+      "key": "intitle:\"credit saison\" -site:saisoncard.co.jp",
+      "impressions": 1,
+      "clicks": 0,
+      "position": 36
+    },
+    {
+      "key": "inventage lab",
+      "impressions": 2,
+      "clicks": 0,
+      "position": 3
+    },
+    {
+      "key": "isu abxis",
+      "impressions": 1,
+      "clicks": 0,
+      "position": 10
+    },
+    {
+      "key": "iwaki co., ltd. earnings results",
+      "impressions": 1,
+      "clicks": 0,
+      "position": 10
+    },
+    {
+      "key": "japan maritime logistics services market",
+      "impressions": 4,
+      "clicks": 0,
+      "position": 77
+    },
+    {
+      "key": "japan medical morphine market",
+      "impressions": 1,
+      "clicks": 0,
+      "position": 96
+    },
+    {
+      "key": "japan non-ferrous metals market",
+      "impressions": 1,
+      "clicks": 0,
+      "position": 73
+    },
+    {
+      "key": "japan textile market",
+      "impressions": 1,
+      "clicks": 0,
+      "position": 79
+    },
+    {
+      "key": "japanese bank",
+      "impressions": 1,
+      "clicks": 0,
+      "position": 5
+    },
+    {
+      "key": "japanese pharmaceutical company",
+      "impressions": 2,
+      "clicks": 0,
+      "position": 24
+    },
+    {
+      "key": "jrc",
+      "impressions": 1,
+      "clicks": 0,
+      "position": 49
+    },
+    {
+      "key": "jry000a/i086#i-r",
+      "impressions": 1,
+      "clicks": 0,
+      "position": 94
+    },
+    {
+      "key": "js link inc",
+      "impressions": 1,
+      "clicks": 0,
+      "position": 77
+    },
+    {
+      "key": "kangstem biotech",
+      "impressions": 2,
+      "clicks": 0,
+      "position": 8.5
+    },
+    {
+      "key": "kangwon land q3 2025 financial results cash flow ebitda earnings analysis",
+      "impressions": 1,
+      "clicks": 0,
+      "position": 8
+    },
+    {
+      "key": "kasumigaseki capital co., ltd.",
+      "impressions": 1,
+      "clicks": 0,
+      "position": 39
+    },
+    {
+      "key": "katakura industries share price",
+      "impressions": 1,
+      "clicks": 0,
+      "position": 28
+    },
+    {
+      "key": "kepco e&c",
+      "impressions": 1,
+      "clicks": 0,
+      "position": 13
+    },
+    {
+      "key": "kh neochem co., ltd. earnings results",
+      "impressions": 1,
+      "clicks": 0,
+      "position": 8
+    },
+    {
+      "key": "kintetsu group holdings",
+      "impressions": 1,
+      "clicks": 0,
+      "position": 61
+    },
+    {
+      "key": "kobayashi pharmaceutical co., ltd. earnings results",
+      "impressions": 1,
+      "clicks": 0,
+      "position": 5
+    },
+    {
+      "key": "komatsu matere co.,ltd. earnings results",
+      "impressions": 9,
+      "clicks": 0,
+      "position": 5.444444444444445
+    },
+    {
+      "key": "komipharm",
+      "impressions": 2,
+      "clicks": 0,
+      "position": 4
+    },
+    {
+      "key": "korea big companies",
+      "impressions": 1,
+      "clicks": 0,
+      "position": 74
+    },
+    {
+      "key": "korea market",
+      "impressions": 6,
+      "clicks": 0,
+      "position": 73.83333333333333
+    },
+    {
+      "key": "korea unemployment rate",
+      "impressions": 1,
+      "clicks": 0,
+      "position": 92
+    },
+    {
+      "key": "korean companies",
+      "impressions": 9,
+      "clicks": 0,
+      "position": 81.66666666666667
+    },
+    {
+      "key": "korean companies in the us",
+      "impressions": 1,
+      "clicks": 0,
+      "position": 86
+    },
+    {
+      "key": "korean largest companies",
+      "impressions": 2,
+      "clicks": 0,
+      "position": 81.5
+    },
+    {
+      "key": "kospi components",
+      "impressions": 1,
+      "clicks": 0,
+      "position": 42
+    },
+    {
+      "key": "kospi holdings weight",
+      "impressions": 1,
+      "clicks": 0,
+      "position": 56
+    },
+    {
+      "key": "kospi index holdings",
+      "impressions": 1,
+      "clicks": 0,
+      "position": 60
+    },
+    {
+      "key": "krafton inc net worth",
+      "impressions": 1,
+      "clicks": 0,
+      "position": 11
+    },
+    {
+      "key": "ksing",
+      "impressions": 1,
+      "clicks": 0,
+      "position": 54
+    },
+    {
+      "key": "kurabo industries",
+      "impressions": 1,
+      "clicks": 0,
+      "position": 46
+    },
+    {
+      "key": "kurabo industries ltd",
+      "impressions": 1,
+      "clicks": 0,
+      "position": 57
+    },
+    {
+      "key": "kuriyama",
+      "impressions": 2,
+      "clicks": 0,
+      "position": 59.5
+    },
+    {
+      "key": "kusuri no aoki holdings co., ltd. earnings results",
+      "impressions": 13,
+      "clicks": 0,
+      "position": 8.846153846153847
+    },
+    {
+      "key": "kz precision",
+      "impressions": 1,
+      "clicks": 0,
+      "position": 7
+    },
+    {
+      "key": "largest south korean companies",
+      "impressions": 2,
+      "clicks": 0,
+      "position": 76.5
+    },
+    {
+      "key": "lianyou metals",
+      "impressions": 3,
+      "clicks": 0,
+      "position": 6.666666666666667
+    },
+    {
+      "key": "ligachem",
+      "impressions": 4,
+      "clicks": 0,
+      "position": 7
+    },
+    {
+      "key": "mabuchi",
+      "impressions": 1,
+      "clicks": 0,
+      "position": 84
+    },
+    {
+      "key": "major korean companies",
+      "impressions": 1,
+      "clicks": 0,
+      "position": 77
+    },
+    {
+      "key": "medpacto",
+      "impressions": 1,
+      "clicks": 0,
+      "position": 1
+    },
+    {
+      "key": "mezzion",
+      "impressions": 2,
+      "clicks": 0,
+      "position": 4
+    },
+    {
+      "key": "mirarth holdings",
+      "impressions": 1,
+      "clicks": 0,
+      "position": 48
+    },
+    {
+      "key": "mitsubishi materials corporation",
+      "impressions": 1,
+      "clicks": 0,
+      "position": 59
+    },
+    {
+      "key": "mitsuboshi kogyo co.,ltd. yoy growth revenue",
+      "impressions": 3,
+      "clicks": 0,
+      "position": 9
+    },
+    {
+      "key": "morita holdings corporation",
+      "impressions": 1,
+      "clicks": 0,
+      "position": 54
+    },
+    {
+      "key": "nagase group",
+      "impressions": 2,
+      "clicks": 0,
+      "position": 47
+    },
+    {
+      "key": "nagase japan",
+      "impressions": 1,
+      "clicks": 0,
+      "position": 34
+    },
+    {
+      "key": "nagawa ko",
+      "impressions": 1,
+      "clicks": 0,
+      "position": 64
+    },
+    {
+      "key": "nankai industry",
+      "impressions": 1,
+      "clicks": 0,
+      "position": 56
+    },
+    {
+      "key": "ncxx",
+      "impressions": 1,
+      "clicks": 0,
+      "position": 143
+    },
+    {
+      "key": "nextbiomedical",
+      "impressions": 1,
+      "clicks": 0,
+      "position": 1
+    },
+    {
+      "key": "nexus 20 citech",
+      "impressions": 1,
+      "clicks": 0,
+      "position": 9
+    },
+    {
+      "key": "ngsco",
+      "impressions": 1,
+      "clicks": 0,
+      "position": 51
+    },
+    {
+      "key": "nichirei",
+      "impressions": 1,
+      "clicks": 0,
+      "position": 59
+    },
+    {
+      "key": "nichirei corporation earnings results",
+      "impressions": 1,
+      "clicks": 0,
+      "position": 10
+    },
+    {
+      "key": "nikkon holdings",
+      "impressions": 1,
+      "clicks": 0,
+      "position": 94
+    },
+    {
+      "key": "nippon dry chemical",
+      "impressions": 8,
+      "clicks": 0,
+      "position": 35.25
+    },
+    {
+      "key": "nippon express holdings,inc. earnings results",
+      "impressions": 3,
+      "clicks": 0,
+      "position": 10
+    },
+    {
+      "key": "nippon filcon",
+      "impressions": 1,
+      "clicks": 0,
+      "position": 42
+    },
+    {
+      "key": "nippon seiki",
+      "impressions": 1,
+      "clicks": 0,
+      "position": 69
+    },
+    {
+      "key": "nippon seiki co ltd",
+      "impressions": 1,
+      "clicks": 0,
+      "position": 62
+    },
+    {
+      "key": "nippon shinyaku",
+      "impressions": 2,
+      "clicks": 0,
+      "position": 53
+    },
+    {
+      "key": "nishimatsuya chain co., ltd. earnings results",
+      "impressions": 7,
+      "clicks": 0,
+      "position": 8.285714285714285
+    },
+    {
+      "key": "nitto kohki co., ltd. earnings results",
+      "impressions": 1,
+      "clicks": 0,
+      "position": 10
+    },
+    {
+      "key": "nkgen",
+      "impressions": 4,
+      "clicks": 0,
+      "position": 4
+    },
+    {
+      "key": "nkgen biotech",
+      "impressions": 1,
+      "clicks": 0,
+      "position": 3
+    },
+    {
+      "key": "number of employees at kawaden.co.jp",
+      "impressions": 2,
+      "clicks": 0,
+      "position": 9
+    },
+    {
+      "key": "nxera pharma",
+      "impressions": 1,
+      "clicks": 0,
+      "position": 96
+    },
+    {
+      "key": "ohmori group",
+      "impressions": 1,
+      "clicks": 0,
+      "position": 55
+    },
+    {
+      "key": "one api covering taiwan japan and korea equity data",
+      "impressions": 1,
+      "clicks": 0,
+      "position": 10
+    },
+    {
+      "key": "orum therapeutics",
+      "impressions": 1,
+      "clicks": 0,
+      "position": 6
+    },
+    {
+      "key": "paradise co ltd",
+      "impressions": 1,
+      "clicks": 0,
+      "position": 24
+    },
+    {
+      "key": "pemtron",
+      "impressions": 1,
+      "clicks": 0,
+      "position": 6
+    },
+    {
+      "key": "peptron",
+      "impressions": 1,
+      "clicks": 0,
+      "position": 29
+    },
+    {
+      "key": "popular korean companies",
+      "impressions": 1,
+      "clicks": 0,
+      "position": 78
+    },
+    {
+      "key": "round one corp",
+      "impressions": 1,
+      "clicks": 0,
+      "position": 62
+    },
+    {
+      "key": "rznomics",
+      "impressions": 1,
+      "clicks": 0,
+      "position": 2
+    },
+    {
+      "key": "sakura rubber company",
+      "impressions": 1,
+      "clicks": 0,
+      "position": 68
+    },
+    {
+      "key": "salary",
+      "impressions": 1,
+      "clicks": 0,
+      "position": 1
+    },
+    {
+      "key": "samsung e&a",
+      "impressions": 2,
+      "clicks": 0,
+      "position": 81
+    },
+    {
+      "key": "samyang packaging corporation",
+      "impressions": 1,
+      "clicks": 0,
+      "position": 82
+    },
+    {
+      "key": "screen japan",
+      "impressions": 1,
+      "clicks": 0,
+      "position": 50
+    },
+    {
+      "key": "seiwa electric",
+      "impressions": 2,
+      "clicks": 0,
+      "position": 37
+    },
+    {
+      "key": "shibaura machine co., ltd. earnings results",
+      "impressions": 6,
+      "clicks": 0,
+      "position": 8.5
+    },
+    {
+      "key": "shiga corp",
+      "impressions": 1,
+      "clicks": 0,
+      "position": 36
+    },
+    {
+      "key": "shinki group shiga",
+      "impressions": 1,
+      "clicks": 0,
+      "position": 53
+    },
+    {
+      "key": "shinko shoji co., ltd. earnings results",
+      "impressions": 1,
+      "clicks": 0,
+      "position": 9
+    },
+    {
+      "key": "shinobu foods",
+      "impressions": 1,
+      "clicks": 0,
+      "position": 44
+    },
+    {
+      "key": "shinpoong",
+      "impressions": 1,
+      "clicks": 0,
+      "position": 3
+    },
+    {
+      "key": "shinwon",
+      "impressions": 3,
+      "clicks": 0,
+      "position": 61.333333333333336
+    },
+    {
+      "key": "site:shopee.* intitle:\"credit saison\"",
+      "impressions": 1,
+      "clicks": 0,
+      "position": 45
+    },
+    {
+      "key": "six financial information sales japan",
+      "impressions": 3,
+      "clicks": 0,
+      "position": 32.66666666666667
+    },
+    {
+      "key": "smc mortgage corporation",
+      "impressions": 1,
+      "clicks": 0,
+      "position": 9
+    },
+    {
+      "key": "softbank corp",
+      "impressions": 1,
+      "clicks": 0,
+      "position": 51
+    },
+    {
+      "key": "south korea api market",
+      "impressions": 1,
+      "clicks": 0,
+      "position": 77
+    },
+    {
+      "key": "south korea enterprise file synchronization sharing market",
+      "impressions": 1,
+      "clicks": 0,
+      "position": 98
+    },
+    {
+      "key": "south korea industrial rubber market",
+      "impressions": 2,
+      "clicks": 0,
+      "position": 66
+    },
+    {
+      "key": "south korea rubber molding market",
+      "impressions": 1,
+      "clicks": 0,
+      "position": 59
+    },
+    {
+      "key": "south korea silicone rubber market",
+      "impressions": 6,
+      "clicks": 0,
+      "position": 77.16666666666667
+    },
+    {
+      "key": "south korea tic industry",
+      "impressions": 1,
+      "clicks": 0,
+      "position": 96
+    },
+    {
+      "key": "south korea time tracking software market",
+      "impressions": 4,
+      "clicks": 0,
+      "position": 80.5
+    },
+    {
+      "key": "south korea womens healthcare market",
+      "impressions": 5,
+      "clicks": 0,
+      "position": 87.4
+    },
+    {
+      "key": "stella chemifa",
+      "impressions": 1,
+      "clicks": 0,
+      "position": 33
+    },
+    {
+      "key": "stella chemifa corporation earnings results",
+      "impressions": 17,
+      "clicks": 0,
+      "position": 8.823529411764707
+    },
+    {
+      "key": "sumitomo heavy industries",
+      "impressions": 1,
+      "clicks": 0,
+      "position": 59
+    },
+    {
+      "key": "sumitomo metal mining",
+      "impressions": 1,
+      "clicks": 0,
+      "position": 48
+    },
+    {
+      "key": "sv investment",
+      "impressions": 1,
+      "clicks": 0,
+      "position": 45
+    },
+    {
+      "key": "taiyo yuden",
+      "impressions": 7,
+      "clicks": 0,
+      "position": 55.57142857142857
+    },
+    {
+      "key": "takachiho koheki co.,ltd. analyst price target disagreement * *",
+      "impressions": 1,
+      "clicks": 0,
+      "position": 10
+    },
+    {
+      "key": "takachiho koheki co.,ltd. bullish and bearish analyst opinions * *",
+      "impressions": 1,
+      "clicks": 0,
+      "position": 7
+    },
+    {
+      "key": "takachiho koheki co.,ltd. bullish and bearish analyst opinions * * * * *",
+      "impressions": 1,
+      "clicks": 0,
+      "position": 6
+    },
+    {
+      "key": "takachiho koheki co.,ltd. forecast and analysis * *",
+      "impressions": 1,
+      "clicks": 0,
+      "position": 6
+    },
+    {
+      "key": "takachiho koheki co.,ltd. forecast and analysis * * *",
+      "impressions": 1,
+      "clicks": 0,
+      "position": 7
+    },
+    {
+      "key": "takachiho koheki co.,ltd. forecast and analysis * * * * *",
+      "impressions": 1,
+      "clicks": 0,
+      "position": 7
+    },
+    {
+      "key": "tamura corporation",
+      "impressions": 1,
+      "clicks": 0,
+      "position": 97
+    },
+    {
+      "key": "teikoku sen-i co., ltd. earnings results",
+      "impressions": 2,
+      "clicks": 0,
+      "position": 8.5
+    },
+    {
+      "key": "the hyakujushi bank, ltd.",
+      "impressions": 2,
+      "clicks": 0,
+      "position": 6.5
+    },
+    {
+      "key": "tis japan",
+      "impressions": 1,
+      "clicks": 0,
+      "position": 53
+    },
+    {
+      "key": "tokyo steel manufacturing co., ltd. earnings results",
+      "impressions": 1,
+      "clicks": 0,
+      "position": 4
+    },
+    {
+      "key": "tomocube",
+      "impressions": 3,
+      "clicks": 0,
+      "position": 23.333333333333332
+    },
+    {
+      "key": "tomony holdings, inc. (8600.t) stock related news articles",
+      "impressions": 4,
+      "clicks": 0,
+      "position": 9
+    },
+    {
+      "key": "top companies south korea",
+      "impressions": 1,
+      "clicks": 0,
+      "position": 80
+    },
+    {
+      "key": "top korean companies",
+      "impressions": 1,
+      "clicks": 0,
+      "position": 96
+    },
+    {
+      "key": "top korean stocks",
+      "impressions": 1,
+      "clicks": 0,
+      "position": 58
+    },
+    {
+      "key": "tosei corporation earnings results",
+      "impressions": 1,
+      "clicks": 0,
+      "position": 9
+    },
+    {
+      "key": "toyo denki seizo",
+      "impressions": 1,
+      "clicks": 0,
+      "position": 58
+    },
+    {
+      "key": "trinity industrial corporation",
+      "impressions": 1,
+      "clicks": 0,
+      "position": 28
+    },
+    {
+      "key": "ts corporation korea",
+      "impressions": 1,
+      "clicks": 0,
+      "position": 38
+    },
+    {
+      "key": "ts tech japan",
+      "impressions": 1,
+      "clicks": 0,
+      "position": 90
+    },
+    {
+      "key": "tsurumi manufacturing co., ltd. earnings results",
+      "impressions": 1,
+      "clicks": 0,
+      "position": 4
+    },
+    {
+      "key": "u m i o s",
+      "impressions": 3,
+      "clicks": 0,
+      "position": 63.666666666666664
+    },
+    {
+      "key": "uni-president taiwan",
+      "impressions": 1,
+      "clicks": 0,
+      "position": 94
+    },
+    {
+      "key": "update best loan",
+      "impressions": 1,
+      "clicks": 0,
+      "position": 8
+    },
+    {
+      "key": "vt holdings",
+      "impressions": 1,
+      "clicks": 0,
+      "position": 86
+    },
+    {
+      "key": "wacoal holdings corp",
+      "impressions": 1,
+      "clicks": 0,
+      "position": 37
+    },
+    {
+      "key": "watahan",
+      "impressions": 1,
+      "clicks": 0,
+      "position": 14
+    },
+    {
+      "key": "who is the ceo of hokkaidosenko.co.jp",
+      "impressions": 5,
+      "clicks": 0,
+      "position": 10
+    },
+    {
+      "key": "woongjin group",
+      "impressions": 1,
+      "clicks": 0,
+      "position": 45
+    },
+    {
+      "key": "y.l.h. expanded metal co.,ltd. number of employees and annual revenue",
+      "impressions": 2,
+      "clicks": 0,
+      "position": 8
+    },
+    {
+      "key": "ycchem",
+      "impressions": 1,
+      "clicks": 0,
+      "position": 3
+    },
+    {
+      "key": "yonyu plastics co., ltd. analyst price target disagreement * * *",
+      "impressions": 1,
+      "clicks": 0,
+      "position": 8
+    },
+    {
+      "key": "younghwa tech",
+      "impressions": 1,
+      "clicks": 0,
+      "position": 4
+    },
+    {
+      "key": "zuiko corporation earnings results",
+      "impressions": 1,
+      "clicks": 0,
+      "position": 8
+    },
+    {
+      "key": "株式会社 デンソー 広瀬製作所 last known annual revenue",
+      "impressions": 1,
+      "clicks": 0,
+      "position": 6
+    },
+    {
+      "key": "株式会社 マルセンクリーニング アネックス工場 last known annual revenue",
+      "impressions": 5,
+      "clicks": 0,
+      "position": 6.4
+    },
+    {
+      "key": "片山製作所 last known annual revenue",
+      "impressions": 2,
+      "clicks": 0,
+      "position": 8
+    },
+    {
+      "key": "대현산업 total number of employees",
+      "impressions": 1,
+      "clicks": 0,
+      "position": 7
+    },
+    {
+      "key": "동진테크 last known annual revenue",
+      "impressions": 3,
+      "clicks": 0,
+      "position": 9.333333333333334
+    },
+    {
+      "key": "일본 은행 순위",
+      "impressions": 1,
+      "clicks": 0,
+      "position": 84
+    },
+    {
+      "key": "장오엔지니어링 total number of employees",
+      "impressions": 1,
+      "clicks": 0,
+      "position": 9
+    },
+    {
+      "key": "주식회사 비원아이 last known annual revenue",
+      "impressions": 3,
+      "clicks": 0,
+      "position": 9.666666666666666
+    },
+    {
+      "key": "태양상사 last known annual revenue",
+      "impressions": 3,
+      "clicks": 0,
+      "position": 7.666666666666667
+    }
+  ]
+}

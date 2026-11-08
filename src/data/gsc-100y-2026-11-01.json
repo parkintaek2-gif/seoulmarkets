@@ -1,0 +1,60 @@
+{
+  "site": "sc-domain:100yearmap.com",
+  "dimension": "query",
+  "window": {
+    "from": "2026-10-04",
+    "to": "2026-11-01",
+    "days": 28
+  },
+  "rowLimit": 25000,
+  "rows": [
+    {
+      "key": "경기 국제 통상 고등학교",
+      "impressions": 1,
+      "clicks": 0,
+      "position": 57
+    },
+    {
+      "key": "대학 학과",
+      "impressions": 1,
+      "clicks": 0,
+      "position": 44
+    },
+    {
+      "key": "용인예술과학대학교 수준",
+      "impressions": 1,
+      "clicks": 0,
+      "position": 100
+    },
+    {
+      "key": "은평구 고등학교",
+      "impressions": 1,
+      "clicks": 0,
+      "position": 15
+    },
+    {
+      "key": "작업치료학과 대학 순위",
+      "impressions": 1,
+      "clicks": 0,
+      "position": 66
+    },
+    {
+      "key": "장안대학교 수준",
+      "impressions": 1,
+      "clicks": 0,
+      "position": 19
+    },
+    {
+      "key": "졸업생 진로 현황",
+      "impressions": 1,
+      "clicks": 0,
+      "position": 3
+    },
+    {
+      "key": "천안 상업 고등학교",
+      "impressions": 1,
+      "clicks": 0,
+      "position": 69
+    }
+  ]
+}

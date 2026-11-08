@@ -1,0 +1,1776 @@
+{
+  "site": "sc-domain:100yearmap.com",
+  "dimension": "page",
+  "window": {
+    "from": "2026-10-04",
+    "to": "2026-11-01",
+    "days": 28
+  },
+  "rowLimit": 25000,
+  "rows": [
+    {
+      "key": "https://100yearmap.com/university/0000476",
+      "impressions": 1,
+      "clicks": 1,
+      "position": 1
+    },
+    {
+      "key": "https://100yearmap.com/",
+      "impressions": 5,
+      "clicks": 0,
+      "position": 2.6
+    },
+    {
+      "key": "https://100yearmap.com/afterschool",
+      "impressions": 1,
+      "clicks": 0,
+      "position": 3
+    },
+    {
+      "key": "https://100yearmap.com/age",
+      "impressions": 1,
+      "clicks": 0,
+      "position": 8
+    },
+    {
+      "key": "https://100yearmap.com/ages",
+      "impressions": 1,
+      "clicks": 0,
+      "position": 10
+    },
+    {
+      "key": "https://100yearmap.com/breakfast",
+      "impressions": 1,
+      "clicks": 0,
+      "position": 4
+    },
+    {
+      "key": "https://100yearmap.com/college-major",
+      "impressions": 1,
+      "clicks": 0,
+      "position": 44
+    },
+    {
+      "key": "https://100yearmap.com/college-major/%EA%B5%90%ED%9A%8C%EC%9D%8C%EC%95%85%EA%B3%BC",
+      "impressions": 1,
+      "clicks": 0,
+      "position": 6
+    },
+    {
+      "key": "https://100yearmap.com/college-major/%EA%B5%AD%EC%95%85%EA%B3%BC",
+      "impressions": 1,
+      "clicks": 0,
+      "position": 3
+    },
+    {
+      "key": "https://100yearmap.com/college-major/%EA%B8%B0%EC%88%A0%EA%B2%BD%EC%98%81%ED%95%99%EA%B3%BC",
+      "impressions": 1,
+      "clicks": 0,
+      "position": 4
+    },
+    {
+      "key": "https://100yearmap.com/college-major/%EC%8B%9D%ED%92%88%EA%B3%B5%ED%95%99%EA%B3%BC",
+      "impressions": 1,
+      "clicks": 0,
+      "position": 8
+    },
+    {
+      "key": "https://100yearmap.com/college-major/%EC%9D%98%EA%B3%BC%ED%95%99%EA%B3%BC",
+      "impressions": 1,
+      "clicks": 0,
+      "position": 9
+    },
+    {
+      "key": "https://100yearmap.com/college-major/%EC%9E%91%EC%97%85%EC%B9%98%EB%A3%8C%EA%B3%BC",
+      "impressions": 1,
+      "clicks": 0,
+      "position": 66
+    },
+    {
+      "key": "https://100yearmap.com/college-major/%ED%95%9C%EA%B5%AD%EC%96%B4%EB%AC%B8%ED%95%99%EA%B3%BC",
+      "impressions": 1,
+      "clicks": 0,
+      "position": 2
+    },
+    {
+      "key": "https://100yearmap.com/data",
+      "impressions": 1,
+      "clicks": 0,
+      "position": 4
+    },
+    {
+      "key": "https://100yearmap.com/elementary",
+      "impressions": 2,
+      "clicks": 0,
+      "position": 9
+    },
+    {
+      "key": "https://100yearmap.com/home",
+      "impressions": 14,
+      "clicks": 0,
+      "position": 4.5
+    },
+    {
+      "key": "https://100yearmap.com/major/%EA%B1%B4%EC%B6%95%EC%8B%9C%EC%8A%A4%ED%85%9C%EA%B3%BC",
+      "impressions": 1,
+      "clicks": 0,
+      "position": 4
+    },
+    {
+      "key": "https://100yearmap.com/major/%EA%B2%BD%EC%98%81%EC%A0%95%EB%B3%B4%EA%B3%BC",
+      "impressions": 3,
+      "clicks": 0,
+      "position": 7.333333333333333
+    },
+    {
+      "key": "https://100yearmap.com/major/%EA%B3%B5%ED%86%B5%EA%B3%BC%EC%A0%95%EC%97%AC",
+      "impressions": 1,
+      "clicks": 0,
+      "position": 2
+    },
+    {
+      "key": "https://100yearmap.com/major/%EA%B8%80%EB%A1%9C%EB%B2%8C%EB%B9%84%EC%A6%88%EB%8B%88%EC%8A%A4%EA%B3%BC",
+      "impressions": 1,
+      "clicks": 0,
+      "position": 5
+    },
+    {
+      "key": "https://100yearmap.com/major/%EA%B8%B0%EA%B3%84%EA%B3%B5%EC%9E%91%EA%B3%BC",
+      "impressions": 1,
+      "clicks": 0,
+      "position": 9
+    },
+    {
+      "key": "https://100yearmap.com/major/%EB%AC%B4%EC%97%AD%EA%B3%BC",
+      "impressions": 1,
+      "clicks": 0,
+      "position": 1
+    },
+    {
+      "key": "https://100yearmap.com/major/%EB%B7%B0%ED%8B%B0%EC%95%84%ED%8A%B8%EA%B3%BC",
+      "impressions": 1,
+      "clicks": 0,
+      "position": 10
+    },
+    {
+      "key": "https://100yearmap.com/major/%EB%B9%84%EC%A6%88%EB%8B%88%EC%8A%A4%EA%B3%BC",
+      "impressions": 1,
+      "clicks": 0,
+      "position": 1
+    },
+    {
+      "key": "https://100yearmap.com/major/%EC%82%AC%EC%9D%B4%EB%B2%84%EC%A0%95%EB%B3%B4%ED%86%B5%EC%8B%A0%EA%B3%BC",
+      "impressions": 1,
+      "clicks": 0,
+      "position": 6
+    },
+    {
+      "key": "https://100yearmap.com/major/%EC%8B%9C%EA%B0%81%EB%94%94%EC%9E%90%EC%9D%B8%EA%B3%BC",
+      "impressions": 1,
+      "clicks": 0,
+      "position": 2
+    },
+    {
+      "key": "https://100yearmap.com/major/%EC%8B%A4%EC%9A%A9%EC%9D%8C%EC%95%85%EA%B3%BC",
+      "impressions": 1,
+      "clicks": 0,
+      "position": 6
+    },
+    {
+      "key": "https://100yearmap.com/major/%EC%97%90%EB%84%88%EC%A7%80%EC%8B%9C%EC%8A%A4%ED%85%9C%EA%B3%BC",
+      "impressions": 1,
+      "clicks": 0,
+      "position": 6
+    },
+    {
+      "key": "https://100yearmap.com/major/%EC%9C%A0%EC%95%84%EA%B5%90%EC%9C%A1%EA%B3%BC",
+      "impressions": 1,
+      "clicks": 0,
+      "position": 4
+    },
+    {
+      "key": "https://100yearmap.com/major/%EC%9D%B8%EB%AC%B8%EC%82%AC%ED%9A%8C%EA%B3%BC%EC%A0%95%EC%97%AC",
+      "impressions": 2,
+      "clicks": 0,
+      "position": 1
+    },
+    {
+      "key": "https://100yearmap.com/major/%EC%9D%B8%EB%AC%B8%EC%82%AC%ED%9A%8C%EA%B3%BC%ED%95%99%EA%B3%BC%EC%A0%95",
+      "impressions": 1,
+      "clicks": 0,
+      "position": 6
+    },
+    {
+      "key": "https://100yearmap.com/major/%EC%9D%B8%ED%84%B0%EB%84%B7%EC%A0%95%EB%B3%B4%EA%B3%BC",
+      "impressions": 1,
+      "clicks": 0,
+      "position": 5
+    },
+    {
+      "key": "https://100yearmap.com/major/%EC%A0%84%EA%B8%B0%EA%B3%BC",
+      "impressions": 2,
+      "clicks": 0,
+      "position": 2
+    },
+    {
+      "key": "https://100yearmap.com/major/%EC%A0%84%EC%9E%90%EA%B3%84%EC%82%B0%EA%B3%BC",
+      "impressions": 1,
+      "clicks": 0,
+      "position": 5
+    },
+    {
+      "key": "https://100yearmap.com/major/%EC%BB%A8%EB%B2%A4%EC%85%98%EB%B9%84%EC%A6%88%EB%8B%88%EC%8A%A4%EA%B3%BC",
+      "impressions": 1,
+      "clicks": 0,
+      "position": 2
+    },
+    {
+      "key": "https://100yearmap.com/major/%EC%BB%B4%ED%93%A8%ED%84%B0%EA%B7%B8%EB%9E%98%ED%94%BD%EB%94%94%EC%9E%90%EC%9D%B8%EA%B3%BC",
+      "impressions": 1,
+      "clicks": 0,
+      "position": 3
+    },
+    {
+      "key": "https://100yearmap.com/major/%ED%86%B5%EC%8B%A0%EA%B3%BC",
+      "impressions": 1,
+      "clicks": 0,
+      "position": 2
+    },
+    {
+      "key": "https://100yearmap.com/major/%ED%98%B8%ED%85%94%EA%B4%80%EA%B4%91%EA%B3%BC",
+      "impressions": 1,
+      "clicks": 0,
+      "position": 3
+    },
+    {
+      "key": "https://100yearmap.com/major/%ED%99%94%EC%9E%A5%ED%92%88%EC%9D%91%EC%9A%A9%EA%B3%BC%ED%95%99%EA%B3%BC",
+      "impressions": 1,
+      "clicks": 0,
+      "position": 4
+    },
+    {
+      "key": "https://100yearmap.com/marriage-age",
+      "impressions": 2,
+      "clicks": 0,
+      "position": 7.5
+    },
+    {
+      "key": "https://100yearmap.com/pediatrics",
+      "impressions": 3,
+      "clicks": 0,
+      "position": 4.333333333333334
+    },
+    {
+      "key": "https://100yearmap.com/report/area/%EA%B2%BD%EA%B8%B0%EB%8F%84-%EC%96%91%EC%A3%BC%EC%8B%9C",
+      "impressions": 1,
+      "clicks": 0,
+      "position": 8
+    },
+    {
+      "key": "https://100yearmap.com/report/area/%EA%B2%BD%EC%83%81%EB%82%A8%EB%8F%84-%EC%B0%BD%EC%9B%90%EC%8B%9C-%EC%9D%98%EC%B0%BD%EA%B5%AC",
+      "impressions": 1,
+      "clicks": 0,
+      "position": 46
+    },
+    {
+      "key": "https://100yearmap.com/report/area/%EC%84%9C%EC%9A%B8%ED%8A%B9%EB%B3%84%EC%8B%9C-%EA%B4%91%EC%A7%84%EA%B5%AC",
+      "impressions": 1,
+      "clicks": 0,
+      "position": 4
+    },
+    {
+      "key": "https://100yearmap.com/report/area/%EC%84%9C%EC%9A%B8%ED%8A%B9%EB%B3%84%EC%8B%9C-%EB%8F%84%EB%B4%89%EA%B5%AC",
+      "impressions": 1,
+      "clicks": 0,
+      "position": 1
+    },
+    {
+      "key": "https://100yearmap.com/report/area/%EC%84%9C%EC%9A%B8%ED%8A%B9%EB%B3%84%EC%8B%9C-%EC%86%A1%ED%8C%8C%EA%B5%AC",
+      "impressions": 2,
+      "clicks": 0,
+      "position": 1
+    },
+    {
+      "key": "https://100yearmap.com/report/area/%EC%84%9C%EC%9A%B8%ED%8A%B9%EB%B3%84%EC%8B%9C-%EC%98%81%EB%93%B1%ED%8F%AC%EA%B5%AC",
+      "impressions": 1,
+      "clicks": 0,
+      "position": 4
+    },
+    {
+      "key": "https://100yearmap.com/report/area/%EC%84%9C%EC%9A%B8%ED%8A%B9%EB%B3%84%EC%8B%9C-%EC%9D%80%ED%8F%89%EA%B5%AC",
+      "impressions": 1,
+      "clicks": 0,
+      "position": 15
+    },
+    {
+      "key": "https://100yearmap.com/report/area/%EC%B6%A9%EC%B2%AD%EB%B6%81%EB%8F%84-%EC%B2%AD%EC%A3%BC%EC%8B%9C-%EC%84%9C%EC%9B%90%EA%B5%AC",
+      "impressions": 3,
+      "clicks": 0,
+      "position": 3
+    },
+    {
+      "key": "https://100yearmap.com/research",
+      "impressions": 1,
+      "clicks": 0,
+      "position": 5
+    },
+    {
+      "key": "https://100yearmap.com/school/1371663",
+      "impressions": 2,
+      "clicks": 0,
+      "position": 3
+    },
+    {
+      "key": "https://100yearmap.com/school/7010057",
+      "impressions": 1,
+      "clicks": 0,
+      "position": 5
+    },
+    {
+      "key": "https://100yearmap.com/school/7010059",
+      "impressions": 1,
+      "clicks": 0,
+      "position": 5
+    },
+    {
+      "key": "https://100yearmap.com/school/7010060",
+      "impressions": 3,
+      "clicks": 0,
+      "position": 1
+    },
+    {
+      "key": "https://100yearmap.com/school/7010061",
+      "impressions": 1,
+      "clicks": 0,
+      "position": 3
+    },
+    {
+      "key": "https://100yearmap.com/school/7010063",
+      "impressions": 1,
+      "clicks": 0,
+      "position": 4
+    },
+    {
+      "key": "https://100yearmap.com/school/7010064",
+      "impressions": 1,
+      "clicks": 0,
+      "position": 3
+    },
+    {
+      "key": "https://100yearmap.com/school/7010065",
+      "impressions": 1,
+      "clicks": 0,
+      "position": 2
+    },
+    {
+      "key": "https://100yearmap.com/school/7010066",
+      "impressions": 1,
+      "clicks": 0,
+      "position": 1
+    },
+    {
+      "key": "https://100yearmap.com/school/7010067",
+      "impressions": 1,
+      "clicks": 0,
+      "position": 4
+    },
+    {
+      "key": "https://100yearmap.com/school/7010068",
+      "impressions": 1,
+      "clicks": 0,
+      "position": 1
+    },
+    {
+      "key": "https://100yearmap.com/school/7010069",
+      "impressions": 1,
+      "clicks": 0,
+      "position": 10
+    },
+    {
+      "key": "https://100yearmap.com/school/7010081",
+      "impressions": 1,
+      "clicks": 0,
+      "position": 2
+    },
+    {
+      "key": "https://100yearmap.com/school/7010082",
+      "impressions": 1,
+      "clicks": 0,
+      "position": 2
+    },
+    {
+      "key": "https://100yearmap.com/school/7010085",
+      "impressions": 2,
+      "clicks": 0,
+      "position": 2
+    },
+    {
+      "key": "https://100yearmap.com/school/7010086",
+      "impressions": 1,
+      "clicks": 0,
+      "position": 7
+    },
+    {
+      "key": "https://100yearmap.com/school/7010089",
+      "impressions": 1,
+      "clicks": 0,
+      "position": 2
+    },
+    {
+      "key": "https://100yearmap.com/school/7010090",
+      "impressions": 2,
+      "clicks": 0,
+      "position": 1.5
+    },
+    {
+      "key": "https://100yearmap.com/school/7010095",
+      "impressions": 1,
+      "clicks": 0,
+      "position": 3
+    },
+    {
+      "key": "https://100yearmap.com/school/7010099",
+      "impressions": 2,
+      "clicks": 0,
+      "position": 1.5
+    },
+    {
+      "key": "https://100yearmap.com/school/7010105",
+      "impressions": 1,
+      "clicks": 0,
+      "position": 3
+    },
+    {
+      "key": "https://100yearmap.com/school/7010110",
+      "impressions": 2,
+      "clicks": 0,
+      "position": 4.5
+    },
+    {
+      "key": "https://100yearmap.com/school/7010112",
+      "impressions": 1,
+      "clicks": 0,
+      "position": 2
+    },
+    {
+      "key": "https://100yearmap.com/school/7010115",
+      "impressions": 1,
+      "clicks": 0,
+      "position": 2
+    },
+    {
+      "key": "https://100yearmap.com/school/7010116",
+      "impressions": 1,
+      "clicks": 0,
+      "position": 1
+    },
+    {
+      "key": "https://100yearmap.com/school/7010118",
+      "impressions": 1,
+      "clicks": 0,
+      "position": 10
+    },
+    {
+      "key": "https://100yearmap.com/school/7010120",
+      "impressions": 1,
+      "clicks": 0,
+      "position": 3
+    },
+    {
+      "key": "https://100yearmap.com/school/7010124",
+      "impressions": 1,
+      "clicks": 0,
+      "position": 3
+    },
+    {
+      "key": "https://100yearmap.com/school/7010126",
+      "impressions": 2,
+      "clicks": 0,
+      "position": 5.5
+    },
+    {
+      "key": "https://100yearmap.com/school/7010127",
+      "impressions": 2,
+      "clicks": 0,
+      "position": 2
+    },
+    {
+      "key": "https://100yearmap.com/school/7010135",
+      "impressions": 3,
+      "clicks": 0,
+      "position": 1
+    },
+    {
+      "key": "https://100yearmap.com/school/7010145",
+      "impressions": 1,
+      "clicks": 0,
+      "position": 2
+    },
+    {
+      "key": "https://100yearmap.com/school/7010147",
+      "impressions": 1,
+      "clicks": 0,
+      "position": 1
+    },
+    {
+      "key": "https://100yearmap.com/school/7010148",
+      "impressions": 4,
+      "clicks": 0,
+      "position": 1
+    },
+    {
+      "key": "https://100yearmap.com/school/7010149",
+      "impressions": 3,
+      "clicks": 0,
+      "position": 1
+    },
+    {
+      "key": "https://100yearmap.com/school/7010156",
+      "impressions": 4,
+      "clicks": 0,
+      "position": 2.25
+    },
+    {
+      "key": "https://100yearmap.com/school/7010159",
+      "impressions": 1,
+      "clicks": 0,
+      "position": 1
+    },
+    {
+      "key": "https://100yearmap.com/school/7010166",
+      "impressions": 1,
+      "clicks": 0,
+      "position": 2
+    },
+    {
+      "key": "https://100yearmap.com/school/7010167",
+      "impressions": 3,
+      "clicks": 0,
+      "position": 1
+    },
+    {
+      "key": "https://100yearmap.com/school/7010168",
+      "impressions": 1,
+      "clicks": 0,
+      "position": 9
+    },
+    {
+      "key": "https://100yearmap.com/school/7010178",
+      "impressions": 3,
+      "clicks": 0,
+      "position": 1.6666666666666665
+    },
+    {
+      "key": "https://100yearmap.com/school/7010179",
+      "impressions": 1,
+      "clicks": 0,
+      "position": 4
+    },
+    {
+      "key": "https://100yearmap.com/school/7010183",
+      "impressions": 3,
+      "clicks": 0,
+      "position": 2
+    },
+    {
+      "key": "https://100yearmap.com/school/7010185",
+      "impressions": 1,
+      "clicks": 0,
+      "position": 3
+    },
+    {
+      "key": "https://100yearmap.com/school/7010186",
+      "impressions": 1,
+      "clicks": 0,
+      "position": 7
+    },
+    {
+      "key": "https://100yearmap.com/school/7010188",
+      "impressions": 2,
+      "clicks": 0,
+      "position": 5
+    },
+    {
+      "key": "https://100yearmap.com/school/7010190",
+      "impressions": 20,
+      "clicks": 0,
+      "position": 1.15
+    },
+    {
+      "key": "https://100yearmap.com/school/7010191",
+      "impressions": 1,
+      "clicks": 0,
+      "position": 2
+    },
+    {
+      "key": "https://100yearmap.com/school/7010192",
+      "impressions": 1,
+      "clicks": 0,
+      "position": 2
+    },
+    {
+      "key": "https://100yearmap.com/school/7010193",
+      "impressions": 1,
+      "clicks": 0,
+      "position": 2
+    },
+    {
+      "key": "https://100yearmap.com/school/7010195",
+      "impressions": 6,
+      "clicks": 0,
+      "position": 4.166666666666666
+    },
+    {
+      "key": "https://100yearmap.com/school/7010196",
+      "impressions": 3,
+      "clicks": 0,
+      "position": 1.3333333333333333
+    },
+    {
+      "key": "https://100yearmap.com/school/7010200",
+      "impressions": 5,
+      "clicks": 0,
+      "position": 1.6
+    },
+    {
+      "key": "https://100yearmap.com/school/7010201",
+      "impressions": 3,
+      "clicks": 0,
+      "position": 3.3333333333333335
+    },
+    {
+      "key": "https://100yearmap.com/school/7010202",
+      "impressions": 1,
+      "clicks": 0,
+      "position": 2
+    },
+    {
+      "key": "https://100yearmap.com/school/7010203",
+      "impressions": 1,
+      "clicks": 0,
+      "position": 3
+    },
+    {
+      "key": "https://100yearmap.com/school/7010204",
+      "impressions": 1,
+      "clicks": 0,
+      "position": 6
+    },
+    {
+      "key": "https://100yearmap.com/school/7010205",
+      "impressions": 3,
+      "clicks": 0,
+      "position": 1
+    },
+    {
+      "key": "https://100yearmap.com/school/7010206",
+      "impressions": 1,
+      "clicks": 0,
+      "position": 1
+    },
+    {
+      "key": "https://100yearmap.com/school/7010208",
+      "impressions": 1,
+      "clicks": 0,
+      "position": 5
+    },
+    {
+      "key": "https://100yearmap.com/school/7010209",
+      "impressions": 1,
+      "clicks": 0,
+      "position": 4
+    },
+    {
+      "key": "https://100yearmap.com/school/7010212",
+      "impressions": 2,
+      "clicks": 0,
+      "position": 8.5
+    },
+    {
+      "key": "https://100yearmap.com/school/7010214",
+      "impressions": 1,
+      "clicks": 0,
+      "position": 4
+    },
+    {
+      "key": "https://100yearmap.com/school/7010216",
+      "impressions": 1,
+      "clicks": 0,
+      "position": 5
+    },
+    {
+      "key": "https://100yearmap.com/school/7010217",
+      "impressions": 3,
+      "clicks": 0,
+      "position": 2
+    },
+    {
+      "key": "https://100yearmap.com/school/7010218",
+      "impressions": 1,
+      "clicks": 0,
+      "position": 2
+    },
+    {
+      "key": "https://100yearmap.com/school/7010219",
+      "impressions": 1,
+      "clicks": 0,
+      "position": 4
+    },
+    {
+      "key": "https://100yearmap.com/school/7010222",
+      "impressions": 9,
+      "clicks": 0,
+      "position": 4.555555555555555
+    },
+    {
+      "key": "https://100yearmap.com/school/7010232",
+      "impressions": 5,
+      "clicks": 0,
+      "position": 1.4
+    },
+    {
+      "key": "https://100yearmap.com/school/7010234",
+      "impressions": 4,
+      "clicks": 0,
+      "position": 7.25
+    },
+    {
+      "key": "https://100yearmap.com/school/7010236",
+      "impressions": 2,
+      "clicks": 0,
+      "position": 1.5
+    },
+    {
+      "key": "https://100yearmap.com/school/7010238",
+      "impressions": 1,
+      "clicks": 0,
+      "position": 6
+    },
+    {
+      "key": "https://100yearmap.com/school/7010241",
+      "impressions": 1,
+      "clicks": 0,
+      "position": 4
+    },
+    {
+      "key": "https://100yearmap.com/school/7010243",
+      "impressions": 15,
+      "clicks": 0,
+      "position": 1.5333333333333332
+    },
+    {
+      "key": "https://100yearmap.com/school/7010244",
+      "impressions": 5,
+      "clicks": 0,
+      "position": 2
+    },
+    {
+      "key": "https://100yearmap.com/school/7010248",
+      "impressions": 1,
+      "clicks": 0,
+      "position": 4
+    },
+    {
+      "key": "https://100yearmap.com/school/7010254",
+      "impressions": 1,
+      "clicks": 0,
+      "position": 1
+    },
+    {
+      "key": "https://100yearmap.com/school/7010255",
+      "impressions": 2,
+      "clicks": 0,
+      "position": 2
+    },
+    {
+      "key": "https://100yearmap.com/school/7010261",
+      "impressions": 20,
+      "clicks": 0,
+      "position": 2.4
+    },
+    {
+      "key": "https://100yearmap.com/school/7010264",
+      "impressions": 3,
+      "clicks": 0,
+      "position": 2
+    },
+    {
+      "key": "https://100yearmap.com/school/7010267",
+      "impressions": 2,
+      "clicks": 0,
+      "position": 2
+    },
+    {
+      "key": "https://100yearmap.com/school/7010268",
+      "impressions": 1,
+      "clicks": 0,
+      "position": 2
+    },
+    {
+      "key": "https://100yearmap.com/school/7010272",
+      "impressions": 1,
+      "clicks": 0,
+      "position": 3
+    },
+    {
+      "key": "https://100yearmap.com/school/7010278",
+      "impressions": 1,
+      "clicks": 0,
+      "position": 4
+    },
+    {
+      "key": "https://100yearmap.com/school/7010346",
+      "impressions": 1,
+      "clicks": 0,
+      "position": 4
+    },
+    {
+      "key": "https://100yearmap.com/school/7010536",
+      "impressions": 1,
+      "clicks": 0,
+      "position": 2
+    },
+    {
+      "key": "https://100yearmap.com/school/7010547",
+      "impressions": 1,
+      "clicks": 0,
+      "position": 1
+    },
+    {
+      "key": "https://100yearmap.com/school/7010552",
+      "impressions": 2,
+      "clicks": 0,
+      "position": 2.5
+    },
+    {
+      "key": "https://100yearmap.com/school/7010562",
+      "impressions": 1,
+      "clicks": 0,
+      "position": 4
+    },
+    {
+      "key": "https://100yearmap.com/school/7010564",
+      "impressions": 1,
+      "clicks": 0,
+      "position": 4
+    },
+    {
+      "key": "https://100yearmap.com/school/7010565",
+      "impressions": 1,
+      "clicks": 0,
+      "position": 7
+    },
+    {
+      "key": "https://100yearmap.com/school/7010590",
+      "impressions": 1,
+      "clicks": 0,
+      "position": 1
+    },
+    {
+      "key": "https://100yearmap.com/school/7010591",
+      "impressions": 1,
+      "clicks": 0,
+      "position": 5
+    },
+    {
+      "key": "https://100yearmap.com/school/7010703",
+      "impressions": 1,
+      "clicks": 0,
+      "position": 2
+    },
+    {
+      "key": "https://100yearmap.com/school/7010721",
+      "impressions": 1,
+      "clicks": 0,
+      "position": 2
+    },
+    {
+      "key": "https://100yearmap.com/school/7010722",
+      "impressions": 3,
+      "clicks": 0,
+      "position": 6.666666666666667
+    },
+    {
+      "key": "https://100yearmap.com/school/7010737",
+      "impressions": 1,
+      "clicks": 0,
+      "position": 4
+    },
+    {
+      "key": "https://100yearmap.com/school/7010740",
+      "impressions": 3,
+      "clicks": 0,
+      "position": 3
+    },
+    {
+      "key": "https://100yearmap.com/school/7010741",
+      "impressions": 1,
+      "clicks": 0,
+      "position": 4
+    },
+    {
+      "key": "https://100yearmap.com/school/7010747",
+      "impressions": 4,
+      "clicks": 0,
+      "position": 1.25
+    },
+    {
+      "key": "https://100yearmap.com/school/7010810",
+      "impressions": 1,
+      "clicks": 0,
+      "position": 5
+    },
+    {
+      "key": "https://100yearmap.com/school/7010811",
+      "impressions": 5,
+      "clicks": 0,
+      "position": 4.8
+    },
+    {
+      "key": "https://100yearmap.com/school/7010813",
+      "impressions": 1,
+      "clicks": 0,
+      "position": 2
+    },
+    {
+      "key": "https://100yearmap.com/school/7010817",
+      "impressions": 1,
+      "clicks": 0,
+      "position": 2
+    },
+    {
+      "key": "https://100yearmap.com/school/7010837",
+      "impressions": 1,
+      "clicks": 0,
+      "position": 1
+    },
+    {
+      "key": "https://100yearmap.com/school/7010884",
+      "impressions": 1,
+      "clicks": 0,
+      "position": 3
+    },
+    {
+      "key": "https://100yearmap.com/school/7010885",
+      "impressions": 1,
+      "clicks": 0,
+      "position": 4
+    },
+    {
+      "key": "https://100yearmap.com/school/7010886",
+      "impressions": 1,
+      "clicks": 0,
+      "position": 1
+    },
+    {
+      "key": "https://100yearmap.com/school/7010906",
+      "impressions": 2,
+      "clicks": 0,
+      "position": 25
+    },
+    {
+      "key": "https://100yearmap.com/school/7010917",
+      "impressions": 1,
+      "clicks": 0,
+      "position": 6
+    },
+    {
+      "key": "https://100yearmap.com/school/7010964",
+      "impressions": 1,
+      "clicks": 0,
+      "position": 2
+    },
+    {
+      "key": "https://100yearmap.com/school/7010965",
+      "impressions": 1,
+      "clicks": 0,
+      "position": 2
+    },
+    {
+      "key": "https://100yearmap.com/school/7011084",
+      "impressions": 3,
+      "clicks": 0,
+      "position": 2
+    },
+    {
+      "key": "https://100yearmap.com/school/7011109",
+      "impressions": 1,
+      "clicks": 0,
+      "position": 4
+    },
+    {
+      "key": "https://100yearmap.com/school/7011113",
+      "impressions": 1,
+      "clicks": 0,
+      "position": 5
+    },
+    {
+      "key": "https://100yearmap.com/school/7011122",
+      "impressions": 1,
+      "clicks": 0,
+      "position": 4
+    },
+    {
+      "key": "https://100yearmap.com/school/7011482",
+      "impressions": 1,
+      "clicks": 0,
+      "position": 5
+    },
+    {
+      "key": "https://100yearmap.com/school/7011486",
+      "impressions": 1,
+      "clicks": 0,
+      "position": 1
+    },
+    {
+      "key": "https://100yearmap.com/school/7011488",
+      "impressions": 1,
+      "clicks": 0,
+      "position": 6
+    },
+    {
+      "key": "https://100yearmap.com/school/7011505",
+      "impressions": 1,
+      "clicks": 0,
+      "position": 6
+    },
+    {
+      "key": "https://100yearmap.com/school/7011507",
+      "impressions": 2,
+      "clicks": 0,
+      "position": 6.5
+    },
+    {
+      "key": "https://100yearmap.com/school/7011513",
+      "impressions": 19,
+      "clicks": 0,
+      "position": 3.473684210526316
+    },
+    {
+      "key": "https://100yearmap.com/school/7011569",
+      "impressions": 1,
+      "clicks": 0,
+      "position": 4
+    },
+    {
+      "key": "https://100yearmap.com/school/7011585",
+      "impressions": 1,
+      "clicks": 0,
+      "position": 7
+    },
+    {
+      "key": "https://100yearmap.com/school/7011586",
+      "impressions": 1,
+      "clicks": 0,
+      "position": 5
+    },
+    {
+      "key": "https://100yearmap.com/school/7011651",
+      "impressions": 1,
+      "clicks": 0,
+      "position": 6
+    },
+    {
+      "key": "https://100yearmap.com/school/7140166",
+      "impressions": 5,
+      "clicks": 0,
+      "position": 6.6
+    },
+    {
+      "key": "https://100yearmap.com/school/7140202",
+      "impressions": 1,
+      "clicks": 0,
+      "position": 7
+    },
+    {
+      "key": "https://100yearmap.com/school/7140203",
+      "impressions": 1,
+      "clicks": 0,
+      "position": 4
+    },
+    {
+      "key": "https://100yearmap.com/school/7140218",
+      "impressions": 2,
+      "clicks": 0,
+      "position": 2
+    },
+    {
+      "key": "https://100yearmap.com/school/7140230",
+      "impressions": 3,
+      "clicks": 0,
+      "position": 7
+    },
+    {
+      "key": "https://100yearmap.com/school/7140242",
+      "impressions": 1,
+      "clicks": 0,
+      "position": 10
+    },
+    {
+      "key": "https://100yearmap.com/school/7140244",
+      "impressions": 1,
+      "clicks": 0,
+      "position": 9
+    },
+    {
+      "key": "https://100yearmap.com/school/7140276",
+      "impressions": 3,
+      "clicks": 0,
+      "position": 4.333333333333334
+    },
+    {
+      "key": "https://100yearmap.com/school/7140296",
+      "impressions": 1,
+      "clicks": 0,
+      "position": 5
+    },
+    {
+      "key": "https://100yearmap.com/school/7140319",
+      "impressions": 1,
+      "clicks": 0,
+      "position": 10
+    },
+    {
+      "key": "https://100yearmap.com/school/7140345",
+      "impressions": 1,
+      "clicks": 0,
+      "position": 8
+    },
+    {
+      "key": "https://100yearmap.com/school/7140381",
+      "impressions": 1,
+      "clicks": 0,
+      "position": 5
+    },
+    {
+      "key": "https://100yearmap.com/school/7140388",
+      "impressions": 1,
+      "clicks": 0,
+      "position": 5
+    },
+    {
+      "key": "https://100yearmap.com/school/7140396",
+      "impressions": 2,
+      "clicks": 0,
+      "position": 6
+    },
+    {
+      "key": "https://100yearmap.com/school/7150105",
+      "impressions": 5,
+      "clicks": 0,
+      "position": 7
+    },
+    {
+      "key": "https://100yearmap.com/school/7150405",
+      "impressions": 1,
+      "clicks": 0,
+      "position": 2
+    },
+    {
+      "key": "https://100yearmap.com/school/7150533",
+      "impressions": 1,
+      "clicks": 0,
+      "position": 25
+    },
+    {
+      "key": "https://100yearmap.com/school/7150621",
+      "impressions": 1,
+      "clicks": 0,
+      "position": 3
+    },
+    {
+      "key": "https://100yearmap.com/school/7150623",
+      "impressions": 1,
+      "clicks": 0,
+      "position": 1
+    },
+    {
+      "key": "https://100yearmap.com/school/7150659",
+      "impressions": 1,
+      "clicks": 0,
+      "position": 5
+    },
+    {
+      "key": "https://100yearmap.com/school/7150755",
+      "impressions": 1,
+      "clicks": 0,
+      "position": 1
+    },
+    {
+      "key": "https://100yearmap.com/school/7240098",
+      "impressions": 1,
+      "clicks": 0,
+      "position": 8
+    },
+    {
+      "key": "https://100yearmap.com/school/7240111",
+      "impressions": 2,
+      "clicks": 0,
+      "position": 8
+    },
+    {
+      "key": "https://100yearmap.com/school/7240217",
+      "impressions": 3,
+      "clicks": 0,
+      "position": 5
+    },
+    {
+      "key": "https://100yearmap.com/school/7240276",
+      "impressions": 3,
+      "clicks": 0,
+      "position": 3
+    },
+    {
+      "key": "https://100yearmap.com/school/7240296",
+      "impressions": 6,
+      "clicks": 0,
+      "position": 6.333333333333333
+    },
+    {
+      "key": "https://100yearmap.com/school/7240331",
+      "impressions": 1,
+      "clicks": 0,
+      "position": 17
+    },
+    {
+      "key": "https://100yearmap.com/school/7240514",
+      "impressions": 2,
+      "clicks": 0,
+      "position": 2
+    },
+    {
+      "key": "https://100yearmap.com/school/7310370",
+      "impressions": 1,
+      "clicks": 0,
+      "position": 8
+    },
+    {
+      "key": "https://100yearmap.com/school/7430062",
+      "impressions": 2,
+      "clicks": 0,
+      "position": 1
+    },
+    {
+      "key": "https://100yearmap.com/school/7430143",
+      "impressions": 1,
+      "clicks": 0,
+      "position": 3
+    },
+    {
+      "key": "https://100yearmap.com/school/7430149",
+      "impressions": 1,
+      "clicks": 0,
+      "position": 3
+    },
+    {
+      "key": "https://100yearmap.com/school/7430325",
+      "impressions": 1,
+      "clicks": 0,
+      "position": 1
+    },
+    {
+      "key": "https://100yearmap.com/school/7480030",
+      "impressions": 7,
+      "clicks": 0,
+      "position": 5
+    },
+    {
+      "key": "https://100yearmap.com/school/7480172",
+      "impressions": 1,
+      "clicks": 0,
+      "position": 6
+    },
+    {
+      "key": "https://100yearmap.com/school/7530085",
+      "impressions": 1,
+      "clicks": 0,
+      "position": 4
+    },
+    {
+      "key": "https://100yearmap.com/school/7530098",
+      "impressions": 1,
+      "clicks": 0,
+      "position": 6
+    },
+    {
+      "key": "https://100yearmap.com/school/7530109",
+      "impressions": 1,
+      "clicks": 0,
+      "position": 8
+    },
+    {
+      "key": "https://100yearmap.com/school/7530145",
+      "impressions": 1,
+      "clicks": 0,
+      "position": 2
+    },
+    {
+      "key": "https://100yearmap.com/school/7530216",
+      "impressions": 1,
+      "clicks": 0,
+      "position": 3
+    },
+    {
+      "key": "https://100yearmap.com/school/7530538",
+      "impressions": 1,
+      "clicks": 0,
+      "position": 5
+    },
+    {
+      "key": "https://100yearmap.com/school/7530578",
+      "impressions": 3,
+      "clicks": 0,
+      "position": 1
+    },
+    {
+      "key": "https://100yearmap.com/school/7530598",
+      "impressions": 1,
+      "clicks": 0,
+      "position": 6
+    },
+    {
+      "key": "https://100yearmap.com/school/7530611",
+      "impressions": 3,
+      "clicks": 0,
+      "position": 8
+    },
+    {
+      "key": "https://100yearmap.com/school/7530625",
+      "impressions": 1,
+      "clicks": 0,
+      "position": 7
+    },
+    {
+      "key": "https://100yearmap.com/school/7530652",
+      "impressions": 2,
+      "clicks": 0,
+      "position": 2
+    },
+    {
+      "key": "https://100yearmap.com/school/7530661",
+      "impressions": 1,
+      "clicks": 0,
+      "position": 8
+    },
+    {
+      "key": "https://100yearmap.com/school/7530825",
+      "impressions": 1,
+      "clicks": 0,
+      "position": 2
+    },
+    {
+      "key": "https://100yearmap.com/school/7530851",
+      "impressions": 2,
+      "clicks": 0,
+      "position": 9
+    },
+    {
+      "key": "https://100yearmap.com/school/7530980",
+      "impressions": 1,
+      "clicks": 0,
+      "position": 4
+    },
+    {
+      "key": "https://100yearmap.com/school/7530989",
+      "impressions": 1,
+      "clicks": 0,
+      "position": 57
+    },
+    {
+      "key": "https://100yearmap.com/school/7530999",
+      "impressions": 1,
+      "clicks": 0,
+      "position": 1
+    },
+    {
+      "key": "https://100yearmap.com/school/7531054",
+      "impressions": 1,
+      "clicks": 0,
+      "position": 9
+    },
+    {
+      "key": "https://100yearmap.com/school/7531136",
+      "impressions": 1,
+      "clicks": 0,
+      "position": 6
+    },
+    {
+      "key": "https://100yearmap.com/school/7531158",
+      "impressions": 1,
+      "clicks": 0,
+      "position": 3
+    },
+    {
+      "key": "https://100yearmap.com/school/7531393",
+      "impressions": 2,
+      "clicks": 0,
+      "position": 8
+    },
+    {
+      "key": "https://100yearmap.com/school/7531407",
+      "impressions": 2,
+      "clicks": 0,
+      "position": 1
+    },
+    {
+      "key": "https://100yearmap.com/school/7531409",
+      "impressions": 1,
+      "clicks": 0,
+      "position": 3
+    },
+    {
+      "key": "https://100yearmap.com/school/7801123",
+      "impressions": 2,
+      "clicks": 0,
+      "position": 10
+    },
+    {
+      "key": "https://100yearmap.com/school/8000069",
+      "impressions": 2,
+      "clicks": 0,
+      "position": 10
+    },
+    {
+      "key": "https://100yearmap.com/school/8000122",
+      "impressions": 1,
+      "clicks": 0,
+      "position": 9
+    },
+    {
+      "key": "https://100yearmap.com/school/8000201",
+      "impressions": 3,
+      "clicks": 0,
+      "position": 4
+    },
+    {
+      "key": "https://100yearmap.com/school/8000215",
+      "impressions": 1,
+      "clicks": 0,
+      "position": 6
+    },
+    {
+      "key": "https://100yearmap.com/school/8140053",
+      "impressions": 6,
+      "clicks": 0,
+      "position": 6.833333333333333
+    },
+    {
+      "key": "https://100yearmap.com/school/8140197",
+      "impressions": 2,
+      "clicks": 0,
+      "position": 8.5
+    },
+    {
+      "key": "https://100yearmap.com/school/8140358",
+      "impressions": 1,
+      "clicks": 0,
+      "position": 69
+    },
+    {
+      "key": "https://100yearmap.com/school/8140366",
+      "impressions": 1,
+      "clicks": 0,
+      "position": 9
+    },
+    {
+      "key": "https://100yearmap.com/school/8140509",
+      "impressions": 2,
+      "clicks": 0,
+      "position": 6
+    },
+    {
+      "key": "https://100yearmap.com/school/8321090",
+      "impressions": 1,
+      "clicks": 0,
+      "position": 10
+    },
+    {
+      "key": "https://100yearmap.com/school/8321092",
+      "impressions": 1,
+      "clicks": 0,
+      "position": 4
+    },
+    {
+      "key": "https://100yearmap.com/school/8321100",
+      "impressions": 3,
+      "clicks": 0,
+      "position": 3
+    },
+    {
+      "key": "https://100yearmap.com/school/8321122",
+      "impressions": 3,
+      "clicks": 0,
+      "position": 3
+    },
+    {
+      "key": "https://100yearmap.com/school/8321124",
+      "impressions": 1,
+      "clicks": 0,
+      "position": 10
+    },
+    {
+      "key": "https://100yearmap.com/school/8321135",
+      "impressions": 1,
+      "clicks": 0,
+      "position": 9
+    },
+    {
+      "key": "https://100yearmap.com/school/8321150",
+      "impressions": 3,
+      "clicks": 0,
+      "position": 9
+    },
+    {
+      "key": "https://100yearmap.com/school/8321159",
+      "impressions": 3,
+      "clicks": 0,
+      "position": 4.666666666666666
+    },
+    {
+      "key": "https://100yearmap.com/school/8321161",
+      "impressions": 1,
+      "clicks": 0,
+      "position": 10
+    },
+    {
+      "key": "https://100yearmap.com/school/8321166",
+      "impressions": 1,
+      "clicks": 0,
+      "position": 8
+    },
+    {
+      "key": "https://100yearmap.com/school/8321242",
+      "impressions": 1,
+      "clicks": 0,
+      "position": 1
+    },
+    {
+      "key": "https://100yearmap.com/school/8750079",
+      "impressions": 1,
+      "clicks": 0,
+      "position": 11
+    },
+    {
+      "key": "https://100yearmap.com/school/8750082",
+      "impressions": 1,
+      "clicks": 0,
+      "position": 10
+    },
+    {
+      "key": "https://100yearmap.com/school/8750156",
+      "impressions": 2,
+      "clicks": 0,
+      "position": 4
+    },
+    {
+      "key": "https://100yearmap.com/school/8750178",
+      "impressions": 6,
+      "clicks": 0,
+      "position": 4.5
+    },
+    {
+      "key": "https://100yearmap.com/school/8750198",
+      "impressions": 3,
+      "clicks": 0,
+      "position": 6
+    },
+    {
+      "key": "https://100yearmap.com/school/8750212",
+      "impressions": 2,
+      "clicks": 0,
+      "position": 3
+    },
+    {
+      "key": "https://100yearmap.com/school/8750214",
+      "impressions": 1,
+      "clicks": 0,
+      "position": 10
+    },
+    {
+      "key": "https://100yearmap.com/school/8750475",
+      "impressions": 1,
+      "clicks": 0,
+      "position": 7
+    },
+    {
+      "key": "https://100yearmap.com/school/8750476",
+      "impressions": 1,
+      "clicks": 0,
+      "position": 68
+    },
+    {
+      "key": "https://100yearmap.com/school/9010046",
+      "impressions": 3,
+      "clicks": 0,
+      "position": 10
+    },
+    {
+      "key": "https://100yearmap.com/school/9010097",
+      "impressions": 1,
+      "clicks": 0,
+      "position": 9
+    },
+    {
+      "key": "https://100yearmap.com/school/9010147",
+      "impressions": 1,
+      "clicks": 0,
+      "position": 2
+    },
+    {
+      "key": "https://100yearmap.com/school/9010172",
+      "impressions": 5,
+      "clicks": 0,
+      "position": 2.8
+    },
+    {
+      "key": "https://100yearmap.com/school/9010242",
+      "impressions": 1,
+      "clicks": 0,
+      "position": 1
+    },
+    {
+      "key": "https://100yearmap.com/school/9010267",
+      "impressions": 1,
+      "clicks": 0,
+      "position": 2
+    },
+    {
+      "key": "https://100yearmap.com/school/9010335",
+      "impressions": 1,
+      "clicks": 0,
+      "position": 7
+    },
+    {
+      "key": "https://100yearmap.com/school/9290050",
+      "impressions": 1,
+      "clicks": 0,
+      "position": 4
+    },
+    {
+      "key": "https://100yearmap.com/school/9290055",
+      "impressions": 1,
+      "clicks": 0,
+      "position": 8
+    },
+    {
+      "key": "https://100yearmap.com/school/9290076",
+      "impressions": 3,
+      "clicks": 0,
+      "position": 5.333333333333333
+    },
+    {
+      "key": "https://100yearmap.com/school/C020714",
+      "impressions": 3,
+      "clicks": 0,
+      "position": 7
+    },
+    {
+      "key": "https://100yearmap.com/spending",
+      "impressions": 2,
+      "clicks": 0,
+      "position": 6
+    },
+    {
+      "key": "https://100yearmap.com/terms",
+      "impressions": 1,
+      "clicks": 0,
+      "position": 5
+    },
+    {
+      "key": "https://100yearmap.com/university",
+      "impressions": 3,
+      "clicks": 0,
+      "position": 1
+    },
+    {
+      "key": "https://100yearmap.com/university/0000088",
+      "impressions": 1,
+      "clicks": 0,
+      "position": 5
+    },
+    {
+      "key": "https://100yearmap.com/university/0000175",
+      "impressions": 1,
+      "clicks": 0,
+      "position": 7
+    },
+    {
+      "key": "https://100yearmap.com/university/0000181",
+      "impressions": 1,
+      "clicks": 0,
+      "position": 2
+    },
+    {
+      "key": "https://100yearmap.com/university/0000247",
+      "impressions": 1,
+      "clicks": 0,
+      "position": 4
+    },
+    {
+      "key": "https://100yearmap.com/university/0000450",
+      "impressions": 1,
+      "clicks": 0,
+      "position": 3
+    },
+    {
+      "key": "https://100yearmap.com/university/0000497",
+      "impressions": 1,
+      "clicks": 0,
+      "position": 24
+    },
+    {
+      "key": "https://100yearmap.com/university/0000512",
+      "impressions": 2,
+      "clicks": 0,
+      "position": 1
+    },
+    {
+      "key": "https://100yearmap.com/university/0000520",
+      "impressions": 1,
+      "clicks": 0,
+      "position": 100
+    },
+    {
+      "key": "https://100yearmap.com/university/0000527",
+      "impressions": 1,
+      "clicks": 0,
+      "position": 19
+    },
+    {
+      "key": "https://100yearmap.com/university/0000554",
+      "impressions": 1,
+      "clicks": 0,
+      "position": 10
+    },
+    {
+      "key": "https://100yearmap.com/university/0000578",
+      "impressions": 1,
+      "clicks": 0,
+      "position": 4
+    },
+    {
+      "key": "https://100yearmap.com/university/0002656",
+      "impressions": 2,
+      "clicks": 0,
+      "position": 1
+    },
+    {
+      "key": "https://100yearmap.com/university/0002972",
+      "impressions": 2,
+      "clicks": 0,
+      "position": 1
+    },
+    {
+      "key": "https://100yearmap.com/video",
+      "impressions": 1,
+      "clicks": 0,
+      "position": 4
+    },
+    {
+      "key": "https://100yearmap.com/years-left",
+      "impressions": 1,
+      "clicks": 0,
+      "position": 5
+    }
+  ]
+}

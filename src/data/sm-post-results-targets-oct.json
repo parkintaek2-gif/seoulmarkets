@@ -1,0 +1,19 @@
+{
+  "무엇": "2026-10-26~29 3분기 실적 발표 24개사(아시아경제 10/25 일정)에 대해, 발표일 «다음 날 이후»(~10/30) 나온 증권사 보고서 목표주가를 같은 증권사의 직전 목표와 견준 것 — SeoulMarkets 기사 korea-q3-results-broker-target-price-cuts-raises-after-earnings-october-2026 와 같은 수",
+  "출처": "SeoulMarkets broker research archive (archive/index/research.ndjson, generated 2026-10-31 07:00 KST, 1,444 records since 2026-06-29; Naver Finance research board and brokers' own sites) · KRX OPEN API KOSPI daily close 2026-10-29 (archive/raw/stocks/20261029.ndjson) · earnings calendar: The Asia Business Daily, 25 October 2026",
+  "받은날": "2026-10-31",
+  "회사수": 24,
+  "보고서수": 138,
+  "증권사수": 13,
+  "견줄수있는것": 56,
+  "합계": { "내림": 19, "올림": 5, "그대로": 32, "이전없음": 79, "목표없음": 3 },
+  "내림평균": -19.4,
+  "목표있는보고서": 135,
+  "종가대비": { "최저": 1.224, "중앙": 1.582, "최고": 3.047, "두배이상": 29, "종가아래": 0 },
+  "날별": [
+    { "날": "Mon 26", "회사": 3, "보고서": 17, "내림": 1, "올림": 0, "그대로": 2 },
+    { "날": "Tue 27", "회사": 7, "보고서": 39, "내림": 10, "올림": 0, "그대로": 4 },
+    { "날": "Wed 28", "회사": 7, "보고서": 40, "내림": 3, "올림": 3, "그대로": 15 },
+    { "날": "Thu 29", "회사": 7, "보고서": 42, "내림": 5, "올림": 2, "그대로": 11 }
+  ]
+}
