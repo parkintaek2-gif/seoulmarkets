@@ -233,7 +233,30 @@ if (내가직접돌았나) {
     llms = (r.글.match(/llms\.txt 200/g) || []).length;
     console.log('   ' + (llms === 집들.length ? '✅ ' : '🔴 ') + '네 집 가운데 llms.txt 가 사는 곳 ' + llms + '개');
     if (llms !== 집들.length) 메모.push('llms ' + llms + '/' + 집들.length);
-    console.log('   ⬜ 「AI 유입 수」는 이 자가 아직 못 센다 — 0 으로 적지 않는다');
+
+    /* 🔴 [2026-11-08 · 사장님] 「AI 유입 수는 아직 못 셉니다」라고 적었더니
+       「**세는 도구 만들기로 했는데 왜 안하나. 바로 해**」 하셨다.
+       llms.txt 가 «있나»는 문을 열어 뒀나이지 **사람이 들어왔나**가 아니다.
+       GEO 를 한다면서 그 성과를 한 번도 세지 않고 있었다. */
+    try {
+      const 자 = await import('./잰다-AI유입.mjs');
+      const r = await 자.잰다({ 일: 30 });
+      if (r.못잼) {
+        console.log('   ⬜ AI 유입 — 못 쟀다 (' + r.못잼 + '). ⛔ 0 으로 적지 않는다');
+        메모.push('AI유입 못잼');
+      } else {
+        const 몫 = r.전체합 > 0 ? ((100 * r.AI합) / r.전체합).toFixed(2) + '%' : '몫 못 냄';
+        const 갈래 = Object.entries(r.AI별).sort((a, z) => z[1] - a[1])
+          .map(([k, v]) => k + ' ' + v).join(' · ') || '한 건도 없다';
+        console.log('   ✅ AI 유입 요 30일 ' + r.AI합.toLocaleString() + '건'
+          + ' / 전체 ' + r.전체합.toLocaleString() + '건 · 몫 ' + 몫);
+        console.log('      ' + 갈래);
+        메모.push('AI유입 ' + r.AI합);
+      }
+    } catch (e) {
+      console.log('   ⬜ AI 유입 — 못 쟀다 (' + e.message + '). ⛔ 0 으로 적지 않는다');
+      메모.push('AI유입 못잼');
+    }
   }
 
   /* ── ④ 대장 ───────────────────────────────────────────────────────── */
