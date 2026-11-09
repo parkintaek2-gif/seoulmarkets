@@ -27,7 +27,7 @@ import fs from 'node:fs';
 import path from 'node:path';
 import { execFileSync } from 'node:child_process';
 import { fileURLToPath } from 'node:url';
-import { 금지어 } from './순한글-금지어.mjs';
+import { 금지어, 재기 } from './순한글-금지어.mjs';
 
 const 저장소루트 = fileURLToPath(new URL('..', import.meta.url));
 
@@ -114,15 +114,39 @@ export function 더해진줄() {
   return 것;
 }
 
-/** 한 줄에서 금지어를 찾는다 */
-export function 줄에서찾는다(글, 목록 = 금지어) {
-  const 것 = [];
+/**
+ * 한 줄에서 금지어를 찾는다.
+ *
+ * 🔴 [2026-11-09] 처음에는 여기서 `includes` 로 직접 찾았다. **그것이 흠이었다.**
+ *   사전은 말마다 두 가지를 더 적어 둔다 —
+ *     · 앞에 한글이 붙으면 다른 낱말의 일부다 (「따지면」의 '지면')
+ *     · `뒤` 가 적힌 말은 뒤 글자가 조사일 때만 센다 (「지면에·지면을」)
+ *   그 둘을 안 보고 세었더니 오늘 고친 글에서 48개가 떴는데 거의 다 헛것이었다.
+ *   ⛔ 헛경보가 쌓이면 사람이 이 자를 안 본다 — 그러면 진짜 하나도 같이 묻힌다.
+ *   ⇒ 사전이 쥔 판정 자리(`재기`)를 그대로 부른다. 판정 규칙을 두 벌 두지 않는다.
+ *
+ * ⚠ `주석도본다: true` 다. 코드 파일에서 내가 한국어로 쓰는 자리가 바로 주석이기 때문이다.
+ */
+export function 줄에서찾는다(글, 목록 = null) {
   const 본문 = String(글 ?? '');
-  for (const x of 목록) {
-    if (!x || !x.말) continue;
-    if (본문.includes(x.말)) 것.push({ 말: x.말, 대신: x.대신 });
+  if (!본문) return [];
+  if (목록) {
+    /* 자체검사에서 작은 목록을 넘길 때만 쓰는 길 — 앞 글자 규칙은 같이 지킨다 */
+    const 것 = [];
+    for (const x of 목록) {
+      if (!x || !x.말) continue;
+      let i = -1;
+      while ((i = 본문.indexOf(x.말, i + 1)) !== -1) {
+        const 앞 = i > 0 ? 본문[i - 1] : ' ';
+        if (/[가-힣]/.test(앞)) continue;
+        if (x.뒤 && !x.뒤.includes(본문[i + x.말.length] ?? '')) continue;
+        것.push({ 말: x.말, 대신: x.대신 });
+        break;
+      }
+    }
+    return 것;
   }
-  return 것;
+  return 재기(본문, { 주석도본다: true }).map((x) => ({ 말: x.말, 대신: x.대신 }));
 }
 
 /** 한 차례 검사한다 */
@@ -156,6 +180,13 @@ export function 자체검사() {
     줄에서찾는다('', 목록).length === 0 && 줄에서찾는다(null, 목록).length === 0);
 
   검사('실제 금지어 목록을 읽는다 — 0개면 못 읽은 것이다', 금지어.length > 100);
+  /* 🔴 [2026-11-09] 사전의 앞·뒤 규칙을 안 보고 세던 자리. 헛경보 48개가 났다 */
+  검사('🔴 낱말 안에 우연히 든 것은 안 센다 — 「따지면」의 지면',
+    줄에서찾는다('그렇게 따지면 맞는 말이다').length === 0);
+  검사('🔴 조사가 붙은 것은 센다 — 「지면에」',
+    줄에서찾는다('지면에 싣는다').some((x) => x.말 === '지면'));
+  검사('빈칸 뒤 「지면 탈락한다」는 안 센다 — 지다+면이다',
+    줄에서찾는다('한 번 더 지면 탈락한다').every((x) => x.말 !== '지면'));
   검사('더해진 줄을 배열로 돌려준다', Array.isArray(더해진줄()));
   검사('🔴 git 이 감싼 따옴표를 벗긴다 — 한글 경로가 조용히 빠지던 자리다',
     따옴표벗기기('"docs/보고.md"') === 'docs/보고.md' && 따옴표벗기기('docs/보고.md') === 'docs/보고.md');

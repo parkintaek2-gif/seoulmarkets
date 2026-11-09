@@ -207,6 +207,10 @@ export const 단계들 = [
      금지어 목록을 155개까지 늘려 놓고도 내가 쓴 문서에 49번 들어 있었다.
      목록을 늘리는 것과 지키는 것은 다른 일이다. 그래서 돌게 한다. */
   "node scripts/check-새글-말투.mjs",
+  /* 🔴 [2026-11-09 · 사장님이 서치콘솔 통지를 주셨다] 내린 페이지에 301 을 안 걸어
+     구글이 404 를 긁고 있었다. 10-26 에 올린 유효성 검사가 11-07 에 그 탓에 실패했다.
+     같은 흠이 세 번째(09-03 KCW 다섯 장 · 10-26 무역 글 · 오늘 /data 두 장)라 검사로 둔다. */
+  "node scripts/check-내린지면에-301이-걸렸나.mjs",
   "node scripts/check-100y-사이트맵-빠진화면.mjs",
   "node scripts/check-100y-age-axis-transfer.mjs",
   "node scripts/check-100y-kosis-transfer.mjs",

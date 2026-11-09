@@ -1359,6 +1359,17 @@ ${줄 ? `<table><thead><tr><th>사이트</th><th class="n">방문자</th><th cla
        셋째 지면인데 이 표에서 빠져 있었다 — 서치콘솔이 「찾을 수 없음(404)」으로 알려 왔다.
        대중 무역수지 글이라 대중 무역을 다룬 살아 있는 재작성본으로 보낸다. */
     '/article/korea-china-trade-balance-flipped': '/article/korea-trade-surplus-not-china',
+    /* 🔴 [2026-11-09 · 5번 · 사장님이 서치콘솔 통지를 주셨다] **같은 흠이 또 났고 이번엔 내 것이다.**
+       2026-10-11 에 내가 이 두 장을 내리면서 카탈로그와 사이트맵에서는 뺐는데
+       **이 표에는 안 넣었다.** 사이트맵에서 빼는 것은 「구글에게 새로 알리지 않는 것」이지
+       「구글이 잊는 것」이 아니다 — 2번이 10월 초에 이미 「Discovered」까지 확인해 둔 주소였다.
+       그 뒤로 구글이 계속 긁어 404 를 받았고(마지막 크롤 10-29), 1번이 10-26 에 올린
+       「찾을 수 없음(404)」 유효성 검사가 11-07 에 **이 장 때문에 실패했다.**
+       ⭐ 내리는 일은 세 자리다 — 카탈로그 · 사이트맵 · **이 표**. 셋째를 빠뜨리면 404 가 남는다.
+       뜻이 가까운 곳 — 둘 다 은행 가계대출 자료라 살아 있는 은행 가계대출 지면으로 보낸다.
+       ⚠ 되살릴 때 이 두 줄도 함께 뗀다. docs/내린지면/README.md */
+    '/data/bank-loan-delinquency': '/data/fixed-variable-rate-share',
+    '/data/mortgage-balance-gender-gap': '/data/fixed-variable-rate-share',
   };
   {
     const 보낼곳 = 사라진지면[pathname];
