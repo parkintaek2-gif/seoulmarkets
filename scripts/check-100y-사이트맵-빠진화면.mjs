@@ -4,7 +4,7 @@
  * 백년지도의 고정 화면이 사이트맵에 빠지지 않았는지 검사한다.
  *
  * ── 왜 만드나 (2026-11-09) ───────────────────────────────────────────
- * 구글 색인 대장에서 `/rankings` 가 「Google에는 아직 알려지지 않은 URL입니다」로
+ * 구글 색인 기록부에서 `/rankings` 가 「Google에는 아직 알려지지 않은 URL입니다」로
  * 찍혀 있었다. 다른 열네 곳은 「크롤링됨 - 현재 색인이 생성되지 않음」인데 이것만
  * 달랐다. 열어 보니 화면은 200 으로 살아 있고 첫 화면에서 링크도 걸려 있는데
  * 사이트맵에만 없었다.
@@ -65,30 +65,30 @@ export function 동적인가(앞, 파일이름) {
 /** 고정 화면 목록 */
 export function 고정화면(폴더 = 화면폴더) {
   const 것 = [];
-  const 훑는다 = (현재폴더, 앞) => {
+  const 살펴본다 = (현재폴더, 앞) => {
     let 목록;
     try { 목록 = fs.readdirSync(현재폴더); } catch { return; }
     for (const 이름 of 목록) {
       const 자식 = path.join(현재폴더, 이름);
       let 정보;
       try { 정보 = fs.statSync(자식); } catch { continue; }
-      if (정보.isDirectory()) { 훑는다(자식, 앞 + '/' + 이름); continue; }
+      if (정보.isDirectory()) { 살펴본다(자식, 앞 + '/' + 이름); continue; }
       if (!/\.astro$/.test(이름)) continue;
       if (동적인가(앞, 이름)) continue;
       것.push({ 주소: 주소만들기(앞, 이름), 파일: 자식 });
     }
   };
-  훑는다(폴더, '');
+  살펴본다(폴더, '');
   return 것;
 }
 
 /**
- * 깃이 들고 있는 파일 목록. 깃이 모르는 파일은 배포되지 않으므로 검사 대상이 아니다.
+ * git이 들고 있는 파일 목록. git이 모르는 파일은 배포되지 않으므로 검사 대상이 아니다.
  * `/school-type` 이 그런 경우다 — .gitignore 에 올라 있어 라이브가 404 다.
  * ⛔ 목록을 못 받으면 빈 집합이 아니라 null 을 돌려준다. 빈 집합이면 모든 화면이
  *   「깃이 모른다」가 되어 검사가 통째로 침묵한다.
  */
-export function 깃이든것(폴더 = 화면폴더) {
+export function git이든것(폴더 = 화면폴더) {
   try {
     const 글 = execFileSync('git', ['ls-files', '--', 폴더], {
       cwd: 저장소루트, encoding: 'utf8', maxBuffer: 1024 * 1024 * 32,
@@ -112,20 +112,20 @@ export function 검사한다(폴더 = 화면폴더, 사이트맵 = 사이트맵�
     return { 측정불가: '사이트맵 원본을 읽지 못했다', 빠진것: [], 살핀수: 0 };
   }
   const 실린것 = 사이트맵주소(본문);
-  const 깃목록 = 깃이든것(폴더);
+  const git목록 = git이든것(폴더);
   const 빠진것 = [];
   const 전부 = 고정화면(폴더);
-  let 깃이모르는것 = 0;
+  let git모르는것 = 0;
   for (const x of 전부) {
     if (제외주소.has(x.주소)) continue;
-    if (깃목록 && !깃목록.has(path.resolve(x.파일))) { 깃이모르는것 += 1; continue; }
+    if (git목록 && !git목록.has(path.resolve(x.파일))) { git모르는것 += 1; continue; }
     if (실린것.has(x.주소)) continue;
     if (색인막았나(x.파일)) continue;
     빠진것.push(x.주소);
   }
   return {
-    빠진것, 살핀수: 전부.length, 실린수: 실린것.size, 깃이모르는것,
-    깃목록못읽음: 깃목록 == null,
+    빠진것, 살핀수: 전부.length, 실린수: 실린것.size, git모르는것,
+    git목록못읽음: git목록 == null,
   };
 }
 
@@ -153,8 +153,8 @@ export function 자체검사() {
   const r = 검사한다();
   검사('실제 화면 폴더를 읽는다 — 0개면 못 읽은 것이다', r.살핀수 > 0);
   검사('사이트맵에서 주소를 읽는다 — 0개면 못 읽은 것이다', (r.실린수 ?? 0) > 0);
-  검사('깃 목록을 읽는다 — 못 읽으면 그렇다고 적는다', r.깃목록못읽음 === false);
-  검사('깃이 모르는 파일을 세어 둔다 — 조용히 버리지 않는다', typeof r.깃이모르는것 === 'number');
+  검사('git 목록을 읽는다 — 못 읽으면 그렇다고 적는다', r.git목록못읽음 === false);
+  검사('git이 모르는 파일을 세어 둔다 — 조용히 버리지 않는다', typeof r.git모르는것 === 'number');
 
   const 실패 = 항목.filter((x) => !x.결과);
   console.log(`■ check-100y-사이트맵-빠진화면 자체 검사 ${항목.length - 실패.length}/${항목.length}`);
@@ -173,8 +173,8 @@ if (직접실행) {
     process.exit(1);
   }
   console.log(`■ 백년지도 사이트맵 검사 — 고정 화면 ${r.살핀수}개 · 사이트맵 주소 ${r.실린수}개`);
-  if (r.깃목록못읽음) console.log('   ⚠ 깃 목록을 읽지 못했다. 배포되지 않는 화면도 함께 세었다');
-  else if (r.깃이모르는것) console.log(`   깃이 모르는 화면 ${r.깃이모르는것}개는 뺐다 — 배포되지 않는다`);
+  if (r.git목록못읽음) console.log('   ⚠ git 목록을 읽지 못했다. 배포되지 않는 화면도 함께 세었다');
+  else if (r.git모르는것) console.log(`   git이 모르는 화면 ${r.git모르는것}개는 뺐다 — 배포되지 않는다`);
   if (!r.빠진것.length) { console.log('빠진 화면이 없다'); process.exit(0); }
 
   console.log(`\n경고: 검색에는 열려 있는데 사이트맵에 없는 화면 ${r.빠진것.length}개`);

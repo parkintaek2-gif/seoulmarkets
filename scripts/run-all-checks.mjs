@@ -203,6 +203,10 @@ export const 단계들 = [
   /* 🔴 [2026-11-09 · 5번] 살아 있는데 사이트맵에 없는 화면을 잡는다.
      `/rankings` 가 구글에 「알려지지 않은 URL」로 찍혀 원인을 찾다
      62개가 한꺼번에 빠져 있는 것을 발견했다. 같은 일이 네 번째였다. */
+  /* 🔴 [2026-11-09 · 사장님] 「지침은 지키라고 있는 거지, 기록용으로 있는 게 아니야」
+     금지어 목록을 155개까지 늘려 놓고도 내가 쓴 문서에 49번 들어 있었다.
+     목록을 늘리는 것과 지키는 것은 다른 일이다. 그래서 돌게 한다. */
+  "node scripts/check-새글-말투.mjs",
   "node scripts/check-100y-사이트맵-빠진화면.mjs",
   "node scripts/check-100y-age-axis-transfer.mjs",
   "node scripts/check-100y-kosis-transfer.mjs",
