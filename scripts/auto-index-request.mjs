@@ -41,6 +41,7 @@ import { fileURLToPath } from 'node:url';
 export const 뿌리 = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
 export const 이력길 = 'docs/색인요청-이력.tsv';
 export const 수요지면길 = 'docs/수요지면.tsv';   /* demand-pages.mjs 가 적는다 */
+export const 되는화면길 = 'docs/되는화면.tsv';   /* GA4 로 잰 착지 화면 — 네 사이트 모두 */
 
 /**
  * 「문」 — 그 아래 지면이 여럿 달린 목록 지면.
@@ -140,6 +141,46 @@ export function 수요지면읽기(글, 자원 = "sc-domain:seoulmarkets.com") {
     }))
     .sort((a, b) => b.수요 - a.수요);
 }
+/** 자원 이름에서 손님이 여는 주소를 만든다 */
+export function 자원의주소(자원) {
+  const d = String(자원 ?? '').replace(/^sc-domain:/, '').trim();
+  if (!d) return null;
+  /* ⚠ 케이컬처와이어는 www 가 정본이다(server.mjs 가 비www 를 301 로 보낸다).
+     301 나는 주소를 색인 요청에 넣으면 구글이 「리디렉션」으로 세고 끝난다 */
+  return 'https://' + (d === 'kculturewire.com' ? 'www.' + d : d);
+}
+
+/**
+ * 「되는 화면」을 읽는다 — docs/되는화면.tsv
+ *
+ * 🔴 [2026-11-09 · 사장님 「1명이라도 오는 통로가 되면 다 해」]
+ *   오늘 이 자를 돌렸더니 「오늘 요청할 것 0개」가 나왔다. 문 15개가 전부 쉬는 중이고
+ *   수요지면.tsv 는 **서울마켓츠 전용으로 박혀 있어** 다른 사이트를 못 넣는다.
+ *   그 사이 하루 할당량은 한 번도 안 쓰이고, 서울마켓츠는 3,435장이 크롤조차 안 됐다.
+ *   ⇒ GA4 로 재서 «손님이 실제로 내려앉는» 화면을 네 사이트 모두에서 받는다.
+ *
+ * ⚠ 「세션」은 구글 노출이 아니라 모든 통로를 합쳐 내려앉은 세션이다. 차례를 정하는 데만 쓴다.
+ * ⛔ 수요지면보다도 «뒤»에 세운다 — 저쪽은 구글이 이미 노출시키는 곳이라 더 가깝다.
+ */
+export function 되는화면읽기(글) {
+  return String(글 ?? '').split('\n')
+    .map((x) => x.trim()).filter((x) => x && !x.startsWith('#'))
+    .map((x) => x.split('\t'))
+    .filter((x) => x.length >= 4 && x[0].startsWith('sc-domain:') && x[3].startsWith('/'))
+    .map((x) => {
+      const 집 = 자원의주소(x[0]);
+      return 집 ? {
+        자원: x[0].trim(),
+        주소: 집 + x[3].trim(),
+        아래: Math.min(0.5, (Number(x[1]) || 0) / 10000),   /* 문·수요지면보다 «항상» 뒤 */
+        세션: Number(x[1]) || 0,
+        통로: x[2].trim(),
+      } : null;
+    })
+    .filter(Boolean)
+    .sort((a, b) => b.세션 - a.세션);
+}
+
 /** 이력 파일을 읽어 [{ 날, 주소, 말 }] 로 */
 export function 이력읽기(글) {
   return String(글 ?? '').split('\n')
@@ -210,6 +251,34 @@ export function 자가시험() {
     검('⛔ 깨진 줄에 안 터진다', 수요지면읽기('아무거나\n\n').length === 0);
     검('⛔ 빈 것에 안 터진다', 수요지면읽기(null).length === 0);
   }
+
+  /* 🔴 [2026-11-09] 되는 화면 — 네 사이트 모두에서 받는다 */
+  {
+    const t = ['# 자원\t세션\t통로\t주소',
+      'sc-domain:100yearmap.com\t48\t네이버모바일\t/report/area/경기도-의정부시',
+      'sc-domain:kculturewire.com\t9\tChatGPT\t/born-in/november',
+      '망가진 줄'].join('\n');
+    const r = 되는화면읽기(t);
+    검('되는 화면을 읽는다', r.length === 2);
+    검('세션이 많은 것이 먼저다', r[0].주소.endsWith('/report/area/경기도-의정부시'));
+    검('🔴 케이컬처와이어는 www 로 적는다 — 비www 는 301 이라 색인 요청이 헛돈다',
+      r[1].주소 === 'https://www.kculturewire.com/born-in/november');
+    검('백년지도는 www 를 안 붙인다',
+      r[0].주소 === 'https://100yearmap.com/report/area/경기도-의정부시');
+    검('🔴 되는 화면은 문보다 «뒤»에 선다',
+      r.every((x) => x.아래 <= 0.5) && 문들.every((x) => x.아래 > 1));
+    검('⛔ 깨진 줄에 안 터진다', 되는화면읽기('아무거나\n\n').length === 0);
+    검('⛔ 빈 것에 안 터진다', 되는화면읽기(null).length === 0);
+    검('자원 이름이 없는 줄은 안 받는다',
+      되는화면읽기('100yearmap.com\t5\tx\t/a').length === 0);
+
+    /* 실제 파일이 읽히나 — 0줄이면 못 읽은 것이다 */
+    const 실물 = fs.existsSync(path.join(뿌리, 되는화면길))
+      ? 되는화면읽기(fs.readFileSync(path.join(뿌리, 되는화면길), 'utf8')) : [];
+    검('🔴 실제 되는화면.tsv 를 읽는다 — 0줄이면 못 읽은 것이다', 실물.length > 10);
+    검('🔴 네 사이트가 다 들어 있다 — 한 곳만 있으면 한 곳만 보고 있는 것이다',
+      new Set(실물.map((x) => x.자원)).size === 4);
+  }
   검('🔴 문 목록에 /school 이 들어 있다 — 아래가 가장 많다',
     문들.some((x) => x.주소.endsWith('/school') && x.아래 > 2000));
   검('⛔ 문 목록이 낱장을 물고 있지 않다',
@@ -273,7 +342,18 @@ if (나인가) {
     const q = path.join(뿌리, 수요지면길);
     if (fs.existsSync(q)) 수요 = 수요지면읽기(fs.readFileSync(q, "utf8"));
   } catch { /* 없으면 그냥 문만 한다 */ }
-  const 할것 = 오늘할것([...진단, ...수요.map((x) => ({ ...x, 색인됨: false }))], 이력);
+  /* 🔴 [2026-11-09] 문과 수요지면이 전부 쉬는 날에도 할당량을 놀리지 않는다.
+     GA4 로 재서 «손님이 내려앉는» 화면을 네 사이트 모두에서 받아 뒤에 세운다. */
+  let 되는것 = [];
+  try {
+    const q = path.join(뿌리, 되는화면길);
+    if (fs.existsSync(q)) 되는것 = 되는화면읽기(fs.readFileSync(q, 'utf8'));
+  } catch { /* 없으면 그냥 넘어간다 */ }
+  const 할것 = 오늘할것([
+    ...진단,
+    ...수요.map((x) => ({ ...x, 색인됨: false })),
+    ...되는것.map((x) => ({ ...x, 색인됨: false })),
+  ], 이력);
 
   console.log(`\n■ 닫힌 문 ${진단.filter((x) => !x.색인됨).length}개 · 오늘 요청할 것 ${할것.length}개`);
   if (!할것.length) { console.log('⬜ 오늘 할 것이 없다 — 다 열렸거나 요 보름 안에 이미 요청했다'); process.exit(0); }

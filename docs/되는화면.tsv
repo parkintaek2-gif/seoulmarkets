@@ -1,0 +1,53 @@
+# 되는 화면 — «손님이 실제로 내려앉는» 주소. 구글에 색인 요청할 차례를 정하는 데 쓴다.
+#
+# 🔴 왜 이 파일이 있나 (2026-11-09 · 5번 · 사장님 「1명이라도 오는 통로가 되면 다 해」)
+#   auto-index-request 가 보던 것은 둘뿐이었다 —
+#     ① 문 15개          전부 요 보름 안에 요청해서 쉬는 중
+#     ② 수요지면.tsv      «서울마켓츠 전용»으로 박혀 있다
+#   그래서 오늘 돌렸더니 「오늘 요청할 것 0개」가 나왔다. 하루 할당량을 한 번도 안 쓴 것이다.
+#   그 사이 서울마켓츠는 3,435장이 「발견됨 · 색인 생성 안 됨」으로 서 있다.
+#
+# ⭐ 여기 적는 주소는 짐작이 아니다. GA4 로 28일을 재서 **손님이 실제로 내려앉은** 화면이다
+#   (Direct 를 뺀 것 — Direct 는 우리 점검 자동화다).
+#   구글이 아직 안 데려오는 화면이라도, 다른 통로에서 사람이 내려앉는다면
+#   그 화면은 «사람이 찾는 것»이 있다는 뜻이다. 구글에 먼저 내밀 값이 있다.
+#
+# ⛔ 손으로 지어 넣지 않는다. 잰 수만 적는다. 재지 않은 주소는 여기 오면 안 된다.
+# ⚠ 「세션」 칸은 구글 노출이 아니다 — 모든 통로를 합쳐 «내려앉은» 세션 수다.
+#
+# 자원	세션	통로	주소
+sc-domain:100yearmap.com	48	네이버모바일	/report/area/경기도-의정부시
+sc-domain:100yearmap.com	41	네이버모바일	/years-left
+sc-domain:100yearmap.com	40	네이버모바일	/report/area/인천광역시-부평구
+sc-domain:100yearmap.com	36	네이버모바일	/report/area/경상북도-경산시
+sc-domain:100yearmap.com	33	네이버모바일	/elementary
+sc-domain:100yearmap.com	31	네이버모바일	/report/area/경상남도-진주시
+sc-domain:100yearmap.com	30	네이버모바일	/report/area/인천광역시-미추홀구
+sc-domain:100yearmap.com	29	네이버모바일	/report/area/경상북도-경주시
+sc-domain:100yearmap.com	29	네이버모바일	/report/area/서울특별시-중랑구
+sc-domain:100yearmap.com	28	네이버모바일	/report/area/서울특별시-성북구
+sc-domain:100yearmap.com	26	네이버모바일	/report/area/대전광역시-유성구
+sc-domain:100yearmap.com	22	네이버모바일	/report/area/경기도-안양시-동안구
+sc-domain:100yearmap.com	21	네이버모바일	/report/area/충청남도-아산시
+sc-domain:100yearmap.com	20	네이버모바일	/report/area/부산광역시-해운대구
+sc-domain:100yearmap.com	19	네이버모바일	/report/area/경기도-안산시-단원구
+sc-domain:100yearmap.com	18	네이버모바일	/report/area/서울특별시-서대문구
+sc-domain:seoulmarkets.com	27	빙·덕덕고·야후	/equities
+sc-domain:seoulmarkets.com	23	ChatGPT·빙	/data/kospi-weights
+sc-domain:seoulmarkets.com	9	ChatGPT·빙	/data/valuation
+sc-domain:seoulmarkets.com	7	ChatGPT	/data/target-price-accuracy
+sc-domain:seoulmarkets.com	7	구글	/companies
+sc-domain:kculturewire.com	9	ChatGPT	/article/what-is-in-netflix-top10-tsv-files
+sc-domain:kculturewire.com	6	ChatGPT	/born-in/november
+sc-domain:kculturewire.com	6	ChatGPT	/group
+sc-domain:kculturewire.com	5	ChatGPT	/article/korea-exports-grew-viewing-did-not
+sc-domain:kculturewire.com	5	ChatGPT	/exports
+sc-domain:kculturewire.com	4	ChatGPT	/staying-power
+sc-domain:kculturewire.com	3	ChatGPT	/most-popular
+sc-domain:kculturewire.com	3	ChatGPT	/star-sign/pisces
+sc-domain:kculturewire.com	3	ChatGPT	/title/reply-1988
+sc-domain:kculturewire.com	3	ChatGPT	/group/cortis
+sc-domain:kculturewire.com	3	ChatGPT	/group/i-dle
+sc-domain:klifemap.ai	12	네이버·ChatGPT	/saju.html
+sc-domain:klifemap.ai	8	네이버	/mansecalendar.html
+sc-domain:klifemap.ai	6	네이버	/astro.html
