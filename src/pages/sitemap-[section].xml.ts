@@ -8,10 +8,10 @@ import countryProfiles from '../data/country-trade-profiles.json';
    지면을 찍는 «까닭»이 색인이므로, 여기 빠지면 2,575장을 지은 뜻이 없다. */
 import fin from '../data/korea-financials-tape.json';
 import { 주소표만들기 } from '../lib/company-slug.mjs';
-import { 지면낼만한가 } from '../lib/company-page.mjs';
+import { 지면낼만한가, 낼만한가 } from '../lib/company-page.mjs';
 /* [2026-10-27 · 1번] 회사 낱장과 «같은 자» — 매출 칸이 없어도 리서치가 있으면 지면이 선다 */
 import 리서치표 from '../data/company-research.json';
-import { 업종주소 } from '../lib/sector-en.mjs';
+import { 업종주소, 업종말 } from '../lib/sector-en.mjs';
 /* 🔴 [2026-09-23 · 5번] 일본 상장사 지면 3,707장. 같은 까닭으로 여기에 넣는다 */
 import jp from '../data/japan-financials-tape.json';
 /* 🔴 [2026-09-23 · 5번] 대만 상장사 지면. 같은 까닭으로 여기에 넣는다 */
@@ -224,8 +224,19 @@ export const GET: APIRoute = async ({ params }) => {
         changefreq: 'monthly',
         priority: '0.6',
       });
+      /* 🔴 [2026-11-09 · 5번] **업종 주소는 «업종 화면과 같은 자»로 걸러야 한다.**
+         회사 화면은 `지면낼만한가`(매출이 없어도 리서치가 있으면 낸다 · 10-27 에 넓혔다)로
+         서는데, 업종 화면 `src/pages/sector/[slug].astro` 는 아직 `낼만한가`(매출이 있어야
+         한다)와 `업종말`로만 선다. 그 둘을 섞어 쓰는 바람에 **보험·연금 업종이 사이트맵에만
+         있고 화면은 없어 404 였다** — 그 업종 회사 12곳이 전부 매출 칸이 비어 있다(보험사는
+         매출을 보험수익으로 적는다). 사이트맵 8,039개를 전수로 눌러 보고 찾았다.
+         ⛔ 사이트맵이 404 를 가리키면 그 사이트맵 «전체»의 신뢰가 깎인다.
+         ⚠ 업종 화면 쪽을 넓히는 것이 더 나은 길이지만, 그 화면은 매출로 세운 표라
+           매출이 하나도 없는 업종을 지금 형태로 내면 줄마다 「—」가 된다. 그것은
+           「못 잰 것을 빈칸으로 늘어놓지 않는다」(company-page.mjs)에 어긋난다.
+           보험·연금은 금융사가 실제로 적는 수(보험수익·이자수익)로 화면을 다시 세울 때 연다. */
       const s2 = 업종주소(h.sector);
-      if (s2) 업종들.add(s2);
+      if (s2 && 업종말(h.sector) && 낼만한가(그회사)) 업종들.add(s2);
     }
     for (const s2 of [...업종들].sort()) {
       /* 업종 지면은 그 업종 회사들을 모은 것이라 가장 최근 받아온 날을 쓴다 */

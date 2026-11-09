@@ -211,6 +211,10 @@ export const 단계들 = [
      구글이 404 를 긁고 있었다. 10-26 에 올린 유효성 검사가 11-07 에 그 탓에 실패했다.
      같은 흠이 세 번째(09-03 KCW 다섯 장 · 10-26 무역 글 · 오늘 /data 두 장)라 검사로 둔다. */
   "node scripts/check-내린지면에-301이-걸렸나.mjs",
+  /* 🔴 [2026-11-09 · 5번] 사이트맵 8,039개를 전수로 눌러 보고 404 한 장을 찾았다 —
+     /sector/insurance-and-pensions. 회사 화면과 업종 화면이 서로 다른 판별 규칙을 쓰는데
+     사이트맵이 넓은 쪽을 썼다. 사이트맵이 404 를 가리키면 그 사이트맵 전체가 의심받는다. */
+  "node scripts/check-사이트맵이-없는화면을-가리키나.mjs",
   "node scripts/check-100y-사이트맵-빠진화면.mjs",
   "node scripts/check-100y-age-axis-transfer.mjs",
   "node scripts/check-100y-kosis-transfer.mjs",
