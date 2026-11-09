@@ -31,6 +31,12 @@ import { SITE_URL } from '../../consts';
 import tape from '../../data/korea-valuation-tape.json';
 import BuyBar from '../../components/BuyBar.astro';
 import CiteAs from '../../components/CiteAs.astro';
+/* 🔴 [2026-11-09 · 5번] **이 화면에 광고 자리가 없었다.**
+   28일 실측으로 서울마켓츠에서 손님이 가장 많이 내려앉는 /data 화면인데(23세션 ·
+   ChatGPT 13 · 빙 7 · 팀즈 3) 광고 단위가 한 개도 없었다. 자동 광고만 돌고 안 채워진다.
+   Base.astro 가 적어 둔 대로 **데이터 화면은 광고를 실어도 되는 편집 콘텐츠**다 —
+   끄는 것은 `noAds` 를 준 화면과 법무·얇은 화면뿐이고 이 화면은 주지 않는다. */
+import AdSlot from '../../components/AdSlot.astro';
 
 type Row = {
   ticker: string | null; nameEn: string | null; market: string | null;
@@ -183,6 +189,10 @@ const jsonLd = [datasetLd, faqLd];
       <b>{두곳.toFixed(1)}%</b> of the market between them.
     </p>
     <BuyBar 자리="top" />
+
+    {/* ⚠ 광고는 «소개 아래»에 둔다 — 2026-09-14 에 홈에서 위에 두었다가 휴대폰 400px 에서
+        첫 화면이 통째로 흰 여백이 됐다(실측). 그 교훈을 여기서도 지킨다. */}
+    <AdSlot slot="banner" />
 
     <section class="stats">
       <div class="stat"><b>{num(kospi.length)}</b><span>companies counted</span></div>

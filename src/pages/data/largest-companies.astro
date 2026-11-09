@@ -39,6 +39,9 @@ import Base from '../../layouts/Base.astro';
 import { SITE_URL } from '../../consts';
 import tape from '../../data/korea-valuation-tape.json';
 import BuyBar from '../../components/BuyBar.astro';
+/* 🔴 [2026-11-09 · 5번] 광고 자리가 없던 화면이다 — 28일에 25번 열린다.
+   Base.astro 기준으로 데이터 화면은 광고를 실어도 되는 편집 콘텐츠다. */
+import AdSlot from '../../components/AdSlot.astro';
 
 type Row = {
   ticker: string | null; name: string | null; nameEn: string | null; market: string | null;
@@ -316,6 +319,9 @@ const jsonLd = [datasetLd, faqLd];
       annual reports. We do not merge them into a single order, because they do not agree.
     </p>
     <BuyBar 자리="top" />
+
+    {/* ⚠ 광고는 «소개 아래»에 둔다 — 위에 두면 휴대폰 첫 화면이 여백이 된다(2026-09-14 실측) */}
+    <AdSlot slot="banner" />
 
     <section class="stats">
       <div class="stat"><b>{unionTickers.length}</b><span>companies make a top ten</span></div>
