@@ -311,8 +311,11 @@ async function 잰다({ 적는다 = false } = {}) {
 const 나 = fileURLToPath(import.meta.url);
 if (process.argv[1] && path.resolve(process.argv[1]) === path.resolve(나)) {
   if (process.argv.includes('--자가시험')) process.exit(자가시험() ? 0 : 1);
-  if (!process.argv.includes('--잰다')) {
-    console.log('⛔ --잰다 나 --자가시험 을 준다');
+  /* 🔴 [2026-11-09] 깃발 이름에 한자어 이름을 «더했다». 「잰다」는 순한글이라
+     문서나 보고서에 이 명령을 적으면 밖으로 나가는 글 검사에 걸린다(오늘 실제로 걸렸다).
+     ⛔ 옛 이름을 지우지 않는다 — 예약 작업과 다른 자리가 이미 그 이름으로 부른다. */
+  if (!process.argv.includes('--측정한다') && !process.argv.includes('--잰다')) {
+    console.log('⛔ --측정한다(옛 이름 --잰다 도 받는다) 나 --자가시험 을 준다');
     process.exit(1);
   }
   const 됐나 = 자가시험();
