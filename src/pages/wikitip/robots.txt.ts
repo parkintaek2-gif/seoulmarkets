@@ -19,6 +19,30 @@ export const GET: APIRoute = () =>
 User-agent: *
 Allow: /
 
+# ── AI answer engines ─────────────────────────────────────────
+# [2026-11-09] The wildcard above already allows these. They are named anyway,
+# because some crawlers look for their own section first and behave conservatively
+# when they do not find one. Measured over 28 days, ChatGPT sent this site 135
+# visitors against Google's 1 — 77% of everyone who found us. Not boilerplate.
+# This is an allow list, not a block list.
+User-agent: GPTBot
+User-agent: OAI-SearchBot
+User-agent: ChatGPT-User
+User-agent: ClaudeBot
+User-agent: Claude-Web
+User-agent: anthropic-ai
+User-agent: PerplexityBot
+User-agent: Perplexity-User
+User-agent: Google-Extended
+User-agent: Applebot-Extended
+User-agent: CCBot
+User-agent: Bingbot
+User-agent: Yeti
+Allow: /
+
+# What this site holds, in one page, for answer engines:
+# https://www.kculturewire.com/llms.txt
+
 Sitemap: https://www.kculturewire.com/sitemap.xml
 
 # Every article, newest first, with the date its data was measured.
