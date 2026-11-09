@@ -1,4 +1,22 @@
 import type { APIRoute } from 'astro';
+import 지역단위 from '../../data/100yearmap/areas.json';
+import { 한벌로팔만한가 } from '../../lib/school-area';
+import { 파는지면검색 } from '../../lib/price';
+
+/**
+ * 🔴 [2026-11-09 · 5번 · 사장님 「1명이라도 오는 통로가 되면 다 해」]
+ *   **지역 리포트가 백년지도 손님의 대부분을 데려오는데 이 안내문에는 한 줄뿐이었다.**
+ *   GA4 로 재 보니 네이버 모바일로 들어온 상위 16자리 가운데 14자리가 `/report/area/…` 였다.
+ *   그런데 AI 에게 주는 이 안내문에는 「by-district rollups」 한 줄에 디렉터리 주소만
+ *   적혀 있었고 그 주소는 301 이다. **AI 는 적히지 않은 것을 인용하지 못한다.**
+ *   ⇒ 258개를 이름과 학교 수까지 적어 둔다. 자료에서 뽑으므로 늘거나 줄면 같이 바뀐다.
+ * ⚠ 거르는 자는 사이트맵과 «같아야» 한다 — 한쪽만 열면 안내문이 noindex 화면을 가리킨다.
+ */
+const 지역줄 = ((지역단위 as any).단위 as any[])
+  .filter((a) => 파는지면검색.연다 || !한벌로팔만한가(a.곳))
+  .map((a) => `- [${a.열쇠}](https://100yearmap.com/report/area/${a.slug}): `
+    + `high schools in ${a.열쇠} — ${a.곳} schools, university-advancement rate measured for ${a.진학잰곳}`)
+  .join('\n');
 
 /**
  * 백년지도 llms.txt — AI 답변엔진(챗GPT·클로드·퍼플렉시티 등)이 읽는 안내문.
@@ -165,7 +183,15 @@ All pages above are indexed together at [/ages](https://100yearmap.com/ages), so
 - [/school/{code}](https://100yearmap.com/school/): 2,525 individual high school pages
 - [/major/{slug}](https://100yearmap.com/major/): 925 major/field pages with employment outcomes
 - [University pages](https://100yearmap.com/): 377 universities, five disclosure metrics each
-- [Regional reports](https://100yearmap.com/report/area/): by-district rollups
+
+## Regional high-school reports (one page per district)
+
+Each page gathers every high school in one city or district onto a single page with its
+university-advancement rate, the number of schools measured, and the spread. We do not rank
+the schools — the page shows where each sits inside the spread. Source: NEIS school
+disclosure data. Korean-language pages; the district name is in Korean.
+
+${지역줄}
 
 ## Non-government source (the one exception)
 

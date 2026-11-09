@@ -23,6 +23,30 @@ export const GET: APIRoute = () =>
 User-agent: *
 Allow: /
 
+# ── AI 답변엔진 ────────────────────────────────────────────────
+# 🔴 [2026-11-09] 위 「User-agent: *」가 이미 이들을 허락한다. 그런데도 «이름을 적어»
+#   따로 쓴다 — 일부 수집기는 제 이름이 적힌 칸을 먼저 찾고 없으면 보수적으로 군다.
+#   ⭐ 우리 영문 두 사이트는 ChatGPT 가 구글보다 손님을 많이 보낸다(28일 실측
+#     K Culture Wire 135명 대 1명). 이 칸은 빈말이 아니라 큰 통로다.
+# ⛔ 막는 칸이 아니다. 이름을 적었다고 막는 것으로 읽지 않는다.
+User-agent: GPTBot
+User-agent: OAI-SearchBot
+User-agent: ChatGPT-User
+User-agent: ClaudeBot
+User-agent: Claude-Web
+User-agent: anthropic-ai
+User-agent: PerplexityBot
+User-agent: Perplexity-User
+User-agent: Google-Extended
+User-agent: Applebot-Extended
+User-agent: CCBot
+User-agent: Bingbot
+User-agent: Yeti
+Allow: /
+
+# AI 답변엔진용 안내문 — 이 사이트가 무엇을 가진 곳인지 한 장에 적었다
+# https://100yearmap.com/llms.txt
+
 Sitemap: https://100yearmap.com/sitemap.xml
 Sitemap: https://100yearmap.com/sitemap-image.xml
 Sitemap: https://100yearmap.com/sitemap-video.xml
