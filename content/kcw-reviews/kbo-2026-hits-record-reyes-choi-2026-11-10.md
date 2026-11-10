@@ -5,7 +5,7 @@ category: baseball
 pubDate: 2026-11-10T12:30:00+09:00
 subject:
   명칭: "2026 KBO리그 정규시즌 개인 기록 — 안타·타율·홈런·타점, 투수 부문"
-  유형: record
+  유형: season
   일시: 2026-11-10T00:00:00+09:00
   주체: "한국야구위원회(KBO)"
 sources:
