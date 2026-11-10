@@ -1370,6 +1370,14 @@ ${줄 ? `<table><thead><tr><th>사이트</th><th class="n">방문자</th><th cla
        ⚠ 되살릴 때 이 두 줄도 함께 뗀다. docs/내린지면/README.md */
     '/data/bank-loan-delinquency': '/data/fixed-variable-rate-share',
     '/data/mortgage-balance-gender-gap': '/data/fixed-variable-rate-share',
+    /* 🔴 [2026-11-10 · 5번 · 사장님 「유료지역 리포트 없애라고 전에 말했잖아」]
+       **값 지면을 내렸다.** 지역 한 벌은 2026-09-10 에 이미 무료가 됐는데(price.ts
+       `미리보기그만`) `/price` 만 살아서 「9,900원」을 세 번 보여 주고 있었다.
+       팔지 않는 값을 적어 둔 것이라 손님에게는 거짓말이고, 광고를 거는 데도 걸린다.
+       ⭐ 내리는 일은 세 자리다 — 카탈로그 · 사이트맵 · **이 표**(2026-11-09 에 배운 것).
+       ⚠ 백년지도 내부 길에는 `/100y` 가 붙는다. 보내는 곳은 손님이 보는 주소다.
+       뜻이 가까운 곳 — 지역 리포트로 가는 입구인 `/region` 으로 보낸다. */
+    '/100y/price': '/region',
   };
   {
     const 보낼곳 = 사라진지면[pathname];

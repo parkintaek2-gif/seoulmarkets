@@ -338,3 +338,16 @@
 .pricebox .answer-num { margin: 6px 0 2px; }
 
 .pricebox ul + p { margin-top: 18px; }
+
+.ad-slot {
+  display: block;
+  margin: 28px 0;
+}
+
+ins.adsbygoogle[data-ad-status='unfilled'] {
+  display: none !important;
+}
+@media print {
+
+  .ad-slot { display: none !important; }
+}

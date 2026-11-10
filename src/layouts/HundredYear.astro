@@ -6,6 +6,7 @@ import { ADS } from '../consts';
 import path from 'node:path';
 import { 자매링크 } from '../lib/sister-link';
 import ContentRail from '../components/ContentRail.astro';
+import AdSlot from '../components/AdSlot.astro';
 import PreferredSource from '../components/선호출처.astro';
 
 /** CSS 파일이 바뀌면 저절로 바뀌는 판 번호. ⛔ 손으로 올리지 않는다 —
@@ -149,7 +150,26 @@ const OG = ogImage ?? `${ORIGIN}/og.png`;
 const 이지면 = (Astro.url?.pathname ?? '').replace(/\.html$/, '').replace(/\/$/, '');
 const 광고빼는지면 = [];
 const 광고안받는길 = 광고빼는지면.some((p) => 이지면 === p || 이지면.endsWith(p));
-const 광고를부르나 = ADS.client !== '' && !noAds && !광고안받는길;
+/**
+ * 🔴 [2026-11-10 · 5번 · 사장님 「광고 게재해」] **광고 자리를 이제 만든다.**
+ *   9월 심사 때 「로더만 두고 자리(ins)는 안 만든다」고 정해 놓고 승인이 난 뒤
+ *   아무도 자리를 넣으러 돌아오지 않았다. 11-09 에 재서 알았다 — 백년지도는
+ *   하루 손님이 우리 중 가장 많은데(69명) 광고 단위가 **0개**였다.
+ *   ⭐ 승인과 수입은 다른 일이다. 「심사 통과」를 「광고가 나간다」로 읽지 않는다.
+ *
+ * ⛔ 비편집 지면(약관·개인정보·환불·문의·404)은 뺀다. 애드센스가 「저가치 콘텐트」로
+ *   보는 자리다 — Base.astro 가 서울마켓츠에서 같은 목록을 이미 쓰고 있다.
+ * ✅ 지역 리포트(`/report/...`)에는 **건다.** 2026-11-10 에 사장님 지시로 유료가
+ *   완전히 없어졌다(값 지면 `/price` 를 내렸다). 파는 것이 없으니 겹칠 것도 없다.
+ *
+ * ⚠ `이지면` 은 **빌드 길**이라 `/100y` 가 붙어 있다. 손님 주소로 재야 조건이 맞는다.
+ */
+const 손님길 = canonical.slice(ORIGIN.length) || '/';
+const 비편집길 = /^\/(terms|privacy|refund|contact|404)(\/|$)/.test(손님길);
+const 광고를부르나 = ADS.client !== '' && !noAds && !광고안받는길 && !비편집길;
+/** ins 하나당 한 번씩 광고 요청. 지면당 이 한 줄로 끝낸다(Base.astro 와 같은 자). */
+const 광고요청 =
+  "document.querySelectorAll('ins.adsbygoogle').forEach(function(){(window.adsbygoogle=window.adsbygoogle||[]).push({})});";
 ---
 
 {/* prettier-ignore */}
@@ -432,7 +452,16 @@ const 광고를부르나 = ADS.client !== '' && !noAds && !광고안받는길;
         ⛔ 상품을 붙이지 않는다 — 여긴 학부모·수험생이 보는 자리다. 우리 지면으로만 보낸다.
         ⛔ 1,080px 아래에서는 열이 사라지고 본문이 온 폭을 쓴다(폰에서 본문 위에 안 쌓는다). */}
     <div class="wrap--crail">
-      <div class="col-main"><slot /></div>
+      <div class="col-main">
+        <slot />
+        {/* 🔴 [2026-11-10 · 5번 · 사장님 「광고 게재해」] 광고는 **본문 아래**다.
+            ⛔ 본문 위에 두지 않는다 — 2026-09-14 에 서울마켓츠에서 겪었다. 폰에서는
+              광고가 먼저 나오고 읽을 것이 아래로 밀려 손님이 그대로 나간다.
+              사장님이 올인하라 하신 것은 체류시간이다. 광고가 그것을 깎으면 안 된다.
+            ⚠ 자리를 만드는 것과 광고가 나오는 것은 다르다 — 아래 `광고요청` 한 줄이
+              이 `ins` 를 구글에 밀어 준다. 둘 중 하나만 있으면 빈칸만 남는다. */}
+        {광고를부르나 && <AdSlot slot="banner" />}
+      </div>
       {/* 🔴 2026-09-17 — 「순위로 보기」 6번째 칸 추가. 순위(ranking-*) 지면 20장이
           메인 메뉴 어디에도 안 걸린 «고립된 섬»이었다(사장님 지시로 실측 — 밸런스가
           우선). ⛔ 새 top-nav 칸을 만들지 않았다 — 2026-08-23에 사장님이 메뉴를
@@ -560,6 +589,10 @@ const 광고를부르나 = ADS.client !== '' && !noAds && !광고안받는길;
       <p class="printurl">이 페이지 — {canonical}</p>
     </footer>
   </div>
+  {/* ins 하나당 한 번씩 광고 요청. 지면당 이 한 줄로 끝낸다.
+      ⛔ 자리(ins)만 만들고 이 줄을 빠뜨리면 **빈칸만 남는다** — 로더는 스스로
+        `ins` 를 찾아 주지 않는다. Base.astro 가 서울마켓츠에서 쓰는 것과 같은 자다. */}
+  {광고를부르나 && <script is:inline set:html={광고요청} />}
 </body>
 </html>
 
