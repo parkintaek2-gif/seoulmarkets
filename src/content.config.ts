@@ -166,7 +166,7 @@ const kcwReviews = defineCollection({
     title: z.string().max(120),
     /** 카드·리뷰 상단에 1행으로 부기하는 부제 */
     dek: z.string().max(240),
-    /** 분류 9종. ⛔ 정본은 `src/lib/리뷰분류.mjs` 단일 파일이다 */
+    /** 분류 목록. ⛔ 정본은 `src/lib/리뷰분류.mjs` 단일 파일이다 */
     category: z.enum(분류코드 as [string, ...string[]]),
     pubDate: z.coerce.date(),
     updatedDate: z.coerce.date().optional(),
@@ -177,9 +177,19 @@ const kcwReviews = defineCollection({
     subject: z.object({
       /** 경기·회차·작품 명칭. 예: '2026 롤드컵 스위스 3라운드 한화생명-IG' */
       명칭: z.string(),
-      /** match 경기 · episode 회차 · season 시즌 전체 · release 음반·영화 */
-      유형: z.enum(['match', 'episode', 'season', 'release']),
-      /** 개최·방영 일시(한국시간). 발행일과 상이한 것이 정상이다 */
+      /**
+       * match 경기 · episode 회차 · season 시즌 전체 · release 음반·영화 ·
+       * channel 채널번호와 편성표
+       *
+       * 🔴 [2026-11-10] `channel` 은 대상이 «경기나 회차가 아닌» 유일한 유형이다.
+       *   채널 1개 또는 프로그램 1개의 번호·시간을 모아 놓은 화면이라,
+       *   반응·사진·다음일정이 없을 수 있다.
+       */
+      유형: z.enum(['match', 'episode', 'season', 'release', 'channel']),
+      /**
+       * 개최·방영 일시(한국시간). 발행일과 상이한 것이 정상이다.
+       * `channel` 에서는 **그 번호·편성표를 확인한 날**을 적는다.
+       */
       일시: z.coerce.date(),
       /** 개최·방영 주체 — 리그·방송사·OTT 명칭. 예: 'LoL 이스포츠', 'tvN', '넷플릭스' */
       주체: z.string(),
