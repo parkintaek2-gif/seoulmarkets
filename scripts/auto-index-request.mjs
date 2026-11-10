@@ -35,6 +35,7 @@
  *   node scripts/auto-index-request.mjs --자가시험
  */
 import fs from 'node:fs';
+import os from 'node:os';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 
@@ -42,6 +43,19 @@ export const 뿌리 = path.resolve(path.dirname(fileURLToPath(import.meta.url)),
 export const 이력길 = 'docs/색인요청-이력.tsv';
 export const 수요지면길 = 'docs/수요지면.tsv';   /* demand-pages.mjs 가 적는다 */
 export const 되는화면길 = 'docs/되는화면.tsv';   /* GA4 로 잰 착지 화면 — 네 사이트 모두 */
+
+/** 누른 그 자리에서 이력 한 줄을 적는다. ⛔ 끝에 몰아 적지 않는다 — 위 자물쇠 주석을 보라 */
+export function 그자리에적는다(줄, 길 = path.join(뿌리, 이력길)) {
+  try {
+    const 머리 = fs.existsSync(길) ? '' : '# 날\t주소\t구글이 한 말 (그대로)\n';
+    fs.appendFileSync(길, 머리 + 줄 + '\n', 'utf8');
+    return true;
+  } catch (e) {
+    /* ⛔ 적지 못한 것을 조용히 넘기지 않는다 — 다음 사람이 또 누르게 된다 */
+    console.log(`🔴 이력을 못 적었다 — ${String(e.message).slice(0, 60)}`);
+    return false;
+  }
+}
 
 /**
  * 「문」 — 그 아래 지면이 여럿 달린 목록 지면.
@@ -100,6 +114,32 @@ export function 오늘할것(진단, 이력 = [], 이제 = new Date(), 쉴날 = 
     .filter((x) => x && x.주소 && !x.색인됨 && !최근.has(x.주소))
     .map((x) => ({ ...x, 아래: Number(x.아래 ?? 0) }))
     .sort((a, b) => b.아래 - a.아래);
+}
+
+/**
+ * 🔴🔴 [2026-11-10 · 5번] **같은 주소를 하루에 두 번 눌렀다. 귀한 할당량을 거기에 버렸다.**
+ *
+ * 오늘 이력을 세어 보니 14줄인데 **같은 다섯 주소가 두 번씩** 들어 있었다 —
+ * 성북구 · equities · 유성구 · kospi-weights · 안양시 동안구.
+ * 예약 작업이 먼저 돌고 있는 동안 내가 손으로 한 번 더 돌렸는데, 둘이 **같은 목록**을 집었다.
+ *
+ * 까닭은 하나다 — **이력을 맨 끝에 한꺼번에 적는다.**
+ * 앞 사람이 다 끝내기 전에는 파일에 아무것도 없으니, 뒷사람이 읽어도 「오늘 한 것이 없다」로 보인다.
+ *
+ * ⭐ 이 문은 하루에 열 번 남짓밖에 못 연다. 다섯을 겹쳐 쓰면 **그날 절반을 버린 것**이다.
+ * ⭐ 끝에 몰아 적으면 중간에 창이 죽었을 때 **누른 기록이 통째로 사라진다.** 그럼 내일 또 누른다.
+ *
+ * ⇒ 고친 것 둘 — ① 한 번 누를 때마다 그 자리에서 적는다 ② 자물쇠로 두 자가 겹치지 않게 한다.
+ */
+export const 자물쇠길 = 'docs/고정업무-마커/.색인요청-도는중';
+
+/** 자물쇠가 아직 살아 있나 — 묵은 것(기본 두 시간)은 죽은 것으로 본다 */
+export function 자물쇠살았나(적힌시각, 이제 = new Date(), 숨넘는분 = 120) {
+  const t = Date.parse(String(적힌시각 ?? ''));
+  if (!Number.isFinite(t)) return false;       /* 깨진 자물쇠는 막지 않는다 */
+  const 지난분 = (이제.getTime() - t) / 60000;
+  if (지난분 < 0) return false;                /* 미래 시각도 막지 않는다 */
+  return 지난분 < 숨넘는분;
 }
 
 /** 구글이 한 말이 「오늘은 그만」인가 */
@@ -241,6 +281,36 @@ export function 자가시험() {
   const 읽 = 이력읽기('# 주석\n2026-10-17\thttps://a\t받았다\n\n깨진줄\n');
   검('이력을 읽는다', 읽.length === 1 && 읽[0].주소 === 'https://a');
 
+  /* 🔴 [2026-11-10] 같은 주소를 하루에 두 번 누른 흠 — 자물쇠와 그자리에적기 */
+  {
+    const 지금 = new Date('2026-11-10T11:00:00+09:00');
+    검('방금 쥔 자물쇠는 살아 있다',
+      자물쇠살았나('2026-11-10T10:55:00+09:00', 지금) === true);
+    검('🔴 두 시간이 지난 자물쇠는 죽은 것으로 본다 — 창이 죽으면 자물쇠만 남는다',
+      자물쇠살았나('2026-11-10T08:30:00+09:00', 지금) === false);
+    검('경계 — 두 시간에서 1분 모자라면 아직 살아 있다',
+      자물쇠살았나('2026-11-10T09:01:00+09:00', 지금) === true);
+    검('⛔ 깨진 시각은 막지 않는다 — 자물쇠가 일을 세우면 안 된다',
+      자물쇠살았나('언젠가', 지금) === false);
+    검('⛔ 빈 자물쇠도 막지 않는다', 자물쇠살았나('', 지금) === false && 자물쇠살았나(null, 지금) === false);
+    검('⛔ 미래 시각도 막지 않는다 — 시계가 어긋나도 일이 서면 안 된다',
+      자물쇠살았나('2026-11-10T23:00:00+09:00', 지금) === false);
+  }
+  {
+    const 임시 = path.join(os.tmpdir(), `색인이력-시험-${process.pid}.tsv`);
+    try { fs.unlinkSync(임시); } catch { /* 없으면 그만 */ }
+    그자리에적는다('2026-11-10\thttps://a\t받았다', 임시);
+    그자리에적는다('2026-11-10\thttps://b\t받았다', 임시);
+    const 글 = fs.readFileSync(임시, 'utf8');
+    검('그자리에적는다 — 머리글을 한 번만 적는다', (글.match(/^# 날/gm) ?? []).length === 1);
+    검('그자리에적는다 — 두 줄이 다 남는다', 이력읽기(글).length === 2);
+    검('🔴 바로 적으므로 다음 사람이 그 자리에서 읽는다 — 끝에 몰아 적던 것이 흠이었다',
+      이력읽기(글).some((x) => x.주소 === 'https://a'));
+    try { fs.unlinkSync(임시); } catch { /* 지워졌으면 그만 */ }
+  }
+  검('⛔ 못 적으면 조용히 참이라고 하지 않는다',
+    그자리에적는다('x', path.join(os.tmpdir(), '없는폴더-' + process.pid, 'a.tsv')) === false);
+
   {
     const t = "# 머리\ndaoudata\t45\t6.2\t/company/daou-data\ngemvax\t13\t3.6\t/company/gemvax-and-kael\n";
     const d = 수요지면읽기(t);
@@ -364,6 +434,23 @@ if (나인가) {
     process.exit(0);
   }
 
+  /* 🔴 [2026-11-10] **자물쇠.** 예약 작업과 손으로 돌린 것이 겹쳐 같은 다섯 주소를
+     두 번씩 눌렀다. 이 문은 하루에 열 번 남짓밖에 못 여는데 그날 절반을 버린 셈이다.
+     ⚠ 두 시간이 지난 자물쇠는 죽은 것으로 보고 넘어간다 — 창이 죽으면 자물쇠만 남는다.
+     ⛔ 「자물쇠가 있다」를 깨진 것으로 세지 않는다. 그냥 안 하고 나간다(exit 0). */
+  const 자물쇠 = path.join(뿌리, 자물쇠길);
+  try {
+    if (fs.existsSync(자물쇠) && 자물쇠살았나(fs.readFileSync(자물쇠, 'utf8').trim())) {
+      console.log('⬜ 다른 자가 지금 색인 요청을 돌고 있다 — 겹쳐 누르지 않는다.');
+      console.log(`   (자물쇠 ${자물쇠길} · 두 시간이 지나면 저절로 풀린다)`);
+      process.exit(0);
+    }
+    fs.writeFileSync(자물쇠, new Date().toISOString(), 'utf8');
+  } catch { /* 자물쇠를 못 써도 일은 한다 — 막는 것이 목적이지 세우는 것이 아니다 */ }
+  const 자물쇠푼다 = () => { try { fs.unlinkSync(자물쇠); } catch { /* 이미 없다 */ } };
+  process.on('exit', 자물쇠푼다);
+  process.on('SIGINT', () => { 자물쇠푼다(); process.exit(130); });
+
   /* ② 서치콘솔 화면에서 누른다 — API 로는 못 한다 */
   const { createRequire } = await import('node:module');
   const require2 = createRequire('file:///C:/Users/User/Documents/GitHub/klifemap/package.json');
@@ -409,7 +496,10 @@ if (나인가) {
         });
       }
       console.log(`${받아들였나(말) ? '✅' : 할당량끝났나(말) ? '⛔' : '⚠'} ${x.주소.replace(/^https?:\/\/[^/]+/, '')} — ${말 ?? '구글이 아무 말도 안 했다'}`);
+      /* 🔴 [2026-11-10] **누른 그 자리에서 적는다.** 끝에 몰아 적던 탓에 같은 주소를
+         하루에 두 번 눌렀다(위 자물쇠 주석). 중간에 창이 죽어도 누른 기록은 남는다. */
       적을것.push(이력줄(x.주소, 말));
+      그자리에적는다(이력줄(x.주소, 말));
 
       await 탭.evaluate(() => {
         const e = [...document.querySelectorAll('[role="button"], button')]
@@ -422,11 +512,9 @@ if (나인가) {
     await 탭.close();
   } finally { await b.disconnect(); }
 
-  if (적을것.length) {
-    const p = path.join(뿌리, 이력길);
-    const 머리 = fs.existsSync(p) ? '' : '# 날\t주소\t구글이 한 말 (그대로)\n';
-    fs.appendFileSync(p, 머리 + 적을것.join('\n') + '\n', 'utf8');
-    console.log(`\n📈 이력에 ${적을것.length}줄 쌓았다 — ${이력길}`);
-  }
+  /* 🔴 [2026-11-10] 이력은 «누를 때마다» 그자리에적는다() 가 이미 적었다.
+     여기서 또 적으면 한 번 누른 것이 두 줄이 되어, 다음 사람이 두 번 누른 줄로 읽는다. */
+  if (적을것.length) console.log(`\n📈 이력에 ${적을것.length}줄 쌓았다 — ${이력길}`);
+  try { fs.unlinkSync(path.join(뿌리, 자물쇠길)); } catch { /* 없으면 그만 */ }
   console.log('⛔ 「요청했다」는 우리가 한 일이다. 색인됐는지는 사흘 뒤에 다시 잰다.');
 }

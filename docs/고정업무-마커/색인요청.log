@@ -834,3 +834,60 @@ Emitted 'error' event on ClientHttp2Stream instance at:
 }
 
 Node.js v26.3.1
+🔴 닫혔다  /school  아래 2,525장  — 크롤링됨 - 현재 색인이 생성되지 않음
+✅ 열렸다  /taiwan/companies  아래 1,057장  
+🔴 닫혔다  /university  아래 420장  — 크롤링됨 - 현재 색인이 생성되지 않음
+🔴 닫혔다  /major  아래 300장  — 크롤링됨 - 현재 색인이 생성되지 않음
+🔴 닫혔다  /region  아래 250장  — 크롤링됨 - 현재 색인이 생성되지 않음
+🔴 닫혔다  /age  아래 101장  — 크롤링됨 - 현재 색인이 생성되지 않음
+✅ 열렸다  /uae/companies  아래 104장  
+🔴 닫혔다  /work  아래 100장  — 크롤링됨 - 현재 색인이 생성되지 않음
+🔴 닫혔다  /rankings  아래 60장  — 크롤링됨 - 현재 색인이 생성되지 않음
+🔴 닫혔다  /all  아래 50장  — 크롤링됨 - 현재 색인이 생성되지 않음
+🔴 닫혔다  /research  아래 40장  — 크롤링됨 - 현재 색인이 생성되지 않음
+🔴 닫혔다  /articles  아래 900장  — 크롤링됨 - 현재 색인이 생성되지 않음
+🔴 닫혔다  /person  아래 800장  — 크롤링됨 - 현재 색인이 생성되지 않음
+🔴 닫혔다  /actors  아래 300장  — 크롤링됨 - 현재 색인이 생성되지 않음
+🔴 닫혔다  /data  아래 120장  — 크롤링됨 - 현재 색인이 생성되지 않음
+🔴 닫혔다  /all-ten  아래 60장  — 크롤링됨 - 현재 색인이 생성되지 않음
+🔴 닫혔다  /all  아래 1,295장  — 크롤링됨 - 현재 색인이 생성되지 않음
+
+■ 닫힌 문 15개 · 오늘 요청할 것 26개
+   /report/area/서울특별시-성북구  (아래 0.003장)
+   /equities  (아래 0.003장)
+   /report/area/대전광역시-유성구  (아래 0.003장)
+   /data/kospi-weights  (아래 0.002장)
+   /report/area/경기도-안양시-동안구  (아래 0.002장)
+   /report/area/충청남도-아산시  (아래 0.002장)
+   /report/area/부산광역시-해운대구  (아래 0.002장)
+   /report/area/경기도-안산시-단원구  (아래 0.002장)
+   /report/area/서울특별시-서대문구  (아래 0.002장)
+   /saju.html  (아래 0.001장)
+   /data/valuation  (아래 0.001장)
+   /article/what-is-in-netflix-top10-tsv-files  (아래 0.001장)
+   /mansecalendar.html  (아래 0.001장)
+   /data/target-price-accuracy  (아래 0.001장)
+   /companies  (아래 0.001장)
+   /born-in/november  (아래 0.001장)
+   /group  (아래 0.001장)
+   /astro.html  (아래 0.001장)
+   /article/korea-exports-grew-viewing-did-not  (아래 0.001장)
+   /exports  (아래 0.001장)
+   /staying-power  (아래 0장)
+   /most-popular  (아래 0장)
+   /star-sign/pisces  (아래 0장)
+   /title/reply-1988  (아래 0장)
+   /group/cortis  (아래 0장)
+   /group/i-dle  (아래 0장)
+✅ /report/area/서울특별시-성북구 — 우선순위 크롤링 대기열에 추가
+✅ /equities — 우선순위 크롤링 대기열에 추가
+✅ /report/area/대전광역시-유성구 — 우선순위 크롤링 대기열에 추가
+✅ /data/kospi-weights — 우선순위 크롤링 대기열에 추가
+✅ /report/area/경기도-안양시-동안구 — 우선순위 크롤링 대기열에 추가
+✅ /report/area/충청남도-아산시 — 우선순위 크롤링 대기열에 추가
+✅ /report/area/부산광역시-해운대구 — 우선순위 크롤링 대기열에 추가
+⛔ /report/area/경기도-안산시-단원구 — 할당량을 초과하여 이 요청을 처리할 수 없습니다. 내일 다시 제출해 주세요.
+⛔ 하루 한도다. 나머지는 내일 이 자가 다시 한다.
+
+📈 이력에 8줄 쌓았다 — docs/색인요청-이력.tsv
+⛔ 「요청했다」는 우리가 한 일이다. 색인됐는지는 사흘 뒤에 다시 잰다.
