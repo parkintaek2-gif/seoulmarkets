@@ -39,9 +39,36 @@ const CHROME = [
 const esc = (s) => String(s)
   .replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
 
+/**
+ * 그림을 어디서 찾을지. 만든다() 가 md 파일이 있는 폴더로 맞춰 준다.
+ * ⛔ 전역에 둔 이유 — 몸통만든다() 는 이미 여러 곳에서 «한 인자»로 불린다. 짝을 깨지 않는다.
+ */
+export let 그림뿌리 = process.cwd();
+export const 그림뿌리정한다 = (길) => { 그림뿌리 = 길; };
+
+/**
+ * 「![이름](경로)」를 **글자 안에 박힌 그림**으로 바꾼다.
+ * 🔴 왜 파일을 읽어서 박나 — setContent() 로 띄운 쪽은 바탕 주소가 없다.
+ *    `<img src="그림.svg">` 는 **아무것도 안 뜬 채** PDF 가 만들어지고, 아무 말도 안 한다.
+ *    그래서 파일을 읽어 data: 로 박는다. 못 읽으면 **못 찾았다고 글자로 남긴다** — 빈자리를 숨기지 않는다.
+ */
+export function 그림박기(길, 이름, 읽기, 있나, 뿌리 = 그림뿌리) {
+  if (/^(data:|https?:)/i.test(길)) return `<img src="${길}" alt="${이름}">`;
+  const 온길 = path.isAbsolute(길) ? 길 : path.join(뿌리, 길);
+  if (!있나(온길)) return `<em>[그림을 못 찾았다: ${이름 || 길}]</em>`;
+  const 종류 = /\.svg$/i.test(온길) ? 'image/svg+xml'
+    : /\.png$/i.test(온길) ? 'image/png'
+      : /\.jpe?g$/i.test(온길) ? 'image/jpeg' : 'application/octet-stream';
+  return `<img src="data:${종류};base64,${Buffer.from(읽기(온길)).toString('base64')}" alt="${이름}">`;
+}
+
 function 안쪽꾸밈(s) {
   let t = esc(s);
   t = t.replace(/`([^`]+)`/g, '<code>$1</code>');
+  /* ⛔ 그림(!)을 고리보다 «먼저» 본다 — 순서를 바꾸면 그림이 고리로 잡힌다 */
+  t = t.replace(/!\[([^\]]*)\]\(([^)\s]+)\)/g,
+    (_, 이름, 길) => 그림박기(길, 이름, (p) => fs.readFileSync(p), (p) => fs.existsSync(p)));
+  t = t.replace(/\[([^\]]+)\]\(([^)\s]+)\)/g, '<a href="$2">$1</a>');
   t = t.replace(/\*\*([^*]+)\*\*/g, '<strong>$1</strong>');
   t = t.replace(/(?<!\*)\*([^*\n]+)\*(?!\*)/g, '<em>$1</em>');
   return t;
@@ -162,6 +189,10 @@ const 판 = (제목, 몸통) => `<!doctype html><html lang="ko"><head><meta char
        padding: 5pt 7pt; border: 1px solid #1c2330; white-space: nowrap; }
   td { padding: 4.5pt 7pt; border: 1px solid #cfd6e0; vertical-align: top; }
   tbody tr:nth-child(even) td { background: #f6f8fb; }
+  /* 그림은 쪽을 넘기지 않게 줄인다 — 넘치면 조용히 잘린다 */
+  img { max-width: 100%; height: auto; display: block; margin: 8pt 0;
+        page-break-inside: avoid; }
+  a { color: #14478f; }
 </style></head><body>
 ${몸통}
 </body></html>`;
@@ -169,6 +200,8 @@ ${몸통}
 export async function 만든다(mdPath, outPath, 제목) {
   if (!CHROME) throw new Error('크롬/엣지를 못 찾았다 — PDF 를 만들 수 없다');
   const md = fs.readFileSync(mdPath, 'utf8');
+  /* 그림은 md 파일 «옆»에서 찾는다 — 어디서 부르든 같은 그림이 들어가야 한다 */
+  그림뿌리정한다(path.dirname(path.resolve(mdPath)));
   const html = 판(제목 || path.basename(mdPath, '.md'), 몸통만든다(md));
   const browser = await puppeteer.launch({ executablePath: CHROME, headless: 'new', args: ['--no-sandbox'] });
   try {
@@ -222,6 +255,23 @@ function 자가시험() {
   const h3 = 몸통만든다('| a | b |\n|---|---|\n| 하나 | 둘 | 셋 |');
   본다('칸이 넘치는 줄은 머리 수에 맞춘다', (h3.match(/<td>/g) || []).length === 2);
   본다('가름줄 없는 표는 표로 안 본다', !몸통만든다('| a | b |\n| c | d |').includes('<table>'));
+  /* ── 고리와 그림 (2026-11-10 사장님 — 「바로보기에 링크를 걸어야지」) ── */
+  const 고리 = 몸통만든다('**[JTBC 편성표 바로보기](https://jtbc.co.kr/schedule)**');
+  본다('[말](주소)를 고리로 건다', 고리.includes('<a href="https://jtbc.co.kr/schedule">JTBC 편성표 바로보기</a>'));
+  본다('고리 둘레의 굵게도 산다', 고리.includes('<strong><a '));
+  본다('주소의 & 를 막는다', 몸통만든다('[ㄱ](https://a.b?x=1&y=2)').includes('x=1&amp;y=2'));
+  /* 🔴 그림은 파일을 읽어서 박는다 — 바탕 주소가 없어 <img src="파일"> 은 안 뜬다 */
+  const 박힌것 = 그림박기('ㄱ.svg', '그림', () => '<svg/>', () => true, '/t');
+  본다('그림을 data: 로 박는다', 박힌것.startsWith('<img src="data:image/svg+xml;base64,'));
+  본다('그림 종류를 확장자로 가른다',
+    그림박기('ㄱ.png', '', () => 'x', () => true, '/t').includes('data:image/png'));
+  본다('data: 주소는 그대로 둔다',
+    그림박기('data:image/svg+xml;base64,AA', 'ㄱ', () => '', () => false) === '<img src="data:image/svg+xml;base64,AA" alt="ㄱ">');
+  본다('🔴 못 찾은 그림을 조용히 지우지 않는다',
+    /못 찾았다/.test(그림박기('없다.svg', '시청률', () => '', () => false, '/t')));
+  본다('그림(!)이 고리보다 먼저다',
+    몸통만든다('![ㄱ](data:image/png;base64,AA)').includes('<img ')
+    && !몸통만든다('![ㄱ](data:image/png;base64,AA)').includes('<a href'));
   본다('크롬을 찾았다', Boolean(CHROME));
   console.log(흠 ? `\n🔴 자가시험 ${흠}개 흠` : `\n✅ 자가시험 ${잰수}가지 다 지났다`);
   return 흠;
