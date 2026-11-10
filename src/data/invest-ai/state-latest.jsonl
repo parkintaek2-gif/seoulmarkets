@@ -1,4 +1,4 @@
-{"_state":true,"읽은날":"20261110","읽은때":"2026. 11. 10. 오전 10:10:06","건수":2218}
+{"_state":true,"읽은날":"20261110","읽은때":"2026. 11. 10. 오후 12:10:06","건수":2218}
 {"ts":"20261106","source":"우리 마켓데이터(재무·밸류에이션)","sourceId":"mkt:900250:2025:20261106","entity":{"market":"KOSDAQ","code":"900250"},"kind":"실적","direction":0,"strength":2,"horizon":90,"evidence":"차이나크리스탈신소재홀딩스 [적자·고마진] PBR 14.23 · ROE -0.4% · 매출 -31.9%(2024→2025)","model":"read-market-data/1.0"}
 {"ts":"20261106","source":"우리 마켓데이터(재무·밸류에이션)","sourceId":"mkt:105840:2025:20261106","entity":{"market":"KOSPI","code":"105840"},"kind":"실적","direction":0,"strength":1,"horizon":90,"evidence":"(주)우진 [저PBR] PBR 0.69 · PER 15.1 · ROE 4.6% · 매출 6.9%(2024→2025)","model":"read-market-data/1.0"}
 {"ts":"20261106","source":"우리 마켓데이터(재무·밸류에이션)","sourceId":"mkt:049800:2025:20261106","entity":{"market":"KOSPI","code":"049800"},"kind":"실적","direction":0,"strength":2,"horizon":90,"evidence":"(주)우진플라임 [저PBR·유동성주의] PBR 0.30 · PER 14.3 · ROE 2.1% · 매출 1.0%(2024→2025)","model":"read-market-data/1.0"}
