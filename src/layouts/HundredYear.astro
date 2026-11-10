@@ -167,9 +167,28 @@ const 광고안받는길 = 광고빼는지면.some((p) => 이지면 === p || 이
 const 손님길 = canonical.slice(ORIGIN.length) || '/';
 const 비편집길 = /^\/(terms|privacy|refund|contact|404)(\/|$)/.test(손님길);
 const 광고를부르나 = ADS.client !== '' && !noAds && !광고안받는길 && !비편집길;
-/** ins 하나당 한 번씩 광고 요청. 지면당 이 한 줄로 끝낸다(Base.astro 와 같은 자). */
+/**
+ * ins 하나당 한 번씩 광고 요청. 지면당 이 한 줄로 끝낸다(Base.astro 와 같은 자).
+ *
+ * 🔴 [2026-11-10 · 5번] **배포한 뒤에 재서 찾았다 — 답이 안 오는 칸이 있다.**
+ *   라이브 400px 에서 우리 칸이 `처리=done` 인데 `답(data-ad-status)=null` 인 채로
+ *   **385×385 빈 상자**로 남았다(20초 기다려 잼). 같은 지면의 자동 광고 칸은
+ *   `unfilled` 을 받아 접혔다. 서울마켓츠에서는 우리 칸도 `unfilled` 을 받는다.
+ *   ⇒ 사이트에 따라 답이 아예 안 오는 경우가 있다.
+ *
+ * ⭐ 400px 화면에서 385px 짜리 빈 상자는 **한 화면을 통째로 먹는다.**
+ *   사장님이 올인하라 하신 것이 체류시간인데, 광고를 넣은 날 그것을 깎으면 거꾸로 간 것이다.
+ *   CSS 는 `unfilled` 만 접는다 — 답이 «없는» 것은 못 접는다. 그래서 여기서 접는다.
+ *
+ * ⛔ 채워진 광고를 숨기지 않는다. 광고가 들어오면 구글이 `data-ad-status="filled"` 를
+ *   반드시 적는다. 그래서 「요청은 끝났는데(done) 답이 없는 것」만 접는다 — 숨길 광고가 없다.
+ * ⚠ 4초를 기다린다. 너무 짧으면 오는 광고를 접고, 너무 길면 빈 상자를 그만큼 보여 준다.
+ */
 const 광고요청 =
-  "document.querySelectorAll('ins.adsbygoogle').forEach(function(){(window.adsbygoogle=window.adsbygoogle||[]).push({})});";
+  "document.querySelectorAll('ins.adsbygoogle').forEach(function(){(window.adsbygoogle=window.adsbygoogle||[]).push({})});" +
+  "setTimeout(function(){document.querySelectorAll('ins.adsbygoogle').forEach(function(e){" +
+  "if(e.getAttribute('data-adsbygoogle-status')==='done'&&!e.getAttribute('data-ad-status')){e.style.display='none';}" +
+  "});},4000);";
 ---
 
 {/* prettier-ignore */}
