@@ -339,6 +339,11 @@
 
 .pricebox ul + p { margin-top: 18px; }
 
+.cite-line {
+  overflow-wrap: anywhere;
+  word-break: break-word;
+}
+
 .ad-slot {
   display: block;
   margin: 28px 0;

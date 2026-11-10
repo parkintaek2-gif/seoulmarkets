@@ -451,7 +451,7 @@ if (내가실행됐다 && !process.argv.includes('--자가시험')) {
     const 도 = await import('./check-감수도장.mjs');
     감수막을것 = 도.감수검사(도.감수대상, 도.도장모으기(
       fs.existsSync(도.도장길) ? fs.readFileSync(도.도장길, 'utf8') : ''
-    ), (p) => fs.readFileSync(p, 'utf8'));
+    ), (p) => fs.readFileSync(p, 'utf8'), (p) => fs.existsSync(p));
     console.log('\n' + 도.판정글(감수막을것));
   } catch (e) {
     // ⛔ 검사를 못 돌린 것을 «통과»로 세지 않는다
