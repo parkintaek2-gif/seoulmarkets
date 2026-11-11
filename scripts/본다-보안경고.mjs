@@ -1,0 +1,190 @@
+#!/usr/bin/env node
+/**
+ * 본다-보안경고.mjs — **보안 경고를 «내가» 본다. 사장님 메일함이 아니라 여기서.**
+ * ═══════════════════════════════════════════════════════════════════════════
+ * 🔴🔴 [2026-11-11 · 사장님]
+ *   「**침입이 매일 이뤄지는가, 정말? 왜 나한테 보안 경고 메일이 이리 자주오나?
+ *     늑대와 양치기 소년 얘기 알지? 네가 양치기 소년이 될 수 있다**」
+ *   「**내가 보안 경고 메일을 받는 것보다, 네가 보안 경고 알림을 받는 게 유용하다**」
+ *
+ * [사실대로 적는다]
+ *   끊는 것이 매일 있는 것은 맞다. 그러나 거의 전부가 **인터넷 배경 소음**이다 —
+ *   `/wp-login` · `/.env` · `/phpmyadmin` 을 기계가 온 세상 서버에 하나씩 두드린다.
+ *   우리를 노린 것이 아니라 주소 대역을 훑다 걸린 것이고, 공개된 서버면 다 겪는다.
+ *   ⛔ 그것을 날마다 「침입 시도」라는 제목으로 사장님께 보냈다. 한 시간에 한 통이면
+ *     하루 스물네 통이다. **그러면 진짜 늑대가 와도 안 열어 보신다.**
+ *
+ * [그래서 바꾼 것]
+ *   ```
+ *   일상(스캐너·탐침·훑기)   하루 한 통 · 5번에게만 · 그리고 «이 자»가 두 시간마다 보여 준다
+ *   급함(우리를 겨냥한 것)    그 자리에서 · 사장님께도 — AI 창구 겨냥 · SQL/명령 넣기 · 세 번째 재방문
+ *   ```
+ * ⛔ 메일함은 내가 안 읽는다. 그래서 이 자가 **두 시간 점검 화면**에 띄운다 —
+ *   내 눈앞에 오지 않는 알림은 없는 것과 같다(auto-1600-report 에서 배운 그대로다).
+ *
+ * ⚠ 열쇠가 없으면 **「괜찮다」가 아니라 「못 쟀다」**로 낸다.
+ * ⛔ 받은 주소·열쇠 값을 화면에 찍지 않는다. 수와 까닭만 적는다.
+ *
+ * 쓰는 법
+ *   node scripts/본다-보안경고.mjs
+ *   node scripts/본다-보안경고.mjs --자가시험
+ */
+import fs from 'node:fs';
+import path from 'node:path';
+
+const 뿌리 = path.resolve(import.meta.dirname, '..');
+/* 🔴🔴 [2026-11-11] **처음 주소는 `/api/admin/침입` 이었는데 아무도 못 열었다.**
+   주소에 든 한글을 브라우저·fetch 가 `%EC%B9%A8%EC%9E%85` 로 감싸 보내는데,
+   서버 쪽 길은 한글 글자 그대로라 둘이 안 맞았다. 11-05 에 만든 뒤로 줄곧 404 였다.
+   ⛔ 「만들었다」를 「닿는다」로 읽지 않는다. ⇒ 영문 길을 쓴다. */
+export const 창구 = 'https://klifemap.ai/api/admin/intrusions';
+/** 옛 길 — 라이브가 아직 안 올라갔으면 이쪽으로 한 번 더 두드려 본다 */
+export const 옛창구 = 'https://klifemap.ai/api/admin/' + encodeURIComponent('침입');
+
+/** 열쇠를 찾는다. ⛔ 값을 돌려만 주고 어디에도 찍지 않는다 */
+export function 열쇠찾기() {
+  for (const p of [path.join(뿌리, '..', 'klifemap', '.env'), path.join(뿌리, '.env')]) {
+    try {
+      const m = fs.readFileSync(p, 'utf8').match(/^SAJU_ADMIN_KEY\s*=\s*(.+)$/m);
+      if (m) return m[1].trim();
+    } catch { /* 없으면 다음 자리 */ }
+  }
+  return process.env.SAJU_ADMIN_KEY || '';
+}
+
+/**
+ * 「우리를 겨냥한 것」인가 — 서버 쪽 급한가() 와 **같은 뜻**이어야 한다.
+ * ⛔ 두 곳이 다르게 가르면, 사장님께 간 것과 내가 보는 것이 어긋난다.
+ *   그 어긋남은 아무도 눈치채지 못한 채 쌓인다.
+ */
+export function 겨냥한것인가(줄) {
+  const 까닭 = Array.isArray(줄?.까닭) ? 줄.까닭
+    : String(줄?.까닭 ?? 줄 ?? '').split(/,\s*/);
+  if (까닭.some((c) => String(c).startsWith('AI — '))) return true;
+  if (까닭.some((c) => c === 'SQL 넣기' || c === '명령 넣기')) return true;
+  if (Number(줄?.횟수) >= 3) return true;
+  return false;
+}
+
+/** 받은 셈을 읽기 좋게 간추린다 */
+export function 간추린다(셈) {
+  if (!셈 || typeof 셈 !== 'object') return null;
+  const 기록 = Array.isArray(셈.기록) ? 셈.기록 : [];
+  const 겨냥 = 기록.filter(겨냥한것인가);
+  const 까닭셈 = {};
+  for (const x of 기록) {
+    for (const c of (Array.isArray(x.까닭) ? x.까닭 : [])) {
+      const 묶음 = String(c).startsWith('스캐너 — ') ? '스캐너'
+        : String(c).startsWith('AI — ') ? 'AI 창구 겨냥' : String(c);
+      까닭셈[묶음] = (까닭셈[묶음] ?? 0) + 1;
+    }
+  }
+  return {
+    끊긴곳: Number(셈.끊긴수 ?? 셈.끊긴곳 ?? 0),
+    기록수: 기록.length,
+    겨냥수: 겨냥.length,
+    까닭: Object.entries(까닭셈).sort((a, b) => b[1] - a[1]),
+  };
+}
+
+export async function 받아온다(가져오기 = fetch) {
+  const 열쇠 = 열쇠찾기();
+  if (!열쇠) return { 못쟀다: '관리자 열쇠가 없다(SAJU_ADMIN_KEY)' };
+  let 마지막 = null;
+  for (const 길 of [창구, 옛창구]) {
+    try {
+      const r = await 가져오기(길, { headers: { 'x-admin-key': 열쇠 } });
+      if (r.ok) {
+        const j = await r.json();
+        if (!j || j.ok !== true) return { 못쟀다: '창구가 ok 를 안 냈다' };
+        return { 셈: j, 길 };
+      }
+      마지막 = `창구가 ${r.status} 를 냈다`;
+      /* ⛔ 401·403 은 열쇠 문제다 — 다른 길로 더 두드려 봐야 소용없다 */
+      if (r.status === 401 || r.status === 403) break;
+    } catch (e) { 마지막 = String(e?.message ?? e).slice(0, 80); }
+  }
+  return { 못쟀다: 마지막 ?? '못 닿았다' };
+}
+
+/* ───────────────────────── 화면 ───────────────────────── */
+
+async function 주다() {
+  if (process.argv.includes('--자가시험')) return 자가시험();
+
+  console.log('■ 보안 경고 — 사장님 메일함이 아니라 여기서 본다');
+  console.log('   🔴 사장님 (2026-11-11): 「내가 보안 경고 메일을 받는 것보다,');
+  console.log('      네가 보안 경고 알림을 받는 게 유용하다」\n');
+
+  const r = await 받아온다();
+  if (r.못쟀다) {
+    console.log(`⬜ 못 쟀다 — ${r.못쟀다}`);
+    console.log('   ⛔ 「못 쟀다」를 「괜찮다」로 읽지 않는다.');
+    process.exit(0);
+  }
+  const g = 간추린다(r.셈);
+  if (!g) { console.log('⬜ 못 쟀다 — 셈을 못 읽었다'); process.exit(0); }
+
+  console.log(`   지금 끊겨 있는 곳   ${g.끊긴곳}`);
+  console.log(`   들고 있는 기록      ${g.기록수}건`);
+  console.log('');
+  if (g.까닭.length) {
+    console.log('   무엇에 걸렸나');
+    for (const [c, n] of g.까닭.slice(0, 8)) console.log(`     ${String(c).padEnd(18)} ${n}건`);
+    console.log('');
+  }
+
+  if (g.겨냥수) {
+    console.log(`🔴🔴 **우리를 겨냥한 것 ${g.겨냥수}건** — 이것이 늑대다`);
+    console.log('   AI 창구 겨냥 · SQL/명령 넣기 · 두 번 끊기고 또 온 곳');
+    console.log('   ⇒ 사장님께도 그 자리에서 메일이 갔다. 내가 내용을 확인한다.');
+    process.exit(1);
+  }
+  console.log('✅ 우리를 겨냥한 것은 없다 — 전부 배경 소음이고 전부 막혔다.');
+  console.log('   ⚠ 이것을 「침입」이라 부르지 않는다. 공개된 서버면 어디나 겪는다.');
+  process.exit(0);
+}
+
+function 자가시험() {
+  let 통 = 0; let 탈 = 0;
+  const 검 = (이름, 참) => { if (참) { 통++; console.log('✅', 이름); } else { 탈++; console.log('🔴', 이름); } };
+
+  /* 🔴 서버 쪽 급한가() 와 뜻이 같아야 한다 — 다르면 사장님이 받으신 것과 내가 보는 것이 어긋난다 */
+  검('🔴 AI 창구 겨냥은 늑대다', 겨냥한것인가({ 까닭: ['AI — 앞 지시 무시'], 횟수: 1 }));
+  검('🔴 SQL 넣기는 늑대다', 겨냥한것인가({ 까닭: ['SQL 넣기'], 횟수: 1 }));
+  검('🔴 명령 넣기도 늑대다', 겨냥한것인가({ 까닭: ['명령 넣기'], 횟수: 1 }));
+  검('🔴 세 번째로 걸린 곳은 늑대다', 겨냥한것인가({ 까닭: ['탐침 주소'], 횟수: 3 }));
+  검('⛔ 탐침 주소 한 번은 늑대가 아니다 — 배경 소음이다',
+    !겨냥한것인가({ 까닭: ['탐침 주소'], 횟수: 1 }));
+  검('⛔ 스캐너 이름만으로는 늑대가 아니다',
+    !겨냥한것인가({ 까닭: ['스캐너 — sqlmap'], 횟수: 1 }));
+  검('⛔ 빈 것·null 에 안 터진다', !겨냥한것인가(null) && !겨냥한것인가({}));
+  검('⚠ 글자로 온 까닭도 읽는다', 겨냥한것인가({ 까닭: 'SQL 넣기, 탐침 주소', 횟수: 1 }));
+
+  /* ⛔ 열쇠 값을 어디에도 찍지 않는다 */
+  const 나 = fs.readFileSync(new URL(import.meta.url), 'utf8');
+  검('⛔ 열쇠 값을 찍는 자리가 없다',
+    !/console\.log\([^)]*(SAJU_ADMIN_KEY|열쇠찾기\(\)|열쇠\b)/.test(나));
+
+  검('간추리면 겨냥한 것을 센다', 간추린다({
+    끊긴수: 2,
+    기록: [
+      { 까닭: ['탐침 주소'], 횟수: 1 },
+      { 까닭: ['AI — 앞 지시 무시'], 횟수: 1 },
+    ],
+  }).겨냥수 === 1);
+  검('간추리면 까닭을 묶는다 — 스캐너는 이름별로 안 쪼갠다', (() => {
+    const g = 간추린다({ 기록: [{ 까닭: ['스캐너 — sqlmap'] }, { 까닭: ['스캐너 — nikto'] }] });
+    return g.까닭.length === 1 && g.까닭[0][0] === '스캐너' && g.까닭[0][1] === 2;
+  })());
+  검('⛔ 셈이 아니면 null 이다', 간추린다(null) === null && 간추린다('x') === null);
+
+  /* ⛔ 「못 쟀다」를 「괜찮다」로 읽지 않는다 */
+  검('⛔ 창구가 안 되면 못 쟀다로 낸다', 나.includes('못쟀다'));
+
+  console.log(탈 ? `\n🔴 자가시험 ${탈}건 탈` : `\n✅ 자가시험 ${통} 통과`);
+  process.exit(탈 ? 1 : 0);
+}
+
+const 나를직접돌렸나 = (process.argv[1] || '').replace(/\\/g, '/').endsWith('본다-보안경고.mjs');
+if (나를직접돌렸나) await 주다();
