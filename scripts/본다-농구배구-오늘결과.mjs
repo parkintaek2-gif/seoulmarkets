@@ -30,9 +30,12 @@ function 지금시각() {
 
 const 날 = process.argv[2] && /^\d{4}-\d{2}-\d{2}$/.test(process.argv[2]) ? process.argv[2] : 오늘날짜();
 
+/* ⚠ 주소는 2026-11-11 에 첫 화면의 메뉴를 «눌러서» 받아 적은 것이다.
+   ⛔ 주소를 지어내지 않는다 — 바뀌면 첫 화면에서 다시 받아 적는다. */
 const 볼곳 = [
   { 이름: 'KBL 첫 화면 — 그날 경기와 점수', 길: 'https://www.kbl.or.kr/' },
-  { 이름: 'KBL 팀 순위', 길: 'https://www.kbl.or.kr/game/team-rank' },
+  { 이름: 'KBL 팀기록 — 속공·턴오버·페인트존', 길: 'https://www.kbl.or.kr/record/team' },
+  { 이름: 'KBL 사진 — 그 경기 사진이 올라왔나', 길: 'https://www.kbl.or.kr/media/photo' },
   { 이름: 'KOVO 첫 화면 — 경기일정과 순위', 길: 'https://www.kovo.co.kr/' },
 ];
 
