@@ -9,7 +9,7 @@ tags: ["bts", "k-pop", "seoul", "busan", "daegu", "wikidata", "places"]
 pages:
   - "/hometowns"
   # 🔴 [2026-08-31] /bts-hometowns 가 구글에 «발견만» 상태였다 — 주소는 아는데 가지러 온 적이 없다.
-  #   그 지면은 제목부터 「Which BTS member is from Busan? Jimin and Jungkook」로 물음에 딱 답하는데,
+  #   그 페이지는 제목부터 「Which BTS member is from Busan? Jimin and Jungkook」로 물음에 딱 답하는데,
   #   정작 «색인되어 7위에 뜨는» 이 기사에서 그리로 가는 링크가 0개였다. 길이 끊겨 있었다.
   - "/bts-hometowns"
 sources:
