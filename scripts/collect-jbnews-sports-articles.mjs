@@ -3982,8 +3982,21 @@ ${자국줄}`, 'utf8');
             const r = spawnSync(process.execPath,
               [path.join(뿌리, 'scripts', '막힌기사-되살린다.mjs'), '--회차', x.시, '--까닭', String(x.까닭)],
               { cwd: 뿌리, encoding: 'utf8', timeout: 7 * 60 * 1000 });
-            const 끝줄 = String(r.stdout || '').trim().split('\n').slice(-1)[0] || '';
-            console.log('     ' + (r.status === 0 ? '✅ ' : '🔴 ') + 끝줄.slice(0, 110));
+            const 낸글 = (String(r.stdout || '') + String(r.stderr || '')).trim();
+            const 줄들 = 낸글.split('\n').map((s) => s.trimEnd()).filter(Boolean);
+            console.log('     ' + (r.status === 0 ? '✅ ' : '🔴 ') + (줄들.slice(-1)[0] || '').slice(0, 110));
+            /* 🔴🔴 [2026-11-12 · 5번] **까닭이 여기서 버려지고 있었다.**
+               되살리는 자의 마지막 줄은 「🔴 되돌리지 못했다 — 위 까닭을 본다」다.
+               그 «위 까닭»은 바로 앞 줄들에 찍혀 있는데 마지막 한 줄만 찍었다 —
+               로그에는 「위 까닭을 본다」만 남았고 볼 까닭은 어디에도 없었다.
+               그렇게 11-07 부터 닷새 동안 기사가 한 편도 안 나갔는데
+               **왜 안 나갔는지 아무 데도 안 적혀 있었다.**
+               ⛔ 못 한 일은 «왜 못 했는지»까지 적어야 적은 것이다. */
+            if (r.status !== 0) {
+              for (const 줄 of 줄들.slice(-8, -1)) console.log('       ' + 줄.slice(0, 160));
+              if (r.error) console.log('       ⛔ ' + String(r.error.message || r.error).slice(0, 160));
+              if (!줄들.length) console.log('       ⛔ 되살리는 자가 아무 말도 안 남겼다 — 터진 것이다');
+            }
           }
         } catch (e) {
           console.log('   ⬜ 되돌리지 못했다 — ' + String(e && e.message ? e.message : e).slice(0, 80));
