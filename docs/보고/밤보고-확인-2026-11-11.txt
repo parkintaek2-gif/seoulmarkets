@@ -1,0 +1,8 @@
+사장님,
+
+23시 업무보고가 안 나가 있었고, 제가 보내려 한 것도 실패했습니다.
+
+지금 상태 그대로 올립니다. 꾸며서 적지 않겠습니다.
+실패한 까닭: Command failed: node C:\Users\User\Documents\GitHub\dataeconomics\scripts\auto-2300-report.mjs --send
+
+5번(총괄) 올림

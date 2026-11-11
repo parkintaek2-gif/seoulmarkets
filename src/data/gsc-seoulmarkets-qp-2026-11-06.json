@@ -1,0 +1,1244 @@
+{
+  "site": "sc-domain:seoulmarkets.com",
+  "dimension": "query+page",
+  "window": {
+    "from": "2026-10-09",
+    "to": "2026-11-06",
+    "days": 28
+  },
+  "rowLimit": 25000,
+  "rows": [
+    {
+      "key": "deepnoid",
+      "page": "https://seoulmarkets.com/companies",
+      "impressions": 1,
+      "clicks": 1,
+      "position": 2
+    },
+    {
+      "key": "kidaristudio",
+      "page": "https://seoulmarkets.com/companies",
+      "impressions": 1,
+      "clicks": 1,
+      "position": 10
+    },
+    {
+      "key": "kostecsys",
+      "page": "https://seoulmarkets.com/companies",
+      "impressions": 2,
+      "clicks": 1,
+      "position": 5.5
+    },
+    {
+      "key": "neoimmunetech",
+      "page": "https://seoulmarkets.com/companies",
+      "impressions": 5,
+      "clicks": 1,
+      "position": 3.2
+    },
+    {
+      "key": "t&r biofab",
+      "page": "https://seoulmarkets.com/companies",
+      "impressions": 2,
+      "clicks": 1,
+      "position": 20
+    },
+    {
+      "key": "toolgen",
+      "page": "https://seoulmarkets.com/companies",
+      "impressions": 1,
+      "clicks": 1,
+      "position": 27
+    },
+    {
+      "key": "\"al ansari financial services pjsc\" -site:alansari.ae -site:facebook.com -site:instagram.com -site:threads.com -site:threads.net -site:linkedin.com -site:x.com -site:twitter.com -site:tiktok.com -site:youtube.com -site:youtu.be -site:reddit.com -site:t.me -site:telegram.me -site:telegram.org -site:pinterest.com -site:vimeo.com",
+      "page": "https://seoulmarkets.com/uae/companies",
+      "impressions": 3,
+      "clicks": 0,
+      "position": 5.666666666666667
+    },
+    {
+      "key": "\"al ansari financial services\" -site:alansari.ae -site:facebook.com -site:instagram.com -site:threads.com -site:threads.net -site:linkedin.com -site:x.com -site:twitter.com -site:tiktok.com -site:youtube.com -site:youtu.be -site:reddit.com -site:t.me -site:telegram.me -site:telegram.org -site:pinterest.com -site:vimeo.com",
+      "page": "https://seoulmarkets.com/uae/companies",
+      "impressions": 4,
+      "clicks": 0,
+      "position": 7.75
+    },
+    {
+      "key": "\"dong suh\" | \"dong suh foods corporation\"",
+      "page": "https://seoulmarkets.com/companies",
+      "impressions": 1,
+      "clicks": 0,
+      "position": 4
+    },
+    {
+      "key": "\"eirgenix\"",
+      "page": "https://seoulmarkets.com/taiwan/companies",
+      "impressions": 1,
+      "clicks": 0,
+      "position": 3
+    },
+    {
+      "key": "\"gc biopharma\"",
+      "page": "https://seoulmarkets.com/companies",
+      "impressions": 1,
+      "clicks": 0,
+      "position": 19
+    },
+    {
+      "key": "\"grand korea\"",
+      "page": "https://seoulmarkets.com/companies",
+      "impressions": 1,
+      "clicks": 0,
+      "position": 10
+    },
+    {
+      "key": "\"hanmi pharm\"",
+      "page": "https://seoulmarkets.com/companies",
+      "impressions": 1,
+      "clicks": 0,
+      "position": 6
+    },
+    {
+      "key": "\"hiroca\"",
+      "page": "https://seoulmarkets.com/taiwan/companies",
+      "impressions": 2,
+      "clicks": 0,
+      "position": 2
+    },
+    {
+      "key": "\"lx international\"",
+      "page": "https://seoulmarkets.com/companies",
+      "impressions": 1,
+      "clicks": 0,
+      "position": 15
+    },
+    {
+      "key": "\"machvision\"",
+      "page": "https://seoulmarkets.com/taiwan/companies",
+      "impressions": 1,
+      "clicks": 0,
+      "position": 3
+    },
+    {
+      "key": "\"meiloon industrial co.\" | \"meiloon industrial\" | \"meiloon\"",
+      "page": "https://seoulmarkets.com/taiwan/companies",
+      "impressions": 1,
+      "clicks": 0,
+      "position": 5
+    },
+    {
+      "key": "\"quintain steel\"",
+      "page": "https://seoulmarkets.com/taiwan/companies",
+      "impressions": 1,
+      "clicks": 0,
+      "position": 1
+    },
+    {
+      "key": "\"sbi investment korea\" acquisition or acquires or investment or invests or \"portfolio company\" -site:crunchbase.com -site:pitchbook.com -site:mergr.com -site:tracxn.com -site:cbinsights.com -site:zoominfo.com -site:dealroom.co -site:mergermarket.com -site:capitaliq.com -site:northdata.com -site:grokipedia.com -site:owler.com -site:linkedin.com -site:facebook.com -site:instagram.com -site:twitter.com -site:x.com -site:reddit.com -site:youtube.com -site:tiktok.com -site:pinterest.com -site:quora.com -site:wikipedia.org -site:glassdoor.com -site:indeed.com -site:jooble.org -site:expertini.com -site:jobly.fi",
+      "page": "https://seoulmarkets.com/companies",
+      "impressions": 1,
+      "clicks": 0,
+      "position": 8
+    },
+    {
+      "key": "\"sesoda corp.\" | \"sesoda\"",
+      "page": "https://seoulmarkets.com/taiwan/companies",
+      "impressions": 1,
+      "clicks": 0,
+      "position": 4
+    },
+    {
+      "key": "\"surplusglobal\" after:2026-10-11",
+      "page": "https://seoulmarkets.com/companies",
+      "impressions": 2,
+      "clicks": 0,
+      "position": 9.5
+    },
+    {
+      "key": "\"syncmold\" | \"syncmold enterprise\" | \"syncmold enterprise corp\"",
+      "page": "https://seoulmarkets.com/taiwan/companies",
+      "impressions": 1,
+      "clicks": 0,
+      "position": 5
+    },
+    {
+      "key": "\"taiwan sakura\"",
+      "page": "https://seoulmarkets.com/taiwan/companies",
+      "impressions": 1,
+      "clicks": 0,
+      "position": 4
+    },
+    {
+      "key": "\"tatung company\"",
+      "page": "https://seoulmarkets.com/taiwan/companies",
+      "impressions": 1,
+      "clicks": 0,
+      "position": 7
+    },
+    {
+      "key": "\"tung ho steel\" | \"tung ho steel enterprise\"",
+      "page": "https://seoulmarkets.com/taiwan/companies",
+      "impressions": 1,
+      "clicks": 0,
+      "position": 2
+    },
+    {
+      "key": "\"tyntek\" | \"tyntek corporation\"",
+      "page": "https://seoulmarkets.com/taiwan/companies",
+      "impressions": 1,
+      "clicks": 0,
+      "position": 2
+    },
+    {
+      "key": "\"young optics\" | \"young optics inc.\"",
+      "page": "https://seoulmarkets.com/taiwan/companies",
+      "impressions": 1,
+      "clicks": 0,
+      "position": 3
+    },
+    {
+      "key": "\"zeng hsing industrial co.\" | \"zeng hsing industrial\" | \"zeng hsing\"",
+      "page": "https://seoulmarkets.com/taiwan/companies",
+      "impressions": 1,
+      "clicks": 0,
+      "position": 6
+    },
+    {
+      "key": "006600",
+      "page": "https://seoulmarkets.com/company/sk-hynix",
+      "impressions": 1,
+      "clicks": 0,
+      "position": 58
+    },
+    {
+      "key": "2025년 결산(일본 4월~12월, 기타 1월~12월) 공시 매출 영업이익 순이익 영업이익률 억원 토요탄소 토카이카본 mersen sgl카본 sec카본 레조낙 gti heg gil mcc sumco sasol",
+      "page": "https://seoulmarkets.com/japan/company/tokai-carbon",
+      "impressions": 2,
+      "clicks": 0,
+      "position": 7
+    },
+    {
+      "key": "3198 最新ニュース 3198 企業動向 3198 株価ニュース",
+      "page": "https://seoulmarkets.com/japan/company/sfp-holdings",
+      "impressions": 1,
+      "clicks": 0,
+      "position": 9
+    },
+    {
+      "key": "^vkospi stock price",
+      "page": "https://seoulmarkets.com/article/vkospi-55-october-15-volatility-futures-barely-trade",
+      "impressions": 4,
+      "clicks": 0,
+      "position": 1
+    },
+    {
+      "key": "aica japan",
+      "page": "https://seoulmarkets.com/japan/company/aica-kogyo-company",
+      "impressions": 1,
+      "clicks": 0,
+      "position": 43
+    },
+    {
+      "key": "alchip",
+      "page": "https://seoulmarkets.com/taiwan/companies",
+      "impressions": 1,
+      "clicks": 0,
+      "position": 28
+    },
+    {
+      "key": "alps alpine co., ltd. earnings results",
+      "page": "https://seoulmarkets.com/japan/company/alps-alpine",
+      "impressions": 4,
+      "clicks": 0,
+      "position": 7
+    },
+    {
+      "key": "applied biocode",
+      "page": "https://seoulmarkets.com/taiwan/companies",
+      "impressions": 3,
+      "clicks": 0,
+      "position": 7
+    },
+    {
+      "key": "asia seed co. ltd",
+      "page": "https://seoulmarkets.com/company/asia-seed",
+      "impressions": 1,
+      "clicks": 0,
+      "position": 80
+    },
+    {
+      "key": "asian market data",
+      "page": "https://seoulmarkets.com/",
+      "impressions": 6,
+      "clicks": 0,
+      "position": 77.33333333333333
+    },
+    {
+      "key": "biggest company in korea",
+      "page": "https://seoulmarkets.com/article/korea-largest-listed-companies",
+      "impressions": 1,
+      "clicks": 0,
+      "position": 74
+    },
+    {
+      "key": "biggest korean companies",
+      "page": "https://seoulmarkets.com/article/korea-largest-listed-companies",
+      "impressions": 1,
+      "clicks": 0,
+      "position": 76
+    },
+    {
+      "key": "biggest korean companies",
+      "page": "https://seoulmarkets.com/data/largest-companies",
+      "impressions": 1,
+      "clicks": 0,
+      "position": 83
+    },
+    {
+      "key": "biggest south korean companies",
+      "page": "https://seoulmarkets.com/article/korea-largest-listed-companies",
+      "impressions": 1,
+      "clicks": 0,
+      "position": 74
+    },
+    {
+      "key": "biggest south korean companies",
+      "page": "https://seoulmarkets.com/data/largest-companies",
+      "impressions": 1,
+      "clicks": 0,
+      "position": 79
+    },
+    {
+      "key": "boditech",
+      "page": "https://seoulmarkets.com/companies",
+      "impressions": 1,
+      "clicks": 0,
+      "position": 14
+    },
+    {
+      "key": "boditech med",
+      "page": "https://seoulmarkets.com/companies",
+      "impressions": 5,
+      "clicks": 0,
+      "position": 16.8
+    },
+    {
+      "key": "caregen",
+      "page": "https://seoulmarkets.com/companies",
+      "impressions": 1,
+      "clicks": 0,
+      "position": 9
+    },
+    {
+      "key": "chuo seisakusho ltd",
+      "page": "https://seoulmarkets.com/japan/company/chuo-seisakusho",
+      "impressions": 1,
+      "clicks": 0,
+      "position": 14
+    },
+    {
+      "key": "curiox biosystems",
+      "page": "https://seoulmarkets.com/companies",
+      "impressions": 4,
+      "clicks": 0,
+      "position": 10.25
+    },
+    {
+      "key": "d&d pharmatech",
+      "page": "https://seoulmarkets.com/companies",
+      "impressions": 5,
+      "clicks": 0,
+      "position": 6.6
+    },
+    {
+      "key": "daewoong",
+      "page": "https://seoulmarkets.com/companies",
+      "impressions": 1,
+      "clicks": 0,
+      "position": 60
+    },
+    {
+      "key": "daoudata",
+      "page": "https://seoulmarkets.com/companies",
+      "impressions": 45,
+      "clicks": 0,
+      "position": 6.2
+    },
+    {
+      "key": "daoudata",
+      "page": "https://seoulmarkets.com/data/largest-companies",
+      "impressions": 29,
+      "clicks": 0,
+      "position": 6.448275862068965
+    },
+    {
+      "key": "dh autolead",
+      "page": "https://seoulmarkets.com/companies",
+      "impressions": 2,
+      "clicks": 0,
+      "position": 8
+    },
+    {
+      "key": "dic corporation earnings results",
+      "page": "https://seoulmarkets.com/japan/company/dic",
+      "impressions": 3,
+      "clicks": 0,
+      "position": 4.666666666666666
+    },
+    {
+      "key": "dohwa",
+      "page": "https://seoulmarkets.com/company/dohwa-engineering",
+      "impressions": 1,
+      "clicks": 0,
+      "position": 60
+    },
+    {
+      "key": "dongwoon anatech",
+      "page": "https://seoulmarkets.com/companies",
+      "impressions": 3,
+      "clicks": 0,
+      "position": 3.6666666666666665
+    },
+    {
+      "key": "eikei university",
+      "page": "https://seoulmarkets.com/taiwan/companies",
+      "impressions": 1,
+      "clicks": 0,
+      "position": 50
+    },
+    {
+      "key": "eluon",
+      "page": "https://seoulmarkets.com/companies",
+      "impressions": 1,
+      "clicks": 0,
+      "position": 1
+    },
+    {
+      "key": "emaar development pjsc\" (\"gambl\" or \"betting\" or \"lottery\" or \"loto\" or \"hawala\")",
+      "page": "https://seoulmarkets.com/uae/company/emaar-properties",
+      "impressions": 1,
+      "clicks": 0,
+      "position": 15
+    },
+    {
+      "key": "ferrotec holdings corporation earnings results",
+      "page": "https://seoulmarkets.com/japan/company/ferrotec",
+      "impressions": 1,
+      "clicks": 0,
+      "position": 6
+    },
+    {
+      "key": "fine semitech",
+      "page": "https://seoulmarkets.com/companies",
+      "impressions": 5,
+      "clicks": 0,
+      "position": 2.2
+    },
+    {
+      "key": "fukutome",
+      "page": "https://seoulmarkets.com/japan/company/fukutome-meat-packers",
+      "impressions": 2,
+      "clicks": 0,
+      "position": 47
+    },
+    {
+      "key": "fulin plastic industry (cayman) holding co., ltd. analyst price target disagreement",
+      "page": "https://seoulmarkets.com/taiwan/companies",
+      "impressions": 4,
+      "clicks": 0,
+      "position": 8.25
+    },
+    {
+      "key": "gemvax",
+      "page": "https://seoulmarkets.com/companies",
+      "impressions": 13,
+      "clicks": 0,
+      "position": 3.6153846153846154
+    },
+    {
+      "key": "geneone",
+      "page": "https://seoulmarkets.com/companies",
+      "impressions": 3,
+      "clicks": 0,
+      "position": 4
+    },
+    {
+      "key": "geneone life science",
+      "page": "https://seoulmarkets.com/companies",
+      "impressions": 3,
+      "clicks": 0,
+      "position": 8.666666666666668
+    },
+    {
+      "key": "gigalane",
+      "page": "https://seoulmarkets.com/companies",
+      "impressions": 4,
+      "clicks": 0,
+      "position": 4.75
+    },
+    {
+      "key": "hachijuni nagano bank ltd",
+      "page": "https://seoulmarkets.com/japan/company/hachijuni-nagano-bank",
+      "impressions": 1,
+      "clicks": 0,
+      "position": 63
+    },
+    {
+      "key": "hanon systems",
+      "page": "https://seoulmarkets.com/companies",
+      "impressions": 1,
+      "clicks": 0,
+      "position": 62
+    },
+    {
+      "key": "hanwool corporation",
+      "page": "https://seoulmarkets.com/company/hanwool-semiconductor",
+      "impressions": 1,
+      "clicks": 0,
+      "position": 42
+    },
+    {
+      "key": "helixmith",
+      "page": "https://seoulmarkets.com/companies",
+      "impressions": 2,
+      "clicks": 0,
+      "position": 8
+    },
+    {
+      "key": "helixmith engensis news october 2026",
+      "page": "https://seoulmarkets.com/companies",
+      "impressions": 1,
+      "clicks": 0,
+      "position": 6
+    },
+    {
+      "key": "how much money has hokkaidosenko.co.jp raised",
+      "page": "https://seoulmarkets.com/japan/company/hokkaidenko",
+      "impressions": 1,
+      "clicks": 0,
+      "position": 5
+    },
+    {
+      "key": "ilyang",
+      "page": "https://seoulmarkets.com/companies",
+      "impressions": 1,
+      "clicks": 0,
+      "position": 7
+    },
+    {
+      "key": "in krw",
+      "page": "https://seoulmarkets.com/japan/company/elements",
+      "impressions": 1,
+      "clicks": 0,
+      "position": 5
+    },
+    {
+      "key": "inventage lab",
+      "page": "https://seoulmarkets.com/companies",
+      "impressions": 2,
+      "clicks": 0,
+      "position": 3
+    },
+    {
+      "key": "isu abxis",
+      "page": "https://seoulmarkets.com/companies",
+      "impressions": 1,
+      "clicks": 0,
+      "position": 10
+    },
+    {
+      "key": "iwaki co., ltd. earnings results",
+      "page": "https://seoulmarkets.com/japan/company/iwaki",
+      "impressions": 1,
+      "clicks": 0,
+      "position": 10
+    },
+    {
+      "key": "japan maritime logistics services market",
+      "page": "https://seoulmarkets.com/japan/sector/marine-transportation",
+      "impressions": 1,
+      "clicks": 0,
+      "position": 78
+    },
+    {
+      "key": "jrc",
+      "page": "https://seoulmarkets.com/japan/company/jrc",
+      "impressions": 1,
+      "clicks": 0,
+      "position": 49
+    },
+    {
+      "key": "jry000a/i086#i-r",
+      "page": "https://seoulmarkets.com/japan/company/ir-japan-holdings",
+      "impressions": 1,
+      "clicks": 0,
+      "position": 94
+    },
+    {
+      "key": "js link inc",
+      "page": "https://seoulmarkets.com/company/js-link",
+      "impressions": 1,
+      "clicks": 0,
+      "position": 77
+    },
+    {
+      "key": "kangstem biotech",
+      "page": "https://seoulmarkets.com/companies",
+      "impressions": 2,
+      "clicks": 0,
+      "position": 8.5
+    },
+    {
+      "key": "katakura industries share price",
+      "page": "https://seoulmarkets.com/japan/company/katakura-industries",
+      "impressions": 1,
+      "clicks": 0,
+      "position": 28
+    },
+    {
+      "key": "kepco e&c",
+      "page": "https://seoulmarkets.com/companies",
+      "impressions": 1,
+      "clicks": 0,
+      "position": 13
+    },
+    {
+      "key": "kh neochem co., ltd. earnings results",
+      "page": "https://seoulmarkets.com/japan/company/kh-neochem",
+      "impressions": 1,
+      "clicks": 0,
+      "position": 8
+    },
+    {
+      "key": "kobayashi pharmaceutical co., ltd. earnings results",
+      "page": "https://seoulmarkets.com/japan/company/kobayashi-pharmaceutical",
+      "impressions": 1,
+      "clicks": 0,
+      "position": 5
+    },
+    {
+      "key": "komatsu matere co.,ltd. earnings results",
+      "page": "https://seoulmarkets.com/japan/company/komatsu-matere",
+      "impressions": 2,
+      "clicks": 0,
+      "position": 8.5
+    },
+    {
+      "key": "komipharm",
+      "page": "https://seoulmarkets.com/companies",
+      "impressions": 2,
+      "clicks": 0,
+      "position": 4
+    },
+    {
+      "key": "korea big companies",
+      "page": "https://seoulmarkets.com/data/largest-companies",
+      "impressions": 1,
+      "clicks": 0,
+      "position": 74
+    },
+    {
+      "key": "korea market",
+      "page": "https://seoulmarkets.com/",
+      "impressions": 6,
+      "clicks": 0,
+      "position": 73.83333333333333
+    },
+    {
+      "key": "korea trade",
+      "page": "https://seoulmarkets.com/article/korea-trade-surplus-four-partners-customs",
+      "impressions": 1,
+      "clicks": 0,
+      "position": 92
+    },
+    {
+      "key": "korea unemployment rate",
+      "page": "https://seoulmarkets.com/article/korea-youth-unemployment-fell-since-2016",
+      "impressions": 1,
+      "clicks": 0,
+      "position": 92
+    },
+    {
+      "key": "korean companies",
+      "page": "https://seoulmarkets.com/companies",
+      "impressions": 1,
+      "clicks": 0,
+      "position": 72
+    },
+    {
+      "key": "korean companies",
+      "page": "https://seoulmarkets.com/data/largest-companies",
+      "impressions": 8,
+      "clicks": 0,
+      "position": 79.75
+    },
+    {
+      "key": "korean companies in the us",
+      "page": "https://seoulmarkets.com/companies",
+      "impressions": 1,
+      "clicks": 0,
+      "position": 86
+    },
+    {
+      "key": "korean largest companies",
+      "page": "https://seoulmarkets.com/article/korea-largest-listed-companies",
+      "impressions": 1,
+      "clicks": 0,
+      "position": 78
+    },
+    {
+      "key": "korean largest companies",
+      "page": "https://seoulmarkets.com/data/largest-companies",
+      "impressions": 1,
+      "clicks": 0,
+      "position": 85
+    },
+    {
+      "key": "kospi components",
+      "page": "https://seoulmarkets.com/data/kospi-weights",
+      "impressions": 1,
+      "clicks": 0,
+      "position": 42
+    },
+    {
+      "key": "kospi holdings weight",
+      "page": "https://seoulmarkets.com/data/kospi-weights",
+      "impressions": 1,
+      "clicks": 0,
+      "position": 56
+    },
+    {
+      "key": "kospi index holdings",
+      "page": "https://seoulmarkets.com/data/kospi-weights",
+      "impressions": 1,
+      "clicks": 0,
+      "position": 60
+    },
+    {
+      "key": "ksing",
+      "page": "https://seoulmarkets.com/company/ksign",
+      "impressions": 1,
+      "clicks": 0,
+      "position": 54
+    },
+    {
+      "key": "kurabo industries",
+      "page": "https://seoulmarkets.com/japan/company/kurabo-industries",
+      "impressions": 1,
+      "clicks": 0,
+      "position": 46
+    },
+    {
+      "key": "kuriyama",
+      "page": "https://seoulmarkets.com/japan/company/kuriyama-holdings",
+      "impressions": 2,
+      "clicks": 0,
+      "position": 59.5
+    },
+    {
+      "key": "kusuri no aoki holdings co., ltd. earnings results",
+      "page": "https://seoulmarkets.com/japan/company/kusuri-no-aoki-holdings",
+      "impressions": 3,
+      "clicks": 0,
+      "position": 8.666666666666668
+    },
+    {
+      "key": "largest south korean companies",
+      "page": "https://seoulmarkets.com/article/korea-largest-listed-companies",
+      "impressions": 1,
+      "clicks": 0,
+      "position": 73
+    },
+    {
+      "key": "largest south korean companies",
+      "page": "https://seoulmarkets.com/data/largest-companies",
+      "impressions": 1,
+      "clicks": 0,
+      "position": 79
+    },
+    {
+      "key": "lianyou metals",
+      "page": "https://seoulmarkets.com/taiwan/companies",
+      "impressions": 3,
+      "clicks": 0,
+      "position": 6.666666666666667
+    },
+    {
+      "key": "ligachem",
+      "page": "https://seoulmarkets.com/companies",
+      "impressions": 4,
+      "clicks": 0,
+      "position": 7
+    },
+    {
+      "key": "mabuchi",
+      "page": "https://seoulmarkets.com/japan/company/mabuchi-motor",
+      "impressions": 1,
+      "clicks": 0,
+      "position": 84
+    },
+    {
+      "key": "medpacto",
+      "page": "https://seoulmarkets.com/companies",
+      "impressions": 1,
+      "clicks": 0,
+      "position": 1
+    },
+    {
+      "key": "mezzion",
+      "page": "https://seoulmarkets.com/companies",
+      "impressions": 2,
+      "clicks": 0,
+      "position": 4
+    },
+    {
+      "key": "mirarth holdings",
+      "page": "https://seoulmarkets.com/japan/company/mirarth-holdings",
+      "impressions": 1,
+      "clicks": 0,
+      "position": 48
+    },
+    {
+      "key": "mitsubishi materials corporation",
+      "page": "https://seoulmarkets.com/japan/company/mitsubishi-materials",
+      "impressions": 1,
+      "clicks": 0,
+      "position": 59
+    },
+    {
+      "key": "mitsuboshi kogyo co.,ltd. yoy growth revenue",
+      "page": "https://seoulmarkets.com/japan/company/mitsuboshi",
+      "impressions": 2,
+      "clicks": 0,
+      "position": 9
+    },
+    {
+      "key": "nagase group",
+      "page": "https://seoulmarkets.com/japan/company/nagase",
+      "impressions": 2,
+      "clicks": 0,
+      "position": 47
+    },
+    {
+      "key": "nagase japan",
+      "page": "https://seoulmarkets.com/japan/company/nagase",
+      "impressions": 1,
+      "clicks": 0,
+      "position": 34
+    },
+    {
+      "key": "nagawa ko",
+      "page": "https://seoulmarkets.com/japan/company/nagawa",
+      "impressions": 1,
+      "clicks": 0,
+      "position": 64
+    },
+    {
+      "key": "ncxx",
+      "page": "https://seoulmarkets.com/japan/company/ncxx-group",
+      "impressions": 1,
+      "clicks": 0,
+      "position": 143
+    },
+    {
+      "key": "nextbiomedical",
+      "page": "https://seoulmarkets.com/companies",
+      "impressions": 1,
+      "clicks": 0,
+      "position": 1
+    },
+    {
+      "key": "nexus 20 citech",
+      "page": "https://seoulmarkets.com/companies",
+      "impressions": 1,
+      "clicks": 0,
+      "position": 9
+    },
+    {
+      "key": "ngsco",
+      "page": "https://seoulmarkets.com/uae/company/adnoc-logistics-services",
+      "impressions": 1,
+      "clicks": 0,
+      "position": 51
+    },
+    {
+      "key": "nichirei corporation earnings results",
+      "page": "https://seoulmarkets.com/japan/company/nichirei",
+      "impressions": 1,
+      "clicks": 0,
+      "position": 10
+    },
+    {
+      "key": "nippon dry chemical",
+      "page": "https://seoulmarkets.com/japan/company/nippon-dry-chemical",
+      "impressions": 5,
+      "clicks": 0,
+      "position": 35.4
+    },
+    {
+      "key": "nippon express holdings,inc. earnings results",
+      "page": "https://seoulmarkets.com/japan/company/nippon-express-holdings",
+      "impressions": 8,
+      "clicks": 0,
+      "position": 10
+    },
+    {
+      "key": "nippon filcon",
+      "page": "https://seoulmarkets.com/japan/company/nippon-filcon",
+      "impressions": 1,
+      "clicks": 0,
+      "position": 42
+    },
+    {
+      "key": "nippon shinyaku",
+      "page": "https://seoulmarkets.com/japan/company/nippon-shinyaku",
+      "impressions": 1,
+      "clicks": 0,
+      "position": 51
+    },
+    {
+      "key": "nishimatsuya chain co., ltd. earnings results",
+      "page": "https://seoulmarkets.com/japan/company/nishimatsuya-chain",
+      "impressions": 7,
+      "clicks": 0,
+      "position": 8.285714285714285
+    },
+    {
+      "key": "nitto kohki co., ltd. earnings results",
+      "page": "https://seoulmarkets.com/japan/company/nitto-kohki",
+      "impressions": 1,
+      "clicks": 0,
+      "position": 10
+    },
+    {
+      "key": "nkgen",
+      "page": "https://seoulmarkets.com/companies",
+      "impressions": 4,
+      "clicks": 0,
+      "position": 4
+    },
+    {
+      "key": "nkgen biotech",
+      "page": "https://seoulmarkets.com/companies",
+      "impressions": 1,
+      "clicks": 0,
+      "position": 3
+    },
+    {
+      "key": "nxera pharma",
+      "page": "https://seoulmarkets.com/japan/company/nxera-pharma",
+      "impressions": 1,
+      "clicks": 0,
+      "position": 96
+    },
+    {
+      "key": "ohmori group",
+      "page": "https://seoulmarkets.com/japan/company/ohmori",
+      "impressions": 1,
+      "clicks": 0,
+      "position": 55
+    },
+    {
+      "key": "orum therapeutics",
+      "page": "https://seoulmarkets.com/companies",
+      "impressions": 1,
+      "clicks": 0,
+      "position": 6
+    },
+    {
+      "key": "pemtron",
+      "page": "https://seoulmarkets.com/companies",
+      "impressions": 1,
+      "clicks": 0,
+      "position": 6
+    },
+    {
+      "key": "peptron",
+      "page": "https://seoulmarkets.com/companies",
+      "impressions": 1,
+      "clicks": 0,
+      "position": 29
+    },
+    {
+      "key": "round one corp",
+      "page": "https://seoulmarkets.com/japan/company/round-one",
+      "impressions": 1,
+      "clicks": 0,
+      "position": 62
+    },
+    {
+      "key": "rznomics",
+      "page": "https://seoulmarkets.com/companies",
+      "impressions": 1,
+      "clicks": 0,
+      "position": 2
+    },
+    {
+      "key": "sakura rubber company",
+      "page": "https://seoulmarkets.com/japan/company/sakura-rubber",
+      "impressions": 1,
+      "clicks": 0,
+      "position": 68
+    },
+    {
+      "key": "salary",
+      "page": "https://seoulmarkets.com/company/dragonfly-gf",
+      "impressions": 1,
+      "clicks": 0,
+      "position": 1
+    },
+    {
+      "key": "samsung e&a",
+      "page": "https://seoulmarkets.com/companies",
+      "impressions": 2,
+      "clicks": 0,
+      "position": 81
+    },
+    {
+      "key": "samyang packaging corporation",
+      "page": "https://seoulmarkets.com/company/samyang-packaging",
+      "impressions": 1,
+      "clicks": 0,
+      "position": 82
+    },
+    {
+      "key": "screen japan",
+      "page": "https://seoulmarkets.com/japan/company/screen-holdings",
+      "impressions": 1,
+      "clicks": 0,
+      "position": 50
+    },
+    {
+      "key": "shinki group shiga",
+      "page": "https://seoulmarkets.com/japan/company/the-shiga-bank",
+      "impressions": 1,
+      "clicks": 0,
+      "position": 53
+    },
+    {
+      "key": "shinko shoji co., ltd. earnings results",
+      "page": "https://seoulmarkets.com/japan/company/shinko-shoji",
+      "impressions": 1,
+      "clicks": 0,
+      "position": 9
+    },
+    {
+      "key": "shinpoong",
+      "page": "https://seoulmarkets.com/companies",
+      "impressions": 1,
+      "clicks": 0,
+      "position": 3
+    },
+    {
+      "key": "shinwon",
+      "page": "https://seoulmarkets.com/companies",
+      "impressions": 3,
+      "clicks": 0,
+      "position": 61.333333333333336
+    },
+    {
+      "key": "six financial information sales japan",
+      "page": "https://seoulmarkets.com/japan/company/yossix-holdings",
+      "impressions": 3,
+      "clicks": 0,
+      "position": 32.66666666666667
+    },
+    {
+      "key": "smc mortgage corporation",
+      "page": "https://seoulmarkets.com/japan/company/mortgage-service-japan",
+      "impressions": 1,
+      "clicks": 0,
+      "position": 9
+    },
+    {
+      "key": "south korea api market",
+      "page": "https://seoulmarkets.com/api",
+      "impressions": 1,
+      "clicks": 0,
+      "position": 77
+    },
+    {
+      "key": "south korea enterprise file synchronization sharing market",
+      "page": "https://seoulmarkets.com/data",
+      "impressions": 1,
+      "clicks": 0,
+      "position": 98
+    },
+    {
+      "key": "south korea silicone rubber market",
+      "page": "https://seoulmarkets.com/companies",
+      "impressions": 1,
+      "clicks": 0,
+      "position": 75
+    },
+    {
+      "key": "south korea tic industry",
+      "page": "https://seoulmarkets.com/companies",
+      "impressions": 1,
+      "clicks": 0,
+      "position": 96
+    },
+    {
+      "key": "south korea time tracking software market",
+      "page": "https://seoulmarkets.com/article/korea-seoul-companies-lose-staff-fastest",
+      "impressions": 4,
+      "clicks": 0,
+      "position": 80.5
+    },
+    {
+      "key": "south korea womens healthcare market",
+      "page": "https://seoulmarkets.com/article/korean-sectors-female-workforce",
+      "impressions": 5,
+      "clicks": 0,
+      "position": 87.4
+    },
+    {
+      "key": "stella chemifa",
+      "page": "https://seoulmarkets.com/japan/company/stella-chemifa",
+      "impressions": 1,
+      "clicks": 0,
+      "position": 33
+    },
+    {
+      "key": "stella chemifa corporation earnings results",
+      "page": "https://seoulmarkets.com/japan/company/stella-chemifa",
+      "impressions": 11,
+      "clicks": 0,
+      "position": 9.363636363636363
+    },
+    {
+      "key": "sumitomo metal mining",
+      "page": "https://seoulmarkets.com/japan/company/sumitomo-metal-mining",
+      "impressions": 1,
+      "clicks": 0,
+      "position": 48
+    },
+    {
+      "key": "teikoku sen-i co., ltd. earnings results",
+      "page": "https://seoulmarkets.com/japan/company/teikoku-sen-i",
+      "impressions": 2,
+      "clicks": 0,
+      "position": 8.5
+    },
+    {
+      "key": "the hyakujushi bank, ltd.",
+      "page": "https://seoulmarkets.com/japan/company/the-hyakujushi-bank",
+      "impressions": 1,
+      "clicks": 0,
+      "position": 7
+    },
+    {
+      "key": "tokyo steel manufacturing co., ltd. earnings results",
+      "page": "https://seoulmarkets.com/japan/company/tokyo-steel-manufacturing",
+      "impressions": 1,
+      "clicks": 0,
+      "position": 4
+    },
+    {
+      "key": "tomocube",
+      "page": "https://seoulmarkets.com/companies",
+      "impressions": 3,
+      "clicks": 0,
+      "position": 23.333333333333332
+    },
+    {
+      "key": "tomony holdings, inc. (8600.t) stock related news articles",
+      "page": "https://seoulmarkets.com/japan/company/tomony-holdings",
+      "impressions": 4,
+      "clicks": 0,
+      "position": 9
+    },
+    {
+      "key": "toyo denki seizo",
+      "page": "https://seoulmarkets.com/japan/company/toyo-denki-seizo-k-k",
+      "impressions": 1,
+      "clicks": 0,
+      "position": 58
+    },
+    {
+      "key": "tsurumi manufacturing co., ltd. earnings results",
+      "page": "https://seoulmarkets.com/japan/company/tsurumi-manufacturing",
+      "impressions": 1,
+      "clicks": 0,
+      "position": 4
+    },
+    {
+      "key": "u m i o s",
+      "page": "https://seoulmarkets.com/japan/company/umios",
+      "impressions": 3,
+      "clicks": 0,
+      "position": 63.666666666666664
+    },
+    {
+      "key": "update best loan",
+      "page": "https://seoulmarkets.com/article/korea-loans-turned-variable",
+      "impressions": 1,
+      "clicks": 0,
+      "position": 8
+    },
+    {
+      "key": "who is the ceo of hokkaidosenko.co.jp",
+      "page": "https://seoulmarkets.com/japan/company/hokkaidenko",
+      "impressions": 3,
+      "clicks": 0,
+      "position": 9.666666666666666
+    },
+    {
+      "key": "y.l.h. expanded metal co.,ltd. number of employees and annual revenue",
+      "page": "https://seoulmarkets.com/company/yeonghwa-metal",
+      "impressions": 2,
+      "clicks": 0,
+      "position": 8
+    },
+    {
+      "key": "ycchem",
+      "page": "https://seoulmarkets.com/companies",
+      "impressions": 1,
+      "clicks": 0,
+      "position": 3
+    },
+    {
+      "key": "younghwa tech",
+      "page": "https://seoulmarkets.com/companies",
+      "impressions": 1,
+      "clicks": 0,
+      "position": 4
+    },
+    {
+      "key": "株式会社 デンソー 広瀬製作所 last known annual revenue",
+      "page": "https://seoulmarkets.com/japan/company/denso",
+      "impressions": 1,
+      "clicks": 0,
+      "position": 6
+    },
+    {
+      "key": "片山製作所 last known annual revenue",
+      "page": "https://seoulmarkets.com/japan/company/katakura-industries",
+      "impressions": 2,
+      "clicks": 0,
+      "position": 8
+    },
+    {
+      "key": "동진테크 last known annual revenue",
+      "page": "https://seoulmarkets.com/japan/company/technologies",
+      "impressions": 1,
+      "clicks": 0,
+      "position": 9
+    },
+    {
+      "key": "장오엔지니어링 total number of employees",
+      "page": "https://seoulmarkets.com/company/dohwa-engineering",
+      "impressions": 1,
+      "clicks": 0,
+      "position": 9
+    },
+    {
+      "key": "주식회사 비원아이 last known annual revenue",
+      "page": "https://seoulmarkets.com/company/wonik",
+      "impressions": 3,
+      "clicks": 0,
+      "position": 9.666666666666666
+    }
+  ]
+}

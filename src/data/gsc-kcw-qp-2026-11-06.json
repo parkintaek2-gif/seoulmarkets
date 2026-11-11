@@ -1,0 +1,54 @@
+{
+  "site": "sc-domain:kculturewire.com",
+  "dimension": "query+page",
+  "window": {
+    "from": "2026-10-09",
+    "to": "2026-11-06",
+    "days": 28
+  },
+  "rowLimit": 25000,
+  "rows": [
+    {
+      "key": "any other",
+      "page": "https://www.kculturewire.com/born-on/01-05",
+      "impressions": 1,
+      "clicks": 0,
+      "position": 2
+    },
+    {
+      "key": "more",
+      "page": "https://www.kculturewire.com/born-on/09-05",
+      "impressions": 1,
+      "clicks": 0,
+      "position": 4
+    },
+    {
+      "key": "корейские актеры",
+      "page": "https://www.kculturewire.com/born-on/04-20",
+      "impressions": 1,
+      "clicks": 0,
+      "position": 2
+    },
+    {
+      "key": "יש עוד?",
+      "page": "https://www.kculturewire.com/born-on/03-26",
+      "impressions": 1,
+      "clicks": 0,
+      "position": 5
+    },
+    {
+      "key": "كوري",
+      "page": "https://www.kculturewire.com/born-on/05-27",
+      "impressions": 1,
+      "clicks": 0,
+      "position": 7
+    },
+    {
+      "key": "還有嗎",
+      "page": "https://www.kculturewire.com/born-on/04-02",
+      "impressions": 1,
+      "clicks": 0,
+      "position": 6
+    }
+  ]
+}

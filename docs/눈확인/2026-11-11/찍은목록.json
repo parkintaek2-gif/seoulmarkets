@@ -1,16 +1,16 @@
 {
- "때": "2026-11-11T10:00:04.314Z",
+ "때": "2026-11-11T14:00:02.725Z",
  "난것": [
   {
    "집": "KLifeMap",
    "자리": "첫지면",
-   "그림": "C:\\Users\\User\\Documents\\GitHub\\dataeconomics\\docs\\눈확인\\2026-11-11\\1900-klifemap-첫지면.png",
+   "그림": "C:\\Users\\User\\Documents\\GitHub\\dataeconomics\\docs\\눈확인\\2026-11-11\\2300-klifemap-첫지면.png",
    "주소": "https://klifemap.ai/"
   },
   {
    "집": "KLifeMap",
    "자리": "로그인",
-   "그림": "C:\\Users\\User\\Documents\\GitHub\\dataeconomics\\docs\\눈확인\\2026-11-11\\1900-klifemap-로그인.png",
+   "그림": "C:\\Users\\User\\Documents\\GitHub\\dataeconomics\\docs\\눈확인\\2026-11-11\\2300-klifemap-로그인.png",
    "주소": "https://klifemap.ai/login.html?next=index.html",
    "누른글": "로그인",
    "흠": null
@@ -18,7 +18,7 @@
   {
    "집": "KLifeMap",
    "자리": "결제",
-   "그림": "C:\\Users\\User\\Documents\\GitHub\\dataeconomics\\docs\\눈확인\\2026-11-11\\1900-klifemap-결제.png",
+   "그림": "C:\\Users\\User\\Documents\\GitHub\\dataeconomics\\docs\\눈확인\\2026-11-11\\2300-klifemap-결제.png",
    "주소": "https://klifemap.ai/",
    "누른글": "요금안내",
    "흠": null
@@ -26,7 +26,7 @@
   {
    "집": "SeoulMarkets",
    "자리": "첫지면",
-   "그림": "C:\\Users\\User\\Documents\\GitHub\\dataeconomics\\docs\\눈확인\\2026-11-11\\1900-seoulmarkets-첫지면.png",
+   "그림": "C:\\Users\\User\\Documents\\GitHub\\dataeconomics\\docs\\눈확인\\2026-11-11\\2300-seoulmarkets-첫지면.png",
    "주소": "https://seoulmarkets.com/"
   },
   {
@@ -39,7 +39,7 @@
   {
    "집": "SeoulMarkets",
    "자리": "결제",
-   "그림": "C:\\Users\\User\\Documents\\GitHub\\dataeconomics\\docs\\눈확인\\2026-11-11\\1900-seoulmarkets-결제.png",
+   "그림": "C:\\Users\\User\\Documents\\GitHub\\dataeconomics\\docs\\눈확인\\2026-11-11\\2300-seoulmarkets-결제.png",
    "주소": "https://seoulmarkets.com/pricing",
    "누른글": "Pricing",
    "흠": null

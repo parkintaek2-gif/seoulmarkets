@@ -1,0 +1,48 @@
+{
+  "site": "sc-domain:kculturewire.com",
+  "dimension": "query",
+  "window": {
+    "from": "2026-10-09",
+    "to": "2026-11-06",
+    "days": 28
+  },
+  "rowLimit": 25000,
+  "rows": [
+    {
+      "key": "any other",
+      "impressions": 1,
+      "clicks": 0,
+      "position": 2
+    },
+    {
+      "key": "more",
+      "impressions": 1,
+      "clicks": 0,
+      "position": 4
+    },
+    {
+      "key": "корейские актеры",
+      "impressions": 1,
+      "clicks": 0,
+      "position": 2
+    },
+    {
+      "key": "יש עוד?",
+      "impressions": 1,
+      "clicks": 0,
+      "position": 5
+    },
+    {
+      "key": "كوري",
+      "impressions": 1,
+      "clicks": 0,
+      "position": 7
+    },
+    {
+      "key": "還有嗎",
+      "impressions": 1,
+      "clicks": 0,
+      "position": 6
+    }
+  ]
+}

@@ -1,0 +1,24 @@
+{
+  "site": "sc-domain:100yearmap.com",
+  "dimension": "query",
+  "window": {
+    "from": "2026-10-09",
+    "to": "2026-11-06",
+    "days": 28
+  },
+  "rowLimit": 25000,
+  "rows": [
+    {
+      "key": "경기 국제 통상 고등학교",
+      "impressions": 1,
+      "clicks": 0,
+      "position": 57
+    },
+    {
+      "key": "졸업생 진로 현황",
+      "impressions": 1,
+      "clicks": 0,
+      "position": 3
+    }
+  ]
+}

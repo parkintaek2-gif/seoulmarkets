@@ -1,0 +1,19 @@
+{
+  "site": "sc-domain:klifemap.ai",
+  "dimension": "query+page",
+  "window": {
+    "from": "2026-10-09",
+    "to": "2026-11-06",
+    "days": 28
+  },
+  "rowLimit": 25000,
+  "rows": [
+    {
+      "key": "사주",
+      "page": "https://klifemap.ai/",
+      "impressions": 1,
+      "clicks": 0,
+      "position": 6
+    }
+  ]
+}

@@ -1,0 +1,18 @@
+{
+  "site": "sc-domain:klifemap.ai",
+  "dimension": "page",
+  "window": {
+    "from": "2026-10-09",
+    "to": "2026-11-06",
+    "days": 28
+  },
+  "rowLimit": 25000,
+  "rows": [
+    {
+      "key": "https://klifemap.ai/",
+      "impressions": 33,
+      "clicks": 8,
+      "position": 7.636363636363637
+    }
+  ]
+}

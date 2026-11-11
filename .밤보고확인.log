@@ -1,0 +1,37 @@
+🔴 23시 업무보고가 «아직 안 나갔다»
+   ⇒ 먼저 메운다 — auto-2300-report.mjs --send
+🔴 오늘 원고가 없다 — docs/보고/업무보고-5번-2026-11-11-2300.md
+   ⛔ 지어내지 않는다. 사람 쪽(21:25 깨우기)이 쓰지 못한 것이다.
+   🔴 메우지 못했다 — Command failed: node C:\Users\User\Documents\GitHub\dataeconomics\scripts\auto-2300-report.mjs --send
+메일 — 보내는 주소 admin@klifedesign.net · 서비스 계정 search-console-sa@search-console-api-506305.iam.gserviceaccount.com
+✅ 위임 토큰 받았다 — 이 주소로 보낼 수 있다
+
+🔴 밖으로 나가는 글에 쓰면 안 되는 말이 들었다. **안 보낸다.**
+   🔴 본문(C:\Users\User\Documents\GitHub\dataeconomics\docs\보고\밤보고-확인-2026-11-11.txt)
+      ⛔ 「까닭」 1번 → 이유 · 원인
+         …  지금 상태 그대로 올립니다. 꾸며서 적지 않겠습니다. 실패한 까닭: Command failed: node C:\Users\Us …
+   ⚠ 사장님 2026-10-28 「웹, 업무보고서, pdf 등 모든 부분에서 … 절대적으로 적용」
+   ✅ 고친 뒤 다시 보낸다. 워드·PDF 는 원본을 고치고 «다시 만들어» 붙인다.
+node:internal/errors:998
+  const err = new Error(message);
+              ^
+
+Error: Command failed: node C:\Users\User\Documents\GitHub\dataeconomics\scripts\send-mail.mjs --받는곳=parkintaek2@gmail.com --제목=[확인] 23시 업무보고가 안 나갔고 메우지도 못했습니다 --글=C:\Users\User\Documents\GitHub\dataeconomics\docs\보고\밤보고-확인-2026-11-11.txt --흐르게 --보낸다
+    at genericNodeError (node:internal/errors:998:15)
+    at wrappedFn (node:internal/errors:543:14)
+    at checkExecSyncError (node:child_process:926:11)
+    at execFileSync (node:child_process:962:15)
+    at 주다 (file:///C:/Users/User/Documents/GitHub/dataeconomics/scripts/%ED%99%95%EC%9D%B8%ED%95%9C%EB%8B%A4-%EB%B0%A4%EB%B3%B4%EA%B3%A0-%EB%82%98%EA%B0%94%EB%82%98.mjs:134:3)
+    at file:///C:/Users/User/Documents/GitHub/dataeconomics/scripts/%ED%99%95%EC%9D%B8%ED%95%9C%EB%8B%A4-%EB%B0%A4%EB%B3%B4%EA%B3%A0-%EB%82%98%EA%B0%94%EB%82%98.mjs:179:20
+    at ModuleJob.run (node:internal/modules/esm/module_job:439:25)
+    at async node:internal/modules/esm/loader:646:26
+    at async asyncRunEntryPointWithESMLoader (node:internal/modules/run_main:101:5) {
+  status: 1,
+  signal: null,
+  output: [ null, null, null ],
+  pid: 52600,
+  stdout: null,
+  stderr: null
+}
+
+Node.js v26.3.1

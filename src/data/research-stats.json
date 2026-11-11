@@ -1,10 +1,10 @@
 {
-  "records": 2023,
+  "records": 2042,
   "first_day": "2026-06-29",
   "latest_day": "2026-11-11",
   "brokers": 21,
   "subjects": 578,
-  "with_target_price": 1726,
-  "generated_at_kst": "2026-11-11 10:00:30",
+  "with_target_price": 1744,
+  "generated_at_kst": "2026-11-12 01:00:13",
   "note": "scripts/build-research-index.mjs 가 만든다. 손으로 고치지 말 것 — 다음 실행에 덮인다."
 }
