@@ -1,4 +1,6 @@
 @echo off
+rem  🔴 [2026-11-11] 자리 번호가 없으면 send-mail 이 cs@ 로 떨어져 못 보낸다
+set "CLAUDE_SEAT=5"
 rem SeoulMarkets - keep the brokerage-research archive current (target prices are the product).
 rem
 rem WHY a Windows task and not a session cron:

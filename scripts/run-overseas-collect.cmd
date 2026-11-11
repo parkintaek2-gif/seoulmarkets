@@ -1,5 +1,7 @@
 @echo off
 chcp 65001 >nul
+rem  🔴 [2026-11-11] 자리 번호가 없으면 send-mail 이 cs@ 로 떨어져 못 보낸다
+set "CLAUDE_SEAT=5"
 rem ── 해외 자료 셋을 날마다 거둔다 (일본 EDINET · UAE ADX · 인도 NSE) ──────────
 rem
 rem  🔴🔴 왜 이 파일이 있나 (2026-11-05 · 5번)

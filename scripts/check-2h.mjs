@@ -1825,7 +1825,11 @@ if (내가실행됐다) {
        그 사이 1번·2번이 글을 올렸다면 한 줄도 못 받았다.
        ⛔ 사람은 조용한 실패를 못 본다. 세어서 말하게 한다. */
     'check-pull이-막혔나.mjs',
-    'check-kcw-memo-clock.mjs', 'check-selftest-counts.mjs', 'check-title-change-cooldown.mjs', 'check-session-entry-crlf.mjs'];
+    'check-kcw-memo-clock.mjs', 'check-selftest-counts.mjs', 'check-title-change-cooldown.mjs', 'check-session-entry-crlf.mjs',
+    /* [2026-11-11] 예약 배치에 CLAUDE_SEAT 이 없어 send-mail 이 cs@ 로 떨어졌다.
+       거둠 로그에 「위임 토큰을 못 받았다」가 520번 쌓였고 평일 닷새에 기사 스무 편이 안 나갔다.
+       같은 자가 줄바꿈(CRLF)도 함께 잰다 — LF 면 cmd 가 조용히 건너뛴다. */
+    'check-예약배치에-자리번호가-있나.mjs'];
   const 결과 = 검사들.map((자) => ({ 자, 통과: 돌리기(자) }));
   const 진것 = 결과.filter((r) => !r.통과).map((r) => r.자.replace(/^check-kcw-|\.mjs$/g, ''));
   console.log(줄('⑤', '검사 묶음', { 됐나: !진것.length, 말: 진것.length ? `걸린 것: ${진것.join(' · ')}` : `${결과.length}개 다 통과` }));

@@ -9,6 +9,8 @@ rem    task dies without a word. Six jobs died that way once.
 rem  * Entry point is daily-seo.mjs, which forwards to the Korean-named one.
 rem ------------------------------------------------------------------
 chcp 65001 >nul
+rem  🔴 [2026-11-11] 자리 번호가 없으면 send-mail 이 cs@ 로 떨어져 못 보낸다
+set "CLAUDE_SEAT=5"
 set PYTHONIOENCODING=utf-8
 cd /d C:\Users\User\Documents\GitHub\dataeconomics
 if errorlevel 1 exit /b 9

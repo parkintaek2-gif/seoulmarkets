@@ -85,6 +85,7 @@ export const 돌릴것 = [
   ['check-selftest-counts.mjs', '--자가시험'],
   ['check-seoulmarkets-silent-video.mjs', '--자가시험'],
   ['check-session-entry-crlf.mjs', '--자가시험'],
+  ['check-예약배치에-자리번호가-있나.mjs', '--자가시험'],
   ['check-template-leak.mjs', '--자가시험'],
   ['check-title-change-cooldown.mjs', '--자가시험'],
   ['check-title-spelling-match.mjs', '--자가시험'],

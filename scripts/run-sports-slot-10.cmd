@@ -1,4 +1,6 @@
 @echo off
+rem  🔴 [2026-11-11] 자리 번호가 없으면 send-mail 이 cs@ 로 떨어져 못 보낸다
+set "CLAUDE_SEAT=5"
 REM Run the 10:00 sports slot by hand, then collect and mail it.
 REM
 REM WHY (2026-09-26): the 10:00 scheduled task only fires on weekdays.

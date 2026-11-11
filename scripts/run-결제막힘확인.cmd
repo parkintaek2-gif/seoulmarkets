@@ -1,3 +1,5 @@
 @echo off
+rem  ðŸ”´ [2026-11-11] ìžë¦¬ ë²ˆí˜¸ê°€ ì—†ìœ¼ë©´ send-mail ì´ cs@ ë¡œ ë–¨ì–´ì ¸ ëª» ë³´ë‚¸ë‹¤
+set "CLAUDE_SEAT=5"
 cd /d "C:\Users\User\Documents\GitHub\dataeconomics"
-node "scripts\check-°áÁ¦¸·Èû-¿À·¡µÆ³ª.mjs" --¾Ë¸°´Ù >> "C:\Users\User\Documents\GitHub\dataeconomics\archive\°áÁ¦¸·Èû.log" 2>&1
+node "scripts\check-ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½-ï¿½ï¿½ï¿½ï¿½ï¿½Æ³ï¿½.mjs" --ï¿½Ë¸ï¿½ï¿½ï¿½ >> "C:\Users\User\Documents\GitHub\dataeconomics\archive\ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½.log" 2>&1

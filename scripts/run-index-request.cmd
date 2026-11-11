@@ -5,6 +5,8 @@ rem SKIPS the whole line while still returning exit code 0. Index requests silen
 rem stopped for 9 days this way (2026-10-23 .. 2026-11-01). The same fix went into
 rem run-jbnews-sports-collect.cmd on 2026-10-15 and never reached this file.
 chcp 65001 >nul
+rem  🔴 [2026-11-11] 자리 번호가 없으면 send-mail 이 cs@ 로 떨어져 못 보낸다
+set "CLAUDE_SEAT=5"
 REM Daily "ask Google to come back" run -- owner's instruction 2026-10-17:
 REM   "are you spending 2/3 of your work on what I told you to? do it" (visitor growth)
 REM

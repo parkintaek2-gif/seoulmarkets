@@ -1,4 +1,6 @@
 @echo off
+rem  🔴 [2026-11-11] 자리 번호가 없으면 send-mail 이 cs@ 로 떨어져 못 보낸다
+set "CLAUDE_SEAT=5"
 REM 직전판-찍는다.cmd — 10 minutes apart, snapshot both repositories.
 REM
 REM WHY (2026-11-11, owner): "always be able to roll back to the version just

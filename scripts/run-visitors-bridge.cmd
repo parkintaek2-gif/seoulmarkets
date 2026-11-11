@@ -1,6 +1,8 @@
 @echo off
 rem UTF-8 first -- this file is UTF-8 and the paths below contain Korean.
 rem Without chcp 65001 cmd reads them as CP949, skips the line, and still
+rem  🔴 [2026-11-11] 자리 번호가 없으면 send-mail 이 cs@ 로 떨어져 못 보낸다
+set "CLAUDE_SEAT=5"
 rem returns exit code 0. That is how index requests died quietly for 9 days.
 chcp 65001 >nul
 REM Bridge: send the three sites visitor counts to the KLifeMap admin screen.
