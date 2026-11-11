@@ -1,7 +1,7 @@
 적은날	잴날	무엇	어떻게	왜	잰날	결과
-2026-10-05	2026-10-19	일주 60장 색인	서치콘솔 klifemap.ai 에서 /ilju/ 로 시작하는 주소가 몇 장 색인됐나. 60장 중 몇 장인지 수로 적는다	닮은 몫이 우리 선(50%)을 넘었다(192쌍 중 65쌍, 최대 72.7%). 사장님께 2주 뒤 재서 판정하겠다고 올렸다		
-2026-10-05	2026-10-19	새 지면 72장 색인	서치콘솔에서 tojeong·sinsal·japsinsal·sonnal·sipseong·ages·yuksipgapja·sinnyeon-unse·cheongan-jiji 아홉 장이 색인됐나	2026-10-05 에 낸 지면이 실제로 구글에 들어갔는지 봐야 낸 보람을 안다		
-2026-10-05	2026-10-12	그룹 263장 제목 효과	서치콘솔 query+page 에서 members age 계열 말의 노출·클릭이 늘었나	제목의 콜론을 빼 members ages 를 연속으로 만들었다. 고쳤다는 것과 효과가 났다는 것은 다르다		
+2026-10-05	2026-10-19	일주 60장 색인	서치콘솔 klifemap.ai 에서 /ilju/ 로 시작하는 주소가 몇 장 색인됐나. 60장 중 몇 장인지 수로 적는다	닮은 몫이 우리 선(50%)을 넘었다(192쌍 중 65쌍, 최대 72.7%). 사장님께 2주 뒤 재서 판정하겠다고 올렸다	2026-11-12	90일 동안 노출 0장 · 노출 0 · 클릭 0 (주소는 /content/ilju-*). klifemap 전체도 90일에 77장 308노출 12클릭뿐이다
+2026-10-05	2026-10-19	새 지면 72장 색인	서치콘솔에서 tojeong·sinsal·japsinsal·sonnal·sipseong·ages·yuksipgapja·sinnyeon-unse·cheongan-jiji 아홉 장이 색인됐나	2026-10-05 에 낸 지면이 실제로 구글에 들어갔는지 봐야 낸 보람을 안다	2026-11-12	아홉 갈래(tojeong·sinsal·japsinsal·sonnal·sipseong·ages·yuksipgapja·sinnyeon-unse·cheongan-jiji) 모두 90일 노출 0장. 낸 보람이 아직 없다
+2026-10-05	2026-10-12	그룹 263장 제목 효과	서치콘솔 query+page 에서 members age 계열 말의 노출·클릭이 늘었나	제목의 콜론을 빼 members ages 를 연속으로 만들었다. 고쳤다는 것과 효과가 났다는 것은 다르다	2026-11-12	못 쟀다 — 검색어 칸이 익명화돼 28일에 검색어가 3~7개뿐이다. 대신 지면으로 쟀더니 /group/ 노출이 앞 30일 15장 21노출에서 뒤 28일 0으로 떨어졌다. 다만 사이트 전체가 같이 떨어져 제목 탓인지 가를 수 없다 — docs/발견/20261112-구글노출이-넉주째-떨어지고-AI가-구글을-앞질렀다.md
 2026-10-05	2027-01-02	신년운세 지면 해 바꾸기	klifemap 에서 node tools/신년운세지면-짓는다.mjs --해 2028 뒤 커밋·배포	해가 바뀌면 지난해 지면이 남는다		
 2026-10-05	2026-10-06	색인 요청 남은 일곱	node scripts/구글-색인요청.mjs 로 cheongan-jiji·ilju/·sinnyeon-unse·sinsal·sonnal·japsinsal·dollimja — 하루 한 장씩만 들어간다	10-05 09:35 에 yuksipgapja 하나만 들어가고 나머지는 할당량 초과. 구글 색인요청 할당량이 하루 한 장 수준이다 — 사이트맵 lastmod 와 링크가 본길이다	2026-10-12	오늘 몫 한 장을 «다른 데» 썼다 — articles/ko-1.html(새로 낸 글 입구 25쪽의 첫 장)에 넣었다. 까닭: 낱장 일곱보다 2,770장으로 가는 «문» 한 장이 먼저다. 남은 일곱(cheongan-jiji·ilju/·sinnyeon-unse·sinsal·sonnal·japsinsal·dollimja)은 그대로 남아 있다 — 하루 한 장씩 이어서 넣는다
 2026-10-05	2027-01-02	만 나이 지면 해 바꾸기	klifemap 에서 node tools/만나이지면-짓는다.mjs --해 2027 뒤 커밋·배포	해가 바뀌면 표의 나이가 한 살씩 틀린다		
