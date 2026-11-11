@@ -3688,11 +3688,17 @@ ${자국줄}`, 'utf8');
        ⚠ 못 읽으면 조용히 넘어간다 — 중복 검사가 안 된다고 거두기를 멈추지 않는다. */
     if (!사진없어도 && !D막.보내도되나(데스킹판정 ?? { 사진못찾음 })) {
       try {
-        const 오늘자국 = fs.readdirSync(자국방)
-          .filter((n) => n.startsWith(`${날}_`) && n.endsWith('시.txt'))
+        /* ⚠ 오늘 것만 보면 또 샌다 — 오늘 네 회차가 쓴 경기는 **어제 저녁에 보낸** 것이었다.
+           스포츠 기사는 전날 경기를 다음 날 아침에 싣는다. ⇒ 사흘 치를 본다. */
+        const 볼날 = [0, 1, 2].map((d) => {
+          const t = new Date(); t.setDate(t.getDate() - d);
+          return t.toLocaleDateString('sv-SE');
+        });
+        const 앞선자국 = fs.readdirSync(자국방)
+          .filter((n) => n.endsWith('시.txt') && 볼날.some((d) => n.startsWith(`${d}_`)))
           .map((n) => fs.readFileSync(path.join(자국방, n), 'utf8'))
           .join('\n');
-        const 겹친것 = 오늘자국.trim() ? 직전중복인가(오늘자국, 보낼제목, 본문) : null;
+        const 겹친것 = 앞선자국.trim() ? 직전중복인가(앞선자국, 보낼제목, 본문) : null;
         if (겹친것) {
           막는까닭 = `중복 — ${겹친것.말} (앞서: ${String(겹친것.앞선것).replace(/^\[스포츠\]\s*/, '').slice(0, 50)})`;
           console.log(`  ${시}시 ⛔ 까닭을 «중복»으로 바로잡는다 — 되살려도 같은 경기다`);
@@ -3946,7 +3952,28 @@ ${자국줄}`, 'utf8');
         try {
           const 살림 = await import('./막힌기사-되살린다.mjs');
           const 오늘날 = new Date().toLocaleDateString('sv-SE');
-          const 되돌릴것 = 요즘.filter((x) => x.날 === 오늘날 && 살림.되돌릴수있나(x.까닭));
+
+          /* 🔴🔴 [2026-11-11 · 5번] **한 회차를 하루에 네 번 되돌리고 있었다.**
+             거두기가 돌 때마다 같은 회차를 또 되돌렸다. 오늘 11·14·15·16시가
+             저마다 네 벌씩 로그에 쌓였다. 되돌릴 때마다 중부매일 계정에
+             3,500자짜리 지시가 들어가므로 **토큰이 네 배로 탄다.**
+             ⛔ 한 번 되돌렸으면 그 회차는 그날 다시 안 되돌린다 —
+               자국에 «[되돌림]»이 이미 있으면 건너뛴다.
+             ⚠ 다시 쓴 글이 와서 또 막히면 자국에 새 «[안보냄]»이 붙지만,
+               그래도 그날은 한 번만 되돌린다. 같은 지시를 또 주면 같은 글이 또 온다. */
+          const 이미되돌렸나 = (시각) => {
+            try {
+              const p = path.join(자국방, `${오늘날}_${시각}시.txt`);
+              return fs.existsSync(p) && fs.readFileSync(p, 'utf8').includes('[되돌림]');
+            } catch { return false; }
+          };
+
+          const 되돌릴것 = 요즘.filter((x) => x.날 === 오늘날 && 살림.되돌릴수있나(x.까닭))
+            .filter((x) => {
+              if (!이미되돌렸나(x.시)) return true;
+              console.log(`   ⬜ ${x.시}시는 오늘 이미 되돌렸다 — 또 안 보낸다(토큰을 태운다)`);
+              return false;
+            });
           if (!되돌릴것.length) {
             console.log('   ⬜ 오늘 것 가운데 되돌릴 수 있는 것이 없다');
           }
