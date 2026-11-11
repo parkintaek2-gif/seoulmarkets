@@ -1,5 +1,5 @@
-# 잰날 2026-11-07
-# 오늘셈 2
+# 잰날 2026-11-11
+# 오늘셈 4
 # ⛔ 이 파일을 지우면 「오늘 새로 난 지면」을 하루 동안 못 센다
 https://klifemap.ai/
 https://klifemap.ai/content
@@ -144,6 +144,10 @@ https://klifemap.ai/articles/zh-3.html
 https://klifemap.ai/articles/zh-4.html
 https://klifemap.ai/articles/zh-5.html
 https://klifemap.ai/today
+https://klifemap.ai/content/ilzin-2026-11-11
+https://klifemap.ai/content/ilzin-2026-11-10
+https://klifemap.ai/content/ilzin-2026-11-09
+https://klifemap.ai/content/ilzin-2026-11-08
 https://klifemap.ai/content/ilzin-2026-11-07
 https://klifemap.ai/content/ilzin-2026-11-06
 https://klifemap.ai/content/ilzin-2026-11-05
