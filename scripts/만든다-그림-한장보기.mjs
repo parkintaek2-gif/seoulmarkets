@@ -54,7 +54,7 @@ export function 화면짓기(것들, 제목) {
   figcaption{font-size:12px;color:#4a4540;padding:7px 9px;border-top:1px solid #efeae3}
 </style></head><body>
 <h1>${제목}</h1>
-<p class="note">원본은 docs/그림-연중기획/ 에 한 장씩 들어 있습니다. 신문 지면에는 쓰지 않습니다.</p>
+<p class="note">원본은 docs/그림-연중기획/ 에 한 장씩 들어 있습니다. 중부매일 기사 사진으로 쓰고, 캡션 끝에 「/ AI 생성 이미지」를 붙입니다.</p>
 <div class="grid">${칸}</div>
 </body></html>`;
 }
