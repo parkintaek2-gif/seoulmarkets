@@ -95,10 +95,22 @@ export function 로봇읽기(글) {
   return { 사이트맵, 예티를막나 };
 }
 
-/** 한 사이트를 재고 「무엇이 빠졌나」를 낸다 */
-export function 빠진것(터정보, 표, 로봇) {
+/**
+ * 한 사이트를 재고 「무엇이 빠졌나」를 낸다.
+ *
+ * 🔴🔴 [2026-11-12 · 5번] **지면의 표만 보고 「구글에 등록 안 됐다」고 날마다 울었다.**
+ * ─────────────────────────────────────────────────────────────────────
+ * 서치콘솔에 직접 물어 보니 네 곳이 **모두 DNS 로 소유확인이 돼 있었다**
+ * (`sc-domain:kculturewire.com` 따위). 소유확인은 지면의 표로도 하고 DNS 로도 한다 —
+ * **지면에 표가 없는 것이 정상인 등록 방식이 있다.**
+ * ⛔ 거짓 빨강이 쌓이면 진짜 빨강을 못 본다. 그래서 «밖에서 난 결과»를 함께 받는다.
+ * ⇒ `붙은엔진` 에 서치콘솔이 확인해 준 엔진을 담아 넘기면 빠진 것에서 뺀다.
+ * ⚠ 안 넘기면 예전처럼 지면만 본다 — 그때는 「표를 못 봤다」이지 「등록 안 됐다」가 아니다.
+ */
+export function 빠진것(터정보, 표, 로봇, 붙은엔진 = []) {
   if (!표) return null;                    /* 못 받았다 */
-  const 빠짐 = 터정보.꼭.filter((e) => !표[e]);
+  const 붙음 = new Set(붙은엔진 ?? []);
+  const 빠짐 = 터정보.꼭.filter((e) => !표[e] && !붙음.has(e));
   const 더 = [];
   if (로봇 && !로봇.사이트맵.length) 더.push('robots.txt 에 Sitemap: 줄이 없다');
   if (로봇 && 로봇.예티를막나) 더.push('🔴 robots.txt 가 네이버 봇(Yeti)을 막는다');
@@ -150,6 +162,21 @@ async function 자가시험() {
     A.deepEqual(r.빠진엔진, ['네이버']);
     A.equal(r.더.length, 0);
   });
+  /* 🔴 [2026-11-12] 서치콘솔이 확인해 준 엔진은 지면에 표가 없어도 빠진 것이 아니다 */
+  test('🔴 서치콘솔이 확인해 준 구글은 빠진 것에서 뺀다', () => {
+    const 표 = { 네이버: true, 구글: false, 빙: true };
+    const 로봇 = { 사이트맵: ['https://a/s.xml'], 예티를막나: false };
+    A.deepEqual(빠진것(사이트들[2], 표, 로봇, ['구글']).빠진엔진, []);
+  });
+  test('⛔ 안 넘기면 예전처럼 지면만 본다', () => {
+    const 표 = { 네이버: true, 구글: false, 빙: true };
+    const 로봇 = { 사이트맵: ['https://a/s.xml'], 예티를막나: false };
+    A.deepEqual(빠진것(사이트들[2], 표, 로봇).빠진엔진, ['구글']);
+  });
+  test('⛔ 붙은엔진이 비어도 안 터진다', () => {
+    const 표 = { 네이버: true, 구글: true, 빙: true };
+    A.deepEqual(빠진것(사이트들[2], 표, null, null).빠진엔진, []);
+  });
   test('⛔ 못 받았으면 null — 「빠졌다」가 아니다', () => {
     A.equal(빠진것(사이트들[0], null, null), null);
   });
@@ -177,6 +204,38 @@ if (process.argv.includes('--자가시험') || process.argv.includes('--selftest
     } catch { return null; }
   };
 
+  /* 🔴 [2026-11-12 · 5번] 구글은 «서치콘솔에 직접 물어» 본다 — 지면의 표는 등록 방식 하나일 뿐이다.
+     ⛔ 못 물으면 빈 묶음으로 둔다. 「못 물었다」를 「등록됐다」로도 「안 됐다」로도 읽지 않는다. */
+  const 서치콘솔붙은곳 = new Set();
+  try {
+    const { 토큰받기 } = await import('./fetch-gsc.mjs');
+    const { 토큰 } = await 토큰받기();
+    const r = await fetch('https://searchconsole.googleapis.com/webmasters/v3/sites', {
+      headers: { Authorization: `Bearer ${토큰}` }, signal: AbortSignal.timeout(20000),
+    });
+    const 답 = await r.json();
+    for (const s of (답.siteEntry ?? [])) 서치콘솔붙은곳.add(String(s.siteUrl ?? ''));
+    console.log('   ⭐ 서치콘솔에 직접 물었다 — 붙어 있는 속성 ' + 서치콘솔붙은곳.size + '개\n');
+  } catch (e) {
+    console.log('   ⬜ 서치콘솔에 못 물었다 — ' + String(e.message).slice(0, 60));
+    console.log('      ⛔ 「못 물었다」는 「등록 안 됐다」가 아니다. 지면의 표만 보고 적는다\n');
+  }
+  /** 그 터가 서치콘솔에 붙어 있나 — 도메인 꼴·주소 꼴 어느 쪽이든 */
+  const 서치콘솔에있나 = (터) => {
+    const 민낯 = String(터).replace(/^www\./, '');
+    return [...서치콘솔붙은곳].some((s) => s.includes(민낯));
+  };
+
+  /* IndexNow 보낸 기록 — ⛔ 못 읽으면 null. 「안 보냈다」가 아니다 */
+  let 인덱스나우기록 = null;
+  try {
+    const { readFileSync } = await import('node:fs');
+    const { fileURLToPath: 길 } = await import('node:url');
+    const { default: path2 } = await import('node:path');
+    const 뿌리2 = path2.resolve(path2.dirname(길(import.meta.url)), '..');
+    인덱스나우기록 = readFileSync(path2.join(뿌리2, 'docs', 'indexnow-보낸기록.tsv'), 'utf8');
+  } catch { 인덱스나우기록 = null; }
+
   let 흠 = 0; let 못잼 = 0;
   for (const x of 사이트들) {
     const html = await 받는다('https://' + x.터 + '/');
@@ -198,7 +257,36 @@ if (process.argv.includes('--자가시험') || process.argv.includes('--selftest
       console.log('      robots.txt    ⬜ 못 받았다 — 「막는다」가 아니라 못 쟀다');
     }
 
-    const r = 빠진것(x, 표, 로봇);
+    /* 🔴🔴 [2026-11-12 · 5번] **빙은 날마다 빨강이었는데 할 수 있는 일이 없었다.**
+       빙 웹마스터는 마이크로소프트 계정이 있어야 들어간다. 우리 크롬 둘 다 로그인이 없고
+       비밀번호는 내가 다루지 않는다 — 그래서 이 빨강은 넉 달째 그대로였다.
+       ⛔ 할 일이 없는 빨강은 소음이다. 진짜 빨강을 못 보게 만든다.
+       ⭐ 그런데 **빙에 지면을 알리는 길은 이미 돌고 있다** — IndexNow 다. 계정이 필요 없다.
+         소유확인 표가 여는 것은 «빙의 보고 화면»이지 색인 자체가 아니다.
+       ⇒ IndexNow 가 사흘 안에 그 터를 알렸으면 ⬜ 로 적고 흠으로 세지 않는다.
+         안 알렸으면 그때는 진짜 빨강이다. */
+    const 빙에알리고있나 = (터) => {
+      try {
+        const 글 = 인덱스나우기록;
+        if (!글) return false;
+        const 민낯 = String(터).replace(/^www\./, '');
+        const 사흘 = [0, 1, 2].map((d) => {
+          const t = new Date(); t.setDate(t.getDate() - d);
+          return `${t.getFullYear()}-${String(t.getMonth() + 1).padStart(2, '0')}-${String(t.getDate()).padStart(2, '0')}`;
+        });
+        return 글.split(/\r?\n/).some((줄) => 줄.includes(민낯) && 사흘.some((d) => 줄.startsWith(d)));
+      } catch { return false; }
+    };
+    const 붙은엔진 = 서치콘솔에있나(x.터) ? ['구글'] : [];
+    if (x.꼭.includes('빙') && !표.빙 && 빙에알리고있나(x.터)) {
+      console.log('      ⬜ 빙          표는 없다. 다만 IndexNow 로 사흘 안에 알렸다 —');
+      console.log('                     색인은 가고 있고, 못 보는 것은 빙의 보고 화면뿐이다');
+      붙은엔진.push('빙');
+    }
+    if (붙은엔진.length && !표.구글) {
+      console.log('      ✅ 구글        지면에 표는 없지만 «서치콘솔에 붙어 있다»(DNS 등록)');
+    }
+    const r = 빠진것(x, 표, 로봇, 붙은엔진);
     if (r.빠진엔진.length) {
       console.log('      🔴 ' + x.말 + ' 지면인데 ' + r.빠진엔진.join(' · ') + ' 표를 못 봤다');
       흠 += r.빠진엔진.length;
