@@ -2,13 +2,11 @@
   "autoCompactEnabled": true,
   "precomputeCompactionEnabled": true,
   "autoCompactWindow": 800000,
-
   "statusLine": {
     "type": "command",
     "command": "node \"C:/Users/USER/Documents/GitHub/dataeconomics/scripts/statusline-boss-pin.mjs\"",
     "padding": 0
   },
-
   "hooks": {
     "SessionStart": [
       {
@@ -27,9 +25,20 @@
           }
         ]
       }
+    ],
+    "Stop": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "node \"C:/Users/User/Documents/GitHub/dataeconomics/scripts/검사한다-내가-쓴-말.mjs\"",
+            "timeout": 15,
+            "statusMessage": "내가 쓴 말에 금지어가 있나"
+          }
+        ]
+      }
     ]
   },
-
   "permissions": {
     "defaultMode": "acceptEdits",
     "allow": [
