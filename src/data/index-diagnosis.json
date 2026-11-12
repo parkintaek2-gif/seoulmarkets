@@ -1,5 +1,5 @@
 {
-  "잰때": "2026. 11. 11. 오후 7:19:28",
+  "잰때": "2026. 11. 12. 오전 6:49:21",
   "사이트": {
     "klifemap": [
       {
@@ -111,7 +111,7 @@
         "오류": null
       },
       {
-        "주소": "https://klifemap.ai/content/taekil-moving-2027-02",
+        "주소": "https://klifemap.ai/content/ilzin-2026-10-12",
         "빛": "🔴",
         "말": "구글이 한 번도 안 왔다",
         "갈래": "발견안됨",
@@ -129,7 +129,7 @@
         "오류": null
       },
       {
-        "주소": "https://klifemap.ai/content/star-q60829936-saju-zh",
+        "주소": "https://klifemap.ai/content/star-q101161499-saju-zh",
         "빛": "🔴",
         "말": "구글이 한 번도 안 왔다",
         "갈래": "발견안됨",
@@ -222,11 +222,11 @@
       },
       {
         "주소": "https://seoulmarkets.com/data/smb-outlook-gap",
-        "빛": "🔴",
-        "말": "구글이 한 번도 안 왔다",
-        "갈래": "발견안됨",
-        "마지막크롤": null,
-        "덮개": "Discovered - currently not indexed",
+        "빛": "✅",
+        "말": "색인됐다",
+        "갈래": "색인됨",
+        "마지막크롤": "2026-11-11T11:22:26Z",
+        "덮개": "Submitted and indexed",
         "오류": null
       },
       {
@@ -249,11 +249,11 @@
       },
       {
         "주소": "https://seoulmarkets.com/data/gold-bar-premium",
-        "빛": "🔴",
-        "말": "구글이 한 번도 안 왔다",
-        "갈래": "발견안됨",
-        "마지막크롤": null,
-        "덮개": "Discovered - currently not indexed",
+        "빛": "✅",
+        "말": "색인됐다",
+        "갈래": "색인됨",
+        "마지막크롤": "2026-11-11T18:42:15Z",
+        "덮개": "Submitted and indexed",
         "오류": null
       },
       {
@@ -554,7 +554,7 @@
         "말": "구글이 한 번도 안 왔다",
         "갈래": "발견안됨",
         "마지막크롤": null,
-        "덮개": "URL is unknown to Google",
+        "덮개": "Discovered - currently not indexed",
         "오류": null
       },
       {
@@ -596,8 +596,8 @@
     ]
   },
   "갈래셈": {
-    "색인됨": 14,
+    "색인됨": 16,
     "왔는데색인안함": 31,
-    "발견안됨": 20
+    "발견안됨": 18
   }
 }
