@@ -38,7 +38,7 @@ export const 열여섯시 = 'trig_01ErSZQm2VhuNYMRBi3MCufF';
  * ⇒ 9/30 부터는 **11시 회차**에 시킨다. 11시 회차가 11:2x 에 스스로 돌고,
  *   그 뒤에 시키면 12시 안팎에 글이 나와 «14시까지» 넉넉히 보낸다.
  * ⛔ 14시 회차에 시키면 이미 14시다. 받으실 시각보다 «두 시간 앞선» 회차에 시킨다. */
-export const 열한시 = 'trig_01X5A3DCXwYi2T3bBosKTQnk';
+export const 열한시 = 'trig_01UW2RtJac77hBVz1tkgCQxN';
 /** 그날 몫을 어느 회차에 넣나 — 날짜로 고른다 */
 export function 넣을회차(날짜글) {
   return 날짜글 >= '2026-09-30' ? 열한시 : 열여섯시;

@@ -36,7 +36,7 @@ export const 당길분 = 35;
 export const 회차 = [
   ['09', 'trig_01GeyrdjqmGjtu3cCt6ynZHm'],
   ['10', 'trig_01QLALBiamUfmxWngeTULv12'],
-  ['11', 'trig_01X5A3DCXwYi2T3bBosKTQnk'],
+  ['11', 'trig_01UW2RtJac77hBVz1tkgCQxN'],
   ['14', 'trig_01RgAwm6L1q4nBhanUgz3s8N'],
   ['15', 'trig_01EwjhZx3AKXuEyHK82N9DEn'],
   ['16', 'trig_01ErSZQm2VhuNYMRBi3MCufF'],
