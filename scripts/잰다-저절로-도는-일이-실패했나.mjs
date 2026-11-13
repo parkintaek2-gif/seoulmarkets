@@ -63,6 +63,23 @@ export function 실패인가(결과) {
   return !실패아닌것.has(n);
 }
 
+/**
+ * 🔴🔴 [2026-11-14 · 5번] **주1회 일을 「이틀 넘게 안 돌았다」로 세고 있었다.**
+ *
+ * `KLifeDesign-미래에셋수집-주1회-월1840` 은 **월요일에만** 돈다. 11-09(월)에
+ * 제대로 돌았고 다음 차례는 11-16(월)이다. 멀쩡한데 노랑 칸에 앉아 있었다.
+ * ⇒ 노랑 칸도 믿을 수 없게 되고, 믿지 않는 칸은 없느니만 못하다.
+ *   오늘 아침 빨강 칸에서 똑같은 일을 겪었다 — [[거짓경보는-진짜경보를-죽인다]].
+ *
+ * ⇒ 그 일이 **얼마 만에 한 번 도는 일인지**를 읽어서 잣대를 그에 맞춘다.
+ *   날마다 도는 일은 이틀, 주1회 일은 보름. 「한 번 걸렀다」와 「죽었다」를 가른다.
+ */
+export function 잣대날수(주기일, 바닥 = 2) {
+  const n = Number(주기일);
+  if (!Number.isFinite(n) || n <= 0) return 바닥;   /* 주기를 못 읽으면 바닥을 쓴다 */
+  return Math.max(바닥, n * 2);
+}
+
 /** 마지막 실행이 너무 오래됐나 — 성공한 채로 «멈춘» 것이 더 위험하다 */
 export function 멈췄나(마지막, 이제 = new Date(), 며칠 = 2) {
   if (!마지막) return true;
@@ -109,6 +126,16 @@ if (process.argv.includes('--자가시험')) {
   본다('⛔ 1 은 여전히 빨강이다 — 2 만 봐준다', 실패인가(1) === true && 안했나(1) === false);
   본다('⛔ 글자 "2" 도 같게 읽는다 — 작업목록은 수를 글자로 준다', 안했나('2') === true);
 
+  /* 🔴 [2026-11-14] 주1회 일을 이틀 잣대로 재서 멀쩡한 것을 날마다 노랑으로 적었다 */
+  본다('🔴 주1회 일은 보름 잣대로 잰다', 잣대날수(7) === 14);
+  본다('⛔ 날마다 도는 일은 바닥(이틀)을 쓴다 — 하루×2 는 이틀보다 작지 않다', 잣대날수(1) === 2);
+  본다('⛔ 주기를 못 읽으면 바닥을 쓴다 — 짐작해서 봐주지 않는다',
+    잣대날수(0) === 2 && 잣대날수(null) === 2 && 잣대날수('abc') === 2 && 잣대날수(-5) === 2);
+  본다('🔴 주1회 일이 닷새 안 돌았다고 노랑이 되지 않는다',
+    멈췄나('2026-11-09T18:40:00+09:00', new Date('2026-11-14T07:30:00+09:00'), 잣대날수(7)) === false);
+  본다('🔴 그래도 한 달 걸렀으면 노랑이다 — 봐주는 것과 눈감는 것은 다르다',
+    멈췄나('2026-10-13T18:40:00+09:00', new Date('2026-11-14T07:30:00+09:00'), 잣대날수(7)) === true);
+
   const 이제 = new Date('2026-10-22T13:00:00+09:00');
   본다('🔴 이틀 넘게 안 돌았으면 멈춘 것이다',
     멈췄나('2026-10-19T00:20:00+09:00', 이제) === true);
@@ -149,7 +176,12 @@ const 며칠 = Number(process.argv[process.argv.indexOf('--며칠') + 1] || 2) |
 const 명령 = '[Console]::OutputEncoding=[Text.Encoding]::UTF8; '
   + '$ISO = { param($d) if ($null -eq $d) { $null } else { $d.ToString("yyyy-MM-ddTHH:mm:ssK") } }; '
   + 'Get-ScheduledTask | ForEach-Object { $t=$_; try { $i=Get-ScheduledTaskInfo -TaskName $t.TaskName -TaskPath $t.TaskPath -ErrorAction Stop } catch { return }; '
-  + '[pscustomobject]@{ n=$t.TaskName; s=$t.State.ToString(); last=(& $ISO $i.LastRunTime); code=$i.LastTaskResult; next=(& $ISO $i.NextRunTime) } } '
+  /* 🔴 [2026-11-14] 주기(며칠에 한 번 도나)를 같이 뽑는다 — 주1회 일을 이틀 잣대로
+     재면 멀쩡한 것이 날마다 노랑이 된다. 못 읽으면 0 을 넘겨 받는 쪽이 바닥을 쓴다. */
+  + '$CYCLE = { param($tt) $d=0; foreach ($g in $tt.Triggers) { '
+  + 'if ($g.DaysInterval) { if ($g.DaysInterval -gt $d) { $d=$g.DaysInterval } } '
+  + 'elseif ($g.WeeksInterval) { $w=$g.WeeksInterval*7; if ($w -gt $d) { $d=$w } } }; $d }; '
+  + '[pscustomobject]@{ n=$t.TaskName; s=$t.State.ToString(); last=(& $ISO $i.LastRunTime); code=$i.LastTaskResult; next=(& $ISO $i.NextRunTime); cycle=(& $CYCLE $t) } } '
   + '| ConvertTo-Json -Compress';
 
 let 목록;
@@ -167,8 +199,19 @@ const 실패 = 도는것.filter((x) => 실패인가(x.code));
 const 안함 = 도는것.filter((x) => 안했나(x.code));
 /* 🔴 [2026-11-13] 방금 건 일(267011 = 한 번도 안 돌았다)을 「멈췄다」로 적지 않는다 —
    오늘 건 알림 둘이 바로 노란불로 떴다. 걸자마자 거짓 경보가 나면 목록을 안 믿게 된다. */
+/**
+ * 🔴🔴 [2026-11-14 · 5번] **다 쓴 일회성 둘이 날마다 노랑을 내고 있었다.**
+ *   `SeoulMarkets-야구PO-나갔나` 와 `일요일지시-되돌리기` 는 2026-10-25 에 한 번
+ *   돌라고 건 일이다. 제 할 일을 마쳤고 **다음 차례가 없다**(NextRunTime 이 빈다).
+ *   그것을 「이틀 넘게 안 돌았다」로 적으면 멀쩡히 끝난 일이 날마다 노랑이 된다.
+ *
+ * ⚠ 그렇다고 눈감지 않는다 — **날마다 돌아야 할 일**의 다음 차례가 비었다면
+ *   그것은 고장이다(트리거가 만료됐다). 그래서 봐주는 것이 아니라 «따로» 적는다.
+ */
+const 차례없음 = 도는것.filter((x) => !실패인가(x.code) && !안했나(x.code) && !x.next);
 const 멈춤 = 도는것.filter((x) => !실패인가(x.code) && !안했나(x.code) && Number(x.code) !== 267011
-  && 멈췄나(x.last, 이제, 며칠));
+  && x.next
+  && 멈췄나(x.last, 이제, 잣대날수(x.cycle, 며칠)));
 
 console.log(`\n■ 저절로 도는 우리 일 ${우리것.length}개 (꺼 둔 것 ${꺼짐.length}개는 따로 센다)\n`);
 
@@ -183,10 +226,18 @@ const 적는다 = (제목, 줄들) => {
 };
 
 적는다(`🔴 결과가 0 이 아니다 — ${실패.length}개`, 실패);
-적는다(`🟡 ${며칠}일 넘게 안 돌았다 — ${멈춤.length}개`, 멈춤);
+/* ⛔ 제목에 「2일」을 박아 두지 않는다 — 일마다 잣대가 다르다(주1회는 보름).
+   재는 잣대를 틀리게 적으면 읽는 사람이 엉뚱한 결론을 낸다. */
+적는다(`🟡 제 주기의 곱절이 넘도록 안 돌았다 — ${멈춤.length}개 (날마다 도는 일은 ${며칠}일)`, 멈춤);
+적는다(`🟠 다음 차례가 없다 — ${차례없음.length}개 · 다시 돌지 않는다`, 차례없음);
 적는다(`🟦 뜻이 있어 «안 했다»(종료코드 ${안했다코드}) — ${안함.length}개 · 고장이 아니다`, 안함);
 
-if (!실패.length && !멈춤.length) console.log('✅ 걸어 둔 일이 모두 제대로 돌고 있다\n');
+if (차례없음.length) {
+  console.log('⛔ 🟠 를 그냥 넘기지 않는다 — 한 번만 돌라고 건 일이면 다 쓴 것이고(치운다),');
+  console.log('   날마다 돌아야 할 일이면 **트리거가 만료된 고장**이다. 둘을 손으로 가른다.\n');
+}
+
+if (!실패.length && !멈춤.length && !차례없음.length) console.log('✅ 걸어 둔 일이 모두 제대로 돌고 있다\n');
 
 console.log('⛔ 0 이 아닌 결과를 모두 「고장」으로 읽지 않는다 — 「할 것이 없다」로 1 을 내는 자가 있다.');
 console.log('⛔ 그래도 «보이게» 둔다. 2026-10-22 에 셋이 조용히 실패해 결제 점검·색인 요청·');
