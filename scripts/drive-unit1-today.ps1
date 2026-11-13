@@ -81,11 +81,26 @@ for ($i = 1; $i -le $Rounds; $i++) {
   Write-Line "--- round $i of $Rounds"
   $reply = ''
   try {
+    # RED [2026-11-14] The first version of this loop failed all 12 rounds without
+    # ever reaching unit 1. Cause: $ErrorActionPreference = 'Stop' at the top plus
+    # `2>&1` on a native .exe. Windows PowerShell 5.1 wraps every stderr line from a
+    # native command in an ErrorRecord (NativeCommandError) - and claude.exe writes a
+    # harmless sign-in warning to stderr on EVERY run. Under 'Stop' that warning is a
+    # terminating error, so each round went straight to catch. The log said "RED round
+    # N threw: Warning: this sign-in can end..." twelve times and nobody was driven.
+    #
+    # DO NOT set this back to Stop around a native command, and do not read a stderr
+    # line as failure - check the exit code instead.
+    $ErrorActionPreference = 'Continue'
     $reply = & claude --resume $SessionId -p $Order --permission-mode acceptEdits 2>&1 | Out-String
+    $code = $LASTEXITCODE
+    if ($code -ne 0) { Write-Line "RED round $i exited with $code" }
   } catch {
     Write-Line "RED round $i threw: $($_.Exception.Message)"
     Start-Sleep -Seconds 60
     continue
+  } finally {
+    $ErrorActionPreference = 'Stop'
   }
 
   $tail = ($reply -split "`n" | Where-Object { $_.Trim() -ne '' } | Select-Object -Last 3) -join ' | '
