@@ -18,7 +18,7 @@ const 열살 = ['0세', '1-9세', '10-19세', '20-29세', '30-39세', '40-49세'
 const 수 = (n: number | null | undefined) => (n == null ? '—' : n.toLocaleString('ko-KR', { maximumFractionDigits: 1 }));
 const 쉬운말 = (s: string) => String(s ?? '').replace(/고의적 자해\(자살\)/g, '스스로 목숨을 끊음').replace('알쯔하이머병', '알츠하이머병');
 const 찾 = (해: number, 성: string, 나이: string, 원인: string) => 칸들.find((x) => x.해 === 해 && x.성 === 성 && x.나이 === 나이 && x.사망원인 === 원인);
-const 출처 = '국가데이터처 사망원인통계(KOSIS DT_1B34E20 「연령대별 사망원인 순위」), 잰날 ' + 자료._메모.잰날;
+const 출처 = '국가데이터처 사망원인통계(KOSIS DT_1B34E20 「연령대별 사망원인」), 잰날 ' + 자료._메모.잰날;
 
 const 원인들 = ["악성신생물"];
 const 표 = 원인들.map((원인) => {
@@ -36,10 +36,10 @@ const 표 = 원인들.map((원인) => {
 });
 const 첫 = 표[0];
 const TITLE = `암 사망 나이대별 2025`;
-const desc = `2025년 사망원인통계로 암(악성신생물)으로 숨진 사람을 나이대별 남자·여자 사망률과 순위를 실었습니다. ` + 표.map((t) => `${쉬운말(t.원인)}: 사망률이 가장 높은 나이대 ${t.정점?.나이 ?? '미확인'}(10만 명당 ${수(t.정점?.계.사망률)}명)`).join(' · ') + '.';
+const desc = `2025년 사망원인통계로 암(악성신생물)으로 숨진 사람을 나이대별 남자·여자 사망률과 차례를 실었습니다. ` + 표.map((t) => `${쉬운말(t.원인)}: 사망률이 가장 높은 나이대 ${t.정점?.나이 ?? '미확인'}(10만 명당 ${수(t.정점?.계.사망률)}명)`).join(' · ') + '.';
 const jsonLd = [
   { '@context': 'https://schema.org', '@type': 'Dataset', name: TITLE, description: desc, creator: { '@type': 'GovernmentOrganization', name: '국가데이터처' }, isBasedOn: 'https://kosis.kr/statHtml/statHtml.do?orgId=101&tblId=DT_1B34E20', temporalCoverage: '2023/2025' },
-  { '@context': 'https://schema.org', '@type': 'FAQPage', mainEntity: 표.map((t) => ({ '@type': 'Question', name: `${쉬운말(t.원인)} 사망률은 어느 나이대가 가장 높은가요?`, acceptedAnswer: { '@type': 'Answer', text: `2025년 사망원인통계에서 순위표에 오른 나이대 가운데 ${t.정점?.나이 ?? '미확인'}이며 인구 10만 명당 ${수(t.정점?.계.사망률)}명입니다. 순위표 10위 밖인 나이대는 값을 알 수 없어 견주지 못했습니다.` } })) },
+  { '@context': 'https://schema.org', '@type': 'FAQPage', mainEntity: 표.map((t) => ({ '@type': 'Question', name: `${쉬운말(t.원인)} 사망률은 어느 나이대가 가장 높은가요?`, acceptedAnswer: { '@type': 'Answer', text: `2025년 사망원인통계에서 차례표에 오른 나이대 가운데 ${t.정점?.나이 ?? '미확인'}이며 인구 10만 명당 ${수(t.정점?.계.사망률)}명입니다. 차례표 10위 밖인 나이대는 값을 알 수 없어 견주지 못했습니다.` } })) },
 ];
 ---
 
@@ -58,7 +58,7 @@ const jsonLd = [
       <h2>{쉬운말(t.원인)} — 나이대별 남자·여자 2025</h2>
       <div class="tablewrap scroll">
         <table>
-          <thead><tr><th>나이대</th><th>남자 10만 명당</th><th>남자 순위</th><th>여자 10만 명당</th><th>여자 순위</th><th>남녀 합계 10만 명당 2023→2024→2025</th></tr></thead>
+          <thead><tr><th>나이대</th><th>남자 10만 명당</th><th>남자 차례</th><th>여자 10만 명당</th><th>여자 차례</th><th>남녀 합계 10만 명당 2023→2024→2025</th></tr></thead>
           <tbody>
             {t.줄.map((r) => (
               <tr>
@@ -86,12 +86,12 @@ const jsonLd = [
   <ul>
     <li><strong>이것은 통계이지 당신이 아닙니다.</strong> 한 해 동안 그 나이대에서 있었던 일을 센 값이며, 어느 개인에게 일어날 일을 말하지 않습니다.</li>
     <li>사망률은 그 나이대 인구 10만 명당 사망자 수입니다. 나이대마다 사람 수가 달라 나이대끼리는 사망률로 견줍니다.</li>
-    <li>순위표에는 나이대마다 상위 10개 원인만 있습니다. 10위 밖인 나이대는 사망자가 없다는 뜻이 아니라 값을 모른다는 뜻입니다.</li>
+    <li>차례표에는 나이대마다 상위 10개 원인만 있습니다. 10위 밖인 나이대는 사망자가 없다는 뜻이 아니라 값을 모른다는 뜻입니다.</li>
   </ul>
   <h2>이 숫자는 어디서 왔나요?</h2>
   <p class="note">{출처} · 2025년 확정 통계 기준 · 「—」는 원표가 그 칸을 내지 않았다는 뜻이며 0명이 아닙니다.</p>
 
-  <NextQuestionBrief 모은것="국가데이터처 사망원인통계 원표로 암(악성신생물)으로 숨진 사람을 나이대별 남녀 사망률과 순위를 정리한 표" />
+  <NextQuestionBrief 모은것="국가데이터처 사망원인통계 원표로 암(악성신생물)으로 숨진 사람을 나이대별 남녀 사망률과 차례를 정리한 표" />
 </HundredYear>
 
 <style>
