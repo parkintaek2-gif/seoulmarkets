@@ -25,8 +25,10 @@
 #    powershell -File scripts\drive-unit1-today.ps1 -DryRun
 # ============================================================
 param(
-  [int]$Rounds = 12,
+  [int]$Rounds = 1,
   [int]$EndHour = 21,
+  [int]$QuietMinutes = 70,
+  [switch]$Force,
   [switch]$DryRun
 )
 
@@ -60,6 +62,37 @@ if (-not (Test-Path $OrderFile)) {
   exit 1
 }
 $Order = Get-Content -Path $OrderFile -Raw -Encoding UTF8
+
+# -- RED [2026-11-14] do NOT nudge a seat that is already working ------------
+#    The first version of this driver assumed unit 1 goes idle after one turn.
+#    It does not: on 11-14 the seat kept going on its own and shipped a second
+#    article at 07:30 while this script was still firing at it. Two drivers on
+#    one session is how a transcript gets corrupted and work gets done twice.
+#
+#    The honest signal is the session's own transcript file: if it is still
+#    growing, that seat is busy. Silence is what needs a nudge, not activity.
+function Get-SessionQuietMinutes($id) {
+  $roots = @('C:\Users\User\.claude-u1\projects', 'C:\Users\USER\.claude-u1\projects')
+  $newest = $null
+  foreach ($root in $roots) {
+    if (-not (Test-Path $root)) { continue }
+    Get-ChildItem -Path $root -Filter "$id.jsonl" -Recurse -ErrorAction SilentlyContinue | ForEach-Object {
+      if ($null -eq $newest -or $_.LastWriteTime -gt $newest) { $newest = $_.LastWriteTime }
+    }
+  }
+  if ($null -eq $newest) { return $null }   # cannot tell - do not claim it is idle
+  return [math]::Round(((Get-Date) - $newest).TotalMinutes, 1)
+}
+
+$quiet = Get-SessionQuietMinutes $SessionId
+if ($null -eq $quiet) {
+  Write-Line "cannot find unit 1's transcript - will nudge rather than assume it is busy"
+} elseif ($quiet -lt $QuietMinutes -and -not $Force) {
+  Write-Line "unit 1 is working (its transcript moved $quiet min ago, threshold $QuietMinutes) - leaving it alone"
+  exit 0
+} else {
+  Write-Line "unit 1 has been quiet for $quiet min - nudging"
+}
 
 Write-Line "=== driving unit 1 - session $SessionId - up to $Rounds rounds, until ${EndHour}:00"
 
