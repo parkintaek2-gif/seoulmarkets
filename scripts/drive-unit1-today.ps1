@@ -27,7 +27,13 @@
 param(
   [int]$Rounds = 1,
   [int]$EndHour = 21,
-  [int]$QuietMinutes = 70,
+  # RED [2026-11-14] 70 was far too generous. Measured: one headless turn of unit 1
+  # runs about 30 min (write + build + deploy + IndexNow), and the seat does NOTHING
+  # between turns - the window just waits for input. At 70 min the seat sat idle for
+  # 45 min before anything would have nudged it, which on a 24-article day is an hour lost.
+  # While a turn IS running the transcript keeps growing, so a short threshold is safe:
+  # it can only fire when the seat is genuinely silent.
+  [int]$QuietMinutes = 25,
   [switch]$Force,
   [switch]$DryRun
 )
