@@ -1,0 +1,101 @@
+---
+/**
+ * /100y/accident-death-by-age — 운수 사고·추락·익사 사망 나이대별 2025 (롱테일, 축 「나이대별 사망원인」 death-causes 에 딸림)
+ *
+ * ── 왜 만들었나 (2026-11-14 · 1번) ──────────────
+ * death-causes 지면은 남녀 합계 1~5위만 낸다. 같은 원표(KOSIS DT_1B34E20)에 있는
+ * 남자·여자 칸과 2023~2025 세 해를 나이대로 갈라 낸다. 숫자는 death-causes-by-age.json 에서 그대로 옮긴다.
+ *
+ * ⛔ 까닭을 지어내지 않는다. ⛔ 「10위 밖」은 0 이 아니라 «원표가 그 칸을 내지 않음»이다.
+ */
+import HundredYear from '../../../layouts/HundredYear.astro';
+import NextQuestionBrief from '../../../components/NextQuestionBrief.astro';
+import 원본 from '../../../data/100yearmap/death-causes-by-age.json';
+
+const 자료 = 원본 as any;
+const 칸들 = 자료.칸들 as any[];
+const 열살 = ['0세', '1-9세', '10-19세', '20-29세', '30-39세', '40-49세', '50-59세', '60-69세', '70-79세', '80세 이상'];
+const 수 = (n: number | null | undefined) => (n == null ? '—' : n.toLocaleString('ko-KR', { maximumFractionDigits: 1 }));
+const 쉬운말 = (s: string) => String(s ?? '').replace(/고의적 자해\(자살\)/g, '스스로 목숨을 끊음').replace('알쯔하이머병', '알츠하이머병');
+const 찾 = (해: number, 성: string, 나이: string, 원인: string) => 칸들.find((x) => x.해 === 해 && x.성 === 성 && x.나이 === 나이 && x.사망원인 === 원인);
+const 출처 = '국가데이터처 사망원인통계(KOSIS DT_1B34E20 「연령대별 사망원인 순위」), 잰날 ' + 자료._메모.잰날;
+
+const 원인들 = ["운수 사고","추락","불의의 물에 빠짐(익사)"];
+const 표 = 원인들.map((원인) => {
+  const 줄 = 열살.map((나이) => {
+    const 남 = 찾(2025, '남자', 나이, 원인);
+    const 여 = 찾(2025, '여자', 나이, 원인);
+    const 계 = 찾(2025, '계', 나이, 원인);
+    return { 나이, 남, 여, 계, 계23: 찾(2023, '계', 나이, 원인), 계24: 찾(2024, '계', 나이, 원인) };
+  });
+  const 둘다 = 줄.filter((r) => r.남?.사망률 != null && r.여?.사망률 != null);
+  const 남높 = 둘다.filter((r) => r.남.사망률 > r.여.사망률).length;
+  const 정점 = 줄.filter((r) => r.계?.사망률 != null).sort((a, b) => b.계.사망률 - a.계.사망률)[0];
+  const 전체 = 찾(2025, '계', '전체', 원인);
+  return { 원인, 줄, 둘다, 남높, 정점, 전체 };
+});
+const 첫 = 표[0];
+const TITLE = `운수 사고·추락·익사 사망 나이대별 2025`;
+const desc = `2025년 사망원인통계로 운수 사고·추락·익사로 숨진 사람을 나이대별 남자·여자 사망률과 순위를 실었습니다. ` + 표.map((t) => `${쉬운말(t.원인)}: 사망률이 가장 높은 나이대 ${t.정점?.나이 ?? '미확인'}(10만 명당 ${수(t.정점?.계.사망률)}명)`).join(' · ') + '.';
+const jsonLd = [
+  { '@context': 'https://schema.org', '@type': 'Dataset', name: TITLE, description: desc, creator: { '@type': 'GovernmentOrganization', name: '국가데이터처' }, isBasedOn: 'https://kosis.kr/statHtml/statHtml.do?orgId=101&tblId=DT_1B34E20', temporalCoverage: '2023/2025' },
+  { '@context': 'https://schema.org', '@type': 'FAQPage', mainEntity: 표.map((t) => ({ '@type': 'Question', name: `${쉬운말(t.원인)} 사망률은 어느 나이대가 가장 높은가요?`, acceptedAnswer: { '@type': 'Answer', text: `2025년 사망원인통계에서 순위표에 오른 나이대 가운데 ${t.정점?.나이 ?? '미확인'}이며 인구 10만 명당 ${수(t.정점?.계.사망률)}명입니다. 순위표 10위 밖인 나이대는 값을 알 수 없어 견주지 못했습니다.` } })) },
+];
+---
+
+<HundredYear title={TITLE} description={desc} jsonLd={jsonLd}>
+  <h1>사고로 숨진 사람 —<br class="pcbr" /> 운수 사고·추락·익사 나이대별 2025</h1>
+  <p class="sub">「나만 이런가?」 운수 사고·추락·익사로 숨진 사람을 나이대마다 남자와 여자의 사망률이 얼마나 다른지, 원표 그대로 놓았습니다.</p>
+
+  <div class="answer">
+    <p class="answer-label">2025년 · {쉬운말(첫.원인)} 전체</p>
+    <p class="answer-num">{첫.전체 ? `${수(첫.전체.사망자수)}명` : '미확인'}</p>
+    <p class="answer-sub">{첫.전체 ? `인구 10만 명당 ${수(첫.전체.사망률)}명 · 전체 사망원인 ${첫.전체.순위}위` : ''}{첫.정점 ? ` · 나이대로 갈랐을 때 사망률이 가장 높은 곳은 ${첫.정점.나이}(${수(첫.정점.계.사망률)}명)` : ''}</p>
+  </div>
+
+  {표.map((t) => (
+    <>
+      <h2>{쉬운말(t.원인)} — 나이대별 남자·여자 2025</h2>
+      <div class="tablewrap scroll">
+        <table>
+          <thead><tr><th>나이대</th><th>남자 10만 명당</th><th>남자 순위</th><th>여자 10만 명당</th><th>여자 순위</th><th>남녀 합계 10만 명당 2023→2024→2025</th></tr></thead>
+          <tbody>
+            {t.줄.map((r) => (
+              <tr>
+                <th>{r.나이}</th>
+                <td class="num">{수(r.남?.사망률)}</td><td class="num">{r.남 ? `${r.남.순위}위` : '10위 밖'}</td>
+                <td class="num">{수(r.여?.사망률)}</td><td class="num">{r.여 ? `${r.여.순위}위` : '10위 밖'}</td>
+                <td class="num">{수(r.계23?.사망률)} → {수(r.계24?.사망률)} → {수(r.계?.사망률)}</td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
+      <p class="note">남녀 둘 다 값이 있는 {t.둘다.length}개 나이대 가운데 남자 사망률이 여자보다 높은 곳은 {t.남높}곳입니다. 「10위 밖」은 그 나이대 사망원인 상위 10위에 들지 않아 원표가 값을 내지 않은 칸입니다.</p>
+    </>
+  ))}
+
+  <h2>같은 자료로 본 다른 표</h2>
+  <ul>
+    <li><a href="/death-causes">나이대별 사망원인 1~5위</a></li>
+    <li><a href="/death-causes-by-sex">나이대별 남자·여자 사망원인 1~3위</a></li>
+    <li><a href="/healthy-years">건강하게 사는 햇수</a></li>
+  </ul>
+
+  <h2>이 숫자를 어떻게 읽어야 하나요?</h2>
+  <ul>
+    <li><strong>이것은 통계이지 당신이 아닙니다.</strong> 한 해 동안 그 나이대에서 있었던 일을 센 값이며, 어느 개인에게 일어날 일을 말하지 않습니다.</li>
+    <li>사망률은 그 나이대 인구 10만 명당 사망자 수입니다. 나이대마다 사람 수가 달라 나이대끼리는 사망률로 견줍니다.</li>
+    <li>순위표에는 나이대마다 상위 10개 원인만 있습니다. 10위 밖인 나이대는 사망자가 없다는 뜻이 아니라 값을 모른다는 뜻입니다.</li>
+  </ul>
+  <h2>이 숫자는 어디서 왔나요?</h2>
+  <p class="note">{출처} · 2025년 확정 통계 기준 · 「—」는 원표가 그 칸을 내지 않았다는 뜻이며 0명이 아닙니다.</p>
+
+  <NextQuestionBrief 모은것="국가데이터처 사망원인통계 원표로 운수 사고·추락·익사로 숨진 사람을 나이대별 남녀 사망률과 순위를 정리한 표" />
+</HundredYear>
+
+<style>
+  .num { text-align: right; font-variant-numeric: tabular-nums; }
+  .scroll { overflow-x: auto; }
+  .help { background: #f4f8f4; border: 1px solid #d9e6d9; border-radius: .6rem; padding: 1rem 1.2rem; margin: 2rem 0; }
+</style>
