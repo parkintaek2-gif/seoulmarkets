@@ -51,9 +51,20 @@ export function 멈췄나(마지막, 이제 = new Date(), 며칠 = 2) {
   return (이제 - t) > 며칠 * 24 * 60 * 60 * 1000;
 }
 
-/** 우리가 건 일인가 — 윈도 제 것까지 세면 읽을 수가 없다 */
+/**
+ * 우리가 건 일인가 — 윈도 제 것까지 세면 읽을 수가 없다
+ *
+ * 🔴🔴 [2026-11-13 · 5번] **이 그물이 「KLD-아침7시-자리열기」를 안 세고 있었다.**
+ *   그 일은 11-13 07:00 에 돌아 **결과 -196608 로 실패**했다(가리키던 .ps1 이 없다).
+ *   그래서 유닛 자리가 안 열렸고, 네 사이트 콘텐트가 **그날 한 편도 안 나갔다.**
+ *   이 자는 33개를 세고 「6개 실패」라고 또렷이 적고 있었는데, 정작 그날을 망친 그 일만
+ *   이름이 `KLD-` 로 시작해 **그물 밖에 있었다.**
+ *   ⛔ 재는 쪽이 제 범위를 스스로 정하면 **못 본 것이 없는 것이 된다.**
+ *   ⇒ 우리가 쓰는 이름표를 다 넣는다. 새 이름표를 만들면 여기도 같이 넣는다.
+ */
 export function 우리일인가(이름) {
-  return /KLifeDesign|KLifeMap|klifemap|SeoulMarkets|정기업무|보고재료/.test(String(이름 ?? ''));
+  return /KLifeDesign|KLifeMap|klifemap|SeoulMarkets|KLD-|정기업무|보고재료|업무보고|자리열기|백년지도|100yearmap|케이컬처|kculturewire/i
+    .test(String(이름 ?? ''));
 }
 
 if (process.argv.includes('--자가시험')) {
@@ -125,7 +136,10 @@ const 이제 = new Date();
 const 꺼짐 = 우리것.filter((x) => x.s === 'Disabled');
 const 도는것 = 우리것.filter((x) => x.s !== 'Disabled');
 const 실패 = 도는것.filter((x) => 실패인가(x.code));
-const 멈춤 = 도는것.filter((x) => !실패인가(x.code) && 멈췄나(x.last, 이제, 며칠));
+/* 🔴 [2026-11-13] 방금 건 일(267011 = 한 번도 안 돌았다)을 「멈췄다」로 적지 않는다 —
+   오늘 건 알림 둘이 바로 노란불로 떴다. 걸자마자 거짓 경보가 나면 목록을 안 믿게 된다. */
+const 멈춤 = 도는것.filter((x) => !실패인가(x.code) && Number(x.code) !== 267011
+  && 멈췄나(x.last, 이제, 며칠));
 
 console.log(`\n■ 저절로 도는 우리 일 ${우리것.length}개 (꺼 둔 것 ${꺼짐.length}개는 따로 센다)\n`);
 
