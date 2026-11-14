@@ -60,3 +60,5 @@ Gen.G has played one LPL team in this window, IG in this year's semi-final, and 
 ## What was not checked
 
 The official schedule data did not return series before the 2023 semi-finals, so earlier Worlds are not counted. Each team's league was assigned by this desk from public knowledge and not matched one by one to official team data. This piece only adds up series results and game scores. It does not rate either team or predict the final.
+
+The table behind this is at [kculturewire.com/worlds-2026](/worlds-2026?from=body).

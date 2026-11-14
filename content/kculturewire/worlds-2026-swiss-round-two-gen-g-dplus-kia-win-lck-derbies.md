@@ -85,3 +85,5 @@ The Swiss Stage sends a team to the quarter-finals at three wins and eliminates 
 For Gen.G and Dplus Kia, one more win means the quarter-finals. Hanwha Life and T1 play their next game knowing a loss leaves them one defeat from elimination.
 
 *Results and statistics from Riot Games' official LoL Esports schedule and live stats feed.*
+
+The tables behind this are at [kculturewire.com/esports-games](/esports-games?from=body) and [kculturewire.com/esports-nations](/esports-nations?from=body).

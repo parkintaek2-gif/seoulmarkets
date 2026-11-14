@@ -65,3 +65,5 @@ Gen.G were behind on kills in semi-final game three, 16-18 against Invictus Gami
 | 15 November, 04:00 | Final: Gen.G v Bilibili Gaming |
 
 All numbers above come from Riot's official records, summed or divided by this desk. The two teams' results against each other at this event and their Swiss-stage records are not compared here. Predictions are left out on purpose.
+
+The table behind this is at [kculturewire.com/worlds-2026](/worlds-2026?from=body).

@@ -65,3 +65,5 @@ Gen.G's top, jungle and mid players used five different champions in six games; 
 | 15 November, 04:00 | Final: Gen.G v Bilibili Gaming |
 
 These are statistics, not a verdict on any player, and six or seven games let a single game move an average a long way. Damage, gold and vision numbers were not confirmed and are not shown. Gen.G's kills add up to 128 from player lines, one fewer than the 129 in our earlier team table, so participation here uses 128 as the base. Swiss-stage records and the teams' meetings at this event are not included. No prediction is made.
+
+The table behind this is at [kculturewire.com/worlds-2026](/worlds-2026?from=body).

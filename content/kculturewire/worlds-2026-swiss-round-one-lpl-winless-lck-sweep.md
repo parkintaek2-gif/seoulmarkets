@@ -60,3 +60,5 @@ The two teams have history. G2 knocked DK out of the Swiss Stage in round one in
 ## What it means for round two
 
 The Swiss Stage sends a team to the quarter-finals at three wins and eliminates it at three losses. All four LPL teams now sit at 0-1 and will be eliminated by two more losses. Gen.G, Hanwha Life and Dplus Kia sit at 1-0.
+
+The tables behind this are at [kculturewire.com/esports-games](/esports-games?from=body) and [kculturewire.com/esports-nations](/esports-nations?from=body).

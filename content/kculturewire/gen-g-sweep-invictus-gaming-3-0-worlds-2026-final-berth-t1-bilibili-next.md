@@ -57,3 +57,5 @@ Gen.G also swept LYON 3-0 in the quarter-finals, so they have not dropped a game
 | 15 November, 04:00 | Final: Gen.G v the winner |
 
 All numbers above are Riot's official records. Predictions are left out on purpose.
+
+The table behind this is at [kculturewire.com/worlds-2026](/worlds-2026?from=body).

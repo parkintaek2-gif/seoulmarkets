@@ -60,3 +60,5 @@ BLG had a rougher road in: it lost twice in the Swiss Stage, to Movistar KOI in 
 | 15 November, 04:00 | Final |
 
 All numbers above are Riot's official records. Predictions are left out on purpose.
+
+The table behind this is at [kculturewire.com/worlds-2026](/worlds-2026?from=body).

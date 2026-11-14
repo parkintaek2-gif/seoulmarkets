@@ -48,3 +48,5 @@ Karmine Corp's win over T1 in the third set, on kills of 8-6, is not an exceptio
 ## What this does not tell us
 
 This is a count of three series. It does not rank the teams, and two other knockout series, Gen.G v LYON and BLG v T1, are left out because their dragon totals could not be confirmed here.
+
+The table behind this is at [kculturewire.com/worlds-2026](/worlds-2026?from=body).

@@ -54,3 +54,5 @@ Across the four games Faker finished on 14 kills and 5 deaths.
 | 15 November, 04:00 | Final: Gen.G v Bilibili Gaming |
 
 All numbers above are Riot's official records. Predictions are left out on purpose.
+
+The table behind this is at [kculturewire.com/worlds-2026](/worlds-2026?from=body).
