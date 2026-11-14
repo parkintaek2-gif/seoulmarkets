@@ -16,6 +16,8 @@
 import fs from 'node:fs';
 import readline from 'node:readline';
 import { koreanTitleFilter } from './lib/korean-netflix-titles.mjs';
+/* 🔴 [2026-11-14] 영문 지면에 「오후」가 나갔다 — 잰 시각은 한 꼴로 적는다 */
+import { 잰때문자 } from './lib/잰때.mjs';
 
 const SEA = { SG: 'Singapore', MY: 'Malaysia', PH: 'the Philippines', TH: 'Thailand', ID: 'Indonesia', VN: 'Vietnam' };
 /* 판정은 한 곳에서 온다 — scripts/lib/korean-netflix-titles.mjs.
@@ -50,7 +52,7 @@ const rows = [...agg.values()]
 const weeks = [...weeksAll].sort();
 const st = ko.stats();
 const out = {
-  generated: new Date().toLocaleString('ko-KR'),
+  generated: 잰때문자(),
   source: 'Netflix Top 10 (Tudum) weekly country lists; Korean titles identified via Wikidata country of origin (P495 = Q884), with titles Netflix classes on its English-language global charts excluded',
   /** 뺀 것과 못 거른 것을 같이 낸다. 지면이 이 값을 그대로 적는다. */
   excludedEnglishChart: st.droppedEnglishChart.length,

@@ -17,6 +17,8 @@
 import fs from 'node:fs';
 import readline from 'node:readline';
 import { koreanTitleFilter } from './lib/korean-netflix-titles.mjs';
+/* 🔴 [2026-11-14] 영문 지면에 「오후」가 나갔다 — 잰 시각은 한 꼴로 적는다 */
+import { 잰때문자 } from './lib/잰때.mjs';
 
 const SEA = new Set(['SG', 'MY', 'PH', 'TH', 'ID', 'VN']);
 const ko = koreanTitleFilter();
@@ -81,7 +83,7 @@ const 시청시간 = [...hours.entries()]
 
 const out = {
   ...prev,
-  갱신: new Date().toLocaleString('ko-KR'),
+  갱신: 잰때문자(),
   동남아,
   시청시간,
   /* 배우 두 칸은 손대지 않고 옮긴다 — 넷플릭스 판정과 무관한 자료다. */

@@ -25,6 +25,8 @@
  */
 import fs from 'node:fs';
 import path from 'node:path';
+/* 🔴 [2026-11-14] 영문 지면에 「오후」가 나갔다 — 잰 시각은 한 꼴로 적는다 */
+import { 잰때문자 } from './lib/잰때.mjs';
 
 const 뿌리 = path.resolve(
   path.dirname(new URL(import.meta.url).pathname).replace(/^\/([A-Za-z]:)/, '$1'), '..');
@@ -178,7 +180,7 @@ if (process.argv[1] && process.argv[1].endsWith('build-kcw-work-vs-attention.mjs
   fs.writeFileSync(낼곳, JSON.stringify({
     무엇인가: '넷플릭스 Top10 한국 작품에 출연으로 적힌 배우 1,113명을 «차트 출연 편수»로 묶어 영문 위키백과 30일 열람수를 센 것',
     출처: 원본.출처, 기간: 원본.기간, 일수: 원본.일수, 명단출처: 원본.명단출처,
-    잰때: new Date().toLocaleString('ko-KR'),
+    잰때: 잰때문자(),
     못재는것: [
       '인과 — 많이 읽혀 캐스팅되는 것인지 많이 나와 읽히는 것인지 못 가른다',
       '한국 안의 관심 — 영문 위키백과만 센다',

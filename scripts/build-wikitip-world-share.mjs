@@ -28,6 +28,8 @@ import readline from 'node:readline';
 import { koreanTitleFilter } from './lib/korean-netflix-titles.mjs';
 /* ⭐ 근거 칸의 표준 문구 — 자료 고유의 한계는 위에서 덧붙인다 */
 import { 근거, 중앙값 as 중앙값자, 백만분율 as 백만분율자 } from './_evidence-kcw.mjs';
+/* 🔴 [2026-11-14] 영문 지면에 「오후」가 나갔다 — 잰 시각은 한 꼴로 적는다 */
+import { 잰때문자 } from './lib/잰때.mjs';
 
 const ko = koreanTitleFilter();
 
@@ -195,7 +197,7 @@ const out = {
     방법: "A country's share is its reads divided by the reads of all countries counted, so the shares sum to a hundred and a large country cannot dominate by population.",
     한계: "A share moves when any country moves, so a rise here can mean one country grew or that every other country shrank — the two are indistinguishable in a share. Only editions large enough to measure are in the denominator, so the hundred per cent is a hundred per cent of what we could count, not of the world.",
   }),
-  generated: new Date().toLocaleString('ko-KR'),
+  generated: 잰때문자(),
   source: 'Netflix Top 10 (Tudum) weekly country lists for every country Netflix publishes; Korean titles identified via Wikidata country of origin (P495 = Q884), with titles Netflix classes on its English-language global charts excluded',
   sourceKo: '넷플릭스 Tudum 주간 나라별 Top10 — 넷플릭스가 목록을 내는 나라 전부',
   question: 'Of the top-10 places Netflix publishes around the world, how many hold a Korean title — and is that share growing?',

@@ -34,6 +34,8 @@ import fs from 'node:fs';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { 살아있는글 } from './lib/live-code.mjs';
+/* 🔴 [2026-11-14] 영문 지면에 「오후」가 나갔다 — 잰 시각은 한 꼴로 적는다 */
+import { 잰때문자 } from './lib/잰때.mjs';
 
 const 뿌리 = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
 const 생년길 = path.join(뿌리, 'archive/raw/wikidata/korean-entertainers-birth.json');
@@ -149,7 +151,7 @@ function 짓기() {
   const 성별미확인 = 사람.filter((p) => p.성별 === '미확인' || p.성별 === '못받음').length;
 
   const 답 = {
-    generated: new Date().toLocaleString('ko-KR'),
+    generated: 잰때문자(),
     /* 🔴 [2026-09-09] `generated` 를 지면에 그대로 찍었더니 「오전 8:50:53」이 화면에 나갔다.
        우리 손님은 영어권이다 — 화면에 한국어를 내지 않는다.
        ⛔ 그렇다고 toISOString() 을 쓰지 않는다. 그것은 UTC 라 새벽에 «날짜가 하루 어긋난다».

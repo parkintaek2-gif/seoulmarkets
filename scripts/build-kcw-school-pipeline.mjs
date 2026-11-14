@@ -27,6 +27,8 @@
  */
 import fs from 'node:fs';
 import path from 'node:path';
+/* 🔴 [2026-11-14] 영문 지면에 「오후」가 나갔다 — 잰 시각은 한 꼴로 적는다 */
+import { 잰때문자 } from './lib/잰때.mjs';
 
 const 뿌리 = path.resolve(path.dirname(new URL(import.meta.url).pathname).replace(/^\/([A-Za-z]:)/, '$1'), '..');
 
@@ -228,7 +230,7 @@ if (process.argv[1] && process.argv[1].endsWith('build-kcw-school-pipeline.mjs')
   const 낼곳 = path.join(뿌리, 'src/data/kcw-school-pipeline.json');
   fs.writeFileSync(낼곳, JSON.stringify({
     무엇인가: '한국 연예인의 학교(위키데이터 educated_at)를 이름·언어판 수와 이어 학교별로 센 것',
-    잰때: new Date().toLocaleString('ko-KR'),
+    잰때: 잰때문자(),
     못재는것: [
       '학교 자료 4,535건과 출생 자료를 이었다 — 겹치지 않는 사람은 학교를 모른다(없는 것이 아니다)',
       '졸업·중퇴·재학을 가르지 않는다 — 위키데이터 educated_at 이 구분하지 않는다',

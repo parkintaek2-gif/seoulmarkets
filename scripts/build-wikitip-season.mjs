@@ -22,6 +22,8 @@
 import fs from 'node:fs';
 import readline from 'node:readline';
 import { koreanTitleFilter } from './lib/korean-netflix-titles.mjs';
+/* 🔴 [2026-11-14] 영문 지면에 「오후」가 나갔다 — 잰 시각은 한 꼴로 적는다 */
+import { 잰때문자 } from './lib/잰때.mjs';
 
 const ko = koreanTitleFilter();
 const 끊긴나라 = new Set(['RU']);
@@ -81,7 +83,7 @@ for (const x of months) 으뜸모음[x.topTitle] = (으뜸모음[x.topTitle] || 
 const [가장잦은제목, 가장잦은수] = Object.entries(으뜸모음).sort((a, b) => b[1] - a[1])[0];
 
 const out = {
-  generated: new Date().toLocaleString('ko-KR'),
+  generated: 잰때문자(),
   source: ws.source,
   sourceKo: '넷플릭스 Tudum 주간 나라별 Top10 — 달마다 묶어 센 것',
   question: 'Does the Korean share of the world\'s top-10 places have a season?',

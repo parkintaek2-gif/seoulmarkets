@@ -27,6 +27,8 @@
  */
 import fs from 'node:fs';
 import path from 'node:path';
+/* 🔴 [2026-11-14] 영문 지면에 「오후」가 나갔다 — 잰 시각은 한 꼴로 적는다 */
+import { 잰때문자 } from './lib/잰때.mjs';
 
 const 뿌리 = path.resolve(
   path.dirname(new URL(import.meta.url).pathname).replace(/^\/([A-Za-z]:)/, '$1'), '..');
@@ -178,7 +180,7 @@ if (process.argv[1] && process.argv[1].endsWith('build-kcw-kpop-concentration.mj
   fs.writeFileSync(낼곳, JSON.stringify({
     무엇인가: '한국 가수·래퍼·작곡가·음악가와 한국 음악 그룹 2,372건의 영문 위키백과 30일 열람수가 얼마나 쏠려 있나',
     출처: 원본.출처, 기간: 원본.기간, 일수: 원본.일수, 명단출처: 원본.명단출처,
-    잰때: new Date().toLocaleString('ko-KR'),
+    잰때: 잰때문자(),
     셈방법: '상위 n% 의 n 은 «올림»이다. 822개의 1% 는 8.22 이고 8개로 내리면 쏠림이 실제보다 작게 나온다',
     못재는것: [
       '그룹과 그 멤버를 잇는 칸이 자료에 없다 — 멤버가 그룹을 앞서나는 못 잰다',

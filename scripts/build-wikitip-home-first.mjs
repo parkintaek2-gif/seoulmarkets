@@ -27,6 +27,8 @@
 import fs from 'node:fs';
 import readline from 'node:readline';
 import { koreanTitleFilter } from './lib/korean-netflix-titles.mjs';
+/* 🔴 [2026-11-14] 영문 지면에 「오후」가 나갔다 — 잰 시각은 한 꼴로 적는다 */
+import { 잰때문자 } from './lib/잰때.mjs';
 
 const SEA = { SG: 'Singapore', MY: 'Malaysia', PH: 'the Philippines', TH: 'Thailand', ID: 'Indonesia', VN: 'Vietnam' };
 const HOME = 'KR';
@@ -150,7 +152,7 @@ if (fs.existsSync(곳간)) {
     if (!res.ok) throw new Error(`Wikidata ${res.status} — 묶음 ${i}. 반쯤 받은 것으로 수를 내지 않는다`);
     for (const b of (await res.json()).results.bindings) 있음.add(b.x.value.split('/').pop());
   }
-  fs.writeFileSync(곳간, JSON.stringify({ 받은날: new Date().toLocaleString('ko-KR'), 속성: 'P449', qs: [...있음] }, null, 1));
+  fs.writeFileSync(곳간, JSON.stringify({ 받은날: 잰때문자(), 속성: 'P449', qs: [...있음] }, null, 1));
   방송사 = 있음;
 }
 /** ⛔ 못 받았으면 0 이 아니라 **null** 이다. 0 은 「없다」고, null 은 「모른다」다 */
@@ -163,7 +165,7 @@ const 방송사비율 = (g) => {
 };
 
 const out = {
-  generated: new Date().toLocaleString('ko-KR'),
+  generated: 잰때문자(),
   source: 'Netflix Top 10 (Tudum) weekly country lists for Korea and the six Southeast Asian markets; Korean titles identified via Wikidata country of origin (P495 = Q884)',
   sourceKo: '넷플릭스 Tudum 주간 나라별 Top10 — 한국과 동남아 여섯 나라',
   question: 'For Korean titles that charted in Southeast Asia, did Korea\'s own chart get there first?',

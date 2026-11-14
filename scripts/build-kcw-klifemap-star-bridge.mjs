@@ -24,6 +24,8 @@
 import fs from 'node:fs';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
+/* 🔴 [2026-11-14] 영문 지면에 「오후」가 나갔다 — 잰 시각은 한 꼴로 적는다 */
+import { 잰때문자 } from './lib/잰때.mjs';
 
 const 여기 = path.dirname(fileURLToPath(import.meta.url));
 const 뿌리 = path.resolve(여기, '..');
@@ -100,7 +102,7 @@ if (내가실행됐다) {
     _meta: {
       무엇: 'KLifeMap 에 영어 사주·별자리 지면이 «둘 다» 있는 한국 연예인 명단',
       아닌것: '인기 순위가 아니다. 지면이 있는가만 본다',
-      잰때: new Date().toLocaleString('ko-KR'),
+      잰때: 잰때문자(),
       출처: '라이브 사이트맵(klifemap.ai/sitemap.xml)에서 재서 뽑았다 · 이름은 Wikidata',
       사람수: 사람들.length,
     },

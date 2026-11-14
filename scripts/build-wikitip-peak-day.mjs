@@ -20,6 +20,8 @@
  * ⛔ 영어 문서가 없는 사람은 아예 안 잡힌다. 그 수도 같이 낸다.
  */
 import fs from 'node:fs';
+/* 🔴 [2026-11-14] 영문 지면에 「오후」가 나갔다 — 잰 시각은 한 꼴로 적는다 */
+import { 잰때문자 } from './lib/잰때.mjs';
 
 const 칸 = 'archive/raw/star-pageviews';
 /**
@@ -81,7 +83,7 @@ const 큰배우 = A.사람.filter((p) => p.합 >= 견줌문턱);
 const 큰케이팝 = K.사람.filter((p) => p.합 >= 견줌문턱);
 
 const out = {
-  generated: new Date().toLocaleString('ko-KR'),
+  generated: 잰때문자(),
   source: 'Wikimedia REST pageviews for English Wikipedia articles, 30 days per roster',
   sourceKo: '영어 위키백과 문서의 하루 조회수 — 로스터마다 서른 날',
   question: 'Of a month of lookups, how much lands on the single biggest day — and is that different for actors and for K-pop acts?',

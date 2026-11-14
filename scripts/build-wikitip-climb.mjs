@@ -27,6 +27,8 @@
 import fs from 'node:fs';
 import readline from 'node:readline';
 import { koreanTitleFilter } from './lib/korean-netflix-titles.mjs';
+/* 🔴 [2026-11-14] 영문 지면에 「오후」가 나갔다 — 잰 시각은 한 꼴로 적는다 */
+import { 잰때문자 } from './lib/잰때.mjs';
 
 const ko = koreanTitleFilter();
 const 끊긴나라 = new Set(['RU']);
@@ -103,7 +105,7 @@ const formats = ['TV', 'Films'].map((t) => {
 });
 
 const out = {
-  generated: new Date().toLocaleString('ko-KR'),
+  generated: 잰때문자(),
   source: 'Netflix Top 10 (Tudum) weekly country lists for every country Netflix publishes; Korean titles identified via Wikidata country of origin (P495 = Q884), with titles Netflix classes on its English-language global charts excluded',
   sourceKo: '넷플릭스 Tudum 주간 나라별 Top10 — 한 작품이 한 나라에서 달린 자취',
   question: 'When a title enters a country\'s top 10, is that week its highest rank — or does it climb afterwards?',

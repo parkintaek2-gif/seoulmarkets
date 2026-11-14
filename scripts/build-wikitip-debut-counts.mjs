@@ -23,6 +23,8 @@
  * ⛔ 해체일은 801곳 중 83곳에만 있다. 수명 이야기를 이 자료로 하면 안 된다.
  */
 import fs from 'node:fs';
+/* 🔴 [2026-11-14] 영문 지면에 「오후」가 나갔다 — 잰 시각은 한 꼴로 적는다 */
+import { 잰때문자 } from './lib/잰때.mjs';
 
 const 곳간 = 'archive/raw/wikidata/group-inception.json';
 /** 견줄 나라 — 한국 하나만 보면 그 선이 자료 탓인지 세상 탓인지 영영 모른다 */
@@ -62,7 +64,7 @@ if (fs.existsSync(곳간)) {
 } else if (process.env.KCW_FETCH === '1') {
   원자료 = await 받기();
   fs.mkdirSync('archive/raw/wikidata', { recursive: true });
-  fs.writeFileSync(곳간, JSON.stringify({ 받은날: new Date().toLocaleString('ko-KR'), byCountry: 원자료 }, null, 1));
+  fs.writeFileSync(곳간, JSON.stringify({ 받은날: 잰때문자(), byCountry: 원자료 }, null, 1));
 } else {
   throw new Error('곳간이 없다 — KCW_FETCH=1 node scripts/build-wikitip-debut-counts.mjs 로 한 번 받는다');
 }
@@ -110,7 +112,7 @@ const 일곱 = 수명.filter((y) => y === 7).length;
 const 여섯 = 수명.filter((y) => y === 6).length;
 
 const out = {
-  generated: new Date().toLocaleString('ko-KR'),
+  generated: 잰때문자(),
   source: 'Wikidata — musical groups (P31/P279* = Q215380) by country of origin (P495), with inception (P571) and dissolution (P576)',
   sourceKo: '위키데이터 — 나라별 음악 그룹의 결성일·해체일',
   question: 'How many new Korean groups are formed each year — and is that question answerable from this source?',

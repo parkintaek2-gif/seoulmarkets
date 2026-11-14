@@ -15,6 +15,8 @@
 import fs from 'node:fs';
 import path from 'node:path';
 import { 난수기, 씨앗, 윌슨구간 } from './lib/noise-test.mjs';
+/* 🔴 [2026-11-14] 영문 지면에 「오후」가 나갔다 — 잰 시각은 한 꼴로 적는다 */
+import { 잰때문자 } from './lib/잰때.mjs';
 
 export const 달이름 = ['January', 'February', 'March', 'April', 'May', 'June',
   'July', 'August', 'September', 'October', 'November', 'December'];
@@ -337,7 +339,7 @@ if (나인가) {
     그룹수: g.groups.length,
     멤버자리: g.groups.reduce((a, x) => a + (x.members || []).length, 0),
     사람수: 사람.length,
-    잰때: new Date().toLocaleString('ko-KR'),
+    잰때: 잰때문자(),
     전부, 시험전부,
     한날뺀것: { 뺀날: '01-01', 뺀사람: 사람.length - 뺀것.합, ...뺀것 },
     시험한날뺀것: 시험뺀것,

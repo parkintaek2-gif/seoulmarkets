@@ -25,6 +25,8 @@
 import fs from 'node:fs';
 import readline from 'node:readline';
 import { koreanTitleFilter } from './lib/korean-netflix-titles.mjs';
+/* 🔴 [2026-11-14] 영문 지면에 「오후」가 나갔다 — 잰 시각은 한 꼴로 적는다 */
+import { 잰때문자 } from './lib/잰때.mjs';
 
 const ko = koreanTitleFilter();
 const 끊긴나라 = new Set(['RU']);
@@ -106,7 +108,7 @@ const 날것차 = 무리셈(안).medianHalfTakes - 무리셈(밖).medianHalfTake
 const 띠차 = 무리셈(띠안).medianHalfTakes - 무리셈(띠밖).medianHalfTakes;
 
 const out = {
-  generated: new Date().toLocaleString('ko-KR'),
+  generated: 잰때문자(),
   source: 'Netflix Top 10 (Tudum) weekly country lists for every country Netflix publishes; Korean titles identified via Wikidata country of origin (P495 = Q884), with titles Netflix classes on its English-language global charts excluded',
   sourceKo: '넷플릭스 Tudum 주간 나라별 Top10 — 넷플릭스가 목록을 내는 나라 전부',
   question: 'How many different Korean titles has each market actually seen in its top 10, and how many of them carry half of it?',

@@ -33,6 +33,8 @@ import fs from 'node:fs';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { 윌슨구간, 겹치나 } from './lib/noise-test.mjs';
+/* 🔴 [2026-11-14] 영문 지면에 「오후」가 나갔다 — 잰 시각은 한 꼴로 적는다 */
+import { 잰때문자 } from './lib/잰때.mjs';
 
 const 뿌리 = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
 const 원자료 = path.join(뿌리, 'src/data/kcw-school-pipeline.json');
@@ -139,7 +141,7 @@ if (!process.argv.includes('--자가시험')) {
   const 전체구간 = 전체잰사람 ? 윌슨구간(전체열개이상, 전체잰사람) : null;
 
   const 낼것 = {
-    잰때: new Date().toLocaleString('ko-KR'),
+    잰때: 잰때문자(),
     무엇인가: 'For each school, the share of its counted alumni who appear in ten or more '
       + 'Wikipedia language editions. Built from Wikidata (school property and sitelink counts).',
     '⛔아닌것': [

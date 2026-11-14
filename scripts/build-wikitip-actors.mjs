@@ -13,6 +13,8 @@
  * 시각: KST. new Date() 그대로.
  */
 import fs from 'node:fs';
+/* 🔴 [2026-11-14] 영문 지면에 「오후」가 나갔다 — 잰 시각은 한 꼴로 적는다 */
+import { 잰때문자 } from './lib/잰때.mjs';
 
 const dir = 'archive/raw/star-pageviews';
 const files = fs.readdirSync(dir).filter((f) => /^actors-\d+\.json$/.test(f)).sort();
@@ -28,7 +30,7 @@ const rows = [...people]
 
 const totalViews = people.reduce((s, p) => s + p.합, 0);
 const out = {
-  generated: new Date().toLocaleString('ko-KR'),
+  generated: 잰때문자(),
   source:
     'English Wikipedia page views (Wikimedia Pageviews API), human traffic only. '
     + 'Roster from Wikidata cast lists (P161) filtered to Korean citizenship (P27).',

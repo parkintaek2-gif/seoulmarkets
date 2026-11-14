@@ -21,6 +21,8 @@
 import { readFileSync, writeFileSync } from 'node:fs';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
+/* 🔴 [2026-11-14] 영문 지면에 「오후」가 나갔다 — 잰 시각은 한 꼴로 적는다 */
+import { 잰때문자 } from './lib/잰때.mjs';
 
 const 뿌리 = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
 const 원자료 = path.join(뿌리, 'archive/raw/wikidata/korean-entertainers-birth.json');
@@ -129,7 +131,7 @@ function 본일() {
     .sort((a, b) => a.달 - b.달);
 
   const 나온것 = {
-    잰때: new Date().toLocaleString('ko-KR'),
+    잰때: 잰때문자(),
     이슈: 'BTS Arirang, 24th week on the UK Official Albums Chart (Sports World headline, 2026-09)',
     whatThisIs: 'The star signs of the seven BTS members, and whether that arrangement is unusual '
       + `against the ${합} Korean entertainers whose birth dates we hold.`,

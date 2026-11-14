@@ -38,6 +38,8 @@
  */
 import fs from 'node:fs';
 import path from 'node:path';
+/* 🔴 [2026-11-14] 영문 지면에 「오후」가 나갔다 — 잰 시각은 한 꼴로 적는다 */
+import { 잰때문자 } from './lib/잰때.mjs';
 
 const 뿌리 = path.resolve(
   path.dirname(new URL(import.meta.url).pathname).replace(/^\/([A-Za-z]:)/, '$1'), '..');
@@ -209,7 +211,7 @@ if (process.argv[1] && process.argv[1].endsWith('build-kcw-surge-floor.mjs')) {
   fs.writeFileSync(낼곳, JSON.stringify({
     무엇인가: '「가장 크게 튄 것」이 바닥(하루평균 최소값)을 어디 두느냐로 얼마나 달라지나',
     출처: kp.머리.출처, 기간: kp.머리.기간, 일수: kp.머리.일수,
-    잰때: new Date().toLocaleString('ko-KR'),
+    잰때: 잰때문자(),
     합치기: { kpop: kp.항목들.length, actors: ac.항목들.length,
       합친뒤: 합.사람들.length, 겹친이름: 합.겹친수, 값이다른사람: 합.값이다른수,
       왜: '두 판에 같은 이름이 232명 있고 값이 완전히 같다. 안 합치면 그 232명이 두 번 세어진다' },

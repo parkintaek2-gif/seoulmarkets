@@ -70,6 +70,44 @@ export function 영어지면인가(글) {
   return !/^ko\b/i.test(m[1].trim());
 }
 
+/**
+ * 🔴🔴 [2026-11-14 · 5번] **인용한 «원문»을 누출로 세고 있었다.**
+ *
+ * 빨강 다섯 장이 전부 같은 꼴이었다 — 한국 기사의 제목을 그대로 따 오고, 닫는
+ * 따옴표 «바로 뒤»에 괄호로 영어 뜻을 붙인 자리다:
+ *
+ * ```
+ *   '방탄소년단 진, 마이원픽 135주 연속 1위…' (BTS's Jin: 135th consecutive week at No. 1 …)
+ *   Korean '민니 (가수)', Spanish 'Minnie (cantante)'
+ *   …renders the name as 발타, which transliterates back as Balta.
+ * ```
+ *
+ * ⭐ 이 자의 머리글이 처음부터 「출처를 밝히는 원문 병기는 정당하고 오히려 옳다」고
+ *   적어 두었다. 다만 **짧은 낱말 짝**(`배급 (Distribution)`)만 알아보고,
+ *   «문장을 통째로 딴 뒤 뜻을 붙인 꼴»은 못 알아봤다 — 따옴표 안이 길어서다.
+ *
+ * ⛔ 길이로 봐주지 않는다. **따옴표와 뜻을 둘 다 요구한다** — 하나만으로는 통과 못 한다.
+ *   그래야 「그냥 길게 쓴 한국어」가 이 문으로 빠져나가지 못한다.
+ */
+export function 딴말에뜻이붙었나(글, 자리, 낱말) {
+  const g = String(글 ?? '');
+  const 뒤 = g.slice(자리 + 낱말.length, 자리 + 낱말.length + 400);
+  const 앞 = g.slice(Math.max(0, 자리 - 400), 자리);
+
+  /* ① 따 온 말 뒤에 괄호로 뜻을 붙였나 — …한국어…' (English …) */
+  const 닫는따옴표 = /^[^'"“”‘’]{0,300}["'“”’]\s*[(（]\s*[^)）]{0,10}[A-Za-z]/.test(뒤);
+  const 여는따옴표 = /["'“”‘’][^'"“”‘’]{0,300}$/.test(앞);
+  if (여는따옴표 && 닫는따옴표) return true;
+
+  /* ② 어느 말인지 영어로 «이름표»를 달고 딴 자리 — Korean '민니 (가수)' */
+  if (/\b[A-Z][a-z]{2,}\s*[:：]?\s*["'“”‘’][^'"“”‘’]{0,40}$/.test(앞)) return true;
+
+  /* ③ 뒤에서 «옮긴 말»이라고 말해 주는 자리 — transliterates back as Balta */
+  if (/^[^.]{0,90}\b(transliterat\w*|romani[sz]\w*|spelled|rendered|reads?|means)\b[^.]{0,30}[A-Za-z]{2,}/i.test(뒤)) return true;
+
+  return false;
+}
+
 /** 한국어 낱말 하나가 **뜻을 달고 있는가**. 앞뒤 어느 쪽이든 로마자 짝이 있으면 정당하다 */
 export function 뜻이있나(글, 자리, 낱말) {
   const 뒤 = 글.slice(자리 + 낱말.length, 자리 + 낱말.length + 26);
@@ -107,6 +145,8 @@ export function 뜻이있나(글, 자리, 낱말) {
   if (열림 > 닫힘 && /[A-Za-z]/.test(앞.slice(0, 열림).slice(-40))) return true;
   /* 🔴 [2026-09-11] 가운뎃점 건너에 «같은 것의 로마자 꼴»이 있는 자리 (사장님 「두 개를 같이 써」) */
   if (두꼴병기인가(글, 자리, 낱말)) return true;
+  /* 🔴 [2026-11-14] 따 온 원문에 뜻을 붙인 자리 — 이 자의 머리글이 「옳다」고 적어 둔 꼴이다 */
+  if (딴말에뜻이붙었나(글, 자리, 낱말)) return true;
   return false;
 }
 
@@ -170,10 +210,38 @@ export function 이름끝(글, 자리) {
   return i;
 }
 
+/**
+ * 🔴🔴 [2026-11-14 · 5번] **글자를 «지우고» 재고 있었다.**
+ *
+ * 따옴표는 지어낸 글에서는 `'` 지만, 손님이 받는 HTML 에서는 `&#39;` 다.
+ * 이 자는 `&[a-z]+;` 만 **빈칸으로 지우고** 숫자 꼴(`&#39;`)은 그대로 뒀다.
+ * 그래서 「따 온 원문 뒤에 뜻이 붙었나」를 보는 규칙이 따옴표를 못 찾아,
+ * 뜻이 멀쩡히 붙은 인용 네 장이 누출로 찍혔다.
+ *
+ * ⭐ **손님이 보는 글자로 되돌려 놓고 잰다** — 검사는 손님이 겪는 것을 재야 한다.
+ * ⛔ 지우지 않는다. 지우면 그 자리에 무엇이 있었는지 영영 모른다.
+ * ⚠ 태그를 «먼저» 벗기고 그 다음에 되돌린다 — 순서를 바꾸면 &lt;b&gt; 가 태그가 된다.
+ */
+export function 글자로되돌린다(글) {
+  return String(글 ?? '')
+    .replace(/&(?:#0*39|#x0*27|apos|lsquo|rsquo);/gi, "'")
+    .replace(/&(?:#0*34|#x0*22|quot|ldquo|rdquo);/gi, '"')
+    .replace(/&(?:#0*40|lpar);/gi, '(')
+    .replace(/&(?:#0*41|rpar);/gi, ')')
+    .replace(/&(?:nbsp|#0*160);/gi, ' ')
+    .replace(/&(?:#0*8230|hellip);/gi, '…')
+    .replace(/&(?:#0*45|ndash|mdash|#0*8211|#0*8212);/gi, '-')
+    .replace(/&(?:amp|#0*38);/gi, '&')
+    /* ⛔ 남은 것은 빈칸으로 둔다 — 알아보지 못한 글자를 지어내지 않는다 */
+    .replace(/&[a-zA-Z]+;|&#\d+;|&#x[0-9a-fA-F]+;/g, ' ');
+}
+
 /** 지면 하나에서 **뜻 없는 한국어**만 뽑는다 */
 export function 맨몸한국어(글) {
-  const 벗김 = 글.replace(/<script[\s\S]*?<\/script>/g, ' ').replace(/<style[\s\S]*?<\/style>/g, ' ')
-    .replace(/<[^>]+>/g, ' ').replace(/&[a-z]+;/g, ' ').replace(/\s+/g, ' ');
+  const 벗김 = 글자로되돌린다(
+    String(글 ?? '').replace(/<script[\s\S]*?<\/script>/g, ' ').replace(/<style[\s\S]*?<\/style>/g, ' ')
+      .replace(/<[^>]+>/g, ' '),
+  ).replace(/\s+/g, ' ');
   const 맨몸 = [];
   const 본끝 = new Set();
   for (const m of 벗김.matchAll(/[가-힣][가-힣\s]{0,15}/g)) {
@@ -367,6 +435,22 @@ if (process.argv[1] && fileURLToPath(import.meta.url) === path.resolve(process.a
     영어지면인가('<html><body>배급</body></html>') === true);
   참('⛔ 홑따옴표도 알아본다', 영어지면인가("<html lang='ko'>") === false);
   참('⛔ 빈 값에도 안 죽는다 (영어지면인가)', 영어지면인가(null) === true);
+  /* 🔴 [2026-11-14] 손님이 받는 HTML 에서는 따옴표가 &#39; 다 — 지우지 말고 되돌린다 */
+  참('숫자 꼴 따옴표를 되돌린다', 글자로되돌린다('&#39;가&#39;') === "'가'");
+  참('이름 꼴 따옴표도 되돌린다', 글자로되돌린다('&quot;가&quot;') === '"가"');
+  참('&amp; 를 되돌린다', 글자로되돌린다('A &amp; B') === 'A & B');
+  참('⛔ 모르는 것은 빈칸으로 둔다 — 지어내지 않는다', 글자로되돌린다('&zzz;') === ' ');
+  참('⛔ 빈 값에도 안 죽는다 (글자로되돌린다)', 글자로되돌린다(null) === '');
+  /* ⭐ 오늘 실제로 걸렸던 꼴 — 딴 원문 뒤에 괄호로 뜻이 붙었다 */
+  참('🔴 따 온 원문 뒤에 뜻이 붙으면 통과한다',
+    맨몸한국어('<p>News report: &#39;방탄소년단 진, 마이원픽 135주 연속 1위&#39; (BTS Jin: 135th week at No. 1)</p>').length === 0);
+  참('⛔ 따옴표만 있고 뜻이 없으면 그대로 걸린다',
+    맨몸한국어('<p>News report: &#39;방탄소년단 진, 마이원픽 135주 연속 1위&#39; and nothing else</p>').length > 0);
+  참('🔴 영어 이름표를 달고 딴 원문은 통과한다',
+    맨몸한국어('<p>Korean &#39;민니 (가수)&#39;, Spanish &#39;Minnie&#39;</p>').length === 0);
+  참('🔴 옮긴 말이라고 말해 주면 통과한다',
+    맨몸한국어('<p>Korean coverage renders the name as 발타, which transliterates back as Balta.</p>').length === 0);
+  참('⛔ 그래도 맨몸 한국어는 걸린다', 맨몸한국어('<p>배급</p>').length > 0);
   참('⛔ korean 이라는 낱말이 든 다른 말에 안 속는다', 영어지면인가('<html lang="kok">') === true);
   const 진 = 잼.filter(([, ok]) => !ok);
   console.log(`자가시험 ${잼.length}개 · ${진.length ? `🔴 ${진.length}개 실패` : '✅ 전부 통과'}`);

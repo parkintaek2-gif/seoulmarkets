@@ -28,6 +28,8 @@
  */
 import fs from 'node:fs';
 import path from 'node:path';
+/* 🔴 [2026-11-14] 영문 지면에 「오후」가 나갔다 — 잰 시각은 한 꼴로 적는다 */
+import { 잰때문자 } from './lib/잰때.mjs';
 
 const 뿌리 = path.resolve(
   path.dirname(new URL(import.meta.url).pathname).replace(/^\/([A-Za-z]:)/, '$1'), '..');
@@ -174,7 +176,7 @@ if (process.argv[1] && process.argv[1].endsWith('build-kcw-press-vs-reading.mjs'
     신문출처: '우리 수집기 archive/raw/newsdesk-korean-press · 매체 스타뉴스·텐아시아',
     신문날들: 날별.map((d) => ({ 날: d.날, 잰때: d.잰때, 제목수: d.제목수, 그룹든제목수: d.그룹든제목수 })),
     열람출처: kj.출처, 열람기간: kj.기간,
-    잰때: new Date().toLocaleString('ko-KR'),
+    잰때: 잰때문자(),
     못재는것: [
       '추세 — 신문 아카이브가 ' + 날들.length + '일치뿐이다',
       '한국 신문 전부 — 우리 수집기가 긁는 두 매체뿐이다',

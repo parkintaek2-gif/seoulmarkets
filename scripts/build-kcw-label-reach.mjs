@@ -28,6 +28,8 @@ import fs from 'node:fs';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { 윌슨구간 } from './lib/noise-test.mjs';
+/* 🔴 [2026-11-14] 영문 지면에 「오후」가 나갔다 — 잰 시각은 한 꼴로 적는다 */
+import { 잰때문자 } from './lib/잰때.mjs';
 
 const 뿌리 = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
 const 출생길 = path.join(뿌리, 'archive/raw/wikidata/korean-entertainers-birth.json');
@@ -211,7 +213,7 @@ if (!process.argv.includes('--자가시험')) {
 
   fs.writeFileSync(낼길, JSON.stringify({
     /* ⛔ toISOString 은 UTC 다 — 우리 시각은 KST 다 */
-    잰때: new Date().toLocaleString('ko-KR'),
+    잰때: 잰때문자(),
     무엇인가: 'For each K-pop company, how widely its artists are actually read on English Wikipedia. '
       + 'Labels are grouped into the listed parent company, so a group of labels counts once.',
     '⛔아닌것': [

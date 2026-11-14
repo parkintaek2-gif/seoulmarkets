@@ -30,6 +30,8 @@
 import fs from 'node:fs';
 import readline from 'node:readline';
 import { koreanTitleFilter, NOT_KOREAN, AUDITED as SHARED_AUDITED } from './lib/korean-netflix-titles.mjs';
+/* 🔴 [2026-11-14] 영문 지면에 「오후」가 나갔다 — 잰 시각은 한 꼴로 적는다 */
+import { 잰때문자 } from './lib/잰때.mjs';
 
 const ko = koreanTitleFilter();
 const korean = ko.korean;
@@ -97,7 +99,7 @@ const sumHand = [...droppedHand.values()].reduce((s, v) => s + v, 0);
 const bothCharts = [...agg.keys()].filter((t) => droppedEn.has(t)).sort();
 
 const out = {
-  generated: new Date().toLocaleString('ko-KR'),
+  generated: 잰때문자(),
   source: 'Netflix Top 10 (Tudum) global weekly hours viewed; Korean titles identified via Wikidata country of origin (P495 = Q884), restricted to the Non-English charts',
   weekFrom: weeks[0],
   weekTo: weeks[weeks.length - 1],
@@ -137,7 +139,7 @@ const noSquid = all.filter((r) => r.kind === 'series' && r.title !== 'Squid Game
 const nsHours = noSquid.reduce((s, r) => s + r.hours, 0);
 
 fs.writeFileSync('src/data/wikitip-screen-split.json', JSON.stringify({
-  generated: new Date().toLocaleString('ko-KR'),
+  generated: 잰때문자(),
   source: out.source,
   sourceKo: '넷플릭스 Tudum 글로벌 주간 Top 10 · 한국 작품 판정은 위키데이터 P495=Q884',
   weekFrom: out.weekFrom, weekTo: out.weekTo, weekCount: out.weekCount,

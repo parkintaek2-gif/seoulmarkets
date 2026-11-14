@@ -25,6 +25,8 @@
 import fs from 'node:fs';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
+/* 🔴 [2026-11-14] 영문 지면에 「오후」가 나갔다 — 잰 시각은 한 꼴로 적는다 */
+import { 잰때문자 } from './lib/잰때.mjs';
 
 const 뿌리 = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
 export const 낼길 = path.join(뿌리, 'src', 'data', 'kcw-idol-vs-netflix.json');
@@ -137,7 +139,7 @@ if (내가실행됐다) {
       무엇: 'KLifeMap 에 사주·별자리 지면이 있는 아이돌과, 그중 넷플릭스 상위권 작품에 나온 사람',
       아닌것: '연기 활동 전체가 아니다. 넷플릭스 주간 상위권에 오른 작품의 출연진 명단에 이름이 있었나만 본다',
       또아닌것: '아이돌 전체가 아니다. 우리가 생일을 찾을 수 있었던 사람만이다',
-      잰때: new Date().toLocaleString('ko-KR'),
+      잰때: 잰때문자(),
       출처: 'KLifeMap 명단(Wikidata) · KCW 넷플릭스 상위권 출연진 · 주소는 라이브 사이트맵에서 재서 뽑았다',
     },
     수: {

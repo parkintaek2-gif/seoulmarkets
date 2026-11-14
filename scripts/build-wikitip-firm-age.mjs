@@ -17,6 +17,8 @@
  * ⛔ 회사 이름을 안 담는다. 줄세우기가 된다.
  */
 import fs from 'node:fs';
+/* 🔴 [2026-11-14] 영문 지면에 「오후」가 나갔다 — 잰 시각은 한 꼴로 적는다 */
+import { 잰때문자 } from './lib/잰때.mjs';
 
 const 길 = 'src/data/rankings.json';
 /** 콘텐트로 보는 업종 코드. `build-wikitip-content-industry.mjs` 와 **같은 것**을 쓴다 */
@@ -94,7 +96,7 @@ if (process.argv[1] && process.argv[1].endsWith('build-wikitip-firm-age.mjs')) {
 
   const 쟨띠 = bands.filter((b) => b.ratio !== null);
   const out = {
-    generated: new Date().toLocaleString('ko-KR'),
+    generated: 잰때문자(),
     source: 'Financial Supervisory Service (Korea), DART annual report employee disclosures — tenure, headcount and years since incorporation, for every listed company that discloses them',
     sourceKo: '금융감독원 전자공시(DART) — 근속·인원·설립 후 연수',
     method: 'Tenure is weighted by headcount, so each figure is the average tenure of a person working in that group rather than of a company. Companies are then banded by their own age, so the comparison holds firm age roughly fixed.',
