@@ -36,6 +36,8 @@ export const 저절로쓰이는것 = [
   /^docs\/.*\.log$/,
   /^\.?[^/]*\.log$/,
   /^docs\/(매시소통|손님길점검|회차-뜬시각-잰기록|indexnow-보낸기록|indexnow-보낸기록-주소|날마다-색인SEO지오-대장|보낸메일)\.tsv$/,
+  /* 두 시간 점검(check-2h.mjs)이 스스로 적는다 — 사람이 손으로 쓰는 글이 아니다 */
+  /^docs\/비상벨\.md$/,
   /^src\/data\/invest-ai\//,
   /^src\/data\/(korea-index-tape|korea-valuation-tape|research-stats)\.json$/,
   /^src\/data\/100yearmap\/lastmod\.json$/,
@@ -139,6 +141,7 @@ function 자가시험() {
 
   참('🔴 글은 저절로 쓰이는 것이 «아니다»', !저절로쓰이나('content/articles/a.md'));
   참('🔴 검사기는 저절로 쓰이는 것이 «아니다»', !저절로쓰이나('scripts/check-네사이트-보안-라이브.mjs'));
+  참('비상벨은 두 시간 점검이 스스로 적는 것이다', 저절로쓰이나('docs/비상벨.md'));
   참('🔴 세션간 메모는 저절로 쓰이는 것이 «아니다» — 사람이 적는다',
     !저절로쓰이나('docs/세션간-메모.md'));
   참('🔴 지면은 저절로 쓰이는 것이 «아니다»', !저절로쓰이나('src/pages/100y/x/index.astro'));
