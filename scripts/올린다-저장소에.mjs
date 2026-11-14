@@ -28,6 +28,7 @@
  *   node scripts/올린다-저장소에.mjs --자가시험
  */
 import { execFileSync } from 'node:child_process';
+import fs from 'node:fs';
 
 /** 저절로 다시 쓰이는 파일 — 사람이 손으로 고치는 것이 아니라 도는 일이 적는 것 */
 export const 저절로쓰이는것 = [
@@ -61,6 +62,15 @@ export function 가른다(길들) {
 
 const 깃 = (...a) => execFileSync('git', a, { encoding: 'utf8', maxBuffer: 64 * 1024 * 1024 });
 
+/** 반쯤 선 리베이스가 남아 있나 — `--abort` 가 실패해도 이 자리는 남는다.
+ *  2026-11-14: abort 가 head-name 을 못 읽어 실패했고, .git/rebase-merge 가 그대로
+ *  남아 그 뒤의 fetch·rebase 가 전부 「이미 리베이스 중이다」로 거절됐다. */
+export function 반쯤선리베이스(넘겨받은것) {
+  if (typeof 넘겨받은것 === 'boolean') return 넘겨받은것;   /* 시험용 */
+  const 깃폴더 = 깃('rev-parse', '--git-dir').trim();
+  return ['rebase-merge', 'rebase-apply'].some((d) => fs.existsSync(깃폴더 + '/' + d));
+}
+
 function 더러운것() {
   /* -z 는 한글 길을 따옴표 없이 그대로 준다 — core.quotepath 에 안 흔들린다 */
   const out = execFileSync('git', ['status', '--porcelain', '-z', '--untracked-files=no'],
@@ -69,6 +79,16 @@ function 더러운것() {
 }
 
 async function 간다({ 본다 }) {
+  /* 🔴 [2026-11-14] 끼인 리베이스가 남아 있으면 fetch 도 rebase 도 안 먹는다.
+     `--quit` 은 작업 나무를 건드리지 않고 그 자리만 비우고, 갇힌 autostash 를
+     스태시로 꺼내 준다. ⛔ .git 안을 손으로 지우지 않는다 — git 이 비우게 둔다. */
+  if (반쯤선리베이스()) {
+    console.log('🟠 반쯤 선 리베이스가 남아 있다 — git rebase --quit 으로 그 자리만 비운다');
+    if (본다) console.log('[본다] 여기서 --quit 을 했을 것이다');
+    else 깃('rebase', '--quit');
+    console.log('   ⚠ 갇혀 있던 것은 git stash list 에 남는다. 버리기 전에 안을 본다.');
+  }
+
   const 더럽 = 더러운것();
   const { 저절로, 사람 } = 가른다(더럽);
 
@@ -132,6 +152,11 @@ function 자가시험() {
   const g = 가른다(['docs/고정업무-마커/a.log', 'scripts/b.mjs', 'src/data/invest-ai/c.jsonl']);
   참('가른다 — 저절로 둘', g.저절로.length === 2);
   참('가른다 — 사람 하나', g.사람.length === 1 && g.사람[0] === 'scripts/b.mjs');
+
+  참('반쯤 선 리베이스를 넘겨주면 그대로 본다', 반쯤선리베이스(true) === true);
+  참('없다고 넘겨주면 없다고 본다', 반쯤선리베이스(false) === false);
+  참('🔴 .git 안을 손으로 지우지 않는다 — git 이 비우게 둔다',
+    !/rmSync|unlinkSync|rimraf/.test(간다.toString()));
 
   /* 🔴 [2026-11-14] 끼인 자리의 핵심 — 스태시를 쓰면 일이 숨는다 */
   참('⛔ 이 자는 stash 라는 말을 쓰지 않는다',
