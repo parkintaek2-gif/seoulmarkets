@@ -25,7 +25,8 @@ excluded:
   - "Why BTS's reading fell or Rodrigo's rose. A pageview series does not carry a reason — tour dates, release cycles and unrelated news all move this number, and we did not match either curve against an event calendar."
   - "Readership inside Korea. English Wikipedia counts English-language readers; it is one audience, not a global total."
   - "A page view is not a stream, a purchase or a vote. The two measurements answer different questions and we are not converting one into the other."
-pages: []
+pages:
+  - "/what-moves-english-reading"
 ---
 
 Korean press this week reported that BTS's 2026 single "Arirang" had passed 5 billion streams on
@@ -86,3 +87,5 @@ two curves are moving in opposite directions.
 14 October 2026; measured 15 October 2026. Medians, not means, so a single viral day does not carry
 the whole window. The Spotify figure is attributed to the cited press report and was not
 independently recomputed.*
+
+The table behind this is at [kculturewire.com/what-moves-english-reading](/what-moves-english-reading?from=body).

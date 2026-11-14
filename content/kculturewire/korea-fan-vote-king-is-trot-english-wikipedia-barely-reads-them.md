@@ -26,7 +26,8 @@ excluded:
   - "STARPOLL votes are a fan campaign: app users vote, often repeatedly and in organised drives. They measure how hard a fandom pushes, not how many people follow a star. We do not treat votes as popularity."
   - "Korean-language Wikipedia, Naver or YouTube figures — English Wikipedia only."
   - "Rankings below fifth place, which the Star Ranking page does not publish without a login."
-pages: []
+pages:
+  - "/what-moves-english-reading"
 ---
 
 Every week the Korean entertainment site Star News publishes the results of its STARPOLL fan vote. This week, in the all-category "King of Kings" ranking, four of the top five names are **trot** singers, performers of the older, ballad-based genre that dominates Korean television's singing contests.
@@ -60,3 +61,5 @@ Trot is one of the biggest genres inside Korea and one of the least exported. Th
 Votes are not popularity, and English Wikipedia is not the world; it leaves out Korean-language readers entirely. We do not rank anyone by either number alone. The narrower point is that the stars Korea votes for hardest are, on this measure, the ones English-language readers look up least.
 
 *STARPOLL Star Ranking results published by Star News, collected 23 October 2026 (top five per category only). English Wikipedia pageviews, user traffic, daily, 16 September–22 October 2026; medians, not means.*
+
+The table behind this is at [kculturewire.com/what-moves-english-reading](/what-moves-english-reading?from=body).

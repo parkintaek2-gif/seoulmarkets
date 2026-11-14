@@ -25,7 +25,8 @@ excluded:
   - "23 October onward, not yet published by Wikimedia when we wrote."
   - "What caused the other spikes (14 July 2026; 3 August 2025). We did not check."
   - "Contract terms. JYP has not published them; we do not speculate."
-pages: []
+pages:
+  - "/what-moves-english-reading"
 ---
 
 Since August, three members of Twice have left JYP Entertainment, the agency that formed the group, while saying they will stay in Twice: **Jeongyeon on 10 August, Chaeyoung on 13 August and Jihyo on 21 October.**
@@ -62,3 +63,5 @@ On each exit day the members who had not left also rose. When Jeongyeon left, Ji
 English Wikipedia reads measure how many people looked a name up, not how they felt about the news. The jumps last about a day: by the day after, each member's page had fallen back to between a third and a half of its peak. What the numbers show is that agency news about Twice draws about as much English-language attention as a solo debut, and that it spreads across the group.
 
 *English Wikipedia pageviews, user traffic, daily. Departure dates from Korea Times, Soompi and Khaleej Times reports.*
+
+The table behind this is at [kculturewire.com/what-moves-english-reading](/what-moves-english-reading?from=body).

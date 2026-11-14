@@ -26,7 +26,8 @@ excluded:
   - "Why BTS's reading held flat while Katseye's spiked. Wikipedia does not record intent, and we did not substitute a guess — an established act's readership may simply already sit near its ceiling on an ordinary week, while a newer act's does not."
   - "Any claim that Katseye deserved to win, or that reading volume should decide an award. This is a count of encyclopedia lookups, not a measure of music quality or fan devotion."
   - "Whether the same gap holds on other language editions of Wikipedia, or on any platform besides Wikipedia. We measured English Wikipedia only."
-pages: []
+pages:
+  - "/what-moves-english-reading"
 ---
 
 BTS won Best K-Pop at the 2026 MTV Video Music Awards on 27 September, for "SWIM." Katseye — nominated
@@ -67,3 +68,5 @@ readers were looking up on 27 September, it wasn't the outcome — Katseye lost.
 *This compares two articles' English Wikipedia reads on the same day, using the same data source. It
 says something about which name more people looked up that day — not about which act is bigger, more
 talented, or more deserving of an award it didn't win.*
+
+The table behind this is at [kculturewire.com/what-moves-english-reading](/what-moves-english-reading?from=body).

@@ -24,7 +24,8 @@ excluded:
   - "Artists without an English article we could match with confidence: Jeon Yu-jin; Kim Jae-hwan, Yuju and Lee Eun-sang, whose names lead to disambiguation pages. Collaborations listed under one act were counted under that act's page only."
   - "Japanese-only releases were counted only where the act's article is the same one used for Korean releases."
   - "Why any one artist rose or fell. A news story in the same days moves the same number; we did not separate the two."
-pages: []
+pages:
+  - "/what-moves-english-reading"
 ---
 
 About 150 releases by Korean acts are listed for October 2026, from full albums to Japanese singles. For each artist with an English Wikipedia article and three days of data after release, we asked one question: **did the release make more people look them up?**
@@ -73,3 +74,5 @@ Katseye's article is read more than all seven of the doubling acts combined, eve
 English Wikipedia is one window on international interest, not the whole of it. It leaves out Korean-language readers, streaming and social media. A release that does not move it can still chart; a jump can come from news that has nothing to do with the music, and we did not separate the two. What the count shows is narrower: **a comeback, by itself, usually brings few new English-language readers.** The ones that did this month started from small bases: none of the seven was read more than 1,000 times a day beforehand.
 
 *Release dates from the kpopcomebacks.com October 2026 calendar. English Wikipedia pageviews, user traffic, daily, 1 September–22 October 2026; medians, not means. Releases from 21 October on are left out until three days of data exist.*
+
+The table behind this is at [kculturewire.com/what-moves-english-reading](/what-moves-english-reading?from=body).

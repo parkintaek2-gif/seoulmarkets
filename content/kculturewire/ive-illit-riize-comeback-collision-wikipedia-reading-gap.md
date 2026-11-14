@@ -28,7 +28,8 @@ excluded:
   - "Whether reading interest predicts how the three comebacks chart or sell on and after 26 October. We measured reading before the release, not outcomes after it."
   - "Why the gap exists. Audience composition, fandom size, and how each comeback was marketed in English-language media could all matter; we did not test any of them."
   - "Pageviews after 15 October — the shared release date itself falls outside the window we measured."
-pages: []
+pages:
+  - "/what-moves-english-reading"
 ---
 
 Korean entertainment coverage has settled on a single frame for the back half of October: three of SM and HYBE's major girl and boy groups — IVE, ILLIT, and RIIZE — all releasing new music on the same day, 26 October. The Korea Times called it a race heating up; ILLIT has confirmed a fifth mini album, "Break Even," for that date, and RIIZE has announced a digital single on the same day as a prelude to a 2027 full-length. The framing treats the three as comparable rivals converging on one release date.
@@ -58,3 +59,5 @@ None of the three groups shows a reading uptick through 15 October, the last day
 This measures one specific audience: people reading English-language Wikipedia pages, a proxy for casual, reference-style interest rather than committed fandom activity. It says nothing about Korean-language interest, streaming numbers, sales, or how the three comebacks will actually perform against each other after 26 October. What it does say is narrower and harder to get from press coverage alone: going into a release date that headlines are treating as a three-way tie, the three groups were not read anywhere near equally in the weeks before it.
 
 *English Wikipedia pageviews, all-access, user traffic only (bots excluded), daily, 1 September–15 October 2026 with a 1 July–1 September 2026 baseline; measured 16 October 2026. Medians, not means, so single days do not carry the whole window.*
+
+The table behind this is at [kculturewire.com/what-moves-english-reading](/what-moves-english-reading?from=body).

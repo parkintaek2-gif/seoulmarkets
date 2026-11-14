@@ -28,7 +28,8 @@ excluded:
   - "Reading in Korean or any language other than English — this measures one audience, English Wikipedia readers."
   - "Why the gap exists. Prior-role recognition, the two characters' relative screen time, and how trailers and clips were cut and distributed could all matter; we did not test any of them."
   - "Whether the gap will persist as the show's run continues — our window ends 15 October, six days after premiere."
-pages: []
+pages:
+  - "/what-moves-english-reading"
 ---
 
 Netflix's new rom-com "Take Charge of My Heart" premiered October 9 with Chae Soo-bin and Kim Young-kwang billed together as co-leads — Kim playing conglomerate heir Baek Ho-rang, Chae playing screenwriter Na Bo-bae. The Korea Times called it a recharge of the classic rom-com formula. Press coverage treated the pairing as a dual draw: two established names sharing top billing.
@@ -58,3 +59,5 @@ Both actors' reading peaked on 11 October — one day after the show's own Wikip
 This measures one specific audience — people who looked up an English Wikipedia page, a proxy for general reference curiosity rather than committed fandom or box-office consumption. It says nothing about which actor viewers liked better, how the show performed on Netflix's own charts, or why the gap exists; billing order, prior international name recognition, and raw screen time could all be factors we did not test. What the data does say is specific: two actors marketed as equal co-leads did not draw equal English-language reference-reading interest around their show's premiere, and the more-read actor pulled further ahead rather than the gap closing.
 
 *English Wikipedia pageviews, all-access, user traffic only (bots excluded), daily, 20 September–15 October 2026; measured 17 October 2026. Medians, not means, so single days do not carry the whole window.*
+
+The table behind this is at [kculturewire.com/what-moves-english-reading](/what-moves-english-reading?from=body).

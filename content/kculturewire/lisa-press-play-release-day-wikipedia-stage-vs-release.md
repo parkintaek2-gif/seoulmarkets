@@ -39,7 +39,8 @@ excluded:
   - "Korean-, Thai- or other-language Wikipedia reading — English only."
   - "Why stages outdraw releases. A televised awards show reaches people who were not looking for a new record; we did not test that or any other explanation."
   - "The VMAs award results reported in some coverage. We could confirm the appearance and performance from the source cited, not the category results, so they are left out."
-pages: []
+pages:
+  - "/what-moves-english-reading"
 ---
 
 LISA's EP "PRESS PLAY" is out today, 23 October. It has six tracks, follows the September single "SaWaDiKa," and is her second solo project after the 2025 album "Alter Ego." BABYMONSTER, the YG Entertainment group, also releases new music today.
@@ -81,3 +82,5 @@ BABYMONSTER, releasing on the same day, sits at a median of 1,066 reads, down 18
 This measures one thing: how many people opened an English-language encyclopedia page. It is a proxy for casual, look-it-up curiosity, not for streams, sales or fandom size, and it cannot say how "PRESS PLAY" will perform. What it does show is a pattern visible across two release cycles. For LISA, the moments that bring new people to her page have been the ones where she appears in front of audiences who were not already waiting for her music. A release on its own has not been one of them.
 
 *English Wikipedia pageviews, all-access, user traffic only (bots excluded), daily, 1 January 2025–21 October 2026, measured 23 October 2026. Days are UTC. Medians, not means, for the 30-day and summer comparisons, so a single spike does not carry the window.*
+
+The table behind this is at [kculturewire.com/what-moves-english-reading](/what-moves-english-reading?from=body).

@@ -25,7 +25,8 @@ excluded:
   - "YouTube views, streaming figures and chart positions. We did not count them and do not restate other outlets' numbers as our own."
   - "Readership inside Korea. English Wikipedia counts English-language readers; the Korean edition is a separate measurement we did not make here."
   - "Why any group's reading rose or fell — a comeback, a drama role, a controversy, an algorithm. Wikipedia records none of that and we did not match it against a news timeline."
-pages: []
+pages:
+  - "/what-moves-english-reading"
 ---
 
 Five Korean groups debuted in 2025, one each from BigHit, SM, JYP, Starship and F&F. If you had
@@ -87,3 +88,5 @@ these five, the first ninety days did not predict the twelfth month.
 group's debut to 4 September 2026; measured 5 September 2026. Medians, not means — one viral day
 would otherwise carry a whole quarter. Two groups in the same dataset debuted before our window and
 are left out rather than estimated.*
+
+The table behind this is at [kculturewire.com/what-moves-english-reading](/what-moves-english-reading?from=body).

@@ -28,7 +28,8 @@ excluded:
   - "C.A.P, a Teen Top member not shown in this comeback's concept photo rollout per our sourcing — excluded rather than assumed inactive on this release."
   - "Korean-language reading, streaming or sales figures, and any chart placement for 'Don't Stop' — this measures one audience, English Wikipedia readers, not commercial performance."
   - "Why Ricky and Chunji's reading didn't move. Promotional role within this specific comeback, media appearances, and prior name recognition could all matter; we did not test any of them."
-pages: []
+pages:
+  - "/what-moves-english-reading"
 ---
 
 Teen Top, the K-pop group that debuted in 2010, released its 11th mini album, "Don't Stop," on October 15 at 6 p.m. KST. Four members were shown in the comeback's concept photo rollout: Niel, Chunji, Ricky and Changjo.
@@ -56,3 +57,5 @@ Niel and Changjo were already the two most-read of the four promoting members be
 This measures one specific audience — people who looked up an English Wikipedia page the day a 15-year-old group released new music — not streaming numbers, chart placement, or Korean-language interest, none of which we measured here. We also only have one day of post-release data: Wikimedia's own pageview dataset had not published October 16 or 17 at the time of this measurement, so we're reporting a release-day snapshot, not a settled pattern across a full promotion cycle.
 
 *English Wikipedia pageviews, all-access, user traffic only (bots excluded), daily, 20 September-15 October 2026; measured 18 October 2026. Medians, not means, so single days do not carry the whole baseline window.*
+
+The table behind this is at [kculturewire.com/what-moves-english-reading](/what-moves-english-reading?from=body).

@@ -27,7 +27,8 @@ excluded:
   - "Why English Wikipedia reading fell. A pageview series does not explain itself — release cycles, unrelated news, and seasonal variation all move this number, and we did not check it against an event calendar."
   - "Readership inside Korea, or in any language other than English. This measures one audience: people reading the English-language article."
   - "Whether a vote and a page view measure the same kind of interest. MyOnePick counts app votes, cast by people who already follow the artist closely. Wikipedia pageviews count encyclopedia lookups, often by people checking a basic fact. Treating one as a stand-in for the other is the mistake this piece is trying not to make."
-pages: []
+pages:
+  - "/what-moves-english-reading"
 ---
 
 Korean entertainment outlets have been running a near-weekly update for most of this year: BTS's Jin, StarNews reports, has not lost the top spot in MyOnePick's K-pop individual weekly ranking since the streak began — 128 weeks in mid-August, 131 by early September, 135 at the end of September, and 137 as of this week's report. It is the kind of number that keeps renewing itself, a fandom-strength story told in consecutive weeks rather than any single event.
@@ -57,3 +58,5 @@ A MyOnePick vote and a Wikipedia page view are not measuring the same behavior. 
 What we can say is narrow: whatever is sustaining the MyOnePick streak, it has not shown up as rising, or even steady, English-language reference-lookup interest. By that specific measure, reading attention eased through the same stretch the streak extended.
 
 *English Wikipedia pageviews, all-access, user traffic only (bots excluded), daily, 1 September–15 October 2026 with a 1 July–1 September 2026 baseline; measured 16 October 2026. Medians, not means, so single days do not carry the whole window. The MyOnePick streak figures are attributed to the cited StarNews reporting and were not independently recomputed.*
+
+The table behind this is at [kculturewire.com/what-moves-english-reading](/what-moves-english-reading?from=body).
