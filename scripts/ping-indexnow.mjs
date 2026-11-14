@@ -50,6 +50,22 @@ export function 경로파싱(인자) {
   return 인자.filter((a, n) => !a.startsWith('--') && !(호스트자리 >= 0 && n === 호스트자리 + 1));
 }
 
+/**
+ * 🔴🔴 [2026-11-14 · 5번] **쉼표로 이어 붙인 주소 한 덩이를 «한 장»으로 통보했다.**
+ *
+ * 이 자는 주소를 **자리 인자**로 받는데(`--only` 같은 깃발이 없다), 다른 자(klifemap 쪽
+ * `tools/indexnow.js`)는 `--only a,b,c` 꼴로 받는다. 그 버릇으로 쉼표로 이어 붙여 넘겼더니,
+ * 통째로 «한 주소»가 되어 404 가 날 글이 검색엔진에 통보됐다.
+ *
+ * ⛔ 「없는 주소를 통보하면 신뢰가 깎인다」는 이 파일의 첫 규칙이다. 그 규칙을 내가 어겼다.
+ * ⇒ 말로 적어 두지 않고 **검사로 막는다** — 경로에 쉼표가 있으면 보내기 전에 선다.
+ *   쉼표는 주소에 올 수 없는 글자가 아니지만(법으로는 올 수 있다), **우리 주소에는 없다.**
+ *   우리 주소에 쉼표가 생기는 날이 오면 그때 이 검사를 고치면 된다 — 조용히 틀리는 것보다 낫다.
+ */
+export function 쉼표로이어붙였나(경로들) {
+  return (경로들 || []).filter((x) => String(x).includes(','));
+}
+
 function 자가시험() {
   let 실패 = 0, 셈 = 0;
   const 자 = (말, 참) => { 셈++; if (!참) { 실패++; console.error(`  ✕ ${말}`); } };
@@ -60,6 +76,11 @@ function 자가시험() {
     JSON.stringify(경로파싱(['/a', '--dry'])) === JSON.stringify(['/a']));
   자('--host X 뒤의 값(X 자신)은 경로가 아니다', JSON.stringify(경로파싱(['--host', 'X', '/a', '/b'])) === JSON.stringify(['/a', '/b']));
   자('--all 만 있으면 경로 0개', JSON.stringify(경로파싱(['--all'])) === JSON.stringify([]));
+  /* 🔴 [2026-11-14] 쉼표로 이어 붙인 덩이를 한 장으로 보냈다 — 검사로 막는다 */
+  자('쉼표로 이어 붙인 것을 잡는다', 쉼표로이어붙였나(['/a,/b']).length === 1);
+  자('성한 경로는 안 잡는다', 쉼표로이어붙였나(['/a', '/b']).length === 0);
+  자('여러 개면 여러 개를 다 돌려준다', 쉼표로이어붙였나(['/a,/b', '/c,/d']).length === 2);
+  자('⛔ 빈 것에 안 죽는다', 쉼표로이어붙였나(null).length === 0);
   자('아무 인자 없으면 경로 0개', JSON.stringify(경로파싱([])) === JSON.stringify([]));
 
   console.log(실패 === 0 ? `✅ 자가시험 통과(${셈}개)` : `🔴 자가시험 실패 ${실패}/${셈}건`);
@@ -128,6 +149,17 @@ const 경로들 = 경로파싱(인자);
 if (고른호스트 && !사이트들[고른호스트]) {
   console.error(`모르는 호스트다: ${고른호스트}`);
   console.error(`아는 것 — ${Object.keys(사이트들).join(' · ')}`);
+  process.exit(1);
+}
+/* 🔴 [2026-11-14] 보내기 «전»에 선다. 보내고 나면 되돌릴 수 없다 */
+const 쉼표든것 = 쉼표로이어붙였나(경로들);
+if (쉼표든것.length) {
+  console.error('⛔ 주소에 쉼표가 들어 있다 — 이 자는 주소를 «자리 인자»로 하나씩 받는다.');
+  console.error('   쉼표로 이어 붙이면 통째로 «한 주소»가 되어 없는 글이 검색엔진에 통보된다.');
+  for (const x of 쉼표든것) console.error(`   · ${String(x).slice(0, 100)}…`);
+  console.error('\n   ✅ 이렇게 칩니다 —');
+  console.error('      MSYS_NO_PATHCONV=1 node scripts/ping-indexnow.mjs --host <호스트> /a /b /c');
+  console.error('   ⚠ klifemap 쪽 tools/indexnow.js 는 `--only a,b,c` 꼴이다. 둘을 섞지 않는다.');
   process.exit(1);
 }
 if (전부 && 경로들.length) {
