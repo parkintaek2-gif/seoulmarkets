@@ -467,16 +467,18 @@ export function 편지부제목뽑기(글) {
  *   제목만 보던 검사가 부제목의 「첫걸음」과 본문의 「가장 무거운 경기」를 통과시켰다.
  *   돌려주는 것은 걸린 낱말 목록이다 — 무엇을 고쳐야 하는지 알려야 고친다.
  */
+/* [2026-11-14] 「축」이 「축구」 속에서 잡히던 구멍 — 낱말로 선 「축」만 센다 */
+const 들었나 = (글, w) => (w === '축' ? /축(?=[s으을이은과마도만]|$)/.test(글) : 글.includes(w));
 export function 순한글비유찾기(글, 메일제목 = '') {
   const g = String(글 ?? '');
   const 걸린것 = [];
   /* ① 제목·부제목 — 제목비유어까지 본다 */
   for (const 자리 of [편지제목뽑기(g) || String(메일제목 ?? ''), 편지부제목뽑기(g)]) {
     if (!자리) continue;
-    for (const w of 제목비유어) if (자리.includes(w) && !걸린것.includes(w)) 걸린것.push(w);
+    for (const w of 제목비유어) if (들었나(자리, w) && !걸린것.includes(w)) 걸린것.push(w);
   }
   /* ② 글 전체 — 본문비유어 */
-  for (const w of 본문비유어) if (g.includes(w) && !걸린것.includes(w)) 걸린것.push(w);
+  for (const w of 본문비유어) if (들었나(g, w) && !걸린것.includes(w)) 걸린것.push(w);
   return 걸린것;
 }
 
