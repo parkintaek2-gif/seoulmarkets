@@ -29,7 +29,8 @@ excluded:
   - "Hours viewed for the per-country charts — Netflix's per-country file gives ranks only."
   - "Licensing terms or what Korea earns from each adaptation. Not in the data and not reported in the sources consulted."
   - "Whether later versions (France, Sweden, the US) will chart. They had not been released by 18 October."
-pages: []
+pages:
+  - "/by-country"
 ---
 
 "Physical: 100" began in 2023 as a Korean reality show: a hundred people with strong bodies, a run of physical trials, one left standing. This autumn two versions made without any Korean contestants reached Netflix's global chart in the same week.
@@ -67,3 +68,5 @@ That is a different kind of export from a drama. A Korean series is watched abro
 Countries reached is a count of national Top 10 appearances, not of viewers. A small country counts the same as a large one, and the per-country file gives ranks without hours. The comparison also runs across different years, when Netflix's audience in each country was not the same size. The pattern is still consistent across all four versions: the further the cast moves from the original, the fewer charts it reaches.
 
 *Netflix Tudum Top 10 official files, global and per-country, all weeks from 4 July 2021 to the week of 12–18 October 2026, downloaded 23 October 2026.*
+
+The table behind this is at [kculturewire.com/by-country](/by-country?from=body).

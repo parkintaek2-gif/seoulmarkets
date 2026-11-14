@@ -25,7 +25,8 @@ excluded:
   - "Saju proper. A full chart needs the hour of birth. Public profiles carry dates and almost never hours, so we can count the distribution and cannot produce a single person's chart — and we say so rather than approximating one."
   - "Anyone born in January or February whose sign is ambiguous. The lunar new year falls in those months, so a birth year alone can assign the wrong sign; the source data drops them rather than guessing."
   - "The 229 people with no readable pageview figures. They are unmeasured, not zero."
-pages: []
+pages:
+  - "/zodiac"
 ---
 
 Here is a question people actually type into a search box: which Korean stars share my zodiac year?
@@ -89,3 +90,5 @@ Ji-sub. That is a fact about a calendar. It is not a fact about you.
 *Wikidata dates of birth, resolved 10 August 2026. Reads are each person's own Wikipedia article
 across the Indonesian, Vietnamese, Thai and Malay editions, August 2025 to July 2026, human traffic
 only, normalised per million reads of each edition. This is a count, not a reading.*
+
+The table behind this is at [kculturewire.com/zodiac](/zodiac?from=body).

@@ -23,7 +23,8 @@ excluded:
   - "Titles outside the top 10. A show watched steadily but never in a country's top ten is invisible here, and in a market where Korean share is 1.6 per cent that will hide a lot."
   - "Any claim about why a share is high or low — catalogue rights, subtitle and dub availability, marketing spend and release timing all differ by country and Netflix publishes none of them."
   - "The first and last of our calendar years, which hold roughly half a year each. Shares above are computed over the whole 268-week window, not year by year."
-pages: []
+pages:
+  - "/by-country"
 ---
 
 Netflix publishes a weekly top 10 for 93 countries. Over 268 weeks — five years — we counted how
@@ -85,3 +86,5 @@ none of it. What the table shows is the outcome, not the cause.
 
 *Netflix Tudum weekly top 10 country lists, 4 July 2021 to 16 August 2026 — 268 weeks, 93
 countries. Korean titles identified by Wikidata country of origin. Build generated 29 August 2026.*
+
+The table behind this is at [kculturewire.com/by-country](/by-country?from=body).

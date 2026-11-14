@@ -31,7 +31,8 @@ excluded:
   - "Any prediction about Faker's 2026 result. His group stage hasn't started; we're not forecasting it."
   - "Reasons for the gap. We don't know why Faker draws more reads — global LoL viewership, his longer career, or the fighting-games final airing at an odd hour are all plausible and we didn't separate them."
   - "Non-English Wikipedia editions, or any platform besides Wikipedia."
-pages: []
+pages:
+  - "/esports-nations"
 ---
 
 South Korea won its first Asian Games gold medal in esports fighting games on 27 September, and the
@@ -69,3 +70,5 @@ single game of it.
 *This compares English Wikipedia reads for two real, completed data points — a won gold medal and a
 not-yet-played tournament — using the same measurement on the same two days. It says which name more
 English-language readers looked up, not who mattered more to South Korea's esports program this week.*
+
+The table behind this is at [kculturewire.com/esports-nations](/esports-nations?from=body).

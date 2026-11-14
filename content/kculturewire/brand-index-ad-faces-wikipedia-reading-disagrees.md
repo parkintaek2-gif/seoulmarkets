@@ -6,7 +6,8 @@ pubDate: 2026-10-09
 dataAsOf: 2026-08-06T00:00:00+09:00
 author: Newsroom
 tags: ["so-ji-sub", "g-dragon", "lim-young-woong", "byeon-woo-seok", "kim-go-eun", "lee-dong-wook", "karina", "wikipedia", "attention", "brand-reputation"]
-pages: []
+pages:
+  - "/what-moves-english-reading"
 sources:
   - org: "Asia Brand Research Institute (아시아브랜드연구소), via K-Brand Index"
     api: "News report, 'K-Brand Index ad-model category shakeup — Son Heung-min settles into 3rd, Yoo Jae-suk rises to 4th,' published 2026-08-28, survey period 1-31 July 2026"
@@ -102,3 +103,5 @@ from two 30-day builds — kpop-occupation entertainers measured 8 July-6 August
 5 July-3 August 2026 — chosen to overlap as closely as our archived builds allow with the brand
 index's 1-31 July 2026 survey window. Where a name appeared in both builds, we used the
 occupation-matched one (actors for screen actors, the kpop build for musicians and the TV host).
+
+The table behind this is at [kculturewire.com/what-moves-english-reading](/what-moves-english-reading?from=body).

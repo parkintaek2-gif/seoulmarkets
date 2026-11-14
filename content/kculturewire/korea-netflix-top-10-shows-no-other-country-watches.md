@@ -19,7 +19,8 @@ excluded:
   - "Where each title was made. Netflix's file has no country-of-production field, so this counts what each country watched, not what it produced."
   - "Hours or views — the per-country file gives ranks only."
   - "Why some markets keep more to themselves. Language, local broadcast partnerships and how many local titles Netflix licenses all plausibly matter; none were tested."
-pages: []
+pages:
+  - "/by-country"
 ---
 
 Korean series are some of Netflix's most exported shows. This month "Take Charge of My Heart" reached the Top 10 in 64 countries and "Doctor X: Mafia in White" in 48.
@@ -73,3 +74,5 @@ The count is about what each country watched, not where a show was made. Netflix
 Read that way, the pattern is clear. The Korean shows that travel are a small, visible part of what Korea itself watches. Most countries' Netflix charts are shared with the rest of the world. Japan's and Korea's are, to a large extent, their own.
 
 *Netflix Tudum Top 10 official per-country file, TV, 52 weeks ending 18 October 2026, 93 countries, downloaded 23 October 2026.*
+
+The table behind this is at [kculturewire.com/by-country](/by-country?from=body).

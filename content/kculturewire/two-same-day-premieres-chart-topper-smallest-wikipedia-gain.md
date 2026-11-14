@@ -28,7 +28,8 @@ excluded:
   - "Streaming numbers, Netflix's own Top 10 placement, or viewership outside the three countries and 36-country top-10 figure The Korea Times reported — those are press-reported facts, not something we measured."
   - "Reading in Korean or any language other than English — this measures one audience, English Wikipedia readers."
   - "Why Kim Ji-won's reading gain lagged the other two leads. Her higher starting baseline (already an established star), prior-role recognition, and how each show's trailers and clips circulated could all matter; we did not test any of them."
-pages: []
+pages:
+  - "/what-moves-english-reading"
 ---
 
 Two Netflix K-dramas launched on the same day, October 9: the medical noir series "Doctor X: Mafia in White," led by Kim Ji-won, and the rom-com "Take Charge of My Heart," co-led by Kim Young-kwang and Chae Soo-bin. Five days later, The Korea Times reported that Doctor X had topped Netflix's weekly non-English TV chart in South Korea, Indonesia, the Philippines and Thailand, and reached the top 10 in 36 countries.
@@ -58,3 +59,5 @@ Doctor X: Mafia in White's own Wikipedia page shows a premiere-week median of 9,
 This measures one specific audience — people who looked up an English Wikipedia page, a proxy for reference-style curiosity rather than streaming consumption or chart performance. It does not contradict The Korea Times' chart report, which is about Netflix's own viewership rankings, a different measurement entirely. What it does say is specific: the lead actor of the show press named a global chart-topper did not see the largest, or even the second-largest, English Wikipedia reading gain among three leads whose shows premiered the same day.
 
 *English Wikipedia pageviews, all-access, user traffic only (bots excluded), daily, 20 September–15 October 2026; measured 17 October 2026. Medians, not means, so single days do not carry the whole window.*
+
+The table behind this is at [kculturewire.com/what-moves-english-reading](/what-moves-english-reading?from=body).

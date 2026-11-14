@@ -26,7 +26,8 @@ excluded:
   - "How many hours the Japanese original was watched. Netflix's per-country file gives ranks only, not hours or views."
   - "Why viewers turned to the original. The file shows the two titles ranked in the same week; it does not say the same people watched both."
   - "The September appearance in Hong Kong came before the Korean remake premiered on 9 October, so not every recent chart entry for the original lines up with the remake."
-pages: []
+pages:
+  - "/netflix-which-country"
 ---
 
 "Doctor X: Mafia in White," SBS's remake of the long-running Japanese medical drama, has been Netflix's No. 1 non-English series worldwide for two weeks. In seven places it is No. 1 outright, among them Indonesia and Vietnam.
@@ -62,3 +63,5 @@ The file records ranks, not people. It cannot say whether the viewers who pushed
 What it does show is narrow and checkable. In the week a Korean remake led two national charts, the 14-year-old Japanese series it is based on charted in both for the first time.
 
 *Netflix Tudum Top 10 official per-country file, all weeks from 4 July 2021 to the week of 12–18 October 2026, downloaded 23 October 2026.*
+
+The table behind this is at [kculturewire.com/netflix-which-country](/netflix-which-country?from=body).

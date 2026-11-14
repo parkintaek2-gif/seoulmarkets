@@ -27,7 +27,8 @@ excluded:
   - "Why Doctor X's listed runtime doubled between weeks. The file only shows the runtime Netflix used; we infer that more episodes became available, but the release schedule itself is from press reports, not the file."
   - "Viewing on platforms other than Netflix, including Korean broadcast ratings."
   - "Any forecast of where either show will rank next week."
-pages: []
+pages:
+  - "/netflix-which-country"
 ---
 
 Netflix's weekly chart for non-English TV has the same Korean drama on top for a second week: "Doctor X: Mafia in White," the SBS co-production starring Kim Ji-won. Its rival from the same premiere day, 9 October, sits at No. 2.
@@ -66,3 +67,5 @@ One show is concentrated and leads the region it is strongest in. The other is s
 Neither number is the "real" winner. Views reward a show that is short or still being released; hours reward one that is long and fully available. Netflix chose views as its headline measure, and by that measure Doctor X is first. What the file adds is that "first" here means fewer hours watched, not more.
 
 *Netflix Tudum Top 10 official files, global and per-country, weeks of 5–11 and 12–18 October 2026, downloaded 23 October 2026.*
+
+The table behind this is at [kculturewire.com/netflix-which-country](/netflix-which-country?from=body).

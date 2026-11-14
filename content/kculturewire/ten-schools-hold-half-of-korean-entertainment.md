@@ -26,7 +26,8 @@ crossChecks:
   - "Chung-Ang University, 310 — Kim Soo-hyun (52 editions), Park Shin-hye (46), Lee Young-ae (43), Hyun Bin (40), Kim Bum (37)."
   - "Dongguk University, 200 — Jun Ji-hyun (49), Im Yoon-ah (48), Lee Jung-jae (47), Han Hyo-joo (40), Park Min-young (40)."
   - "Share of each school's people whose name appears on English Wikipedia: Dongguk 93 per cent, Chung-Ang 91, Kyung Hee 90, Seoul Institute of the Arts 87, Dongduk Women's University 72."
-pages: []
+pages:
+  - "/school"
 ---
 
 If you have watched Korean film or television for any length of time, you have watched one school.
@@ -99,3 +100,5 @@ wrong answer with total confidence, so there isn't one.
 counts from sitelinks on the same date. Schools with fewer than fifteen of our people are counted in
 the totals but not listed. This counts where people studied. It says nothing about what studying
 there did for them.*
+
+The table behind this is at [kculturewire.com/school](/school?from=body).
