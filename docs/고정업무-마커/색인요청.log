@@ -991,3 +991,34 @@ Node.js v26.3.1
 
 📈 이력에 13줄 쌓았다 — docs/색인요청-이력.tsv
 ⛔ 「요청했다」는 우리가 한 일이다. 색인됐는지는 사흘 뒤에 다시 잰다.
+■ 목록 지면이 받고 있는 검색어 5개
+   회사 이름표 2,703개로 맞춰 본다
+
+   ⬜ 못 찾음  노출   4  「"al ansari financial services" -site:alansari.ae -site:facebook.com -site:instagram.com -site:threads.com -site:threads.net -site:linkedin.com -site:x.com -site:twitter.com -site:tiktok.com -site:youtube.com -site:youtu.be -site:reddit.com -site:t.me -site:telegram.me -site:telegram.org -site:pinterest.com -site:vimeo.com」
+   ⬜ 못 찾음  노출   4  「fulin plastic industry (cayman) holding co., ltd. analyst price target disagreement」
+   ⬜ 못 찾음  노출   3  「"al ansari financial services pjsc" -site:alansari.ae -site:facebook.com -site:instagram.com -site:threads.com -site:threads.net -site:linkedin.com -site:x.com -site:twitter.com -site:tiktok.com -site:youtube.com -site:youtu.be -site:reddit.com -site:t.me -site:telegram.me -site:telegram.org -site:pinterest.com -site:vimeo.com」
+   ⬜ 못 찾음  노출   3  「applied biocode」
+   ⬜ 못 찾음  노출   3  「lianyou metals」
+
+■ 수요가 이미 있는 낱장 0장 — 다 실물로 200 을 봤다
+⛔ 이 자는 지면을 만들지 않는다. 색인 줄에 세울 차례를 정할 뿐이다.
+🔴 닫혔다  /school  아래 2,525장  — 크롤링됨 - 현재 색인이 생성되지 않음
+✅ 열렸다  /taiwan/companies  아래 1,057장  
+🔴 닫혔다  /university  아래 420장  — 크롤링됨 - 현재 색인이 생성되지 않음
+🔴 닫혔다  /major  아래 300장  — 크롤링됨 - 현재 색인이 생성되지 않음
+🔴 닫혔다  /region  아래 250장  — 크롤링됨 - 현재 색인이 생성되지 않음
+🔴 닫혔다  /age  아래 101장  — 크롤링됨 - 현재 색인이 생성되지 않음
+✅ 열렸다  /uae/companies  아래 104장  
+🔴 닫혔다  /work  아래 100장  — 크롤링됨 - 현재 색인이 생성되지 않음
+🔴 닫혔다  /rankings  아래 60장  — 크롤링됨 - 현재 색인이 생성되지 않음
+🔴 닫혔다  /all  아래 50장  — 크롤링됨 - 현재 색인이 생성되지 않음
+🔴 닫혔다  /research  아래 40장  — 크롤링됨 - 현재 색인이 생성되지 않음
+🔴 닫혔다  /articles  아래 900장  — 크롤링됨 - 현재 색인이 생성되지 않음
+🔴 닫혔다  /person  아래 800장  — 크롤링됨 - 현재 색인이 생성되지 않음
+🔴 닫혔다  /actors  아래 300장  — 크롤링됨 - 현재 색인이 생성되지 않음
+🔴 닫혔다  /data  아래 120장  — 크롤링됨 - 현재 색인이 생성되지 않음
+🔴 닫혔다  /all-ten  아래 60장  — 크롤링됨 - 현재 색인이 생성되지 않음
+🔴 닫혔다  /all  아래 1,295장  — 크롤링됨 - 현재 색인이 생성되지 않음
+
+■ 닫힌 문 15개 · 오늘 요청할 것 0개
+⬜ 오늘 할 것이 없다 — 다 열렸거나 요 보름 안에 이미 요청했다
