@@ -115,6 +115,54 @@ const 태그제거 = (s) =>
  * 단위도 다르다 — 「15만원」 「150,000원」 「15.0만원」.
  * ⚠ **찾은 척하지 않는다.** 못 읽으면 null 이다. 0 이나 추정치를 넣지 않는다.
  */
+/**
+ * 🔴🔴 [2026-11-14 · 5번] **Next.js 로 갈아탄 사이트에서 자료를 꺼낸다.**
+ *
+ * 한양증권이 사이트를 Next.js 로 새로 지었다. 옛 주소는 200 을 주지만 알맹이가 없다 —
+ * 그래서 수집이 **날마다 0건**이면서 실패로도 안 잡혔다. 「200 이니 멀쩡하다」가 아니다.
+ *
+ * Next.js 는 서버에서 만든 자료를 `self.__next_f.push([1,"…"])` 조각으로 흘려 보낸다.
+ * 조각을 이어 붙이면 그 안에 JSON 이 통째로 들어 있다.
+ * ⛔ 정규식으로 JSON 을 자르지 않는다 — 중첩 괄호에서 반드시 깨진다.
+ *   **괄호 균형**으로 떼어 낸다. 따옴표 안의 괄호는 세지 않는다.
+ */
+export function 넥스트조각잇기(html) {
+  let 이은글 = '';
+  for (const m of String(html ?? '').matchAll(/self\.__next_f\.push\(\[1,\s*"((?:[^"\\]|\\.)*)"\]\)/g)) {
+    /* 조각 하나가 깨져도 나머지는 쓴다 — 한 조각 때문에 전부를 버리지 않는다 */
+    try { 이은글 += JSON.parse('"' + m[1] + '"'); } catch { /* 넘어간다 */ }
+  }
+  return 이은글;
+}
+
+/** 이은 글에서 `머리` 로 시작하는 JSON 덩이를 괄호 균형으로 떼어 «쓸 만한 것»을 돌려준다 */
+export function 덩이떼기(글, 머리, 쓸만한가 = () => true) {
+  const g = String(글 ?? '');
+  let 자리 = -1;
+  while ((자리 = g.indexOf(머리, 자리 + 1)) !== -1) {
+    let 깊이 = 0, 따옴표 = false, 탈출 = false;
+    for (let i = 자리; i < g.length; i++) {
+      const c = g[i];
+      if (탈출) { 탈출 = false; continue; }
+      if (c === '\\') { 탈출 = true; continue; }
+      if (c === '"') { 따옴표 = !따옴표; continue; }
+      if (따옴표) continue;
+      if (c === '{') 깊이++;
+      else if (c === '}') {
+        깊이--;
+        if (깊이 === 0) {
+          try {
+            const j = JSON.parse(g.slice(자리, i + 1));
+            if (쓸만한가(j)) return j;
+          } catch { /* 다음 덩이를 본다 */ }
+          break;
+        }
+      }
+    }
+  }
+  return null;   /* ⛔ 못 찾았으면 null 이다. 빈 것을 「0건」으로 내지 않는다 */
+}
+
 export function parseTargetPrice(text) {
   if (!text) return null;
 
@@ -248,25 +296,41 @@ const 증권사 = {
   },
 
   /**
-   * 한양증권 — 2026-08-03 실측.
-   * 상세 페이지에 Analyst · 투자의견 · 목표주가 · 현재주가가 라벨과 함께 있다.
+   * 한양증권 — 2026-11-14 다시 지음(5번).
+   *
+   * 🔴 **사이트가 Next.js 로 새로 지어졌다.** 옛 주소
+   *   `/board/researchAnalyzeCompany/list?page=N` 은 아직 200 을 주지만
+   *   ① 목록 알맹이가 HTML 에 없고 ② `page=` 를 **무시한다**(늘 1쪽).
+   *   그래서 수집이 날마다 0건이면서 «실패로도 안 잡혔다».
+   *   ⛔ 「200 이니 멀쩡하다」로 읽지 않는다. 몇 건을 건졌나를 본다.
+   *
+   * ⇒ 쪽이 실제로 넘어가는 주소는 보드 UUID 쪽이다(실측 — currentPage 가 따라 움직인다):
+   *     https://www.hygood.co.kr/board/<보드UUID>?page=2
+   *   글 하나는  /board/<보드UUID>/<글UUID>
+   *
+   * 목록 JSON 에 제목·작성일·첨부(PDF)가 다 있고, 상세 본문에 Analyst·투자의견·
+   * 목표주가·현재주가가 라벨과 함께 있다. 2026-11-14 실측으로 2,077건 · 208쪽.
    */
   hanyang: {
     ko: '한양증권',
     origin: 'https://www.hygood.co.kr',
-    list: (p) => `https://www.hygood.co.kr/board/researchAnalyzeCompany/list?page=${p}`,
-    detail: (id) => `https://www.hygood.co.kr/board/researchAnalyzeCompany/detail/${id}?boardNo=17`,
+    보드: '00000000-0000-0000-0000-000009000001',
+    list(p) { return `https://www.hygood.co.kr/board/${this.보드}?page=${p}`; },
+    detail(id) { return `https://www.hygood.co.kr/board/${this.보드}/${id}`; },
     parseList(html) {
+      const j = 덩이떼기(넥스트조각잇기(html), '{"posts":[',
+        (x) => Array.isArray(x.posts) && x.posts.length > 0);
+      /* ⛔ 못 읽었으면 «빈 목록»이 아니라 던진다 — 빈 목록은 「오늘 글이 없다」로 읽힌다 */
+      if (!j) throw new Error('목록 JSON 을 못 읽었다 — 사이트 꼴이 또 바뀌었나 본다');
       const 행 = [];
-      for (const m of html.matchAll(/researchAnalyzeCompany\/detail\/(\d+)[^>]*>([\s\S]{0,300}?)<\/a>/g)) {
-        const t = 태그제거(m[2]);
-        const 날짜 = t.match(/\[(\d{2})\/(\d{2})\]/);
+      for (const x of j.posts) {
+        const t = String(x.title ?? '');
         const 종목 = t.match(/([^[\]()]{1,40}?)\s*\((\d{6})\)/);
         행.push({
-          id: m[1],
-          // 목록은 [07/22] 꼴이라 연도가 없다. 상세에서 채운다.
-          date: null,
-          mmdd: 날짜 ? `${날짜[1]}-${날짜[2]}` : null,
+          id: x.postUuid,
+          /* 작성일이 목록에 그대로 있다 — 상세를 안 열어도 날이 선다 */
+          date: typeof x.createdDate === 'string' ? x.createdDate.slice(0, 10) : null,
+          mmdd: (t.match(/\[(\d{2})\/(\d{2})\]/) || []).slice(1, 3).join('-') || null,
           subject: 종목 ? 종목[1].trim() : null,
           code: 종목 ? 종목[2] : null,
           rating: null,
@@ -276,13 +340,15 @@ const 증권사 = {
       return 행;
     },
     parseDetail(html) {
-      const b = 태그제거(html);
+      /* 상세 본문은 옛 꼴 그대로다 — 라벨이 살아 있어 읽는 법을 안 바꾼다 */
+      const b = 태그제거(넥스트조각잇기(html) || html);
       const analyst = b.match(/Analyst\s*[:：]?\s*([가-힣]{2,4})/)?.[1] ?? null;
       const rating = normalizeRating(b.match(/투자의견\s*[:：]?\s*([A-Za-z가-힣.]{1,12})/)?.[1]);
       const targetPrice = parseTargetPrice(b);
       /*
-       * ⚠ 한양은 「작성일 2026년 07월 10일」 꼴이다. 숫자-구분자 형식만 찾다가
-       *   전건 date=null 이 나왔다. **형식을 하나로 가정하지 않는다.**
+       * ⚠ 한양은 「작성일 2026년 07월 10일」 꼴이었다. 새 꼴에는 작성일이 본문에 없을 수
+       *   있으므로 **목록의 createdDate 를 쓴다**(수집() 이 det.date ?? r.date 로 받는다).
+       *   ⛔ 형식을 하나로 가정하지 않는다 — 2026-08 에 그렇게 전건 date=null 이 났다.
        */
       const 년월일 = b.match(/작성일\s*(20\d\d)\s*년\s*(\d{1,2})\s*월\s*(\d{1,2})\s*일/);
       const 구분자 = b.match(/작성일\s*(20\d\d)[.\-/](\d{1,2})[.\-/](\d{1,2})/);
