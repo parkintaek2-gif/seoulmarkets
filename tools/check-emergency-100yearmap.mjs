@@ -28,7 +28,7 @@
  */
 import fs from 'node:fs';
 import path from 'node:path';
-import { 전부못닿았나, 부를까, 대조군재기, 지금시각 } from './lib/bell-offline-guard.mjs';
+import { 전부못닿았나, 우리가끊겼나, 부를까, 대조군재기, 지금시각 } from './lib/bell-offline-guard.mjs';
 
 const 뿌리 = path.resolve(path.dirname(new URL(import.meta.url).pathname).replace(/^\/([A-Za-z]:)/, '$1'), '..');
 const 로그 = path.join(뿌리, 'docs', '비상벨.md');
@@ -140,6 +140,20 @@ async function 본다() {
 
   /* 🔴 [2026-09-21] **가용성이 «전부» 못 닿았으면 사이트가 아니라 연결을 의심한다.**
      대조군(우리 통제 밖 주소)을 찔러 갈라 본다 — tools/lib/bell-offline-guard.mjs */
+  /* 🔴🔴 [2026-11-14 · 5번] **가용성이 «전부 403» 이면 사이트가 아니라 우리가 끊긴 것이다.**
+     우리 보안 점검기가 /admin·/.env 를 두드리면 침입막기가 우리 아이피를 끊는다.
+     그 뒤로는 모든 자리가 403 으로 찍힌다. ⛔ 그것으로 사장님을 부르지 않는다. */
+  if (!자가시험 && 우리가끊겼나(가용성결과)) {
+    const 판 = 부를까(false, null, true);
+    console.error(`\n⚠ 가용성 ${가용성결과.length}자리가 «전부» 403 이다`);
+    console.error(`   ⇒ ${판.까닭}`);
+    로그남겨([`⚠ 거짓경보를 삼켰다 — 가용성 ${가용성결과.length}자리가 전부 403 이다.`
+      + ' 사이트가 아니라 우리 아이피가 침입막기에 끊긴 것이다(보안 점검기를 돌린 뒤에 그렇게 된다).'
+      + ' 10분 뒤에 저절로 풀린다. 사장님을 부르지 않았다.']);
+    console.error('📮 사장님께 «안» 보냈다 — 우리가 끊긴 것이다. 로그에만 남겼다.');
+    return 1;
+  }
+
   if (!자가시험 && 전부못닿았나(가용성결과)) {
     const 대조군 = await 대조군재기();
     const 판 = 부를까(true, 대조군);
