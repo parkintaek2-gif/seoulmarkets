@@ -102,6 +102,30 @@ export function 있나(u, 있음 = fs.existsSync) {
   return 후보.some((x) => 있음(x));
 }
 
+/**
+ * 🔴🔴 [2026-11-14 · 5번] **재는 태그를 한 꼴로만 찾다가 「없는 것을 있다고 적었다」를 냈다.**
+ *
+ * 지면이 분석 태그를 «자바스크립트로 심는» 꼴로 바뀌었다 —
+ *   `var gaId = "G-B06MWDY5K8";` … `src = "…/gtag/js?id=" + gaId;`
+ * 그런데 이 자는 `?id=G-…` 라는 **글자 그대로**만 찾고 있었다. 그래서 태그가 멀쩡히
+ * 도는데 「태그가 없다」로 읽고, /privacy 가 **거짓말을 한다**고 막았다.
+ * 그 하나 때문에 KCW 배포가 섰다.
+ *
+ * ⛔ 「안 보인다」를 「없다」로 읽지 않는다. 자가 볼 줄 아는 꼴이 좁았을 뿐이다.
+ * ⚠ 그래도 느슨해지지 않는다 — 측정 ID 를 «지면에서 읽어» /privacy 와 맞춰 보는
+ *   본래 규칙은 그대로다. 읽는 길만 둘로 넓힌다.
+ */
+export function 재는ID찾기(글) {
+  const g = String(글 ?? '');
+  /* ① 글자 그대로 박은 꼴 — <script src="…/gtag/js?id=G-XXXX"> */
+  const 곧바로 = /googletagmanager\.com\/gtag\/js\?id=(G-[A-Z0-9]+)/.exec(g);
+  if (곧바로) return 곧바로[1];
+  /* ② 자바스크립트로 심는 꼴 — gaId = "G-XXXX" 를 쓰고 주소를 이어 붙인다 */
+  const 심는꼴 = /gaId\s*=\s*["'](G-[A-Z0-9]+)["']/.exec(g);
+  if (심는꼴 && /googletagmanager\.com\/gtag\/js/.test(g)) return 심는꼴[1];
+  return null;   /* ⛔ 못 찾았으면 null 이다. 「없다」가 아니라 «이 자가 못 봤다»도 된다 */
+}
+
 if (process.argv[1] && process.argv[1].endsWith('check-visitor-walk.mjs')) {
   let 시험 = 0; let 통과 = 0;
   const 자가 = (이름, 참) => { 시험++; if (참) 통과++; else console.log(`  ⛔ 자가시험 실패 — ${이름}`); };
@@ -117,6 +141,15 @@ if (process.argv[1] && process.argv[1].endsWith('check-visitor-walk.mjs')) {
   자가('공유 자산은 뿌리에서도 찾는다', 있나('/_astro/x.css', (q) => q === 'dist/_astro/x.css'));
   자가('⛔ 보통 지면은 뿌리에서 안 찾는다 — 남의 사이트 지면이 잡힌다',
     !있나('/about', (q) => q === 'dist/about.html'));
+  /* 🔴 [2026-11-14] 재는 태그를 두 꼴 다 알아보나 */
+  자가('글자 그대로 박은 꼴을 읽는다',
+    재는ID찾기('<script src="https://www.googletagmanager.com/gtag/js?id=G-ABC12345"></script>') === 'G-ABC12345');
+  자가('자바스크립트로 심는 꼴도 읽는다',
+    재는ID찾기('var gaId = "G-B06MWDY5K8"; s.src = "https://www.googletagmanager.com/gtag/js?id=" + gaId;') === 'G-B06MWDY5K8');
+  자가('⛔ ID 만 있고 주소가 없으면 안 읽는다 — 안 쓰는 값이 남아 있을 수 있다',
+    재는ID찾기('var gaId = "G-B06MWDY5K8";') === null);
+  자가('⛔ 아무것도 없으면 null 이다', 재는ID찾기('<p>hi</p>') === null);
+  자가('⛔ 빈 값에도 안 죽는다', 재는ID찾기(null) === null);
   자가('값을 소스에서 둘 읽는다', 값읽기().length === 2);
   자가('값이 숫자다', 값읽기().every((v) => /^\d+$/.test(v)));
   console.log(`손님 걸음 검사 — 자가시험 ${시험}건 중 ${통과}건 통과`);
@@ -355,15 +388,14 @@ const 기사디렉 = `${D}/article`;
      ⚠ 측정 ID 를 검사에 손으로 박지 않는다. **지면에 나간 것에서 읽어** 서로 맞춘다. */
   {
     const 첫 = fs.existsSync(첫화면) ? fs.readFileSync(첫화면, 'utf8') : '';
-    const 잰다 = /googletagmanager\.com\/gtag\/js\?id=(G-[A-Z0-9]+)/;
-    const m = 첫.match(잰다);
+    const 잰ID = 재는ID찾기(첫);
     const pp = `${D}/privacy.html`;
-    if (m) {
+    if (잰ID) {
       if (!fs.existsSync(pp)) {
         문제.push('🔴 분석 태그를 달아 놓고 /privacy 가 없다 — 밝히지 않고 재는 것이다');
       } else {
         const t = 본문(fs.readFileSync(pp, 'utf8'));
-        if (!t.includes(m[1])) 문제.push(`🔴 /privacy 가 실제로 쓰는 측정 ID(${m[1]})를 안 적는다`);
+        if (!t.includes(잰ID)) 문제.push(`🔴 /privacy 가 실제로 쓰는 측정 ID(${잰ID})를 안 적는다`);
         for (const [말, 무엇] of [[/cookie/i, '쿠키가 생긴다는 것'], [/switch the analytics off|opt-out|block/i, '끄는 법']]) {
           if (!말.test(t)) 문제.push(`/privacy 가 «${무엇}»을 말하지 않는다`);
         }
