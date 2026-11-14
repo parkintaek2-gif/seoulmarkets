@@ -51,3 +51,5 @@ Xikers also has two listings, 4th and 7th, and ranks fourth among the seven acts
 ## Limits
 
 Circle Chart counts shipments minus returns. It does not count sales. The act totals here add rows that the chart lists separately, and Circle Chart does not publish them. This is one week.
+
+Everything we have filed under this subject is at [kculturewire.com/tag/rescene](/tag/rescene?from=body).

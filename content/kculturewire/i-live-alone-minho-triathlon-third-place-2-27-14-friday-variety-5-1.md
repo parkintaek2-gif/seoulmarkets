@@ -69,3 +69,5 @@ In the studio, Jun said **Kim Shin-young** had received a Minister of Culture, S
 OSEN reported that on 1 November Minho finished the JTBC Seoul Marathon in 3:00:18, after which footage showed a pacemaker pushing him on the back, raising a question under World Athletics rules. On 3 November he apologised on social media and returned his race result to the organiser. That is a separate race from the triathlon shown on 6 November.
 
 The next episode of *I Live Alone* airs **13 November at 11:10 pm KST** on MBC.
+
+Everything we have filed under this subject is at [kculturewire.com/tag/i-live-alone](/tag/i-live-alone?from=body).

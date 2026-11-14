@@ -48,3 +48,5 @@ The difference between the two outcomes is one point in the table and nothing at
 LAFC sit sixth in the Western Conference on 46 points. The direct first-round playoff place extends to seventh, so sixth is not yet safe. New York City FC dropped to eleventh in the Eastern Conference.
 
 For Son the night fits a pattern that is easy to miss if you read only the numbers. He has been at LAFC since the summer, and the share of his work that appears as goals and assists is not the whole of it. On this night it was none of it.
+
+Everything we have filed under this subject is at [kculturewire.com/tag/son-heung-min](/tag/son-heung-min?from=body).

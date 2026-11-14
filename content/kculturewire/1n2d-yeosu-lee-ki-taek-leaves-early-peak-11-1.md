@@ -53,3 +53,5 @@ The four went home. Lee Ki-taek escaped the go-home penalty for the first time i
 The reports give no date for the next episode, only that the show airs Sundays at 6:10 pm. By that schedule it would be 15 November, a date we calculated, so check the listing.
 
 Ratings here are Nielsen Korea figures as reported by news outlets. Quotes are as reported by the outlets named above; we did not watch the broadcast ourselves.
+
+Everything we have filed under this subject is at [kculturewire.com/tag/1-night-2-days](/tag/1-night-2-days?from=body).

@@ -65,3 +65,5 @@ That night, someone entered Lee's home while she slept alone. It was Min. The ep
 The only ratings we give are Nielsen Korea's nationwide household figures. We found no peak-minute number for Liar this week, so none is shown. The ending points viewers toward Min, but the series has not confirmed anything, and we do not decide for it.
 
 Liar airs Fridays and Saturdays at 9:50 pm KST on MBC, and a highlights special airs on MBC on 8 November at 1:20 pm.
+
+Everything we have filed under this subject is at [kculturewire.com/tag/liar](/tag/liar?from=body).

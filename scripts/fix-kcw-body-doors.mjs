@@ -57,12 +57,67 @@ export function 문장만들기(지면들) {
   return `The tables behind this are at ${걸이.join(', ')} and ${마지막}.`;
 }
 
+/**
+ * 🔴🔴 [2026-11-14 · 5번] **「자료 지면이 없는 편」에도 문은 있다 — 태그 지면이다.**
+ *
+ * 1번이 40편 가운데 21편에 문을 내고 **19편이 남았다**고 적었다. 남은 편은 시청률·
+ * 연예 뉴스만 근거로 써서 `pages:` 가 비어 있다. 1번이 물었다 —
+ * 「남은 편에 길을 내려면 같은 주제의 자료 지면을 새로 만들어야 합니까」.
+ *
+ * ⛔ **만들지 않는다.** 주소를 살리려고 자료를 짓는 것은 거꾸로다.
+ * ⭐ 우리에겐 이미 **태그 지면**이 있다 — `/tag/1-night-2-days` 처럼 그 주제의 글을 모은 곳이다.
+ *   지어낸 문이 아니라 **있는 문**이고, 그 편을 읽은 사람이 다음에 갈 만한 자리다.
+ *   실측 — 남은 19편 가운데 **18편**이 이 길로 풀린다.
+ *
+ * ⚠ 태그를 아무거나 걸지 않는다. `ratings`·`drama` 같은 **두루뭉술한 것은 뒤로 미룬다** —
+ *   손님에게도 구글에게도 「그 글 이야기」인 태그가 쓸모 있다.
+ * ⚠ 문장도 달라야 한다. 태그 지면은 «표»가 아니라 «모아 둔 곳»이다. 아닌 것을 그렇다고 적지 않는다.
+ */
+export const 두루뭉술한태그 = new Set([
+  'ratings', 'drama', 'variety', 'kpop', 'k-pop', 'music', 'film', 'movies', 'tv',
+  'sports', 'football', 'baseball', 'basketball', 'golf', 'esports', 'netflix',
+  'wikipedia', 'nielsen-korea', 'charts', 'actors', 'idols', 'reality',
+]);
+
+export const 태그슬러그 = (s) => String(s ?? '').toLowerCase().trim()
+  .replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '');
+
+/** 앞말의 tags 목록 — 슬러그로 바꿔 돌려준다 */
+export function tags읽기(원본) {
+  const m = /^tags:[^\S\r\n]*\[([^\]]*)\]/m.exec(String(원본 ?? ''));
+  if (!m) return [];
+  return m[1].split(',').map((x) => 태그슬러그(x.replace(/["']/g, ''))).filter(Boolean);
+}
+
+/**
+ * 걸 태그 하나를 고른다 — **있는 태그 지면 가운데 가장 또렷한 것**.
+ * ⛔ 없는 태그 지면은 안 건다. 지어낸 문이 된다.
+ */
+export function 태그고르기(원본, 있는태그) {
+  const 것 = tags읽기(원본).filter((t) => 있는태그 && 있는태그.has(t));
+  if (!것.length) return null;
+  const 또렷한것 = 것.filter((t) => !두루뭉술한태그.has(t));
+  return (또렷한것.length ? 또렷한것 : 것)[0];
+}
+
+/** 태그 지면으로 가는 한 줄. ⚠ 「표」라고 적지 않는다 — 모아 둔 곳이다 */
+export function 태그문장만들기(태그) {
+  if (!태그) return null;
+  const 길 = `/tag/${태그}`;
+  return `Everything we have filed under this subject is at [kculturewire.com${길}](${길}${딱지}).`;
+}
+
 /** 한 편을 고친 결과를 돌려준다. ⛔ 파일을 쓰지 않는다 — 쓰는 것은 부르는 쪽이다 */
-export function 한편고치기(원본) {
+export function 한편고치기(원본, 있는태그 = null) {
   if (본문에링크있나(원본)) return { 꼴: '그대로', 새것: 원본 };
   const 지면 = pages읽기(원본);
-  const 문장 = 문장만들기(지면);
-  if (!문장) return { 꼴: '못한다', 새것: 원본, 말: 'pages 가 비었다 — 없는 문을 지어내지 않는다' };
+  /* ① 자기 자료 지면이 가장 가까운 문이다 */
+  let 문장 = 문장만들기(지면);
+  /* ② 없으면 태그 지면 — «있는» 것만. 지어내지 않는다 */
+  if (!문장) 문장 = 태그문장만들기(태그고르기(원본, 있는태그));
+  if (!문장) {
+    return { 꼴: '못한다', 새것: 원본, 말: 'pages 도 비었고 걸 만한 태그 지면도 없다 — 없는 문을 지어내지 않는다' };
+  }
   const 끝 = /\r\n/.test(원본) ? '\r\n' : '\n';
   const 몸 = 원본.replace(/[\r\n]+$/, '');
   return { 꼴: '고쳤다', 새것: `${몸}${끝}${끝}${문장}${끝}`, 문장 };
@@ -70,7 +125,8 @@ export function 한편고치기(원본) {
 
 if (process.argv.includes('--자가시험')) {
   const 실패 = [];
-  const 검 = (이름, 참) => { if (!참) 실패.push(이름); };
+  let 검한수 = 0;
+  const 검 = (이름, 참) => { 검한수 += 1; if (!참) 실패.push(이름); };
   const 앞말 = (지면) => `---\ntitle: "x"\npages:\n${지면.map((p) => `  - "${p}"`).join('\n')}\n---\n\nBody text.\n`;
 
   검('지면 하나면 한 줄',
@@ -88,6 +144,25 @@ if (process.argv.includes('--자가시험')) {
   검('고친 뒤에는 본문에 링크가 있다', 본문에링크있나(r.새것) === true);
   검('두 번 돌려도 한 번만 붙는다', 한편고치기(r.새것).꼴 === '그대로');
   검('pages 가 비면 안 고치고 이름을 남긴다', 한편고치기('---\ntitle: "x"\n---\n\nBody.\n').꼴 === '못한다');
+  /* 🔴 [2026-11-14] pages 가 비어도 «있는» 태그 지면이면 문이 된다 */
+  const 태그앞말 = (t) => `---\ntitle: "x"\ntags: [${t.map((x) => `"${x}"`).join(', ')}]\n---\n\nBody.\n`;
+  const 있는것 = new Set(['1-night-2-days', 'ratings', 'kim-hyun-joo']);
+  검('tags 를 읽는다', JSON.stringify(tags읽기(태그앞말(['1 night 2 days', 'ratings']))) === JSON.stringify(['1-night-2-days', 'ratings']));
+  검('있는 태그를 고른다', 태그고르기(태그앞말(['1 night 2 days']), 있는것) === '1-night-2-days');
+  검('⭐ 두루뭉술한 것보다 또렷한 것을 먼저 고른다',
+    태그고르기(태그앞말(['ratings', 'kim hyun-joo']), 있는것) === 'kim-hyun-joo');
+  검('또렷한 것이 없으면 두루뭉술한 것이라도 건다', 태그고르기(태그앞말(['ratings']), 있는것) === 'ratings');
+  검('⛔ 없는 태그 지면은 안 건다 — 지어낸 문이 된다', 태그고르기(태그앞말(['nope']), 있는것) === null);
+  검('⛔ 있는태그를 안 주면 아무것도 안 건다', 태그고르기(태그앞말(['1 night 2 days']), null) === null);
+  검('⚠ 태그 문장은 「표」라고 말하지 않는다', !태그문장만들기('x').includes('table'));
+  검('태그 문장도 본문 링크로 세어진다', 본문에링크있나(`---\nx: 1\n---\n\n${태그문장만들기('x')}\n`));
+  검('태그가 없으면 문장도 없다', 태그문장만들기(null) === null);
+  const t1 = 한편고치기(태그앞말(['1 night 2 days']), 있는것);
+  검('pages 가 비어도 태그로 고친다', t1.꼴 === '고쳤다' && t1.새것.includes('](/tag/1-night-2-days?from=body)'));
+  검('⛔ 태그 지면도 없으면 그대로 못 고친다', 한편고치기(태그앞말(['nope']), 있는것).꼴 === '못한다');
+  검('⭐ 자기 자료 지면이 있으면 그쪽이 먼저다',
+    한편고치기(`---\ntitle: "x"\ntags: ["1 night 2 days"]\npages:\n  - "/places"\n---\n\nBody.\n`, 있는것)
+      .새것.includes('](/places?from=body)'));
   /* ⚠ CRLF 로 저장된 편이 섞여 있다 — 줄끝을 지켜야 한 파일이 통째로 바뀐 것처럼 보이지 않는다 */
   검('CRLF 파일은 CRLF 로 붙인다', 한편고치기(앞말(['/x']).replace(/\n/g, '\r\n')).새것.endsWith('\r\n'));
   검('앞말 안의 링크를 본문 링크로 안 센다', 본문에링크있나('---\nx: "[a](/b)"\n---\n\nplain\n') === false);
@@ -104,7 +179,7 @@ if (process.argv.includes('--자가시험')) {
     본문에링크있나(절대문('https://example.com/places')) === false);
 
   if (실패.length) { console.error('❌ 자가시험 실패\n' + 실패.map((s) => `   · ${s}`).join('\n')); process.exit(1); }
-  console.log('✅ fix-kcw-body-doors 자가시험 통과 (15)');
+  console.log(`✅ fix-kcw-body-doors 자가시험 ${검한수}개 통과`);
   process.exit(0);
 }
 
@@ -114,13 +189,26 @@ if (!고친다 && !process.argv.includes('--본다')) {
   process.exit(1);
 }
 
+/**
+ * 🔴 [2026-11-14] 걸 수 있는 태그 지면을 **지어진 것에서 읽는다.**
+ *   ⛔ 목록을 여기 손으로 적지 않는다 — 적는 순간 늘어난 태그를 못 따라간다.
+ *   ⚠ dist 가 없으면 태그 길은 안 쓴다. 「없는 문을 지어내지 않는다」가 먼저다.
+ */
+const 태그방 = path.join(뿌리, 'dist', 'wikitip', 'tag');
+const 있는태그 = new Set(
+  fs.existsSync(태그방) ? fs.readdirSync(태그방).filter((f) => f.endsWith('.html')).map((f) => f.replace('.html', '')) : [],
+);
+if (!있는태그.size) {
+  console.log('⚠ dist/wikitip/tag 가 없다 — 태그 지면으로는 문을 안 낸다. 먼저 짓는다.');
+}
+
 const 고침 = [];
 const 못함 = [];
 for (const f of fs.readdirSync(CD).filter((x) => x.endsWith('.md'))) {
   const 길 = path.join(CD, f);
   const 원본 = fs.readFileSync(길, 'utf8');
   if (/^draft:[^\S\r\n]*true/m.test(원본)) continue;
-  const r = 한편고치기(원본);
+  const r = 한편고치기(원본, 있는태그);
   if (r.꼴 === '그대로') continue;
   if (r.꼴 === '못한다') { 못함.push(`${f} — ${r.말}`); continue; }
   고침.push(`${f} — ${r.문장}`);
@@ -130,7 +218,7 @@ for (const f of fs.readdirSync(CD).filter((x) => x.endsWith('.md'))) {
 console.log(`${고친다 ? '고쳤다' : '고칠 것'} ${고침.length}편`);
 for (const s of 고침) console.log(`   · ${s}`);
 if (못함.length) {
-  console.log(`\n⚠ 못 고친 것 ${못함.length}편 — pages 가 비어 있다. 지면을 정하는 것은 사람 몫이다`);
+  console.log(`\n⚠ 못 고친 것 ${못함.length}편 — 자기 자료 지면도 태그 지면도 없다. 지어내지 않는다`);
   for (const s of 못함) console.log(`   · ${s}`);
 }
 if (!고친다) console.log('\n⚠ 아직 아무 파일도 안 바꿨다. 바꾸려면 --고친다');

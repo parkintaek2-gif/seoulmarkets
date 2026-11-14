@@ -59,3 +59,5 @@ Choi dived successfully from a **32.8 m** cliff and set a personal record. The s
 The preview showed a "ramen oddity" named Woongseong, who says he has eaten 3,500 bowls, and paper-airplane national team member Lee Jung-wook. The show airs "every Sunday at 6:05 pm". By that schedule episode 2 would be 15 November, a date we calculated, so check the listing.
 
 Reports differ on the height: TenAsia and iMBC Entertainment introduce high diving as a 27 m jump, about ten stories, and give 32.8 m for this one. We use 32.8 m only for this jump. Ratings are Nielsen Korea figures as reported by news outlets; quotes come from outlets that watched the broadcast. We did not watch it ourselves.
+
+Everything we have filed under this subject is at [kculturewire.com/tag/mbc](/tag/mbc?from=body).

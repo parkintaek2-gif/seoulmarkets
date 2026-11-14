@@ -71,3 +71,5 @@ Park later went looking for his father and booked tickets for an Incheon cruise,
 Cheonji Daily reports that episode 482 airs **Saturday 14 November at 10:40 pm** KST on KBS2. iMBC gave 10:35 pm as the start time for episode 481, so check the listing.
 
 Ratings here are Nielsen Korea figures as reported by news outlets. Quotes are as reported by the outlets named above; we did not watch the broadcast ourselves.
+
+Everything we have filed under this subject is at [kculturewire.com/tag/salimnam](/tag/salimnam?from=body).

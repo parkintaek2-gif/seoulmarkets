@@ -59,3 +59,5 @@ Im said he had loved her a lot too, and held him. Whether they end the breakup i
 TenAsia says the finale airs at 10 pm on 10 November, on ENA and also on KT Genie TV and Disney+. The finale's rating and ending are not in this article.
 
 Ratings here are Nielsen Korea figures as reported by news outlets. Park's two lines come from the TenAsia article alone; News1 uses the first sentence as its headline. We did not watch the broadcast ourselves.
+
+Everything we have filed under this subject is at [kculturewire.com/tag/k-drama](/tag/k-drama?from=body).

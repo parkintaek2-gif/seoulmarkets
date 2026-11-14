@@ -38,3 +38,5 @@ The frames MBN supplied show a doll with orange hair standing among band members
 Do-hyuk buys up every copy of Su's CD. He hints at legal action against Seo Jin-woo and smiles. That is where episode 1 ends: the two things Eun-chae was hiding, the clinic mix-up and the stage face, are now in his hands.
 
 Episode 2 airs on Wednesday 12 November at 10:20 pm.
+
+Everything we have filed under this subject is at [kculturewire.com/tag/drama](/tag/drama?from=body).

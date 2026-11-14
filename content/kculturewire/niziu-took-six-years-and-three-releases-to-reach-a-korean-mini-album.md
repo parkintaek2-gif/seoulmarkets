@@ -60,3 +60,5 @@ Grapes" carries more tracks, so its sales, once reported, won't sit on the same 
 *This tracks NiziU's own Japan-to-Korea release timeline and format history, sourced to allkpop and
 Wikipedia's discography record. It is not a comparison against other groups, and it says nothing about
 how "Sour Grapes" itself will chart — those figures aren't out yet.*
+
+Everything we have filed under this subject is at [kculturewire.com/tag/jyp-entertainment](/tag/jyp-entertainment?from=body).

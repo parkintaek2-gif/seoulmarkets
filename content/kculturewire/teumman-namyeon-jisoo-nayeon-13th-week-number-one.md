@@ -60,3 +60,5 @@ With one chance left, Yoo Jae-suk and Nayeon cleared stage two. Yoo Yeon-seok sa
 Nayeon asked to be called again whenever the team plays games.
 
 The show airs Tuesdays at 9 pm. Ratings and quotes come from SBS Entertainment News; Topstar News was used to cross-check the date, cast and streak.
+
+Everything we have filed under this subject is at [kculturewire.com/tag/jisoo](/tag/jisoo?from=body).

@@ -65,3 +65,5 @@ SBS said in a 30 October press release that the 19.5% of episode 6 ranked **fift
 Episode 8 is the one for which a second set of figures is on record. It drew 15.6% nationwide and 15.1% in the Seoul area, with a minute peak of 16.7%. In the 2049 age group the average was 5.4%. These are different measures from the national household figures in the table above, so they are not mixed into it.
 
 This is a count of published ratings. It does not say why viewers came or left, and it does not say what later episodes will draw.
+
+Everything we have filed under this subject is at [kculturewire.com/tag/doctor-x](/tag/doctor-x?from=body).

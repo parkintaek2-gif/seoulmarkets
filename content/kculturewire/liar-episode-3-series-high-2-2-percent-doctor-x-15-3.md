@@ -59,3 +59,5 @@ The episode ends with police detective Lee Hwa-young (Ok Ja-yeon) telling Min th
 Two measures are in circulation for the episode, and they are different things. The nationwide household rating is 2.2%. The broadcaster's release separately reports a peak minute of 4.2%, citing Nielsen Korea but not naming a region. We have not set one beside the other.
 
 Episode 4 airs **7 November at 9:50 pm KST** on MBC.
+
+Everything we have filed under this subject is at [kculturewire.com/tag/liar](/tag/liar?from=body).

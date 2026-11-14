@@ -59,3 +59,5 @@ Kim recalled how Lee had pulled his hand just before the blast and became convin
 We give only Nielsen Korea's household figures. Household and peak-minute figures are different measures, so we do not compare them. The series has not answered Kim's question, and we do not answer it either.
 
 The drama airs Saturdays and Sundays at 9:10 pm on tvN, with six episodes left. By that schedule episode 11 falls on 14 November; we did not check for any change.
+
+Everything we have filed under this subject is at [kculturewire.com/tag/kim-hyun-joo](/tag/kim-hyun-joo?from=body).

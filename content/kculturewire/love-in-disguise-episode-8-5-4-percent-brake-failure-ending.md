@@ -46,3 +46,5 @@ On the way to a memorial service for Yoon's mother, the car's brakes failed and 
 tvN DRAMA's official channel posted a making-of video right after the broadcast, calling Im and Seol "Bangbang Gangjwi" and Kim and Yeon "Neunggeul Nyang-i" in its title. Episode 9 airs on **16 November** at 8:50 pm, and all episodes stream on TVING. The drama is written by Moon Su-jung and directed by Park Dan-hee.
 
 The rating and plot come from one Wikitree report. We did not see the broadcast or Nielsen Korea's own data.
+
+Everything we have filed under this subject is at [kculturewire.com/tag/tvn](/tag/tvn?from=body).

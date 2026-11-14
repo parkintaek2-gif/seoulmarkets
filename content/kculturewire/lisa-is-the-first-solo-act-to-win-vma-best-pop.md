@@ -77,3 +77,5 @@ her fan base — known as "Lilies" — by name. "Dream" was originally released 
 *This is a count of one award category's winners across seventeen ceremonies. It says how rare
 this specific win is within this specific category — not how any other award, chart, or category
 has treated K-pop acts, and not a claim about what happens next.*
+
+Everything we have filed under this subject is at [kculturewire.com/tag/lisa](/tag/lisa?from=body).

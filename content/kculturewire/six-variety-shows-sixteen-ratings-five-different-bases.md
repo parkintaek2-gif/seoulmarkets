@@ -65,3 +65,5 @@ Only the 2054 figure is reported for three shows: I Live Alone at 2.7%, Omniscie
 ## Why we do not rank them
 
 Placing 7.7% next to 2.1% would suggest that one show beat the other. The first is a national household figure for a whole episode, and the second is a 2054 figure. They are different measures, so we do not rank.
+
+Everything we have filed under this subject is at [kculturewire.com/tag/1-night-2-days](/tag/1-night-2-days?from=body).
