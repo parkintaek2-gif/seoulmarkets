@@ -14,3 +14,12 @@
 
 🟢 23시 업무보고를 보냈다
 ✅ 2026-11-13 23시 업무보고는 이미 나갔다 — 아무것도 안 한다
+■ 원고 — docs\보고\업무보고-5번-2026-11-14-2300.md
+(node:39708) ExperimentalWarning: localStorage is not available because --localstorage-file was not provided.
+(Use `node --trace-warnings ...` to show where the warning was created)
+✅ 보냈다 — 메시지 id 1a1da5804ae84ce7
+   ⭐ 보낸 날을 문서에 적는다. 무응답을 「허락」으로 읽지 않기 위한 기준선이다.
+   ✔ 기록했다 — docs/보낸메일.tsv (2026-11-14 22:56)
+   ✔ 그 자리에서 커밋했다 — 공용 트리에서 지워지지 않는다
+
+🟢 23시 업무보고를 보냈다
