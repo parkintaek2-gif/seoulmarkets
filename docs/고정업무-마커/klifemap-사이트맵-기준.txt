@@ -1,5 +1,5 @@
-# 잰날 2026-11-12
-# 오늘셈 1
+# 잰날 2026-11-16
+# 오늘셈 16
 # ⛔ 이 파일을 지우면 「오늘 새로 난 지면」을 하루 동안 못 센다
 https://klifemap.ai/
 https://klifemap.ai/content
@@ -144,6 +144,22 @@ https://klifemap.ai/articles/zh-3.html
 https://klifemap.ai/articles/zh-4.html
 https://klifemap.ai/articles/zh-5.html
 https://klifemap.ai/today
+https://klifemap.ai/content/ilzin-2026-11-16
+https://klifemap.ai/content/sungmyeong-81-suri-over-81-subtract-80-last-digit-ohaeng
+https://klifemap.ai/content/daeun-ten-year-luck-cycle-daeunsu-days-divided-by-three
+https://klifemap.ai/content/ddi-gunghap-age-gap-samhap-4-chung-6-yukhap-odd
+https://klifemap.ai/content/cheongan-hap-five-pairs-gunghap-day-stem-one-in-ten
+https://klifemap.ai/content/saju-month-twelve-jeol-solar-term-month-branch-table
+https://klifemap.ai/content/cheongan-ten-stems-year-last-digit-ohaeng-yinyang-table
+https://klifemap.ai/content/ilzin-2026-11-15
+https://klifemap.ai/content/injeongyong-hanja-8142-name-hanja-legal-limit
+https://klifemap.ai/content/hunminjeongeum-jeja-hae-five-sounds-ohaeng-name-initials
+https://klifemap.ai/content/gunghap-twelve-branches-six-pairs-triads-clashes
+https://klifemap.ai/content/jasi-23-to-01-two-ways-day-change
+https://klifemap.ai/content/korea-standard-time-history-saju-birth-hour
+https://klifemap.ai/content/sixty-ganji-why-sixty-not-120
+https://klifemap.ai/content/ilzin-2026-11-14
+https://klifemap.ai/content/ilzin-2026-11-13
 https://klifemap.ai/content/ilzin-2026-11-12
 https://klifemap.ai/content/ilzin-2026-11-11
 https://klifemap.ai/content/ilzin-2026-11-10
