@@ -61,3 +61,5 @@ A high ratio can mean a lot of capital in a business that sells slowly, as in pr
 This is a balance-sheet measure of capital, not market value. We left market capitalisation out on purpose: it is the price of expectations, not capital employed. We also do not say which level is better. Financial companies may be measured on a different basis, so the Financial Services median of **2.01** across 89 companies is shown for completeness only.
 
 *This is statistics, not you or your company.*
+
+Related: [total assets size bands](/article/korea-total-assets-size-bands-2025-110-companies-above-10-trillion-won-86-percent-of-assets) and [revenue size bands](/article/korea-revenue-size-bands-2025-97-companies-above-5-trillion-won-73-percent-of-sales).

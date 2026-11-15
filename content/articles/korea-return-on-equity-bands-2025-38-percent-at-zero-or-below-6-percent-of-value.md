@@ -61,3 +61,5 @@ Three companies above 20% had the largest market value: SK hynix at 35.6%, SK Sq
 A year-end equity base makes the return jump when equity is small, and one year of earnings is a short record. The 147 companies with no usable equity figure are not in any band, and we do not guess where they would sit.
 
 *This is statistics, not you or your company.*
+
+Related: [price-to-earnings bands](/article/korea-price-to-earnings-bands-2025-45-percent-at-ten-or-below-median-11-5).

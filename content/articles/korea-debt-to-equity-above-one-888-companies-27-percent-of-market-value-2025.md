@@ -61,3 +61,5 @@ At the top of the range the picture turns: the 114 companies above 4.0 hold 8.3%
 The ratio does not separate borrowings from payables, and it is one year-end. We do not call any level high.
 
 *This is statistics, not you or your company.*
+
+Related: [equity as a share of assets, in bands](/article/korea-equity-ratio-bands-2025-median-60-percent-of-assets) and [the 15 companies with negative equity](/article/korea-negative-equity-15-companies-liabilities-above-assets-2025).

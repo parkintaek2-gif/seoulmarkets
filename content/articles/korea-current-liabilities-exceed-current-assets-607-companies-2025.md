@@ -71,3 +71,5 @@ Retail Trade had **21 of 41** companies below 1.0 (51.2%), and Food Products Man
 A year-end balance sheet is a photograph. We have no cash flow or loan maturities, and some businesses are paid before they pay. We do not say any company is at risk.
 
 *This is statistics, not you or your company.*
+
+Related: [equity ratio bands](/article/korea-equity-ratio-bands-2025-median-60-percent-of-assets).

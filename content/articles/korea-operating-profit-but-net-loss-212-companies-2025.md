@@ -54,3 +54,5 @@ The gap also runs the other way. **126 of 855** companies with an operating loss
 The sign of operating income alone did not predict the sign of net income for roughly one company in eight to one in seven, on either side.
 
 *This is statistics, not you or your company.*
+
+Related: [net profit margin bands](/article/korea-net-profit-margin-bands-2025-median-1-9-percent-8-above-100-percent).

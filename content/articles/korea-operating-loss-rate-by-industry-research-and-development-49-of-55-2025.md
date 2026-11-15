@@ -65,3 +65,5 @@ The two ends are 7.4 times apart: 89.1% against 12.1%. In the large Electronic C
 The classification is the one in the tape, and a company is placed in one industry only. We do not know why any company lost money.
 
 *This is statistics, not you or your company.*
+
+Related: [net profit margin bands](/article/korea-net-profit-margin-bands-2025-median-1-9-percent-8-above-100-percent).

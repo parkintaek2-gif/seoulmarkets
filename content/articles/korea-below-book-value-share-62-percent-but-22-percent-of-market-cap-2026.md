@@ -45,3 +45,5 @@ The 1,588 are not all loss-makers. **1,048** reported a positive return on equit
 One reading of a median is that half the companies are below it. On KOSPI, half trade below 0.49 times their book value.
 
 *This is statistics, not you or your portfolio. It describes how 2,542 companies were priced on one day.*
+
+Related: [price-to-earnings bands](/article/korea-price-to-earnings-bands-2025-45-percent-at-ten-or-below-median-11-5).

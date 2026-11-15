@@ -50,3 +50,5 @@ Together the 598 were worth **119.9 trillion won** on 12 November 2026, or **2.7
 So the market, on the day measured, did not price accumulated losses as a reason for a lower book multiple. The table is a count, and it does not say why.
 
 *This is statistics, not you or your company.*
+
+Related: [15 companies with negative equity](/article/korea-negative-equity-15-companies-liabilities-above-assets-2025).

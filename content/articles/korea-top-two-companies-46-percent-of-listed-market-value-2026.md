@@ -61,3 +61,5 @@ KOSDAQ has more than twice as many companies as KOSPI, and about one-eleventh of
 A count of companies and a count of won answer different questions. Both are true, and the tape gives no reason to prefer one. We did not adjust for the shares that actually trade, and we did not compare with any other market.
 
 *This is statistics, not you or your company.*
+
+Related: [revenue size bands](/article/korea-revenue-size-bands-2025-97-companies-above-5-trillion-won-73-percent-of-sales) and [total assets size bands](/article/korea-total-assets-size-bands-2025-110-companies-above-10-trillion-won-86-percent-of-assets).
