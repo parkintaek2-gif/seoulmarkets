@@ -1,0 +1,443 @@
+---
+/**
+ * /elementary/area/[slug] — **시·군·구 초등학교 한 장** (261장)
+ *
+ * ## 🔴 왜 이 지면을 냈나 (2026-11-15 · 5번 · 사장님 「방문자수 증대 올인」)
+ *
+ *   그날 네 사이트 유입원을 재서 나온 것 —
+ *   ```
+ *   백년지도    네이버 2,543명 · 구글   2명
+ *   케이라이프맵  네이버   214명 · 구글   6명
+ *   에스마켓츠   구글      1명 · ChatGPT  69명
+ *   K컬처와이어  구글      1명 · ChatGPT 153명
+ *   ```
+ *   네 사이트 28일 구글 검색 클릭을 **다 더해도 13건**이다.
+ *   그런데 백년지도 하나가 네이버에서 2,543명을 받고, 그 손님이 들어오는 자리를
+ *   다시 재니 **`/report/area/` 258장**이었다. 「인천광역시 부평구 고등학교 진학률 21곳」처럼
+ *   **지역 이름이 제목에 든 지면**이다. 네이버에 「의정부시 고등학교」를 직접 쳐서
+ *   우리 지면이 뜨는 것을 눈으로 봤다.
+ *
+ *   ⇒ **통하는 구조가 이미 증명돼 있다.** 그런데 그 구조를 쓰는 주제가 고등학교 하나뿐이었다.
+ *     초등학교는 자료가 6,328곳·261개 지역으로 이미 갈려 있는데 **전국 한 장**으로만 나가고 있었다.
+ *     같은 구조로 261장을 낸다.
+ *
+ * ## ⛔ 이 지면이 하지 않는 것
+ *
+ *   ```
+ *   ⛔ 줄 세우지 않는다          표는 **가나다순**. 순서에 뜻이 없게 한다
+ *   ⛔ 「명문·전통·순위·좋은 학교」 쓰지 않는다 — 자료 파일에 못 박혀 있다
+ *   ⛔ 오래된 것을 추켜세우지 않는다  햇수는 햇수다. 1898년 설립은 그냥 1898년이다
+ *   ⛔ 없는 것을 메우지 않는다      초등은 진학·학업성취·학급규모 공시가 **없다**
+ *   ```
+ *
+ * ## ⚠ 초등학교 자료에 있는 것과 없는 것
+ *
+ *   NEIS 교육정보 개방 포털이 주는 것은 **문 연 날과 자리와 갈래**다.
+ *   고등학교처럼 진학률을 놓을 수 없다. 없는 칸을 0 으로 채우지 않고,
+ *   **있는 것으로 쓸모가 되게** 짠다 — 우리 동네에 몇 곳이 있고, 언제 문을 열었고,
+ *   공립인지 사립인지, 그리고 그 동네가 시·도 안에서 어디쯤인지.
+ *
+ * ⚠ 설립일은 NEIS 값이다. 학교가 스스로 세는 개교기념일과 다를 수 있어
+ *   「몇 년째」로 단정하지 않고 **「1964년 설립」**으로 적는다.
+ *
+ * ⛔ `is:global` 을 쓰지 않는다 — `/_astro/*.css` 로 빠져 접두사 아래서 404 가 난다.
+ */
+import HundredYear from '../../../../layouts/HundredYear.astro';
+import 초등자료 from '../../../../data/100yearmap/elementary.json';
+import { 슬러그풀기, 열쇠만들기 } from '../../../../lib/school-area';
+import { 초등지역목록, 초등지역주소 } from '../../../../lib/elementary-area';
+
+export async function getStaticPaths() {
+  /* ⛔ 목록을 이 함수 **안**에서 읽는다. 밖에 두면 Astro 가 이 함수를 모듈 밖으로
+     떼어 내 따로 돌리기 때문에 「is not defined」로 빌드가 죽는다.
+     🔴 목록을 만드는 자리는 `lib/elementary-area.ts` **한 곳**이다 —
+        사이트맵이 같은 함수를 부른다. 여기서 따로 만들면 둘이 어긋난다. */
+  const 자료 = await import('../../../../data/100yearmap/elementary.json');
+  const { 초등지역목록 } = await import('../../../../lib/elementary-area');
+  return 초등지역목록(자료 as any).map((a) => ({ params: { slug: a.slug } }));
+}
+
+const { slug } = Astro.params as { slug: string };
+/* ⚠ 「경기도-수원시-장안구」처럼 조각이 셋일 수 있다. split('-')[1] 로 자르면 「수원시」만 남는다 */
+const 푼것 = 슬러그풀기(slug)!;
+const 시도 = 푼것.시도;
+const 구 = 푼것.이름;
+const 이동네열쇠 = 열쇠만들기(시도, 구);
+
+const 모든학교 = (초등자료 as any).자료 as any[];
+const 모든지역 = (초등자료 as any).지역 as any[];
+const 올해 = (초등자료 as any).올해 as number; // 자료가 만들어진 해. ⛔ 오늘 날짜로 다시 세지 않는다
+
+/** ⛔ 가나다순. **무엇으로도 줄 세우지 않는다** */
+const 곳들 = 모든학교
+  .filter((x) => x.열쇠 === 이동네열쇠)
+  .sort((a, b) => String(a.title).localeCompare(String(b.title), 'ko'));
+
+const 이지역 = 모든지역.find((a) => a.열쇠 === 이동네열쇠) ?? null;
+
+/* ── 이 동네를 숫자로 ── */
+const 사립곳 = 곳들.filter((x) => x.설립 === '사립');
+const 국립곳 = 곳들.filter((x) => x.설립 === '국립');
+const 공립곳 = 곳들.filter((x) => x.설립 === '공립');
+/** ⚠ 「남여공학」이 아닌 것만 센다. 자료에 있는 값은 「남여공학」과 「남」 둘뿐이다 */
+const 공학아닌곳 = 곳들.filter((x) => x.공학 && x.공학 !== '남여공학');
+
+const 설립연있는곳 = 곳들.filter((x) => Number.isFinite(x.설립연));
+const 백년넘은곳 = 설립연있는곳
+  .filter((x) => 올해 - x.설립연 >= 100)
+  .sort((a, b) => a.설립연 - b.설립연);
+const 가장오래된 = 설립연있는곳.length
+  ? 설립연있는곳.reduce((p, c) => (c.설립연 < p.설립연 ? c : p))
+  : null;
+const 가장새로운 = 설립연있는곳.length
+  ? 설립연있는곳.reduce((p, c) => (c.설립연 > p.설립연 ? c : p))
+  : null;
+
+/** 열 해 단위로 몇 곳이 문을 열었나. ⛔ 줄 세우기가 아니라 **퍼짐**을 보이는 표다 */
+const 열해묶음 = (() => {
+  const 통: Record<number, number> = {};
+  for (const x of 설립연있는곳) {
+    const 십 = Math.floor(x.설립연 / 10) * 10;
+    통[십] = (통[십] ?? 0) + 1;
+  }
+  return Object.entries(통)
+    .map(([십, 수]) => ({ 십: Number(십), 수 }))
+    .sort((a, b) => a.십 - b.십);
+})();
+const 가장많은십년 = 열해묶음.length
+  ? 열해묶음.reduce((p, c) => (c.수 > p.수 ? c : p))
+  : null;
+
+/* ── 전국과 견주기 ── */
+const 전국곳수 = 모든학교.length;
+const 전국백년 = (초등자료 as any).백년넘은곳수 as number;
+const 전국사립 = 모든학교.filter((x) => x.설립 === '사립').length;
+const 전국사립비 = Math.round((전국사립 / 전국곳수) * 1000) / 10;
+const 이곳사립비 = 곳들.length ? Math.round((사립곳.length / 곳들.length) * 1000) / 10 : null;
+
+/* ── 같은 시·도의 다른 동네 ── */
+/* ⛔ 슬러그를 여기서 다시 만들지 않는다 — lib 가 만든 목록을 그대로 쓴다 */
+const 같은시도 = 초등지역목록(초등자료 as any)
+  .filter((a) => a.시도 === 시도 && a.열쇠 !== 이동네열쇠)
+  .sort((a, b) => String(a.구).localeCompare(String(b.구), 'ko'));
+
+/** 이 동네가 시·도 안에서 **몇 번째로 많은가**가 아니라 **어디쯤인가**를 보인다 */
+const 시도안곳수들 = 모든지역.filter((a) => a.시도 === 시도).map((a) => a.곳).sort((x, y) => x - y);
+const 시도가운데값 = (() => {
+  if (!시도안곳수들.length) return null;
+  const m = 시도안곳수들.length >> 1;
+  return 시도안곳수들.length % 2
+    ? 시도안곳수들[m]
+    : Math.round(((시도안곳수들[m - 1] + 시도안곳수들[m]) / 2) * 10) / 10;
+})();
+
+/* ⚠ 「— 백년지도」는 레이아웃이 붙인다. 여기서 또 붙이면 두 번 나온다 (2026-11-15 에 실물에서 잡았다) */
+const 제목 = `${시도} ${구} 초등학교 ${곳들.length}곳`;
+const desc =
+  곳들.length > 0
+    ? `${시도} ${구} 초등학교 ${곳들.length}곳을 한 표에 놓았습니다. ` +
+      `공립 ${공립곳.length}곳 · 사립 ${사립곳.length}곳` +
+      (국립곳.length ? ` · 국립 ${국립곳.length}곳` : '') +
+      (가장오래된 ? `, 가장 먼저 문을 연 곳은 ${가장오래된.title} ${가장오래된.설립연}년입니다. ` : '. ') +
+      `줄 세우지 않고 가나다순으로 놓았습니다.`
+    : `${시도} ${구} 초등학교를 한 표에 놓았습니다.`;
+
+/**
+ * ⭐ FAQPage — 손님이 실제로 치는 **«동네 이름 + 초등학교»** 그대로 묻는다.
+ *   고등학교 지면(/report/area/)에서 이 자리가 네이버 유입을 끌어온 것이 실측으로 확인됐다.
+ */
+const faqJsonLd = {
+  '@context': 'https://schema.org',
+  '@type': 'FAQPage',
+  mainEntity: [
+    {
+      '@type': 'Question',
+      name: `${구} 초등학교`,
+      acceptedAnswer: { '@type': 'Answer', text: desc },
+    },
+    ...(가장오래된
+      ? [
+          {
+            '@type': 'Question',
+            name: `${구}에서 가장 먼저 문을 연 초등학교`,
+            acceptedAnswer: {
+              '@type': 'Answer',
+              text:
+                `${가장오래된.title}입니다. ${가장오래된.설립연}년 설립으로 기록돼 있습니다. ` +
+                `⚠ NEIS 가 준 설립일이라 학교가 스스로 세는 개교기념일과 다를 수 있습니다.`,
+            },
+          },
+        ]
+      : []),
+  ],
+};
+---
+
+<HundredYear title={제목} description={desc} noindex={false} jsonLd={faqJsonLd}>
+  <p class="note">
+    🎁 <strong>무료로 보실 수 있습니다.</strong> {구}의 초등학교 {곳들.length}곳을 한 표에
+    놓았습니다 — <a href="/region">다른 지역도 보기 →</a>
+  </p>
+
+  <h1>{구} 초등학교<br class="pcbr" /> {곳들.length}곳, 한 장에</h1>
+
+  <p class="lead">
+    {
+      곳들.length === 1 ? (
+        <>
+          이 지역에는 초등학교가 <strong>한 곳</strong> 있습니다. 공시에 적힌 것을{' '}
+          <strong>그대로</strong> 놓았습니다.
+        </>
+      ) : (
+        <>
+          학교 한 곳의 주소는 어디서나 찾을 수 있습니다. 없는 것은{' '}
+          <strong>{구}의 {곳들.length}곳을 한 번에 놓고 보는 화면</strong>입니다. 지금은 학교를
+          하나씩 검색해 따로따로 읽어야 합니다.
+        </>
+      )
+    }
+  </p>
+
+  {/* ⭐ 문 연 지 100년이 넘은 학교 — 있는 곳에만 적는다. 없으면 이 줄이 통째로 없다 */}
+  {
+    백년넘은곳.length > 0 && (
+      <p class="note">
+        이 가운데 <strong>문 연 지 100년이 넘은 곳이 {백년넘은곳.length}곳</strong>입니다. 제일
+        먼저 문을 연 곳은 <strong>{백년넘은곳[0].title} {백년넘은곳[0].설립연}년</strong>입니다.
+        전국 초등학교 {전국곳수.toLocaleString()}곳 가운데 100년이 넘은 곳은{' '}
+        {전국백년.toLocaleString()}곳입니다. ⚠ 설립일은 NEIS 가 준 값이라 학교가 세는
+        개교기념일과 다를 수 있습니다.
+      </p>
+    )
+  }
+
+  <h2>{구}를 숫자로</h2>
+  <div class="nums">
+    <div><strong>{곳들.length}</strong><span>초등학교</span></div>
+    <div><strong>{공립곳.length}</strong><span>공립</span></div>
+    <div><strong>{사립곳.length}</strong><span>사립</span></div>
+    {국립곳.length > 0 && <div><strong>{국립곳.length}</strong><span>국립</span></div>}
+    {백년넘은곳.length > 0 && <div><strong>{백년넘은곳.length}</strong><span>100년 넘음</span></div>}
+  </div>
+
+  {
+    이곳사립비 != null && (
+      <p class="note">
+        {구}는 {곳들.length}곳 가운데 사립이 {사립곳.length}곳({이곳사립비}%)입니다. 전국은{' '}
+        {전국곳수.toLocaleString()}곳 가운데 {전국사립.toLocaleString()}곳({전국사립비}%)입니다.
+        <strong> 많고 적음에 좋고 나쁨은 없습니다.</strong> 사립이 많은 곳은 대개 도시가 오래
+        자리 잡은 곳입니다.
+      </p>
+    )
+  }
+
+  {
+    공학아닌곳.length > 0 && (
+      <p class="note">
+        남녀공학이 아닌 곳이 <strong>{공학아닌곳.length}곳</strong>입니다 —{' '}
+        {공학아닌곳.map((x) => x.title).join(' · ')}.
+      </p>
+    )
+  }
+
+  <h2>{곳들.length}곳을 한 번에</h2>
+  <p class="note">
+    ⛔ <strong>가나다순입니다.</strong> 무엇으로도 줄 세우지 않습니다. 순서에 뜻이 없습니다.
+  </p>
+  <div class="tablewrap">
+    <table>
+      <thead>
+        <tr>
+          <th>학교</th>
+          <th>갈래</th>
+          <th>문 연 해</th>
+          <th>자리</th>
+        </tr>
+      </thead>
+      <tbody>
+        {
+          곳들.map((x) => (
+            <tr>
+              <td>
+                {x.홈페이지 ? (
+                  <a href={x.홈페이지} rel="nofollow noopener" target="_blank">{x.title}</a>
+                ) : (
+                  x.title
+                )}
+              </td>
+              <td>{x.설립}{x.공학 && x.공학 !== '남여공학' ? ` · ${x.공학}` : ''}</td>
+              <td>{Number.isFinite(x.설립연) ? `${x.설립연}년` : '—'}</td>
+              <td class="addr">{String(x.주소 ?? '').replace(`${시도} `, '')}</td>
+            </tr>
+          ))
+        }
+      </tbody>
+    </table>
+  </div>
+
+  {
+    열해묶음.length > 1 && (
+      <>
+        <h2>{구}의 초등학교는 언제 문을 열었나</h2>
+        <p class="note">
+          학교가 언제 생겼는지는 그 동네가 언제 커졌는지를 따라갑니다.
+          {가장많은십년 && (
+            <>
+              {' '}
+              {구}에서는 <strong>{가장많은십년.십}년대에 {가장많은십년.수}곳</strong>이 가장 많이
+              문을 열었습니다.
+            </>
+          )}
+          {가장오래된 && 가장새로운 && 가장오래된.설립연 !== 가장새로운.설립연 && (
+            <>
+              {' '}
+              가장 이른 곳이 {가장오래된.설립연}년, 가장 늦은 곳이 {가장새로운.설립연}년입니다.
+            </>
+          )}
+        </p>
+        <div class="tablewrap">
+          <table>
+            <thead>
+              <tr><th>문 연 해</th><th>곳</th><th /></tr>
+            </thead>
+            <tbody>
+              {
+                열해묶음.map((b) => (
+                  <tr>
+                    <td>{b.십}년대</td>
+                    <td>{b.수}곳</td>
+                    <td class="bar">
+                      <span
+                        style={`display:inline-block;height:10px;background:currentColor;opacity:.45;width:${Math.round((b.수 / (가장많은십년?.수 || 1)) * 100)}%`}
+                      />
+                    </td>
+                  </tr>
+                ))
+              }
+            </tbody>
+          </table>
+        </div>
+      </>
+    )
+  }
+
+  {
+    이지역 && 시도가운데값 != null && 시도안곳수들.length > 1 && (
+      <>
+        <h2>{시도} 안에서 {구}는</h2>
+        <p class="note">
+          {시도}의 시·군·구는 초등학교를 <strong>가운데값 {시도가운데값}곳</strong>씩 가지고
+          있습니다. {구}는 <strong>{곳들.length}곳</strong>입니다.{' '}
+          <strong>많은 쪽이 좋은 것도, 적은 쪽이 나쁜 것도 아닙니다.</strong> 곳수는 그 동네에
+          사는 아이 수와 땅 넓이를 함께 따라갑니다.
+        </p>
+      </>
+    )
+  }
+
+  <h2>이 한 장에 없는 것</h2>
+  <p class="note">
+    초등학교는 <strong>진학률·학업성취·학급당 학생 수 공시가 없습니다.</strong> 고등학교에는
+    있는 칸이 초등학교에는 처음부터 없습니다. 그래서 이 지면에는 그 숫자가 없습니다 —{' '}
+    <strong>빈칸을 0 으로 채우거나 짐작으로 메우지 않았습니다.</strong>
+  </p>
+
+  {
+    같은시도.length > 0 && (
+      <>
+        <h2>{시도}의 다른 지역 초등학교</h2>
+        <p class="links">
+          {
+            같은시도.map((a) => (
+              <>
+                <a href={초등지역주소(a.slug)}>{a.구} {a.곳}곳</a>{' '}
+              </>
+            ))
+          }
+        </p>
+      </>
+    )
+  }
+
+  <h2>이 숫자는 어디서 왔나요?</h2>
+  <p class="note">
+    NEIS 교육정보 개방 포털의 초등학교 자료입니다({올해}년). 전국{' '}
+    {전국곳수.toLocaleString()}곳을 주소로 갈라 시·군·구마다 한 장씩 놓았습니다.
+    <br />
+    ⚠ 재외한국학교와 아직 문을 열지 않은 곳은 뺐습니다. 설립일은 NEIS 값이라 학교가 스스로 세는
+    개교기념일과 다를 수 있습니다.
+  </p>
+
+  <p class="note">
+    <a href="/elementary">전국 초등학교 한눈에 보기 →</a> · <a href="/region">지역으로 보기 →</a>{' '}
+    · <a href={`/report/area/${slug}`}>{구}의 고등학교 보기 →</a>
+  </p>
+</HundredYear>
+
+<style>
+  .nums {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    margin: 14px 0;
+  }
+  .nums > div {
+    flex: 1 1 86px;
+    border: 1px solid rgba(255, 255, 255, 0.14);
+    border-radius: 10px;
+    padding: 10px 8px;
+    text-align: center;
+  }
+  .nums strong {
+    display: block;
+    font-size: clamp(21px, 4.6vw, 30px);
+    font-weight: 900;
+    line-height: 1.1;
+  }
+  .nums span {
+    display: block;
+    font-size: 13px;
+    opacity: 0.72;
+    margin-top: 3px;
+    word-break: keep-all;
+  }
+  .tablewrap {
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+    margin: 12px 0;
+  }
+  .tablewrap table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 15px;
+  }
+  .tablewrap th,
+  .tablewrap td {
+    padding: 7px 9px;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    text-align: left;
+    word-break: keep-all;
+    vertical-align: top;
+  }
+  .tablewrap th {
+    font-weight: 700;
+    white-space: nowrap;
+  }
+  .tablewrap td.addr {
+    font-size: 13px;
+    opacity: 0.74;
+  }
+  .tablewrap td.bar {
+    width: 42%;
+    min-width: 90px;
+  }
+  .links {
+    line-height: 2.1;
+    word-break: keep-all;
+  }
+  .links a {
+    display: inline-block;
+    margin-right: 4px;
+    white-space: nowrap;
+  }
+</style>

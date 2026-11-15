@@ -14,6 +14,11 @@ import { 학과슬러그 } from '../../lib/college-major';
 /* ⚠ 위의 (시·도 목록)과 이름이 겹치지 않게 **다른 이름**으로 받는다 */
 import 지역단위 from '../../data/100yearmap/areas.json';
 import { 한벌로팔만한가 } from '../../lib/school-area';
+/* 🔴 [2026-11-15 · 5번] 초등학교 지역 한 장 261장. 목록은 lib 한 곳에서 온다 —
+   `elementary/area/[slug].astro` 의 getStaticPaths 가 **같은 함수**를 부른다.
+   두 곳에 따로 적으면 「사이트맵엔 있는데 지면이 404」가 난다 */
+import 초등자료 from '../../data/100yearmap/elementary.json';
+import { 초등지역목록, 초등지역주소 } from '../../lib/elementary-area';
 /* 🔴 파는 지면을 검색에 여는 스위치. `[slug].astro` 의 noindex 와 **같은 것**을 부른다 */
 import { 파는지면검색 } from '../../lib/price';
 import { 짧은지역명 } from '../../lib/region';
@@ -695,6 +700,26 @@ export const GET: APIRoute = () => {
      *   지금은 본보기 한 곳이라 여기 한 줄이다. 늘리면 **두 곳을 같이** 늘린다.
      */
     { path: '/report/7010057', priority: '0.7', changefreq: 'monthly' },
+    /**
+     * ⭐ 2026-11-15 · 5번 — **초등학교 지역 한 장 261장.**
+     *
+     *   사장님 「방문자수 증대 올인」에 따라 그날 네 사이트 유입원을 쟀다.
+     *   네 사이트 28일 구글 검색 클릭을 다 더해도 13건인데, 백년지도 하나가
+     *   네이버에서 2,543명을 받고 있었다. 그 손님이 들어오는 자리를 다시 재니
+     *   **`/report/area/` 258장**이었다 — 지역 이름이 제목에 든 지면이다.
+     *   네이버에 「의정부시 고등학교」를 직접 쳐서 우리 지면이 뜨는 것을 눈으로 봤다.
+     *
+     *   같은 구조를 초등학교로 한 벌 더 낸다. 자료(NEIS 6,328곳·261개 지역)는
+     *   이미 있었고 **전국 한 장**으로만 나가고 있었다.
+     *
+     * 🔴 목록은 `lib/elementary-area.ts` **한 곳**에서 온다.
+     * ⚠ 파는 것이 없으므로 곳수로 가르지 않는다 — **261장 전부 연다.**
+     */
+    ...초등지역목록(초등자료 as any).map((a) => ({
+      path: 초등지역주소(a.slug),
+      priority: '0.6',
+      changefreq: 'monthly',
+    })),
   ];
 
   const body = `<?xml version="1.0" encoding="UTF-8"?>

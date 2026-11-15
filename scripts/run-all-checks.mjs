@@ -186,6 +186,13 @@ export const 단계들 = [
   "node scripts/check-legal-name.mjs",
   "node scripts/check-korean.mjs",
   "node scripts/check-frontmatter.mjs",
+  /* 🔴 [2026-11-15 · 5번] 리뷰 글의 분류 코드. `category: volleyball` 한 줄이
+     Astro content schema 에서 터져 **`npm run build` 가 통째로 죽었고
+     백년지도·K컬처와이어 배포가 함께 섰다.** 스키마는 마지막 그물이라
+     빌드까지 가야 보인다 — 그 앞에서 거른다.
+     ⚠ 사장님 2026-10-28 — 「배구는 제 칸을 두지 않고 스포츠종합이 받는다」 */
+  "node scripts/check-리뷰분류.mjs --자가시험",
+  "node scripts/check-리뷰분류.mjs",
   "node scripts/check-school-area.mjs",
   "node scripts/check-school-gap.mjs",
   "node scripts/check-inflow-tag.mjs",
