@@ -10,9 +10,9 @@ const 낼곳 = 'C:/Users/User/AppData/Local/Temp/claude/112258f41787d32a/033739c
 const 마스크 = `<svg xmlns="http://www.w3.org/2000/svg" width="1024" height="1024">
   <defs>
     <linearGradient id="천" x1="0" y1="0" x2="0.35" y2="1">
-      <stop offset="0" stop-color="#F4F5F6"/>
-      <stop offset="0.52" stop-color="#E4E7EA"/>
-      <stop offset="1" stop-color="#C9CFD4"/>
+      <stop offset="0" stop-color="#A18E6D"/>
+      <stop offset="0.52" stop-color="#86734F"/>
+      <stop offset="1" stop-color="#5E4E37"/>
     </linearGradient>
     <linearGradient id="그늘" x1="0" y1="0" x2="1" y2="0">
       <stop offset="0" stop-color="#000" stop-opacity="0.22"/>
@@ -23,8 +23,8 @@ const 마스크 = `<svg xmlns="http://www.w3.org/2000/svg" width="1024" height="
 
   <g transform="translate(-10, 30) rotate(-6 560 548)">
     <!-- 귀끈 — 얼굴 양옆으로 넘어간다 -->
-    <path d="M 432 486 C 392 476, 374 498, 388 536" stroke="#CDD2D7" stroke-width="12" fill="none" stroke-linecap="round" opacity="0.92"/>
-    <path d="M 684 470 C 722 462, 738 486, 726 526" stroke="#CDD2D7" stroke-width="12" fill="none" stroke-linecap="round" opacity="0.92"/>
+    <path d="M 432 486 C 392 476, 374 498, 388 536" stroke="#8E7B58" stroke-width="12" fill="none" stroke-linecap="round" opacity="0.92"/>
+    <path d="M 684 470 C 722 462, 738 486, 726 526" stroke="#8E7B58" stroke-width="12" fill="none" stroke-linecap="round" opacity="0.92"/>
 
     <!-- 마스크 몸체 -->
     <path d="M 430 470 C 476 446, 628 442, 682 468 C 696 512, 690 574, 656 618 C 622 664, 494 668, 456 622 C 424 584, 420 508, 430 470 Z"
@@ -33,15 +33,15 @@ const 마스크 = `<svg xmlns="http://www.w3.org/2000/svg" width="1024" height="
           fill="url(#그늘)"/>
 
     <!-- 콧등 쪽 가장자리 -->
-    <path d="M 430 470 C 476 446, 628 442, 682 468" stroke="#9AA3AB" stroke-width="6" fill="none" opacity="0.85"/>
+    <path d="M 430 470 C 476 446, 628 442, 682 468" stroke="#604F39" stroke-width="6" fill="none" opacity="0.85"/>
     <!-- 코 집게 -->
-    <path d="M 464 476 C 514 458, 606 456, 656 474" stroke="#9AA3AB" stroke-width="7" fill="none" opacity="0.5" stroke-linecap="round"/>
+    <path d="M 464 476 C 514 458, 606 456, 656 474" stroke="#604F39" stroke-width="7" fill="none" opacity="0.5" stroke-linecap="round"/>
 
     <!-- 가운데 접힘선 -->
-    <path d="M 558 456 C 562 522, 560 596, 552 656" stroke="#AEB6BD" stroke-width="4" fill="none" opacity="0.55"/>
+    <path d="M 558 456 C 562 522, 560 596, 552 656" stroke="#6F5E43" stroke-width="4" fill="none" opacity="0.55"/>
     <!-- 가로 주름 -->
-    <path d="M 436 518 C 512 500, 608 498, 680 516" stroke="#B9C0C6" stroke-width="3.5" fill="none" opacity="0.5"/>
-    <path d="M 444 566 C 516 548, 606 546, 674 562" stroke="#B9C0C6" stroke-width="3.5" fill="none" opacity="0.45"/>
+    <path d="M 436 518 C 512 500, 608 498, 680 516" stroke="#736247" stroke-width="3.5" fill="none" opacity="0.5"/>
+    <path d="M 444 566 C 516 548, 606 546, 674 562" stroke="#736247" stroke-width="3.5" fill="none" opacity="0.45"/>
 
     <!-- 아래쪽 그늘 -->
     <path d="M 456 622 C 494 668, 622 664, 656 618 C 620 652, 496 656, 456 622 Z" fill="#000" opacity="0.14"/>
@@ -49,8 +49,10 @@ const 마스크 = `<svg xmlns="http://www.w3.org/2000/svg" width="1024" height="
   </g>
 </svg>`;
 
+/* 가장자리를 살짝 흐려 사진에 녹인다. 알파까지 함께 흐려야 테두리가 안 보인다 */
+const 흐린마스크 = await sharp(Buffer.from(마스크)).blur(1.6).png().toBuffer();
 await sharp(원본)
-  .composite([{ input: Buffer.from(마스크) }])
+  .composite([{ input: 흐린마스크 }])
   .jpeg({ quality: 92, mozjpeg: true })
   .toFile(낼곳);
 console.log('마스크를 씌웠다');
