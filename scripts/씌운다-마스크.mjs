@@ -51,8 +51,18 @@ const 마스크 = `<svg xmlns="http://www.w3.org/2000/svg" width="1024" height="
 
 /* 가장자리를 살짝 흐려 사진에 녹인다. 알파까지 함께 흐려야 테두리가 안 보인다 */
 const 흐린마스크 = await sharp(Buffer.from(마스크)).blur(1.6).png().toBuffer();
+
+/* 🔴 망원경은 마스크보다 «앞»에 있다 — 왼쪽 귀끈이 망원경 위로 나오면 안 된다.
+   원본에서 망원경이 지나가는 띠만 떼어 맨 위에 다시 올린다. */
+const 망원경덮개 = `<svg xmlns="http://www.w3.org/2000/svg" width="1024" height="1024">
+  <rect width="1024" height="1024" fill="#000"/>
+  <path d="M 0 408 L 438 490 L 450 598 L 0 664 Z" fill="#fff"/>
+</svg>`;
+const 덮개알파 = await sharp(Buffer.from(망원경덮개)).blur(1.3).extractChannel('red').toBuffer();
+const 망원경조각 = await sharp(원본).ensureAlpha().joinChannel(덮개알파).png().toBuffer();
+
 await sharp(원본)
-  .composite([{ input: 흐린마스크 }])
+  .composite([{ input: 흐린마스크 }, { input: 망원경조각 }])
   .jpeg({ quality: 92, mozjpeg: true })
   .toFile(낼곳);
 console.log('마스크를 씌웠다');
