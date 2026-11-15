@@ -55,6 +55,7 @@ import 합계출산율 from '../../../data/100yearmap/fertility-rate.json';
 import 자격나이 from '../../../data/100yearmap/qual-age.json';
 import 자격기간 from '../../../data/100yearmap/qual-duration.json';
 import 문화관람 from '../../../data/100yearmap/culture-attendance.json';
+import 진로격차 from '../../../data/100yearmap/career-aspiration-gap.json';
 
 const a = 어린이집 as any, b = 유치원 as any, c = 방과후 as any, d = 소아과 as any;
 const e = 초등 as any, f = 직장 as any, g = 남은해 as any, h = 건강한해 as any;
@@ -147,6 +148,12 @@ const 문들 = [
     수: '한 점',
     한줄: '대학은 백 년 가운데 한 점입니다. 이 자리도 저희 페이지 대부분이 여기 있습니다.',
     기간: '해마다',
+  },
+  {
+    나이: '10대 · 진로', 주소: '/career-aspiration-gap', 이름: '성적이 비슷해도 희망 직업이 갈리나',
+    수: `${(진로격차 as any).기대직업지위지수격차[1].격차}점`,
+    한줄: `부모 사회경제적 지위 상위 25%와 하위 25% 학생의 기대 직업지위 지수 차이입니다. 진로 정보를 인터넷에서 찾아본 적이 있는 학생은 ${(진로격차 as any).진로교육경험.칸들[0].상위}%와 ${(진로격차 as any).진로교육경험.칸들[0].하위}%로 갈렸습니다.`,
+    기간: `PISA ${(진로격차 as any).기대직업지위지수격차[0].해}·${(진로격차 as any).기대직업지위지수격차[1].해} · 한국교육개발원 RR2026-02`,
   },
   {
     나이: '20대 · 첫 일', 주소: '/first-job', 이름: '처음 일자리는 언제 오고, 얼마나 갈까',
