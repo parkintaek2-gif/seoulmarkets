@@ -1,0 +1,262 @@
+---
+/*
+ * **Korean listed companies, by industry** — 무료 영문 지면 40장.
+ * (seoulmarkets.com/data/industry/<slug>)
+ *
+ * ── 🔴 왜 이 지면인가 — 측정해서 찾은 자리다 (2026-11-16 · 5번) ────────────────
+ *   30일 AI 유입 실측: SeoulMarkets 89건 가운데 **38%가 `/data/` 세 장**에 몰렸다
+ *   (kospi-weights 20 · target-price-accuracy 7 · valuation 7). 그런데 `/data/` 는
+ *   이미 57장이고 나머지 54장은 거의 0이다.
+ *   ⇒ 이기는 셋과 지는 54장의 차이는 형식이 아니라 **«질문»**이었다.
+ *     「Korean pharmaceutical companies」·「Korean banks list」처럼 **업종 전수**를 묻는
+ *     말에 답할 자료(2,709사)는 쥐고 있는데, 그 질문을 받는 지면이 한 장도 없었다.
+ *
+ * ── ⛔ 이 지면이 지키는 것 (kospi-weights 와 같은 규칙) ──────────────────
+ * ⛔ 화면에 한국어를 내지 않는다 — 손님이 영어권이다.
+ * ⛔ 「싸다·비싸다·사라·팔라」를 말하지 않는다. 투자자문이 아니다.
+ * ⛔ **평균을 만들지 않는다.** 중앙값과 «센 곳 수»를 낸다 — 자료 메타도
+ *   「No sector averages are computed」라고 못박고 있다.
+ * ⛔ 못 잰 것을 0 으로 채우지 않는다 — 「—」로 두고, 몇 곳을 못 쟀는지 **표 위에** 적는다.
+ * ⛔ 광고 자리를 넣지 않는다 — 사장님 2026-11-15 「광고는 케이컬쳐만 승인 받은.
+ *   거기에만 광고 넣어. 더하지마」.
+ * ⚠ 회사 단위다. 우선주가 따로 상장돼 있어도 발행 회사 하나로 센다(DART 신고 주체 기준).
+ * ⚠ 업종은 **우리가 나눈 것이 아니라** DART 신고서의 산업 분류를 그대로 쓴다.
+ *   그 분류가 무엇을 못 가르는지 지면에 적는다.
+ *
+ * 🔴 Astro 앞말(`---` 사이)은 TypeScript 다. JSX 를 넣으면 빌드가 죽는다.
+ * ⚠ 줄바꿈만으로 두 글월을 띄우면 «붙어» 나간다. 사이에 {' '} 를 넣는다.
+ */
+import Base from '../../../layouts/Base.astro';
+import { SITE_URL } from '../../../consts';
+import CiteAs from '../../../components/CiteAs.astro';
+import tape from '../../../data/korea-valuation-tape.json';
+import { 업종목록, 업종의회사들, type 업종, type 업종행 } from '../../../lib/industry-pages';
+
+export function getStaticPaths() {
+  return 업종목록().map((x) => ({ params: { slug: x.slug }, props: { 업종: x } }));
+}
+
+const { 업종: 이업종 } = Astro.props as { 업종: 업종 };
+const meta = (tape as any)._meta as Record<string, any>;
+
+const 회사들: 업종행[] = 업종의회사들(이업종.열쇠);
+
+/* 시장별 — 'Y' KOSPI · 'K' KOSDAQ · 'N' KONEX */
+const 시장이름: Record<string, string> = { Y: 'KOSPI', K: 'KOSDAQ', N: 'KONEX' };
+const 시장셈 = 회사들.reduce<Record<string, number>>((a, r) => {
+  const k = 시장이름[r.market ?? ''] ?? 'Other';
+  a[k] = (a[k] ?? 0) + 1;
+  return a;
+}, {});
+const 시장줄 = Object.entries(시장셈)
+  .sort((a, b) => b[1] - a[1])
+  .map(([k, v]) => `${v} on ${k}`)
+  .join(', ');
+
+/** 못 잰 것은 빼고 센다. ⛔ 0 으로 채우지 않는다 */
+function 잰값(고르기: (r: 업종행) => number | null): number[] {
+  return 회사들.map(고르기).filter((v): v is number => typeof v === 'number' && Number.isFinite(v));
+}
+function 중앙값(xs: number[]): number | null {
+  if (!xs.length) return null;
+  const s = [...xs].sort((a, b) => a - b);
+  const m = Math.floor(s.length / 2);
+  return s.length % 2 ? s[m] : (s[m - 1] + s[m]) / 2;
+}
+
+const 시총들 = 잰값((r) => r.marketCap);
+const per들 = 잰값((r) => r.per);
+const pbr들 = 잰값((r) => r.pbr);
+const roe들 = 잰값((r) => r.roe);
+
+const 시총합 = 시총들.reduce((a, b) => a + b, 0);
+const 못잰시총 = 회사들.length - 시총들.length;
+const perMed = 중앙값(per들);
+const pbrMed = 중앙값(pbr들);
+const roeMed = 중앙값(roe들);
+
+const 큰셋 = 회사들.slice(0, 3).filter((r) => r.nameEn && typeof r.marketCap === 'number');
+/* 위 세 곳이 «잰» 시총 합에서 차지하는 몫 — 분모는 «잰 것»만 */
+const 셋몫 = 시총합 > 0 && 큰셋.length === 3
+  ? (큰셋.reduce((a, r) => a + (r.marketCap ?? 0), 0) / 시총합) * 100
+  : null;
+
+const num = (n: number) => n.toLocaleString('en-US');
+const 조원 = (n: number) => `₩${(n / 1e12).toLocaleString('en-US', { maximumFractionDigits: 1 })}tn`;
+const 억원 = (n: number | null) =>
+  typeof n === 'number' ? (n / 1e8).toLocaleString('en-US', { maximumFractionDigits: 0 }) : '—';
+const 비 = (x: number | null, d = 1) => (typeof x === 'number' ? x.toFixed(d) : '—');
+
+const priceDate = String(meta.priceAsOf ?? '');
+const 값날 = priceDate.length === 8
+  ? `${priceDate.slice(0, 4)}-${priceDate.slice(4, 6)}-${priceDate.slice(6, 8)}`
+  : priceDate;
+
+const 이름 = 이업종.영문;
+const 소문자이름 = 이름.toLowerCase();
+const TITLE = `Korean ${소문자이름} companies — all ${num(이업종.곳)} listed, ranked`;
+const DESC = [
+  `Every listed Korean company classified as ${이름} — ${num(이업종.곳)} of them (${시장줄}),`,
+  `ranked by market cap on ${값날}, with revenue, operating profit, PER, PBR and ROE from`,
+  `fiscal ${meta.fiscalYear} annual filings. Free, in English, company-level.`,
+  못잰시총 > 0 ? `${num(못잰시총)} have no market cap in our tape and are not counted in the total.` : '',
+].filter(Boolean).join(' ');
+
+/* 다른 업종으로 가는 길 — 회사 수 많은 차례로 열둘. ⛔ 고아 지면을 만들지 않는다 */
+const 모든업종 = 업종목록();
+const 이웃 = 모든업종.filter((x) => x.slug !== 이업종.slug).slice(0, 12);
+
+const jsonLd = {
+  '@context': 'https://schema.org',
+  '@type': 'Dataset',
+  name: TITLE,
+  description: DESC,
+  url: `${SITE_URL}/data/industry/${이업종.slug}`,
+  isAccessibleForFree: true,
+  creator: { '@type': 'Organization', name: 'SeoulMarkets', url: SITE_URL },
+  temporalCoverage: String(meta.fiscalYear ?? ''),
+  spatialCoverage: { '@type': 'Country', name: 'South Korea' },
+  variableMeasured: [
+    'Market capitalisation', 'Revenue', 'Operating income', 'PER', 'PBR', 'ROE',
+  ],
+};
+---
+
+<Base title={TITLE} description={DESC} jsonLd={jsonLd}>
+  <article class="wrap">
+    <h1>Korean {소문자이름} companies</h1>
+    <p class="lead">
+      Every listed company the DART register classifies as <b>{이름}</b> — {num(이업종.곳)} of them
+      ({시장줄}) — ranked by market cap on <b>{값날}</b>.{' '}
+      {셋몫 !== null && (
+        <span>The three largest are <b>{셋몫.toFixed(1)}%</b> of the measured total between them.</span>
+      )}
+    </p>
+
+    {못잰시총 > 0 && (
+      <p class="warn">
+        {num(못잰시총)} of these {num(이업종.곳)} companies have no market cap in our tape. They are
+        listed below with a dash and are <b>not</b> in the total or the share figures. We do not
+        fill them with zero.
+      </p>
+    )}
+
+    <section class="stats">
+      <div class="stat"><b>{num(이업종.곳)}</b><span>listed companies</span></div>
+      <div class="stat"><b>{조원(시총합)}</b><span>total market value, {num(시총들.length)} measured</span></div>
+      <div class="stat"><b>{비(perMed)}</b><span>median PER, {num(per들.length)} measured</span></div>
+      <div class="stat"><b>{비(pbrMed, 2)}</b><span>median PBR, {num(pbr들.length)} measured</span></div>
+      <div class="stat"><b>{비(roeMed)}%</b><span>median ROE, {num(roe들.length)} measured</span></div>
+    </section>
+
+    <p class="note">
+      These are medians, not averages — one company can move an average and tell you nothing about
+      the rest. The count beside each says how many companies the figure could be computed from.
+      PER is left empty for companies that did not earn a profit, rather than printed negative.
+    </p>
+
+    <div class="scroll">
+      <table class="grid">
+        <thead>
+          <tr>
+            <th class="rk">#</th>
+            <th>Company</th>
+            <th>Ticker</th>
+            <th>Market</th>
+            <th class="n">Market cap</th>
+            <th class="n">Revenue</th>
+            <th class="n">Operating profit</th>
+            <th class="n">PER</th>
+            <th class="n">PBR</th>
+            <th class="n">ROE</th>
+          </tr>
+        </thead>
+        <tbody>
+          {회사들.map((r, i) => (
+            <tr>
+              <td class="rk">{i + 1}</td>
+              <td>{r.nameEn ?? r.name ?? '—'}</td>
+              <td class="tk">{r.ticker ?? '—'}</td>
+              <td>{시장이름[r.market ?? ''] ?? '—'}</td>
+              <td class="n">{억원(r.marketCap)}</td>
+              <td class="n">{억원(r.revenue)}</td>
+              <td class="n">{억원(r.operatingIncome)}</td>
+              <td class="n">{비(r.per)}</td>
+              <td class="n">{비(r.pbr, 2)}</td>
+              <td class="n">{비(r.roe)}</td>
+            </tr>
+          ))}
+        </tbody>
+      </table>
+    </div>
+    <p class="note">
+      Money columns are in 억원 (hundred million won), the unit Korean filings use. One 억원 is
+      100 million won.
+    </p>
+
+    <section class="qa">
+      <h2>What this classification does and does not do</h2>
+      <p>
+        The industry label comes from the company's own DART filing, not from us. A holding company
+        is filed under its holding-company code even when one business is most of its revenue, so a
+        name you expect here may sit under a different label — and a name here may do several
+        things. We publish the register's answer rather than re-sorting companies by hand, because
+        a hand sort cannot be reproduced by anyone checking our work.
+      </p>
+      <p>
+        Market cap is one trading day ({값날}). Revenue, operating profit, PER, PBR and ROE come
+        from the fiscal {meta.fiscalYear} annual report. Consolidated accounts are used when filed,
+        otherwise separate accounts — so a figure here can differ from one computed on a different
+        basis.
+      </p>
+    </section>
+
+    <section class="more">
+      <h2>Other industries</h2>
+      <ul class="inds">
+        {이웃.map((x) => (
+          <li>
+            <a href={`/data/industry/${x.slug}`}>{x.영문}</a>{' '}
+            <span class="c">{num(x.곳)}</span>
+          </li>
+        ))}
+      </ul>
+      <p><a href="/data/industry">All {num(모든업종.length)} industries &rarr;</a></p>
+    </section>
+
+    <CiteAs title={TITLE} url={`${SITE_URL}/data/industry/${이업종.slug}`} />
+  </article>
+</Base>
+
+<style>
+  .wrap { max-width: 62rem; margin: 0 auto; padding: 0 1rem 3rem; }
+  h1 { font-size: 1.7rem; line-height: 1.25; margin: 1.2rem 0 .6rem; }
+  h2 { font-size: 1.15rem; margin: 1.8rem 0 .6rem; }
+  .lead { font-size: 1.02rem; line-height: 1.65; color: #333; margin: 0 0 1rem; }
+  .warn { background: #fdf6e3; border-left: 3px solid #c08a20; padding: .7rem .9rem;
+          margin: 0 0 1rem; font-size: .9rem; line-height: 1.55; }
+  .note { color: #666; font-size: .86rem; line-height: 1.55; margin: .6rem 0 1.2rem; }
+  .stats { display: flex; flex-wrap: wrap; gap: .6rem; margin: 1rem 0; }
+  .stat { flex: 1 1 9rem; border: 1px solid #e3e3e3; border-radius: 8px; padding: .7rem .8rem; }
+  .stat b { display: block; font-size: 1.25rem; }
+  .stat span { color: #666; font-size: .8rem; }
+  .scroll { overflow-x: auto; }
+  .grid { width: 100%; border-collapse: collapse; font-size: .88rem; min-width: 48rem; }
+  .grid th, .grid td { border-bottom: 1px solid #ededed; padding: .35rem .5rem; text-align: left; }
+  .grid thead th { border-bottom: 2px solid #ddd; white-space: nowrap; }
+  .grid .n { text-align: right; white-space: nowrap; }
+  .grid .rk, .grid .tk { color: #777; }
+  .inds { list-style: none; padding: 0; margin: 0; display: flex; flex-wrap: wrap; gap: .4rem .9rem; }
+  .inds li { font-size: .9rem; }
+  .inds .c { color: #777; font-size: .82rem; }
+  a { color: #1a5c9c; }
+  @media (prefers-color-scheme: dark) {
+    .lead { color: #cfcfcf; }
+    .note, .stat span, .grid .rk, .grid .tk, .inds .c { color: #a0a0a0; }
+    .warn { background: #2a2318; border-left-color: #c08a20; }
+    .stat { border-color: #333; background: #1b1b1b; }
+    .grid th, .grid td { border-bottom-color: #2c2c2c; }
+    .grid thead th { border-bottom-color: #3a3a3a; }
+    a { color: #7ab3e8; }
+  }
+</style>

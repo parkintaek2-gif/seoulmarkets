@@ -1,0 +1,131 @@
+---
+/*
+ * **Korean listed companies by industry — the index.** (seoulmarkets.com/data/industry)
+ *
+ * ⛔ 이 지면이 없으면 아래 40장이 **고아**가 된다 — 사이트맵에만 있고 들어가는 길이 없는
+ *   지면은 검색엔진이 거의 안 줍는다. 2026-11-15 에 백년지도에서 새 261장을 그렇게 냈다가
+ *   배포 점검의 「홈에서 한 번도 안 닿는 지면」에 잡혔다. 같은 잘못을 되풀이하지 않는다.
+ * ⛔ 목록을 여기서 따로 적지 않는다 — `lib/industry-pages` 하나만 본다.
+ * ⛔ 화면에 한국어를 내지 않는다. ⛔ 광고 자리를 넣지 않는다(사장님 2026-11-15).
+ */
+import Base from '../../../layouts/Base.astro';
+import { SITE_URL } from '../../../consts';
+import tape from '../../../data/korea-valuation-tape.json';
+import { 업종목록, 지면을내는최소회사수 } from '../../../lib/industry-pages';
+
+const meta = (tape as any)._meta as Record<string, any>;
+const 목록 = 업종목록();
+const 전체회사 = ((tape as any).rows ?? []).length as number;
+const 덮는회사 = 목록.reduce((a, x) => a + x.곳, 0);
+const 안덮는회사 = 전체회사 - 덮는회사;
+
+const num = (n: number) => n.toLocaleString('en-US');
+const 조원 = (n: number) => `₩${(n / 1e12).toLocaleString('en-US', { maximumFractionDigits: 1 })}tn`;
+
+const priceDate = String(meta.priceAsOf ?? '');
+const 값날 = priceDate.length === 8
+  ? `${priceDate.slice(0, 4)}-${priceDate.slice(4, 6)}-${priceDate.slice(6, 8)}`
+  : priceDate;
+
+const TITLE = `Korean listed companies by industry — ${num(목록.length)} industries, ${num(덮는회사)} companies`;
+const DESC =
+  `Every listed Korean company grouped by the industry on its own DART filing — ` +
+  `${num(목록.length)} industries covering ${num(덮는회사)} of ${num(전체회사)} companies, each with ` +
+  `market cap, revenue, operating profit, PER, PBR and ROE. Free, in English, company-level.`;
+
+const jsonLd = {
+  '@context': 'https://schema.org',
+  '@type': 'CollectionPage',
+  name: TITLE,
+  description: DESC,
+  url: `${SITE_URL}/data/industry`,
+  isPartOf: { '@type': 'WebSite', name: 'SeoulMarkets', url: SITE_URL },
+};
+---
+
+<Base title={TITLE} description={DESC} jsonLd={jsonLd}>
+  <article class="wrap">
+    <h1>Korean listed companies, by industry</h1>
+    <p class="lead">
+      {num(덮는회사)} listed Korean companies grouped into {num(목록.length)} industries, each page
+      ranked by market cap on <b>{값날}</b> with revenue, operating profit, PER, PBR and ROE from
+      fiscal {meta.fiscalYear} filings. The industry is the one on the company's own DART filing —
+      we do not re-sort companies by hand.
+    </p>
+
+    {안덮는회사 > 0 && (
+      <p class="warn">
+        {num(안덮는회사)} of {num(전체회사)} companies are not on these pages. Their industry has
+        fewer than {지면을내는최소회사수} listed companies, which is too few to make a page worth
+        reading. They are still in the{' '}
+        <a href="/data/valuation">valuation tape</a> and the{' '}
+        <a href="/data/screener">screener</a>.
+      </p>
+    )}
+
+    <div class="scroll">
+      <table class="grid">
+        <thead>
+          <tr>
+            <th>Industry</th>
+            <th class="n">Companies</th>
+            <th class="n">Market value</th>
+            <th class="n">Measured</th>
+          </tr>
+        </thead>
+        <tbody>
+          {목록.map((x) => (
+            <tr>
+              <td><a href={`/data/industry/${x.slug}`}>{x.영문}</a></td>
+              <td class="n">{num(x.곳)}</td>
+              <td class="n">{조원(x.시총합)}</td>
+              <td class="n">{num(x.시총잰곳)}</td>
+            </tr>
+          ))}
+        </tbody>
+      </table>
+    </div>
+
+    <p class="note">
+      <b>Measured</b> is how many companies in that industry have a market cap in our tape. The
+      market-value column adds up only those — we do not fill a missing figure with zero, because a
+      zero would read as "worth nothing" rather than "not measured".
+    </p>
+
+    <section class="qa">
+      <h2>Where these come from</h2>
+      <p>
+        One source, one date: the Korea Valuation Tape, built {meta.builtAt} from FSS DART annual
+        filings for fiscal {meta.fiscalYear} and KRX closing prices for {값날}. The same tape is
+        behind <a href="/data/valuation">Korea valuation</a>,{' '}
+        <a href="/data/kospi-weights">KOSPI market cap by company</a> and{' '}
+        <a href="/data/largest-companies">the largest companies in Korea</a>, so figures on those
+        pages and these agree by construction.
+      </p>
+    </section>
+  </article>
+</Base>
+
+<style>
+  .wrap { max-width: 56rem; margin: 0 auto; padding: 0 1rem 3rem; }
+  h1 { font-size: 1.7rem; line-height: 1.25; margin: 1.2rem 0 .6rem; }
+  h2 { font-size: 1.15rem; margin: 1.8rem 0 .6rem; }
+  .lead { font-size: 1.02rem; line-height: 1.65; color: #333; margin: 0 0 1rem; }
+  .warn { background: #fdf6e3; border-left: 3px solid #c08a20; padding: .7rem .9rem;
+          margin: 0 0 1rem; font-size: .9rem; line-height: 1.55; }
+  .note { color: #666; font-size: .86rem; line-height: 1.55; margin: .6rem 0 1.2rem; }
+  .scroll { overflow-x: auto; }
+  .grid { width: 100%; border-collapse: collapse; font-size: .9rem; min-width: 34rem; }
+  .grid th, .grid td { border-bottom: 1px solid #ededed; padding: .4rem .5rem; text-align: left; }
+  .grid thead th { border-bottom: 2px solid #ddd; white-space: nowrap; }
+  .grid .n { text-align: right; white-space: nowrap; }
+  a { color: #1a5c9c; }
+  @media (prefers-color-scheme: dark) {
+    .lead { color: #cfcfcf; }
+    .note { color: #a0a0a0; }
+    .warn { background: #2a2318; border-left-color: #c08a20; }
+    .grid th, .grid td { border-bottom-color: #2c2c2c; }
+    .grid thead th { border-bottom-color: #3a3a3a; }
+    a { color: #7ab3e8; }
+  }
+</style>

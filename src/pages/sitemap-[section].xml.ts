@@ -4,6 +4,9 @@ import { SITE_URL, CATEGORIES } from '../consts';
 import { publishedArticles } from '../lib/articles';
 import { getPagedTags } from '../lib/tags';
 import countryProfiles from '../data/country-trade-profiles.json';
+/* 🔴 [2026-11-16 · 5번] 업종 지면 40장. ⛔ 목록을 여기서 따로 적지 않는다 —
+   lib 하나만 본다. 두 곳에 적으면 「사이트맵엔 있는데 404」가 난다. */
+import { 업종목록 } from '../lib/industry-pages';
 /* 🔴 [2026-09-22 · 5번] 회사·업종 지면 2,575장 — 사이트맵에 없으면 구글이 못 찾는다.
    지면을 찍는 «까닭»이 색인이므로, 여기 빠지면 2,575장을 지은 뜻이 없다. */
 import fin from '../data/korea-financials-tape.json';
@@ -326,6 +329,12 @@ export const GET: APIRoute = async ({ params }) => {
       { loc: '/video', lastmod: newest, changefreq: 'weekly', priority: '0.7' },
       // 데이터 상품 지면들 — 기업이 살 「주소」다. 검색 유입이 곧 영업. 5장이 사이트맵에 0개였다(56316, 2026-08-09).
       { loc: '/data', changefreq: 'weekly', priority: '0.9' },
+      /* 🔴 [2026-11-16 · 5번] 업종별 전수 지면. 30일 AI 유입을 측정하니 /data 세 장이
+         38%를 가져왔는데 「Korean <업종> companies」 물음을 받는 지면이 한 장도 없었다. */
+      { loc: '/data/industry', changefreq: 'weekly', priority: '0.9' },
+      ...업종목록().map((x) => ({
+        loc: `/data/industry/${x.slug}`, changefreq: 'weekly' as const, priority: '0.8',
+      })),
       // 🔴 [2026-09-18 · 6번] Korea Markets Research Index(학술논문 1,406편 색인) — 라이브
       // 200 이고 noindex 도 없는데 이 목록에 없었다. 넷째로 찾은 같은 병.
       { loc: '/research', changefreq: 'weekly', priority: '0.7' },
