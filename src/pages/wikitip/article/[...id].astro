@@ -22,6 +22,8 @@ import cardnewsData from '../../../data/wikitip-cardnews.json';
 import WikiTip from '../../../layouts/WikiTip.astro';
 import { 이웃표 } from '../../../lib/kcw-neighbours.mjs';
 import ContentRail from '../../../components/ContentRail.astro';
+/* 🔴 [2026-11-15 · 사장님] 「광고는 케이컬쳐만 … 거기에만 광고 넣어」 */
+import AdSlot from '../../../components/AdSlot.astro';
 import starPages from '../../../data/klifemap-star-pages.json';
 import { 자매링크 } from '../../../lib/sister-link';
 
@@ -344,6 +346,21 @@ const jsonLd = [articleLd, breadcrumbLd, datasetLd].filter(Boolean);
     )}
 
     <div class="body"><Content /></div>
+
+    {/*
+      🔴🔴 [2026-11-15 · 사장님] 「**광고는 케이컬쳐만 승인 받은. 거기에만 광고 넣어. 더하지마**」
+        애드센스 인아티클 단위(2718381807)와 코드를 그대로 주셨다.
+
+      ⭐ **여기가 케이컬처와이어 기사 틀이다.** 그래서 여기에 둔다 —
+        `astro.config.mjs` 의 마크다운 플러그인으로 넣으면 네 사이트 기사에 모두 들어간다
+        (그 단계에서는 어느 사이트의 글인지 가릴 수 없다). 그래서 그 플러그인을 뺐다.
+
+      ⛔ **자리를 더 늘리지 않는다** — 사장님 「더하지마」.
+        이 지면의 광고는 둘이다: 여기 인아티클 하나, 그리고 틀(WikiTip)의 배너 하나.
+        애드센스 안내 — 「2개 이상 게재하려는 경우 각 광고 사이에 충분한 콘텐츠가
+        포함되도록 하여 독자의 불편을 최소화해야 합니다」. 사이에 출처·B2B·카드뉴스·댓글이 있다.
+    */}
+    <AdSlot slot="inArticle" />
 
     {/* "[VS News]" 자체 투표 — 사장님 지시(2026-09-14). 무쿠키·무IP, votes.mjs 참고 */}
     {d.vote && (

@@ -7,7 +7,6 @@
  *   따로 세면 지면·사이트맵·허브 셋이 어긋나 404 가 실린다.
  */
 import Base from '../../layouts/Base.astro';
-import AdSlot from '../../components/AdSlot.astro';
 import { SITE_URL } from '../../consts';
 import { getPagedTags } from '../../lib/tags';
 import { publishedArticles } from '../../lib/articles';
@@ -49,7 +48,10 @@ const jsonLd = {
 
 <Base title={TITLE} description={DESC} jsonLd={jsonLd}>
   <div class="wrap">
-    <AdSlot slot="banner" />
+    {/* 🔴🔴 [2026-11-15 · 사장님] 「**광고는 케이컬쳐만 승인 받은. 거기에만 광고 넣어. 더하지마**」
+         승인된 것은 **케이컬처와이어 하나**다. 여기 있던 광고 자리를 뺐다.
+         ⛔ 승인 없이 자리를 두면 빈 칸만 남고, 애드센스에도 좋지 않다.
+         ✅ 다시 넣는 것은 그 사이트가 승인된 뒤다 — `node scripts/check-ad-fill.mjs` 로 잰다. */}
 
     <div class="page-head">
       <p class="kicker">SeoulMarkets · topics</p>

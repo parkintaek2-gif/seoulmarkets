@@ -1,7 +1,6 @@
 ---
 import Base from '../layouts/Base.astro';
 import ArticleCard from '../components/ArticleCard.astro';
-import AdSlot from '../components/AdSlot.astro';
 import Newsletter from '../components/Newsletter.astro';
 import HomeCharts from '../components/HomeCharts.astro';
 import { SITE, SITE_URL, CATEGORIES } from '../consts';
@@ -152,7 +151,10 @@ const jsonLd = {
     {/* 🔴 [2026-09-14] 광고를 «소개 아래»로 내렸다. 위에 두었더니 휴대폰 400px 에서
         385px 을 먹고 h1 을 y=709 로 밀어, 첫 화면이 통째로 흰 여백이었다(실측).
         ⛔ 광고를 지우지 않는다 — 자리만 바꾼다. */}
-    <AdSlot slot="banner" />
+    {/* 🔴🔴 [2026-11-15 · 사장님] 「**광고는 케이컬쳐만 승인 받은. 거기에만 광고 넣어. 더하지마**」
+         승인된 것은 **케이컬처와이어 하나**다. 여기 있던 광고 자리를 뺐다.
+         ⛔ 승인 없이 자리를 두면 빈 칸만 남고, 애드센스에도 좋지 않다.
+         ✅ 다시 넣는 것은 그 사이트가 승인된 뒤다 — `node scripts/check-ad-fill.mjs` 로 잰다. */}
 
     <section class="products" aria-labelledby="products-h">
       <h2 id="products-h">What we sell</h2>

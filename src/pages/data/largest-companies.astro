@@ -41,7 +41,6 @@ import tape from '../../data/korea-valuation-tape.json';
 import BuyBar from '../../components/BuyBar.astro';
 /* 🔴 [2026-11-09 · 5번] 광고 자리가 없던 화면이다 — 28일에 25번 열린다.
    Base.astro 기준으로 데이터 화면은 광고를 실어도 되는 편집 콘텐츠다. */
-import AdSlot from '../../components/AdSlot.astro';
 
 type Row = {
   ticker: string | null; name: string | null; nameEn: string | null; market: string | null;
@@ -321,7 +320,10 @@ const jsonLd = [datasetLd, faqLd];
     <BuyBar 자리="top" />
 
     {/* ⚠ 광고는 «소개 아래»에 둔다 — 위에 두면 휴대폰 첫 화면이 여백이 된다(2026-09-14 실측) */}
-    <AdSlot slot="banner" />
+    {/* 🔴🔴 [2026-11-15 · 사장님] 「**광고는 케이컬쳐만 승인 받은. 거기에만 광고 넣어. 더하지마**」
+         승인된 것은 **케이컬처와이어 하나**다. 여기 있던 광고 자리를 뺐다.
+         ⛔ 승인 없이 자리를 두면 빈 칸만 남고, 애드센스에도 좋지 않다.
+         ✅ 다시 넣는 것은 그 사이트가 승인된 뒤다 — `node scripts/check-ad-fill.mjs` 로 잰다. */}
 
     <section class="stats">
       <div class="stat"><b>{unionTickers.length}</b><span>companies make a top ten</span></div>

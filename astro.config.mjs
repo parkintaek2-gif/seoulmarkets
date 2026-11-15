@@ -51,13 +51,20 @@ function inArticleAdPlugin() {
 
         const slot = configured
           ? el('aside', { className: ['ad-slot'], 'aria-label': 'Advertisement' }, [
+              /* 🔴🔴 [2026-11-15 · 사장님] 「케이컬쳐와이어 구글 애드센스 광고게재해」
+                 애드센스 화면과 함께 코드를 그대로 주셨다 —
+                   data-ad-layout="in-article" · data-ad-format="fluid" · text-align:center
+                 ⛔ 전에는 인아티클 «단위»에 디스플레이 «코드»(format=auto)를 붙이고 있었다.
+                   단위 종류와 코드가 어긋나면 애드센스가 광고를 제대로 주지 않는다 —
+                   그동안 네 사이트가 모두 「안채워짐」이었다(scripts/check-ad-fill.mjs).
+                 ⚠ 인아티클에는 data-full-width-responsive 를 붙이지 않는다. 주신 코드에 없다. */
               el('ins', {
                 className: ['adsbygoogle'],
-                style: 'display:block',
+                style: 'display:block; text-align:center;',
+                'data-ad-layout': 'in-article',
+                'data-ad-format': 'fluid',
                 'data-ad-client': ADS.client,
                 'data-ad-slot': ADS.slots.inArticle,
-                'data-ad-format': 'auto',
-                'data-full-width-responsive': 'true',
               }),
             ])
           : el('aside', { className: ['ad-slot', 'ad-slot--placeholder'], 'aria-hidden': 'true' }, [
@@ -168,7 +175,14 @@ export default defineConfig({
     syntaxHighlight: false,
     processor: satteri({
       // 팩토리로 넘긴다 — 문서마다 클로저 상태(h2 카운트 등)가 초기화되어야 한다.
-      hastPlugins: [fundChartPlugin, inArticleAdPlugin, wrapTablesPlugin],
+      /* 🔴🔴 [2026-11-15 · 사장님] 「**광고는 케이컬쳐만 승인 받은. 거기에만 광고 넣어. 더하지마**」
+         ⇒ `inArticleAdPlugin` 을 **뺐다.** 이 플러그인은 마크다운 단계에서 돌아
+           **어느 사이트의 글인지 모른다** — 네 사이트 기사에 모두 광고가 들어갔다.
+           케이컬처와이어 기사 틀(`pages/wikitip/article/[...id].astro`)에서
+           `<AdSlot slot="inArticle" />` 로 직접 넣는다. 거기서는 사이트가 분명하다.
+         ⚠ 함수는 지우지 않고 남겨 둔다 — 다른 사이트가 승인되면 다시 쓸 수 있다.
+           ⛔ 다시 켤 때는 «어느 사이트인지 가릴 수 있나»부터 푼다. */
+      hastPlugins: [fundChartPlugin, wrapTablesPlugin],
     }),
   },
 });

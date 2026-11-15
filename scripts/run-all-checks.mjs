@@ -193,6 +193,15 @@ export const 단계들 = [
      ⚠ 사장님 2026-10-28 — 「배구는 제 칸을 두지 않고 스포츠종합이 받는다」 */
   "node scripts/check-리뷰분류.mjs --자가시험",
   "node scripts/check-리뷰분류.mjs",
+  /* 🔴 [2026-11-15 · 5번] 같은 광고 단위가 한 지면에 두 번 나가는 것을 막는다.
+     인아티클 자리를 만드는 곳이 둘이라(astro.config.mjs 의 플러그인 · AdSlot.astro)
+     한쪽만 보고 넣었다가 겹쳤다. 소스 grep 으로는 안 보이고 빌드해야 보인다. */
+  "node scripts/check-광고자리-겹침.mjs --자가시험",
+  "node scripts/check-광고자리-겹침.mjs",
+  /* 🔴🔴 [2026-11-15 · 사장님] 「광고는 케이컬쳐만 승인 받은. 거기에만 광고 넣어. 더하지마」
+     그날 재 보니 네 사이트 전부에 광고 자리가 나가고 있었다. 승인된 곳은 하나다. */
+  "node scripts/check-광고는-승인된곳에만.mjs --자가시험",
+  "node scripts/check-광고는-승인된곳에만.mjs",
   "node scripts/check-school-area.mjs",
   "node scripts/check-school-gap.mjs",
   "node scripts/check-inflow-tag.mjs",

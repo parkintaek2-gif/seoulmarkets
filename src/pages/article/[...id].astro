@@ -3,7 +3,6 @@ import { render } from 'astro:content';
 import fs from 'node:fs';
 import Base from '../../layouts/Base.astro';
 import DataNotes from '../../components/DataNotes.astro';
-import AdSlot from '../../components/AdSlot.astro';
 import ProductRail from '../../components/ProductRail.astro';
 import ProductFloatingBar from '../../components/ProductFloatingBar.astro';
 import { publishedArticles } from '../../lib/articles';
@@ -225,7 +224,10 @@ const jsonLd = 추가스키마.length ? [articleLd, ...추가스키마] : articl
       ⛔ 모바일에서 상품을 본문 «위»에 쌓지 않는다 — 본문 전에 광고가 오면 그냥 나간다. */}
   <div class="wrap wrap--rail">
     <div class="col-main">
-    <AdSlot slot="banner" />
+    {/* 🔴🔴 [2026-11-15 · 사장님] 「**광고는 케이컬쳐만 승인 받은. 거기에만 광고 넣어. 더하지마**」
+         승인된 것은 **케이컬처와이어 하나**다. 여기 있던 광고 자리를 뺐다.
+         ⛔ 승인 없이 자리를 두면 빈 칸만 남고, 애드센스에도 좋지 않다.
+         ✅ 다시 넣는 것은 그 사이트가 승인된 뒤다 — `node scripts/check-ad-fill.mjs` 로 잰다. */}
 
     <article class="article">
       <div class="article__head">

@@ -1,6 +1,35 @@
 ---
 import { ADS } from '../consts';
 
+/**
+ * 광고 한 자리.
+ *
+ * ## 🔴🔴 [2026-11-15 · 사장님] 「케이컬쳐와이어 구글 애드센스 광고게재해」
+ *
+ *   사장님이 애드센스 화면과 함께 **코드를 그대로** 주셨다 —
+ *   ```html
+ *   <ins class="adsbygoogle"
+ *        style="display:block; text-align:center;"
+ *        data-ad-layout="in-article"
+ *        data-ad-format="fluid"
+ *        data-ad-client="ca-pub-3547185342873229"
+ *        data-ad-slot="2718381807"></ins>
+ *   ```
+ *
+ *   🔴 **그런데 이 자는 모든 자리를 `data-ad-format="auto"` 로 내보내고 있었다.**
+ *     라이브 실측(2026-11-15) —
+ *     ```
+ *     <ins ... data-ad-slot="2718381807" data-ad-format="auto" data-full-width-responsive="true">
+ *     ```
+ *     인아티클 «단위»에 디스플레이 «코드»를 붙인 것이다. 애드센스는 단위 종류와 코드가
+ *     어긋나면 광고를 제대로 주지 않는다. 그동안 네 사이트가 모두 「안채워짐」이었는데
+ *     (`node scripts/check-ad-fill.mjs`), 적어도 이 자리는 그 까닭이 설명된다.
+ *
+ *   ⇒ 자리마다 **그 단위에 맞는 속성**을 낸다. 사장님이 주신 코드와 글자까지 맞춘다.
+ *
+ * ⛔ 광고 요청(push)은 여기서 하지 않는다 — 레이아웃이 지면당 한 번 일괄 처리한다.
+ * ⛔ 설정이 비면 운영 화면에 빈 상자를 그리지 않는다. 개발 중에만 점선으로 자리를 보인다.
+ */
 interface Props {
   slot: 'banner' | 'inArticle';
 }
@@ -11,19 +40,38 @@ const configured = ADS.client !== '' && ADS.slots[slot] !== '';
 // 개발 중에는 자리와 크기를 눈으로 확인할 수 있게 점선 박스를 그린다.
 // 실제 광고 요청(push)은 Base 레이아웃이 페이지당 한 번 일괄 처리한다.
 const showPlaceholder = !configured && import.meta.env.DEV;
+
+/**
+ * 단위 종류별 속성. ⛔ 한 벌로 뭉뚱그리지 않는다 —
+ *   banner    디스플레이(반응형)  format=auto  + full-width-responsive
+ *   inArticle 인아티클(네이티브)  format=fluid + layout=in-article
+ * ⚠ 인아티클에는 `data-full-width-responsive` 를 붙이지 않는다 — 사장님이 주신 코드에 없다.
+ */
+const 인아티클 = slot === 'inArticle';
 ---
 
 {
   configured ? (
-    <aside class="ad-slot" aria-label="Advertisement">
-      <ins
-        class="adsbygoogle"
-        style="display:block"
-        data-ad-client={ADS.client}
-        data-ad-slot={ADS.slots[slot]}
-        data-ad-format="auto"
-        data-full-width-responsive="true"
-      />
+    <aside class={`ad-slot${인아티클 ? ' ad-slot--inarticle' : ''}`} aria-label="Advertisement">
+      {인아티클 ? (
+        <ins
+          class="adsbygoogle"
+          style="display:block; text-align:center;"
+          data-ad-layout="in-article"
+          data-ad-format="fluid"
+          data-ad-client={ADS.client}
+          data-ad-slot={ADS.slots.inArticle}
+        />
+      ) : (
+        <ins
+          class="adsbygoogle"
+          style="display:block"
+          data-ad-client={ADS.client}
+          data-ad-slot={ADS.slots.banner}
+          data-ad-format="auto"
+          data-full-width-responsive="true"
+        />
+      )}
     </aside>
   ) : showPlaceholder ? (
     <aside class="ad-slot ad-slot--placeholder" aria-hidden="true">
