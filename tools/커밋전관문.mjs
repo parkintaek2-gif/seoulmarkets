@@ -23,6 +23,15 @@
  *   node tools/커밋전관문.mjs --건다        .git/hooks/pre-commit 을 만든다
  *   node tools/커밋전관문.mjs --뗀다        훅을 뗀다
  *   node tools/커밋전관문.mjs               지금 담긴 것을 검사한다 (훅이 이것을 부른다)
+ *   node tools/커밋전관문.mjs --전부        커밋 여부와 상관없이 content 전체를 본다
+ *
+ * ── 🔴 왜 --전부 를 더했나 (2026-11-16 · 5번) ──────────────────────
+ *   오늘 아침 빌드가 통째로 죽었다 — 한 기사의 title 이 123자(한도 120)였다.
+ *   그 파일은 **커밋되지 않은 채** 작업 중이었고, 이 관문은 «담긴 것»만 보므로
+ *   한 번도 보지 않았다. 빌드는 파일이 거기 있기만 하면 읽는다.
+ *   ⇒ 커밋 앞에 두는 것만으로는 모자라다. **빌드 앞**에도 둘 수 있어야 한다.
+ *   어제는 리뷰 한 편의 category 값이 같은 일을 했다(check-리뷰분류.mjs 로 막았다).
+ *   ⛔ 한 사람이 조심하는 것으로는 안 고쳐진다 — 4분짜리 빌드로 알아내지 않는다.
  */
 
 import fs from 'node:fs';
@@ -186,8 +195,24 @@ if (내가실행됐다) {
   }
 
   // 검사 — 훅이 부르는 자리
+  const 전부보기 = process.argv.includes('--전부');
   let 담긴것 = [];
-  try {
+  if (전부보기) {
+    /* 🔴 [2026-11-16] 커밋 안 된 작업 중 파일도 빌드를 죽인다 — 그래서 트리를 직접 훑는다 */
+    const 훑기 = (자리) => {
+      let 나온것 = [];
+      let 들 = [];
+      try { 들 = fs.readdirSync(자리, { withFileTypes: true }); } catch { return 나온것; }
+      for (const d of 들) {
+        const q = path.join(자리, d.name).split(path.sep).join('/');
+        if (d.isDirectory()) 나온것 = 나온것.concat(훑기(q));
+        else if (볼갈래.test(q)) 나온것.push(q);
+      }
+      return 나온것;
+    };
+    담긴것 = 훑기('content');
+    console.log('■ content 전체를 본다 — ' + 담긴것.length + '편');
+  } else try {
     // 🔴 `-z` 로 받는다. 없으면 git 이 «한글 경로를 따옴표와 8진 escape 로» 감싸서 낸다 —
     //   "content/kculturewire/zz-\355\233\205....md" 꼴이 되어 정규식이 못 맞추고 «조용히 통과»한다.
     //   2026-09-10 에 실제로 그렇게 통과했다(시험 커밋이 두 개 들어갔다).
@@ -198,7 +223,10 @@ if (내가실행됐다) {
     // ⛔ git 을 못 부르면 «막지 않는다». 관문이 커밋을 못 하게 만드는 것이 더 나쁘다
     process.exit(0);
   }
-  if (담긴것.length === 0) process.exit(0);
+  if (담긴것.length === 0) {
+    if (전부보기) console.log('⬜ 볼 글이 없다 — content 아래에 해당 갈래가 없다');
+    process.exit(0);
+  }
 
   let 한도표 = {};
   try { 한도표 = 한도읽기(fs.readFileSync(스키마길, 'utf8')); } catch { 한도표 = {}; }

@@ -106,6 +106,25 @@ const DESC = [
 const 모든업종 = 업종목록();
 const 이웃 = 모든업종.filter((x) => x.slug !== 이업종.slug).slice(0, 12);
 
+/**
+ * 이 업종과 «겹치는» 애널리스트 목표주가 지면.
+ * ⚠ 「같다」고 말하지 않는다 — 목표주가 지면은 KSIC 코드로 더 좁게 고른 «표본»이고
+ *   이 지면은 신고서 업종 «전수»다. 서로 다른 잣대로 모은 것이라 회사 수가 다르다.
+ *   그래서 화면에서도 related 라고만 적고 두 수를 견주지 않는다.
+ * ⛔ 조선·방산·배터리는 신고서 업종에 10사 미만이라 이 지면이 아예 없다. 억지로 짝짓지 않는다.
+ */
+const 목표주가짝: Record<string, { href: string; name: string }> = {
+  'Electronic Components, Computers, and Communication Equipment': {
+    href: '/data/korea-semiconductor-target-prices',
+    name: 'Korean semiconductor stocks — broker target prices',
+  },
+  'Medicinal Substances and Pharmaceuticals': {
+    href: '/data/korea-biotech-target-prices',
+    name: 'Korean biotech and pharma stocks — broker target prices',
+  },
+};
+const 짝 = 목표주가짝[이업종.열쇠] ?? null;
+
 const jsonLd = {
   '@context': 'https://schema.org',
   '@type': 'Dataset',
@@ -210,6 +229,17 @@ const jsonLd = {
         basis.
       </p>
     </section>
+
+    {짝 && (
+      <section class="more">
+        <h2>Related page</h2>
+        <p>
+          <a href={짝.href}>{짝.name}</a> — a narrower sample: only the companies with broker
+          research we collect, picked by KSIC code rather than by the filing label used here, so
+          the two counts are not meant to match.
+        </p>
+      </section>
+    )}
 
     <section class="more">
       <h2>Other industries</h2>
