@@ -57,6 +57,11 @@ const 흐린마스크 = await sharp(Buffer.from(마스크)).blur(1.6).png().toBu
 const 망원경덮개 = `<svg xmlns="http://www.w3.org/2000/svg" width="1024" height="1024">
   <rect width="1024" height="1024" fill="#000"/>
   <path d="M 0 408 L 438 490 L 450 598 L 0 664 Z" fill="#fff"/>
+  <!-- 오른쪽 머리카락 — 귀끈이 이 뒤로 들어간다 -->
+  <path d="M 662 418 C 700 410, 744 430, 752 486
+           C 760 540, 748 592, 722 622
+           C 700 646, 672 640, 664 606
+           C 656 548, 654 466, 662 418 Z" fill="#fff"/>
 </svg>`;
 const 덮개알파 = await sharp(Buffer.from(망원경덮개)).blur(1.3).extractChannel('red').toBuffer();
 const 망원경조각 = await sharp(원본).ensureAlpha().joinChannel(덮개알파).png().toBuffer();
