@@ -74,6 +74,8 @@ function 클라이프맵읽기(일수) {
   return { 평균: Math.round(합 / 값들.length), 잰날수: 값들.length, 요청날수: 일수 };
 }
 const 목표 = 1000;
+/** 손님에게 내는 사이트 수 — 전체 목표는 이 수로 곱한다. ⛔ 4000 을 따로 적지 않는다 */
+const 사이트수 = 4;
 
 /** traffic-report 의 「■ 사이트별 (사람)」 토막에서 «주소 → 사람 수»를 뽑는다 */
 export function 사이트별뽑기(글) {
@@ -207,25 +209,32 @@ try {
 } catch (e) { GA4못잼 = String(e.message).slice(0, 60); }
 
 console.log(`\n📊 유닛별 하루 방문 — ${날}${일수 > 1 ? ` · ${일수}일` : ''}`);
-console.log(`   목표: 유닛당 하루 순방문자 ${목표.toLocaleString()}명 (9월)`);
+/* 🔴 [2026-11-15 · 사장님] 「한 사이트당 순방문자 목표가 1,000명이야. 그럼 목표를
+   4,000명으로 해야 정확하지. **그리고 사이트마다 별도로 집계해**」
+   ⛔ 합계만 적어 사이트별을 흐리지 않는다. 사이트별이 먼저고 합은 끝에 한 줄이다. */
+console.log(`   목표: **사이트마다** 하루 순방문자 ${목표.toLocaleString()}명 · 네 사이트 모두 채우면 ${(목표 * 사이트수).toLocaleString()}명`);
 console.log('   ⬜ 순방문자 = 사람 수(쿠키로 묶음) · 지면요청 = 열린 지면 수(사람 수가 아니다)\n');
 console.log(`  ${'유닛'.padEnd(20)} ${'순방문자/일'.padStart(11)}  목표  ${'지면요청/일'.padStart(11)}`);
 console.log('  ' + '─'.repeat(62));
 
 /** 순방문자 칸 한 줄 — 못 쟀으면 0 이 아니라 「못 쟀음」 */
 function 순칸(주소들) {
-  if (!GA4표) return { 글: '못 쟀음'.padStart(11), 몫: '  —  ' };
+  if (!GA4표) return { 글: '못 쟀음'.padStart(11), 몫: '  —  ', 수: null };
   const 값 = 주소들.map((d) => GA4표.get(d.replace(/^www\./, ''))).filter(Boolean);
-  if (!값.length) return { 글: '0'.padStart(11), 몫: '  0% ' };
+  if (!값.length) return { 글: '0'.padStart(11), 몫: '  0% ', 수: 0 };
   const 평 = 값.reduce((a, b) => a + b.평균, 0);
-  return { 글: (Math.round(평 * 10) / 10).toLocaleString().padStart(11), 몫: `${String(Math.round((평 / 목표) * 100)).padStart(3)}% ` };
+  /* 🔴 [2026-11-15] «수»를 함께 돌려준다 — 전체 줄이 글자에서 숫자를 되뽑다 틀렸다(400.4 대 728.1) */
+  return { 글: (Math.round(평 * 10) / 10).toLocaleString().padStart(11), 몫: `${String(Math.round((평 / 목표) * 100)).padStart(3)}% `, 수: 평 };
 }
 
 const 넘친것 = [];
+/* 🔴 사장님 2026-11-15 — 사이트별이 먼저고, 전체는 «표에 찍힌 그 값»을 더한 것이어야 한다 */
+const 사이트별수 = [];
 for (const u of 유닛) {
   const 요청 = Math.round(u.주소.reduce((a, d) => a + (표.get(d) ?? 0), 0) / 일수);
   const s = 순칸(u.주소);
   console.log(`  ${u.이름.padEnd(20)} ${s.글}  ${s.몫} ${String(요청.toLocaleString()).padStart(11)}`);
+  사이트별수.push(s.수);
   const 비 = 너무많나(요청, Number(String(s.글).replace(/,/g, '')) || null);
   if (비) 넘친것.push(`${u.이름} ${비}장/사람`);
 }
@@ -235,8 +244,28 @@ const 맵 = 클라이프맵읽기(일수);
   const s = 순칸(['klifemap.ai']);
   const 자체 = 맵 === null ? '못 쟀음' : `${맵.평균.toLocaleString()} (자체 계수기)`;
   console.log(`  ${'1번/4번 KLifeMap'.padEnd(20)} ${s.글}  ${s.몫} ${자체.padStart(11)}`);
+  사이트별수.push(s.수);
 }
 
+/* 🔴 [2026-11-15 · 사장님] 「한 사이트당 목표가 1,000명이야. 그럼 목표를 4,000명으로
+   해야 정확하지. 그리고 사이트마다 별도로 집계해」
+   ⛔ 전체는 «표에 찍힌 사이트별 값»을 그대로 더한다. GA4 를 따로 다시 묻지 않는다 —
+     그렇게 했다가 400.4 가 나왔다(사이트별 합은 728.1 이었다). 표와 합이 어긋나면 둘 다 못 믿는다.
+   ⛔ 한 곳이라도 못 쟀으면 합을 내지 않는다. 0 으로 채우면 「손님이 없다」가 된다. */
+{
+  const 못잰곳 = 사이트별수.filter((x) => x == null).length;
+  const 전체목표 = 목표 * 사이트수;
+  console.log('  ' + '─'.repeat(62));
+  if (못잰곳) {
+    console.log(`  ${'전체 (네 사이트)'.padEnd(20)} ${'못 쟀음'.padStart(11)}    —   ${못잰곳}곳을 못 쟀습니다`);
+  } else {
+    const 합 = 사이트별수.reduce((a, b) => a + b, 0);
+    console.log(
+      `  ${'전체 (네 사이트)'.padEnd(20)} ${(Math.round(합 * 10) / 10).toLocaleString().padStart(11)}  ` +
+      `${String(Math.round((합 / 전체목표) * 100)).padStart(3)}%   목표 ${전체목표.toLocaleString()}명`
+    );
+  }
+}
 console.log('');
 if (GA4못잼) console.log(`  ⬜ 순방문자를 못 쟀습니다 — ${GA4못잼}. **0 이 아니라 「못 쟀다」입니다**`);
 else console.log(`  ⬜ 순방문자는 GA4 ${GA4날수}일 평균입니다. 광고차단·쿠키거부로 **덜 세는 바닥값**입니다`);
