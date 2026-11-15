@@ -46,8 +46,29 @@ import { existsSync } from 'node:fs';
 
 /** 인자 배열에서 경로만 뽑는다(순수함수 — 자가시험용). `--host x` 와 `--all`·`--dry` 를 뺀 나머지. */
 export function 경로파싱(인자) {
-  const 호스트자리 = 인자.indexOf('--host');
-  return 인자.filter((a, n) => !a.startsWith('--') && !(호스트자리 >= 0 && n === 호스트자리 + 1));
+  const 값을받는깃발 = ['--host', '--주소파일'];
+  const 값자리 = new Set();
+  인자.forEach((a, n) => { if (값을받는깃발.includes(a)) 값자리.add(n + 1); });
+  return 인자.filter((a, n) => !a.startsWith('--') && !값자리.has(n));
+}
+
+/**
+ * 🔴🔴 [2026-11-15 · 5번] **셸을 거치면 한글 주소가 깨진다.**
+ *
+ *   초등학교 지역 페이지 261장을 통보하려고 PowerShell 에서 주소를 자리 인자로 넘겼더니,
+ *   PowerShell 이 UTF-8 파일을 CP949 로 읽어 **261개가 49개로 뭉개지고 글자가 다 깨졌다.**
+ *   (2026-11-12 에 .cmd 가 CP949 로 읽혀 한글 인자가 깨진 것과 같은 자리다.)
+ *
+ *   ⛔ 없는 주소를 통보하면 신뢰가 깎인다 — 이 파일의 첫 규칙이다.
+ *   ⇒ 주소를 **셸에 올리지 않는다.** 파일에 적고 node 가 UTF-8 로 읽는다.
+ *
+ *   한 줄에 한 주소. 빈 줄과 # 로 시작하는 줄은 건너뛴다.
+ */
+export function 주소파일파싱(글) {
+  return String(글 ?? '')
+    .split(/\r?\n/)
+    .map((l) => l.trim())
+    .filter((l) => l && !l.startsWith('#'));
 }
 
 /**
@@ -145,6 +166,26 @@ const 고른호스트 = 호스트자리 >= 0 ? 인자[호스트자리 + 1] : nul
 /** `--host x` 와 `--all`·`--dry` 를 뺀 나머지가 경로다. 자가시험이 도는 순수함수(위 `경로파싱`)를 그대로 쓴다 —
  * 2026-09-04 실측: 옛 코드는 --host 없이 쓸 때 첫 경로 인자를 조용히 빼먹었다(경로 3개 주면 2개만 나갔다). */
 const 경로들 = 경로파싱(인자);
+/* 🔴 [2026-11-15] 한글 주소는 셸을 거치면 깨진다 — 파일에서 읽는다 (주소파일파싱 주석 참조) */
+const 주소파일자리 = 인자.indexOf('--주소파일');
+if (주소파일자리 >= 0) {
+  const 파일 = 인자[주소파일자리 + 1];
+  if (!파일 || 파일.startsWith('--')) {
+    console.error('⛔ --주소파일 뒤에 파일 경로가 없다');
+    process.exit(1);
+  }
+  if (!existsSync(파일)) {
+    console.error('⛔ 주소 파일이 없다 — ' + 파일);
+    process.exit(1);
+  }
+  const 더한것 = 주소파일파싱(await readFile(파일, 'utf8'));
+  if (!더한것.length) {
+    console.error('⛔ 주소 파일이 비었다 — ' + 파일);
+    process.exit(1);
+  }
+  경로들.push(...더한것);
+  console.log('주소 파일에서 ' + 더한것.length + '개를 읽었다 — ' + 파일);
+}
 
 if (고른호스트 && !사이트들[고른호스트]) {
   console.error(`모르는 호스트다: ${고른호스트}`);
