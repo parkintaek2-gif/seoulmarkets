@@ -69,9 +69,12 @@ function 깨끗한가() {
   const 더러움 = execFileSync('git', ['status', '--porcelain'], { cwd: 뿌리, encoding: 'utf8' })
     .split(/\r?\n/)
     .filter((줄) => 줄.trim())
-    /* 자동으로 쌓이는 기록은 봐준다 — 지면을 바꾸지 않는다 */
-    .filter((줄) => !/\s(docs|logs|archive|tmp)\//.test(줄))
-    .filter((줄) => !/\.log$|찍은목록\.json$|\.tsv$/.test(줄));
+    /* 자동으로 쌓이는 기록은 봐준다 — 지면을 바꾸지 않는다.
+       ⚠ git 은 한글 경로를 «따옴표로 감싸» 낸다 — `?? "docs/…"`.
+         따옴표를 셈에 넣지 않으면 이 거르개가 통째로 헛돈다(2026-11-17 에 그랬다). */
+    .filter((줄) => !/^.{0,3}\s*"?(docs|logs|archive|tmp|dist|out)\//.test(줄))
+    .filter((줄) => !/^.{0,3}\s*"?scripts\/_tmp-/.test(줄))
+    .filter((줄) => !/\.log"?$|찍은목록\.json"?$|\.tsv"?$/.test(줄));
   return 더러움;
 }
 
