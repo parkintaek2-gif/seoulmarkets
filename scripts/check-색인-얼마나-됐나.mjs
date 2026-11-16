@@ -35,6 +35,18 @@ export function 주소뽑기(사이트맵글) {
 }
 
 /**
+ * 🔴 [2026-11-16 · 5번] **묶음 사이트맵인가.**
+ *   서울마켓츠를 쟀더니 「사이트맵 11장」이 나왔다. 실제는 8,046장이다.
+ *   그 사이트는 sitemap.xml 이 하위 사이트맵 11개를 가리키는 «묶음»인데,
+ *   이 자가 그 11개 «주소»를 지면으로 세었다. 그러고는 「안 왔음 100%」를 냈다 —
+ *   사이트맵 주소는 색인될 지면이 아니니 당연한 결과였다. **거짓 빨강이다.**
+ *   ⛔ 묶음을 안 펼치면 큰 사이트는 영영 못 잰다. 못 재는 자는 없는 자보다 나쁘다.
+ */
+export function 묶음인가(사이트맵글) {
+  return /<sitemapindex[\s>]/i.test(String(사이트맵글 ?? ''));
+}
+
+/**
  * 주소를 갈래로 나눈다 — 갈래마다 고르게 뽑아야 한쪽만 보고 단정하지 않는다.
  * ⚠ `/content/star-…` 가 수천 장이라, 그냥 앞에서부터 뽑으면 **그것만** 뽑힌다.
  */
@@ -100,6 +112,10 @@ function 자가시험() {
 
   본다('⛔ 못 읽으면 null 이다 — 빈 배열이 아니다', 주소뽑기('아무 글') === null && 주소뽑기(null) === null);
   본다('주소를 뽑는다', 주소뽑기('<url><loc>https://a/b</loc></url>').join() === 'https://a/b');
+  /* 🔴 2026-11-16 — 묶음을 못 가려 서울마켓츠가 「11장」으로 보였다 */
+  본다('묶음 사이트맵을 가린다', 묶음인가('<sitemapindex xmlns="x"><sitemap><loc>https://a/s1.xml</loc></sitemap></sitemapindex>') === true);
+  본다('낱장은 묶음이 아니다', 묶음인가('<urlset><url><loc>https://a/b</loc></url></urlset>') === false);
+  본다('⛔ 빈 것에 안 터진다', 묶음인가(null) === false && 묶음인가('') === false);
 
   본다('스타 글을 가린다', 갈래('https://k/content/star-q1-saju') === '스타글-ko');
   본다('말을 가린다', 갈래('https://k/content/star-q1-saju?lang=en') === '스타글-en');
@@ -145,7 +161,20 @@ else {
 
   const 뿌리 = 자리.속성.replace(/^sc-domain:/, 'https://').replace(/\/$/, '');
   const 사이트맵글 = await (await fetch(`${뿌리}/sitemap.xml`)).text();
-  const 주소들 = 주소뽑기(사이트맵글);
+  /* 🔴 묶음이면 하위 사이트맵을 모두 펼친다 — 안 펼치면 큰 사이트가 11장으로 보인다 */
+  let 주소들 = 주소뽑기(사이트맵글);
+  if (묶음인가(사이트맵글) && 주소들) {
+    const 모음 = [];
+    for (const 하위 of 주소들) {
+      try {
+        const 글 = await (await fetch(하위)).text();
+        const 것 = 주소뽑기(글);
+        if (것) 모음.push(...것);
+      } catch (e) { /* 한 장을 못 받아도 나머지는 센다 */ }
+    }
+    console.log(`   ⬜ 묶음 사이트맵이다 — 하위 ${주소들.length}장을 펼쳐 지면 ${모음.length.toLocaleString()}장을 얻었다`);
+    주소들 = 모음;
+  }
   if (!주소들) { console.log('🔴 사이트맵을 못 읽었다 — 안 센다'); process.exit(1); }
 
   const 표본 = 고르게뽑기(주소들, 몇개);

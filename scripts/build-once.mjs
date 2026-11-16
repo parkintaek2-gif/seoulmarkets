@@ -134,9 +134,20 @@ try {
     cwd: 뿌리, stdio: 'inherit', timeout: 60000,
   });
   if (앞말.status !== 0) {
-    console.log('⛔ 앞말이 스키마를 어긴 글이 있다 — 위에 적힌 글자 수를 줄이고 다시 돌린다');
-    console.log('   (빌드를 4분 태우지 않으려고 여기서 세웁니다)');
-    process.exit(1);
+    /* 🔴 [2026-11-16] **배포 서버에서는 세우지 않는다.**
+       Cloudtype 이 `npm run build` 로 이 자를 «서버에서» 부른다(.cloudtype/app.yaml).
+       거기서 세우면 라이브가 통째로 안 나간다 — 내 PC 를 지키자고 손님 쪽을 끊는 꼴이다.
+       서버에서는 적어만 두고 빌드는 계속한다. 어차피 깨진 글이 있으면 astro 가 멈춘다.
+       ⛔ 막는 검사가 거짓이면 일이 통째로 선다 — 2026-11-14 에 그렇게 KCW 영문 4편이
+         못 나갔다. 이 자의 값어치는 «내 PC 에서 4분을 아끼는 것»이지 배포를 막는 것이 아니다. */
+    const 서버다 = !!(process.env.CLOUDTYPE || process.env.CI || process.env.PORT);
+    console.log('⛔ 앞말이 스키마를 어긴 글이 있다 — 위에 적힌 글자 수를 줄이십시오');
+    if (서버다) {
+      console.log('   ⚠ 배포 서버라 세우지 않는다 — 빌드를 이어 간다');
+    } else {
+      console.log('   (빌드를 4분 태우지 않으려고 여기서 세웁니다)');
+      process.exit(1);
+    }
   }
 } catch (e) {
   console.log('⚠ 앞말 검사를 못 돌렸다(무시하고 빌드한다) — ' + e.message);
