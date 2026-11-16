@@ -26,4 +26,4 @@ import('file:///$ROOT/scripts/lib/boss-orders.mjs')
 # ⚠ 자가 죽어도 상태줄은 비우지 않는다. 빈 줄은 「지시가 없다」로 읽힌다
 [ -z "$LINE" ] && LINE="$FALLBACK"
 
-printf '5번 · K Culture Wire ┃ %s' "$LINE"
+printf '5번 ┃ %s' "$LINE"
