@@ -213,7 +213,7 @@ export async function 원격에올린다(key, body, contentType = 'application/o
  *   이 함수를 쓰는 곳이 그 자리다 — `scripts/받는다-지어진지면.mjs`.
  * @returns 받은 바이트 수. 없으면 null
  */
-export async function 원격을파일로받는다(key, 낼곳, { timeout = 600_000 } = {}) {
+export async function 원격을흘려보낸다(key, 받는곳, { timeout = 600_000 } = {}) {
   if (!remoteEnabled) throw new Error('원격 저장이 꺼져 있다 — ARCHIVE_S3_* 가 없다');
   const res = await signedFetch('GET', key, { timeout });
   if (res.status === 404) return null;
@@ -221,18 +221,22 @@ export async function 원격을파일로받는다(key, 낼곳, { timeout = 600_0
     const detail = (await res.text().catch(() => '')).slice(0, 300);
     throw new Error(`S3 GET ${res.status}: ${detail}`);
   }
-  const { createWriteStream } = await import('node:fs');
-  const 펜 = createWriteStream(낼곳);
   const 읽개 = res.body.getReader();
   let 센것 = 0;
   for (;;) {
     const { done, value } = await 읽개.read();
     if (done) break;
     센것 += value.length;
-    if (!펜.write(Buffer.from(value))) await new Promise((r) => 펜.once('drain', r));
+    if (!받는곳.write(Buffer.from(value))) await new Promise((r) => 받는곳.once('drain', r));
   }
-  await new Promise((r) => 펜.end(r));
+  await new Promise((r) => 받는곳.end(r));
   return 센것;
+}
+
+/** 같은 것을 파일로 받는다. 묶음을 디스크에 둘 자리가 있을 때만 쓴다 */
+export async function 원격을파일로받는다(key, 낼곳, 거들 = {}) {
+  const { createWriteStream } = await import('node:fs');
+  return 원격을흘려보낸다(key, createWriteStream(낼곳), 거들);
 }
 
 /**

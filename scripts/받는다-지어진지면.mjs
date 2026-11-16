@@ -24,10 +24,17 @@
  */
 import fs from 'node:fs';
 import path from 'node:path';
-import { spawnSync } from 'node:child_process';
+import { spawn, spawnSync } from 'node:child_process';
 import { fileURLToPath } from 'node:url';
 
 const 뿌리 = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
+
+/** 디스크 여유를 적는다. ⚠ 「아무 말 없이 끊겼다」의 까닭이 여기 적혀야 다음 사람이 안 헤맨다 */
+function 자리본다(이름) {
+  const r = spawnSync('sh', ['-c', 'df -h /app 2>/dev/null || df -h .'], { cwd: 뿌리, encoding: 'utf8' });
+  const 줄 = String(r.stdout ?? '').split(/\r?\n/)[1] ?? '(못 쟀다)';
+  console.log('■ 디스크(' + 이름 + ') — ' + 줄.replace(/\s+/g, ' '));
+}
 
 /** 편 것이 쓸 만한가. 틀린 데를 «모두» 적어 돌려준다 — 하나씩 고치며 다시 돌지 않게 */
 export function 편것을본다({ 있는파일, 도장, 장수, 커밋 }) {
@@ -69,19 +76,31 @@ async function 한다() {
   console.log('■ 쪽지가 가리키는 커밋 — ' + 커밋.slice(0, 9)
     + ' · ' + (쪽지.크기 / 1024 / 1024).toFixed(0) + 'MB');
 
-  const 묶음길 = path.join(뿌리, 'dist.tar.gz');
-  const 받은 = await 창고.원격을파일로받는다(쪽지.키, 묶음길);
+  자리본다('받기 전');
+
+  /* 🔴 [2026-11-17 · 5번] **묶음을 디스크에 두지 않는다. 받으면서 바로 편다.**
+   *   처음엔 dist.tar.gz 로 받아 두고 `tar -xzf` 를 돌렸는데, 「받았다」 바로 뒤에서
+   *   아무 말 없이 끊겼다. 묶음 372MB + 편 것 914MB 를 «동시에» 들고 있어야 했다.
+   *   흘려 보내면 372MB 가 통째로 빠진다. */
+  fs.rmSync(path.join(뿌리, 'dist'), { recursive: true, force: true });
+  const 펴개 = spawn('tar', ['-xz'], { cwd: 뿌리, stdio: ['pipe', 'inherit', 'inherit'] });
+  const 끝났나 = new Promise((res) => 펴개.on('close', res));
+  let 받은 = null;
+  try {
+    받은 = await 창고.원격을흘려보낸다(쪽지.키, 펴개.stdin);
+  } catch (e) {
+    console.log('🔴 받다가 끊겼다 — ' + e.message);
+    process.exit(1);
+  }
+  const 끝값 = await 끝났나;
   if (받은 === null) { console.log('🔴 쪽지가 가리키는 묶음이 없다 — ' + 쪽지.키); process.exit(1); }
-  console.log('■ 받았다 — ' + (받은 / 1024 / 1024).toFixed(0) + 'MB');
+  console.log('■ 받으면서 폈다 — ' + (받은 / 1024 / 1024).toFixed(0) + 'MB · tar 끝값 ' + 끝값);
   if (받은 !== 쪽지.크기) {
     console.log(`🔴 크기가 다르다 — 쪽지 ${쪽지.크기} · 받은 것 ${받은}`);
     process.exit(1);
   }
-
-  fs.rmSync(path.join(뿌리, 'dist'), { recursive: true, force: true });
-  const 품 = spawnSync('tar', ['-xzf', 'dist.tar.gz'], { cwd: 뿌리, stdio: 'inherit' });
-  if (품.status !== 0) { console.log('🔴 묶음을 못 폈다 — 끝값 ' + 품.status); process.exit(1); }
-  fs.rmSync(묶음길, { force: true });
+  if (끝값 !== 0) { console.log('🔴 묶음을 못 폈다 — tar 끝값 ' + 끝값); process.exit(1); }
+  자리본다('편 뒤');
 
   /* 편 것을 «다시 보고» 확인한다 — 펴는 것과 지면이 있는 것은 다른 일이다 */
   const 있는파일 = ['dist/index.html', 'dist/deploy-stamp.txt'].filter((p) => fs.existsSync(path.join(뿌리, p)));
