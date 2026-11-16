@@ -33,8 +33,10 @@ src/pages
 src/components
 src/layouts
 src/styles
-content
-tools
+# ⛔ `content` 와 `tools` 는 빼지 않는다 — 2026-11-17 에 뺐다가 바로 되돌렸다.
+#   `src/lib/admin.mjs` 가 **런타임에** `content/articles/` 를 readdir 한다.
+#   빠지면 배포는 되고 관리자 화면만 조용히 빈다 — 가장 늦게 들키는 꼴이다.
+#   둘을 합쳐 6MB 라 아껴서 얻는 것도 없다.
 
 # 만들어지는 것들
 node_modules
