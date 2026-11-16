@@ -63,9 +63,14 @@ options:
     #   ✅ 그 전에 남에게 영향이 없는 것부터 한다 — Node 힙을 컨테이너보다 작게 못박는다.
     #     힙 기본값은 컨테이너 크기를 모르고 잡히므로 한계를 모른 채 늘리다 통째로 죽는다.
     #     작게 박으면 GC 가 더 돌아 느려지는 대신 죽지 않는다.
+    #   🔴 [2026-11-16 두 번째] **400 → 820.** memory 를 0.5 → 1.0 으로 올리고도 빌드가
+    #     죽었다. 까닭은 내가 넣은 이 줄이었다 — 컨테이너는 1GB 인데 힙을 400MB 로
+    #     묶어 두었으니 Astro 가 힙 부족으로 죽는다. 완화하려던 것이 막는 것이 됐다.
+    #     ⛔ 이 값은 «컨테이너 memory 와 함께» 움직인다. 한쪽만 고치지 않는다.
+    #       기준 — 컨테이너의 8할쯤(1GB → 820MB). 나머지는 Node 바깥(네이티브·버퍼)이 쓴다.
     #   ⚠ 이것으로도 모자라면 그때 memory 를 올린다. 이 줄을 지우지 말고 함께 둔다.
     - name: NODE_OPTIONS
-      value: --max-old-space-size=400
+      value: --max-old-space-size=820
     - name: ARCHIVE_S3_ENDPOINT
       secret: ARCHIVE_S3_ENDPOINT
     - name: ARCHIVE_S3_BUCKET
