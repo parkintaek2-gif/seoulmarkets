@@ -24,11 +24,20 @@
 # 문서. 6,731개 615MB. 지면이 읽지 않는다
 docs
 
-# ⛔ `public` · `src/pages` · `src/components` · `src/layouts` · `src/styles` 는 빼지 않는다.
-#   2026-11-17 에 빼 봤다. **통은 181MB 까지 줄었는데 배포는 그대로 실패했다** —
-#   통 크기는 까닭이 아니었다(2.19GB 일 때도, 181MB 일 때도 같은 자리에서 끝났다).
-#   ⇒ 얻는 것 없이 「서버가 저 안의 무엇을 읽나」라는 물음만 남긴다. 그래서 되돌렸다.
-#   ⚠ 줄여서 고쳐지지 않는 것을 줄이는 쪽으로 더 밀지 않는다.
+# 🔴🔴 [2026-11-17 · 5번] **이미지의 «한 겹»이 안 올라가서 배포가 죽고 있었다.**
+#   빌드 로그 끝까지 읽어서 알아낸 것 —
+#     🟢 Image build complete.
+#     The push refers to ... parkintaek2-seoulmarkets-web
+#       …16겹: Layer already exists
+#       6d10453ed3a7 : Preparing      ← 이 한 겹만 끝까지 안 올라가고 로그가 끊긴다
+#   그 겹은 `COPY --from=build /app/./` — node_modules(371MB) + 저장소가 통째로 한 겹이다.
+#   ⇒ 그 한 겹을 줄이는 것이 고치는 길이다. 통(context) 크기가 아니라 **겹 크기**다.
+#   ⚠ 앞서 통을 2.19GB→181MB 로 줄여도 안 됐던 까닭이 이것이다 — 그때는 지면 914MB 가
+#     이미지 «안»에 들어 있어서 겹이 그대로 컸다.
+#
+# public/ 444MB — 서버는 dist/ 만 내보낸다. dist 안에 public 사본이 이미 들어 있고
+#   server.mjs 는 public/ 을 한 번도 열지 않는다(2026-11-17 확인).
+public
 
 # ⛔ `content` 와 `tools` 는 빼지 않는다 — 2026-11-17 에 뺐다가 바로 되돌렸다.
 #   `src/lib/admin.mjs` 가 **런타임에** `content/articles/` 를 readdir 한다.
