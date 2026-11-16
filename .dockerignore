@@ -12,8 +12,12 @@
 #   ⛔ 빌드가 import 하는 자료는 src/data/ 에 둔다. archive/ 를 바로 읽지 않는다
 #     (.gitignore 의 2026-08-04 기록 참조 — 그때 3시간을 잃었다)
 
-# 판올림 기록 — 빌드는 커밋 해시를 쓰지 않는다
-.git
+# ⛔ `.git` 을 빼지 않는다 — 2026-11-17 에 빼 봤다가 그날 되돌렸다.
+#   `scripts/build-100y-lastmod.mjs` 가 빌드 도중 지면마다
+#   `git log -1 --format=%cs -- <파일>` 로 «진짜 고친 날»을 캐서
+#   사이트맵의 <lastmod> 를 만든다. .git 이 없으면 빌드 로그가
+#   `fatal: not a git repository` 로 도배되고 날짜가 전부 null 이 된다.
+#   색인에 바로 손해라 1.3GB 를 아끼는 것보다 비싸다.
 .github
 
 # 문서. 6,731개 615MB. 지면이 읽지 않는다
