@@ -70,7 +70,11 @@ options:
     #       기준 — 컨테이너의 8할쯤(1GB → 820MB). 나머지는 Node 바깥(네이티브·버퍼)이 쓴다.
     #   ⚠ 이것으로도 모자라면 그때 memory 를 올린다. 이 줄을 지우지 말고 함께 둔다.
     - name: NODE_OPTIONS
-      value: --max-old-space-size=820
+    #   🔴🔴 [2026-11-16 세 번째 · 되돌림] **820 → 400.** memory 를 0.5 로 되돌렸으므로
+    #     힙 상한 820 은 컨테이너(512MB)보다 커서 쓸모가 없다 — Node 가 컨테이너 한계를
+    #     넘기 전에 GC 를 돌리지 않는다. **이 값은 컨테이너 memory 의 8할**이어야 한다.
+    #     ⛔ 한쪽만 고치지 않는다. memory 를 바꾸면 이 줄도 같이 바꾼다.
+      value: --max-old-space-size=400
     - name: ARCHIVE_S3_ENDPOINT
       secret: ARCHIVE_S3_ENDPOINT
     - name: ARCHIVE_S3_BUCKET
