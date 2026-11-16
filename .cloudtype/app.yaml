@@ -74,7 +74,8 @@ options:
     #     힙 상한 820 은 컨테이너(512MB)보다 커서 쓸모가 없다 — Node 가 컨테이너 한계를
     #     넘기 전에 GC 를 돌리지 않는다. **이 값은 컨테이너 memory 의 8할**이어야 한다.
     #     ⛔ 한쪽만 고치지 않는다. memory 를 바꾸면 이 줄도 같이 바꾼다.
-      value: --max-old-space-size=400
+      # ⚠ 컨테이너 memory(0.75GB=768MB)의 8할. memory 를 바꾸면 이 줄도 같이 바꾼다.
+      value: --max-old-space-size=600
     - name: ARCHIVE_S3_ENDPOINT
       secret: ARCHIVE_S3_ENDPOINT
     - name: ARCHIVE_S3_BUCKET
@@ -199,7 +200,17 @@ resources:
   #     진짜 원인은 esbuild 설치 스크립트 차단이었고 .npmrc 로 고쳤다(커밋 9d6fad5de).
   #   ⛔ 라이브가 안 바뀌는데 Running 이면 **메모리를 만지기 전에** npm ci 끝의
   #     「allow-scripts ... not yet covered」 줄부터 본다.
-  memory: 0.5
+  #
+  #   🔴🔴 [2026-11-16 넷째 · 0.5 → 0.75] **재서 올린다. 짐작으로 올리지 않았다.**
+  #   깨끗한 판(git archive → npm ci → npm run build)을 힙 400MB 로 돌려 봤다 —
+  #   **16,143장이 4분 32초에 다 지어졌다.** 코드는 멀쩡하다는 뜻이다.
+  #   그런데 컨테이너는 **2분 만에** Running 으로 돌아온다. 다 짓고 죽은 것이 아니라
+  #   **짓는 중에** 죽는다 — 0.5GB 로는 모자란다.
+  #   ⚠ 오늘 아침 100y 지면 6장과 data/industry 묶음이 들어가며 선을 넘은 것으로 본다.
+  #     2026-08-04 에 17 → 19쪽으로 넘은 것과 같은 모양이다.
+  #   ⛔ 1.0 은 쓰지 않는다 — 계정이 「2GB of 2GB」로 꽉 차 빌드 통이 뜰 자리가 없어진다.
+  #     0.75 면 1.75/2GB 로 0.25GB 가 남는다.
+  memory: 0.75
 
 context:
   git:
