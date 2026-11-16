@@ -193,6 +193,49 @@ async function delRemote(key, { timeout = 30_000 } = {}) {
 }
 
 /**
+ * 큰 묶음을 **로컬 사본 없이** 원격에만 올린다.
+ *
+ * 🔴 [2026-11-17 · 5번] `put()` 은 늘 `archive/<키>` 에 사본을 같이 남긴다.
+ *   작은 기록에는 그게 맞지만, **370MB 짜리 지면 묶음**을 그렇게 두면 배포마다
+ *   이 PC 에 370MB 가 쌓인다. 올리는 것이 목적일 때는 이쪽을 쓴다.
+ * ⛔ 서명은 `signedFetch` 하나만 쓴다 — 서명 길을 둘로 가르지 않는다(위 주석 참조).
+ */
+export async function 원격에올린다(key, body, contentType = 'application/octet-stream') {
+  if (!remoteEnabled) throw new Error('원격 저장이 꺼져 있다 — ARCHIVE_S3_* 가 없다');
+  return putRemote(key, body, contentType);
+}
+
+/**
+ * 원격의 한 건을 **흘려서 파일로** 받는다. 통째로 메모리에 들지 않는다.
+ *
+ * 🔴 [2026-11-17 · 5번] `get()` 은 본문을 통째로 버퍼에 담는다. 370MB 짜리를
+ *   그렇게 받으면 **메모리가 모자라 죽는 바로 그 자리**에서 또 죽는다.
+ *   이 함수를 쓰는 곳이 그 자리다 — `scripts/받는다-지어진지면.mjs`.
+ * @returns 받은 바이트 수. 없으면 null
+ */
+export async function 원격을파일로받는다(key, 낼곳, { timeout = 600_000 } = {}) {
+  if (!remoteEnabled) throw new Error('원격 저장이 꺼져 있다 — ARCHIVE_S3_* 가 없다');
+  const res = await signedFetch('GET', key, { timeout });
+  if (res.status === 404) return null;
+  if (!res.ok) {
+    const detail = (await res.text().catch(() => '')).slice(0, 300);
+    throw new Error(`S3 GET ${res.status}: ${detail}`);
+  }
+  const { createWriteStream } = await import('node:fs');
+  const 펜 = createWriteStream(낼곳);
+  const 읽개 = res.body.getReader();
+  let 센것 = 0;
+  for (;;) {
+    const { done, value } = await 읽개.read();
+    if (done) break;
+    센것 += value.length;
+    if (!펜.write(Buffer.from(value))) await new Promise((r) => 펜.once('drain', r));
+  }
+  await new Promise((r) => 펜.end(r));
+  return 센것;
+}
+
+/**
  * 한 건을 지운다 — 로컬과 원격 «둘 다».
  * ⛔ 한쪽만 지우지 않는다. 로컬만 지우면 다음에 원격에서 되살아난다.
  * ⚠ 원격이 실패해도 던지지 않고 결과에 적는다 — 부르는 쪽이 「반쯤 지웠다」를 알아야 한다.

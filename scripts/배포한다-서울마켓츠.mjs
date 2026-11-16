@@ -28,6 +28,26 @@ if (!위치) {
   process.exit(1);
 }
 
+/* 🔴 [2026-11-17 · 5번] **지어 올린 것이 있는지 먼저 본다.**
+ *   컨테이너는 더는 짓지 않는다 — R2 의 `지면/최신.json` 을 받아서 편다.
+ *   안 올리고 배포하면 컨테이너가 10분을 기다리다 죽는다. 그 10분을 여기서 아낀다. */
+try {
+  const { execFileSync } = await import('node:child_process');
+  const 커밋 = execFileSync('git', ['rev-parse', 'HEAD'], { cwd: 뿌리, encoding: 'utf8' }).trim();
+  const 창고 = await import('../src/lib/store.mjs');
+  const { 쪽지풀기 } = await import('./올린다-지어진지면.mjs');
+  const 쪽지 = 쪽지풀기((await 창고.get('지면/최신.json'))?.toString?.('utf8'));
+  if (!쪽지 || 쪽지.커밋 !== 커밋) {
+    console.log('🔴 이 커밋으로 지은 지면이 R2 에 없다 — ' + 커밋.slice(0, 9));
+    console.log('   올라가 있는 것 — ' + (쪽지?.커밋?.slice(0, 9) ?? '(쪽지를 못 읽었다)'));
+    console.log('   ⇒ 먼저 돌린다:  node scripts/올린다-지어진지면.mjs');
+    process.exit(1);
+  }
+  console.log('■ 지어 올린 것 확인 — ' + (쪽지.크기 / 1024 / 1024).toFixed(0) + 'MB');
+} catch (e) {
+  console.log('⚠ 올라간 것을 못 봤다(그래도 배포는 건다) — ' + e.message);
+}
+
 console.log('■ 재배포를 시작한다 — ' + 대상 + ' / ' + 짝);
 const 아이 = spawn(process.execPath, [위치, 'update', 대상, '-t', 짝], {
   cwd: 뿌리, stdio: 'inherit',
