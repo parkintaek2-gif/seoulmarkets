@@ -1,0 +1,39 @@
+# ⚠ 이 파일이 비어 있으면 저장소 전체가 빌드 통으로 들어간다.
+#
+# 🔴🔴 [2026-11-17 · 5번] **빌드 통으로 2.19GB 가 통째로 넘어가고 있었다.**
+#   빌드 로그 — `#6 transferring context: 2.19GB 21.6s done`
+#   그 뒤 npm ci · astro build 가 돌면서 16,143장을 짓는다. 빌드 기계의 디스크가
+#   원본 2.19GB + node_modules + dist 를 한꺼번에 들고 있어야 했다.
+#   배포가 「no message · 오류」로 3분 만에 끝나는 날이 열아홉 시간 이어졌다.
+#
+# ⚠ 아래를 빼기 전에 «빌드가 그 파일을 읽는지» 확인했다 —
+#     src/ 에서 docs/ 를 파일로 읽는 곳: 없음 (readFileSync·readdirSync·import.meta.glob 전부)
+#     tools/커밋전관문.mjs 는 `--전부` 일 때 content/ 만 훑는다. git 을 안 부른다
+#   ⛔ 빌드가 import 하는 자료는 src/data/ 에 둔다. archive/ 를 바로 읽지 않는다
+#     (.gitignore 의 2026-08-04 기록 참조 — 그때 3시간을 잃었다)
+
+# 판올림 기록 — 빌드는 커밋 해시를 쓰지 않는다
+.git
+.github
+
+# 문서. 6,731개 615MB. 지면이 읽지 않는다
+docs
+
+# 만들어지는 것들
+node_modules
+dist
+.astro
+out
+tmp
+logs
+
+# 자료 원본. .gitignore 에도 있어 클론에는 없지만, 손으로 빌드할 때를 위해 적는다
+archive
+
+# 시험·잡동사니
+tests
+*.mp4
+*.png
+*.log
+.env
+.env.local
