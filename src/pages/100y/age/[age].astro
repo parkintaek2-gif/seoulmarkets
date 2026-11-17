@@ -24,7 +24,7 @@ import { href } from '../../../lib/hundredyear';
 import 원본 from '../../../data/100yearmap/age-axis.json';
 import 사망원인자료 from '../../../data/100yearmap/death-causes-by-age.json';
 import {
-  나이말, 임금값, 살림값, 혼인누적, 임금꼭대기, 월급말, 고용값, 사망원인값, type 나이자료,
+  나이말, 제목나이말, 임금값, 살림값, 혼인누적, 임금꼭대기, 월급말, 고용값, 사망원인값, type 나이자료,
 } from '../../../lib/age-page';
 
 /** 페이지를 낼 나이 — 오픈에는 다섯 자리만 낸다. 넓히기 전에 되는지 본다 */
@@ -100,14 +100,14 @@ const desc =
 const jsonLd = {
   '@context': 'https://schema.org',
   '@type': 'Article',
-  headline: `${나이말(나이)} — 남들은 어떻게 하고 있나`,
+  headline: `${제목나이말(나이)} — 남들은 어떻게 하고 있나`,
   description: desc,
   inLanguage: 'ko',
   isAccessibleForFree: true,
 };
 ---
 
-<HundredYear title={`${나이말(나이)} — 남들은 어떻게 하고 있나`} description={desc} jsonLd={jsonLd}>
+<HundredYear title={`${제목나이말(나이)} — 남들은 어떻게 하고 있나`} description={desc} jsonLd={jsonLd}>
   <h1>{나이말(나이)}</h1>
   <p class="sub">
     같은 나이의 사람들이 <strong>실제로 어떻게 했는지</strong>만 놓았습니다.
