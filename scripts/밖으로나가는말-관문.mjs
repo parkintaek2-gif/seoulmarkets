@@ -127,18 +127,25 @@ export function 글을잰다(글) {
   return 재기(String(글 ?? ''), { 주석도본다: true });
 }
 
-/** 파일 여럿을 잰다 — 돌려주는 것은 [{길, 걸린것}] 과 못 읽은 것 */
+/** 파일 여럿을 잰다 — 돌려주는 것은 [{길, 걸린것}] 과 못 읽은 것, 그리고 인용만 든 것 */
 export async function 파일들을잰다(길들) {
   const 걸린파일 = [];
   const 못읽은것 = [];
+  /* 🔴 [2026-11-18] 인용은 «막지 않는다». 그래서 걸린파일에 넣으면 안 된다 —
+     넣는 순간 통과하던 글이 빨강이 되어 일이 선다. 따로 모아 눈에만 보인다. */
+  const 인용든것 = [];
   for (const 길 of 길들) {
     let 글 = null;
     try { 글 = await 글자뽑기(길); } catch (e) { 못읽은것.push({ 길, 왜: e.message }); continue; }
     if (글 === null) continue;
     const 걸린것 = 글을잰다(글);
+    /* 🔴 [2026-11-18] 인용 안의 것은 막지 않지만 «숨기지도» 않는다 —
+       「인용으로 감싸면 통과한다」가 빠져나갈 구멍이 되지 않게 사람 눈에 보인다. */
+    const 인용속 = Array.isArray(걸린것?.인용속) ? 걸린것.인용속 : [];
+    if (인용속.length) 인용든것.push({ 길, 인용속 });
     if (걸린것.length) 걸린파일.push({ 길, 걸린것 });
   }
-  return { 걸린파일, 못읽은것 };
+  return { 걸린파일, 못읽은것, 인용든것 };
 }
 
 /* ── 자가시험 ─────────────────────────────────────────────────────── */
@@ -173,8 +180,16 @@ if (내가진입점) {
     console.log('쓰는 법: node scripts/밖으로나가는말-관문.mjs <파일…>');
     process.exit(2);
   }
-  const { 걸린파일, 못읽은것 } = await 파일들을잰다(길들);
+  const { 걸린파일, 못읽은것, 인용든것 = [] } = await 파일들을잰다(길들);
   for (const x of 못읽은것) console.log(`⚠ 못 읽었다 — ${x.길} (${x.왜})`);
+  /* 🔴 [2026-11-18] 인용 안은 막지 않지만 눈에는 보인다 —
+     ⛔ 「낫표로 감싸면 통과한다」가 빠져나갈 구멍이 되지 않게 한다.
+     사장님 말씀 원문·선수 인터뷰·대체표의 「쓰지 않는다」 칸이 여기 들어온다. */
+  for (const x of 인용든것) {
+    console.log(`⬜ 인용 ${x.인용속.length}곳은 안 쟀다 — ${x.길}`);
+    for (const q of x.인용속.slice(0, 5)) console.log(`     ${q.replace(/\s+/g, ' ').slice(0, 70)}`);
+    if (x.인용속.length > 5) console.log(`     … 그 밖에 ${x.인용속.length - 5}곳`);
+  }
   if (!걸린파일.length && !못읽은것.length) {
     console.log(`✅ ${길들.length}개 깨끗하다 — 금지어 ${금지어.length}개로 다 쟀다.`);
     process.exit(0);
