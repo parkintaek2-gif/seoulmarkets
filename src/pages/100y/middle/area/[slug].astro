@@ -41,6 +41,7 @@ import HundredYear from '../../../../layouts/HundredYear.astro';
 import 중등자료 from '../../../../data/100yearmap/middle.json';
 import { 슬러그풀기, 열쇠만들기 } from '../../../../lib/school-area';
 import { 중등지역목록, 중등지역주소 } from '../../../../lib/middle-area';
+import { 같은시다른구, 같은시합계, 시부분 } from '../../../../lib/same-city';
 
 export async function getStaticPaths() {
   /* ⛔ 목록을 이 함수 **안**에서 읽는다. 밖에 두면 Astro 가 이 함수를 모듈 밖으로
@@ -118,6 +119,16 @@ const 이곳사립비 = 곳들.length ? Math.round((사립곳.length / 곳들.le
 
 /* ── 같은 시·도의 다른 동네 ── */
 /* ⛔ 슬러그를 여기서 다시 만들지 않는다 — lib 가 만든 목록을 그대로 쓴다 */
+/* 🔴 [2026-11-18 · 5번] 같은 시의 다른 구. 화성시가 네 장으로 갈려 있는데
+   어느 장도 「나머지가 더 있다」를 말하지 않았다. 손님이 적게 읽고 나간다.
+   ⚠ 이 목록은 이름 칸이 `구` 다 — lib 가 아는 꼴(`이름`)로 맞춰 넘긴다. */
+const 꼴맞춘목록 = 중등지역목록(중등자료 as any)
+  .map((a) => ({ slug: a.slug, 이름: a.구, 시도: a.시도, 곳: a.곳 }));
+const 나꼴 = { slug, 이름: 구, 시도 };
+const 같은시이웃 = 같은시다른구(나꼴, 꼴맞춘목록);
+const 같은시곳수 = 같은시합계({ slug, 이름: 구, 시도, 곳: 곳들.length }, 같은시이웃);
+const 시부분이름 = 시부분(구);
+
 const 같은시도 = 중등지역목록(중등자료 as any)
   .filter((a) => a.시도 === 시도 && a.열쇠 !== 이동네열쇠)
   .sort((a, b) => String(a.구).localeCompare(String(b.구), 'ko'));
@@ -397,6 +408,22 @@ const faqJsonLd = {
     중학교에는 처음부터 없습니다. 그래서 이 지면에는 그 숫자가 없습니다 —{' '}
     <strong>빈칸을 0 으로 채우거나 짐작으로 메우지 않았습니다.</strong>
   </p>
+
+  {같은시이웃.length > 0 && (
+    <>
+      <h2>{시부분이름} 전체로는 {같은시곳수}곳입니다</h2>
+      <p class="note">
+        이 표의 {곳들.length}곳은 <strong>{구}</strong>의 것입니다. 같은 시 안의 다른 구에
+        <strong>{같은시곳수 - 곳들.length}곳</strong>이 더 있습니다 — 학교 주소에 적힌
+        구로 갈라 놓았기 때문입니다.
+      </p>
+      <ul>
+        {같은시이웃.map((a: any) => (
+          <li><a href={`/middle/area/${a.slug}`}>{a.이름} 중학교</a> {a.곳}곳</li>
+        ))}
+      </ul>
+    </>
+  )}
 
   {
     같은시도.length > 0 && (
