@@ -42,7 +42,17 @@ preset: node
 options:
   ports: 3000
   nodeversion: 22
-  install: npm ci
+  # 🔴🔴 [2026-11-18 · 5번] **빌드를 죽이던 것이 이 줄이었다.**
+  #   배포가 밤새 「오류」였고 빌드 로그는 unable to retrieve container logs —
+  #   로그도 못 남기고 죽었다. 빌드 명령은 echo 한 줄인데도 그렇다 ⇒ 설치가 범인이다.
+  #     ffmpeg-static 80MB(dev) · @napi-rs 44MB · pdfjs-dist 35MB · puppeteer-core 7.5MB(dev)
+  #     합 170MB 넘게 받아 푸는데 통은 512MB 다.
+  #   ⭐ 그런데 통이 돌리는 43개 파일을 전부 따라가 보니 **바깥 꾸러미를 하나도 안 쓴다.**
+  #     전부 node: 내장 모듈이다. 빌드를 안 하니 astro·vite 도 필요 없다.
+  #   ⛔ 설치를 «아예 빼지는» 않는다 — 동적 import 는 추적이 안 되므로 node_modules 는
+  #     있기는 해야 한다. 무게만 반 이하로 줄인다.
+  #   ⚠ 대시보드 설정도 같은 값으로 고쳐 두었다. 둘이 어긋나면 설정을 일괄 적용할 때 되돌아간다.
+  install: npm ci --omit=dev --ignore-scripts
   # 🔴🔴 [2026-11-17 · 5번] **컨테이너가 더는 짓지 않는다. 지어 놓은 것을 받아서 편다.**
   #   재서 알아낸 것 —
   #     astro build 가 실제로 쓰는 메모리   1,120MB  (실측 · 220초에 성공)
