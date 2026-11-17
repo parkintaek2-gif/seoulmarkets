@@ -44,6 +44,11 @@ import { 지역가르기, 슬러그풀기, 한벌로팔만한가, 열쇠만들�
 import { 퍼센트, 한자리 } from '../../../../lib/number-format';
 import 중단자료 from '../../../../data/100yearmap/school-dropout.json';
 import { 입시줄들, 학교환경줄들, 몇째 } from '../../../../lib/school-area-sum';
+/* 🔴 [2026-11-17] 같은 구의 초등학교 지면으로 길을 낸다.
+   초등 261장이 28일 0명이었고, 까닭은 «들어가는 링크가 없는 것»이었다.
+   네이버가 이미 들어오는 자리는 여기다 — 여기서 내려보낸다. */
+import 초등자료 from '../../../../data/100yearmap/elementary.json';
+import { 초등지역목록, 초등지역주소 } from '../../../../lib/elementary-area';
 import 학급자료 from '../../../../data/100yearmap/school-class-size.json';
 /* 🔴 값과 다음 칸은 **한 곳**에서 온다 — 페이지마다 9,900 을 적으면 값이 바뀔 때 일부만 고쳐진다 */
 import {
@@ -81,6 +86,10 @@ const { slug } = Astro.params as { slug: string };
 const 푼것 = 슬러그풀기(slug)!;
 const 시도 = 푼것.시도;
 const 구 = 푼것.이름;
+
+/* ⛔ 슬러그를 짐작하지 않는다 — 초등 목록에 «있을 때만» 건다.
+   초등 261장 · 고등 258장으로 수가 달라, 없는 곳에 걸면 404 가 생긴다. */
+const 이구초등 = 초등지역목록(초등자료 as any).find((a) => a.slug === slug) ?? null;
 
 const 진로표 = new Map(((진로자료 as any).자료 as any[]).map((r) => [r.code, r]));
 const 진로통계 = (진로자료 as any).통계;
@@ -711,6 +720,17 @@ const 최종jsonLd = 합친jsonLd.length > 1 ? 합친jsonLd : 합친jsonLd[0];
     * ⚠ **무료 지면에도 건다.** 지금은 안 팔지만 같은 지면 꼴이고,
     *   손님은 무료·유료를 오가며 본다. 한쪽에만 있으면 없는 것과 같다.
     */}
+  {/* 🔴 [2026-11-17] 같은 구의 초등학교로 가는 길.
+       초등 261장이 28일 동안 순방문자 0명이었다. 지면이 나쁜 것이 아니라
+       «들어가는 링크»가 없었다 — 사이트맵에는 261장 다 있었는데도 고아였다.
+       네이버가 이미 들어오는 자리가 여기다. 여기서 내려보낸다.
+       손님이 다음에 묻는 것이기도 하다 — 고등학교를 보러 온 부모가 「그럼 초등학교는」을 묻는다. */}
+  {이구초등 && (
+    <p class="note">
+      🏫 <a href={초등지역주소(slug)}><strong>{구}의 초등학교 {이구초등.곳}곳</strong>도 한 장에 있습니다 →</a>
+    </p>
+  )}
+
   <hr class="rule" />
   {/* 🔴 셋 다 19px 이었다(2026-08-09 05:3x · 375px 실측). 파는 지면에서 「사도 되나」를 보는 줄이다 */}
   <p class="note linkrow">

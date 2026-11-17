@@ -63,6 +63,11 @@ const desc =
   `전국 17개 시·도의 고등학교 ${고교합.toLocaleString()}곳과 대학 ${대학합.toLocaleString()}곳을 ` +
   `지역별로 모았습니다. 지역마다 대학 취업률·중도탈락률·고교 학업중단률이 전국 평균과 얼마나 다른지 볼 수 있습니다.`;
 import 요약 from '../../../data/100yearmap/summary.json';
+/* 🔴 [2026-11-17] 초등학교 지역 지면 261장은 이 지면에서 한 장도 안 보였다.
+   구마다 고등학교만 걸려 있었다. 초등도 같이 건다. */
+import 초등자료2 from '../../../data/100yearmap/elementary.json';
+import { 초등지역목록 as 초등목록2 } from '../../../lib/elementary-area';
+const 초등표2 = new Map(초등목록2(초등자료2 as any).map((a) => [a.slug, a]));
 /* 🔴 2026-08-14 — 출처에 「언제 받은 자료인가」가 빠져 있었다(8번이 잡음).
    ⛔ 날을 손으로 박지 않는다. 대장에서 가져와 날짜만 남긴다 */
 const 받은날 = String((요약 as any).원천수집시각 ?? '').slice(0, 10);
@@ -154,6 +159,11 @@ const jsonLd = {
               <a class="gotoarea" href={href(`/report/area/${g.슬러그}`)}>
                 {g.이름}
               </a>
+              {초등표2.get(g.슬러그) && (
+                <a class="gotoarea" href={href(`/elementary/area/${g.슬러그}`)}>
+                  초등 {초등표2.get(g.슬러그)!.곳}곳
+                </a>
+              )}
               <span class="note"> 고등학교 {g.곳수.toLocaleString()}곳</span>
             </li>
           ))}

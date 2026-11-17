@@ -84,6 +84,11 @@ const desc =
     : '') +
   `학교를 고르기 전에 그 지역이 어떤 모습인지 숫자로 봅니다.`;
 import 요약 from '../../../data/100yearmap/summary.json';
+/* 🔴 [2026-11-17] 초등학교 지역 지면으로 가는 길. 28일 0명이던 까닭이
+   «들어가는 링크 없음»이었다. 고등학교 옆에 나란히 둔다. */
+import 초등자료 from '../../../data/100yearmap/elementary.json';
+import { 초등지역목록, 초등지역주소 } from '../../../lib/elementary-area';
+const 초등지역표 = new Map(초등지역목록(초등자료 as any).map((a) => [a.slug, a]));
 /* 🔴 2026-08-14 — 출처에 「언제 받은 자료인가」가 빠져 있었다(8번이 잡음).
    ⛔ 날을 손으로 박지 않는다. 대장에서 가져와 날짜만 남긴다 */
 const 받은날 = String((요약 as any).원천수집시각 ?? '').slice(0, 10);
@@ -246,6 +251,12 @@ const jsonLd = {
           {이시도구들.map((a: any) => (
             <li>
               <a href={href(`/report/area/${a.slug}`)}>{a.이름} 고등학교 {a.곳}곳</a>
+              {초등지역표.get(a.slug) && (
+                <>
+                  {' · '}
+                  <a href={href(`/elementary/area/${a.slug}`)}>초등학교 {초등지역표.get(a.slug)!.곳}곳</a>
+                </>
+              )}
               <span class="note">
                 {a.한벌로팔만한가 ? '한 표에 · 퍼짐과 함께' : '무료로 열어 둔 페이지'}
               </span>
