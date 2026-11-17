@@ -89,6 +89,9 @@ import 요약 from '../../../data/100yearmap/summary.json';
 import 초등자료 from '../../../data/100yearmap/elementary.json';
 import { 초등지역목록, 초등지역주소 } from '../../../lib/elementary-area';
 const 초등지역표 = new Map(초등지역목록(초등자료 as any).map((a) => [a.slug, a]));
+import 중등자료4 from '../../../data/100yearmap/middle.json';
+import { 중등지역목록 as 중등목록4 } from '../../../lib/middle-area';
+const 중등지역표 = new Map(중등목록4(중등자료4 as any).map((a) => [a.slug, a]));
 /* 🔴 2026-08-14 — 출처에 「언제 받은 자료인가」가 빠져 있었다(8번이 잡음).
    ⛔ 날을 손으로 박지 않는다. 대장에서 가져와 날짜만 남긴다 */
 const 받은날 = String((요약 as any).원천수집시각 ?? '').slice(0, 10);
@@ -255,6 +258,12 @@ const jsonLd = {
                 <>
                   {' · '}
                   <a href={href(`/elementary/area/${a.slug}`)}>초등학교 {초등지역표.get(a.slug)!.곳}곳</a>
+                </>
+              )}
+              {중등지역표.get(a.slug) && (
+                <>
+                  {' · '}
+                  <a href={href(`/middle/area/${a.slug}`)}>중학교 {중등지역표.get(a.slug)!.곳}곳</a>
                 </>
               )}
               <span class="note">

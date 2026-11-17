@@ -19,6 +19,10 @@ import { 한벌로팔만한가 } from '../../lib/school-area';
    두 곳에 따로 적으면 「사이트맵엔 있는데 지면이 404」가 난다 */
 import 초등자료 from '../../data/100yearmap/elementary.json';
 import { 초등지역목록, 초등지역주소 } from '../../lib/elementary-area';
+/* 🔴 [2026-11-17 · 5번] 중학교 지역 258장. 목록은 lib 한 곳에서 온다 —
+   `middle/area/[slug].astro` 의 getStaticPaths 가 **같은 함수**를 부른다. */
+import 중등자료 from '../../data/100yearmap/middle.json';
+import { 중등지역목록, 중등지역주소 } from '../../lib/middle-area';
 /* 🔴 파는 지면을 검색에 여는 스위치. `[slug].astro` 의 noindex 와 **같은 것**을 부른다 */
 import { 파는지면검색 } from '../../lib/price';
 import { 짧은지역명 } from '../../lib/region';
@@ -723,6 +727,20 @@ export const GET: APIRoute = () => {
      */
     ...초등지역목록(초등자료 as any).map((a) => ({
       path: 초등지역주소(a.slug),
+      priority: '0.6',
+      changefreq: 'monthly',
+    })),
+    /**
+     * 🔴 [2026-11-17 · 5번] **중학교 지역 258장.**
+     *   실측으로 정했다 — 지역 이름이 제목에 든 지면이 한 장에 12.16명,
+     *   그 밖이 2.26명이다(28일 · GA4). 초등을 냈으니 중등을 내면 초·중·고가 갖춰진다.
+     *   ⭐ 중학교에만 있는 축이 있다 — 남중 334곳 · 여중 310곳.
+     * ⛔ 사이트맵에만 올리지 않는다. 들어가는 링크를 같은 날 함께 낸다 —
+     *   초등 261장이 사이트맵에만 있다가 28일 동안 0명이었다.
+     */
+    { path: '/middle', priority: '0.8', changefreq: 'monthly' },
+    ...중등지역목록(중등자료 as any).map((a) => ({
+      path: 중등지역주소(a.slug),
       priority: '0.6',
       changefreq: 'monthly',
     })),

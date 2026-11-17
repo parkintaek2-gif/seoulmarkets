@@ -49,6 +49,8 @@ import { 입시줄들, 학교환경줄들, 몇째 } from '../../../../lib/school
    네이버가 이미 들어오는 자리는 여기다 — 여기서 내려보낸다. */
 import 초등자료 from '../../../../data/100yearmap/elementary.json';
 import { 초등지역목록, 초등지역주소 } from '../../../../lib/elementary-area';
+import 중등자료 from '../../../../data/100yearmap/middle.json';
+import { 중등지역목록, 중등지역주소 } from '../../../../lib/middle-area';
 import 학급자료 from '../../../../data/100yearmap/school-class-size.json';
 /* 🔴 값과 다음 칸은 **한 곳**에서 온다 — 페이지마다 9,900 을 적으면 값이 바뀔 때 일부만 고쳐진다 */
 import {
@@ -90,6 +92,7 @@ const 구 = 푼것.이름;
 /* ⛔ 슬러그를 짐작하지 않는다 — 초등 목록에 «있을 때만» 건다.
    초등 261장 · 고등 258장으로 수가 달라, 없는 곳에 걸면 404 가 생긴다. */
 const 이구초등 = 초등지역목록(초등자료 as any).find((a) => a.slug === slug) ?? null;
+const 이구중등 = 중등지역목록(중등자료 as any).find((a) => a.slug === slug) ?? null;
 
 const 진로표 = new Map(((진로자료 as any).자료 as any[]).map((r) => [r.code, r]));
 const 진로통계 = (진로자료 as any).통계;
@@ -728,6 +731,13 @@ const 최종jsonLd = 합친jsonLd.length > 1 ? 합친jsonLd : 합친jsonLd[0];
   {이구초등 && (
     <p class="note">
       🏫 <a href={초등지역주소(slug)}><strong>{구}의 초등학교 {이구초등.곳}곳</strong>도 한 장에 있습니다 →</a>
+    </p>
+  )}
+  {이구중등 && (
+    <p class="note">
+      🏫 <a href={중등지역주소(slug)}><strong>{구}의 중학교 {이구중등.곳}곳</strong>도 한 장에 있습니다
+      {이구중등.여중 > 0 && <> — 여자중학교 {이구중등.여중}곳</>}
+      {이구중등.남중 > 0 && <> · 남자중학교 {이구중등.남중}곳</>} →</a>
     </p>
   )}
 

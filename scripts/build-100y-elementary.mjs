@@ -37,29 +37,17 @@
 import fs from 'node:fs';
 import path from 'node:path';
 import { 지역가르기, 한벌최소 } from '../src/lib/school-area.ts';
+import { 올해, 읽기, 시도씻기, 설립연 } from './lib/neis-school.mjs';
 
 const ROOT = path.resolve(path.dirname(new URL(import.meta.url).pathname).replace(/^\/([A-Za-z]:)/, '$1'), '..');
 const 원자료 = path.join(ROOT, 'archive', 'raw', 'neis', 'school-info.json');
 const 낼길 = path.join(ROOT, 'src', 'data', '100yearmap', 'elementary.json');
 
-/** ⚠ 올해를 붙박는다. 해가 바뀌면 「100년」의 뜻도 바뀐다 — 그때 다시 센다 */
-export const 올해 = 2026;
-
-/** 🔴 BOM 을 떼고 배열인 칸을 찾는다. 둘 중 하나만 빠뜨려도 통째로 죽는다 */
-export function 읽기(글) {
-  const s =글.charCodeAt(0) === 0xFEFF ? 글.slice(1) : 글;
-  const j = JSON.parse(s);
-  return Array.isArray(j) ? j : (Object.values(j).find((v) => Array.isArray(v)) ?? []);
-}
-
-/** ⚠ 「전남광주통합특별시(광주)」→「전남광주통합특별시」. 괄호를 두면 한 시도가 둘이 된다 */
-export const 시도씻기 = (s) => String(s ?? '').replace(/\s*\([^)]*\)\s*$/, '').trim();
-
-/** 설립 연도. ⛔ 여덟 자리가 아니면 null — 지어내지 않는다 */
-export function 설립연(x) {
-  const v = String(x.FOND_YMD ?? '').replace(/-/g, '');
-  return /^\d{8}$/.test(v) ? Number(v.slice(0, 4)) : null;
-}
+/* 🔴 [2026-11-17] 함수를 lib 로 옮겼다. 중학교 빌더가 여기서 들여왔더니
+   «이 파일 본문이 통째로 돌아» elementary.json 을 덮어쓸 뻔했다.
+   ⛔ 돌아가는 자에서 함수를 들여오지 않는다. 함수는 돌지 않는 자리에 둔다.
+   ⛔ 아래 재수출은 옛 들여오기를 쓰는 자를 위해 남긴다 — 몸통은 lib 에만 있다. */
+export { 올해, 읽기, 시도씻기, 설립연 } from './lib/neis-school.mjs';
 
 if (process.argv.includes('--자가시험')) {
   let 통과 = 0, 실패 = 0;

@@ -1,0 +1,299 @@
+---
+/**
+ * /100y/middle — 우리 동네 중학교, 남중과 여중은 몇 곳인가요
+ *
+ * ## 🔴 왜 만드나 — 실측으로 정해졌다
+ *
+ *   [2026-11-17] 백년지도의 묶음별 「한 장이 버는 사람」(28일 · GA4 순방문자)
+ *   ```
+ *   /report/area/  고등학교 지역 258장   12.16명
+ *   그 밖           942장                2.26명
+ *   ```
+ *   지역 이름이 제목에 든 페이지가 다섯 배를 번다. 초등을 냈으니 중등을 내면
+ *   **초·중·고가 갖춰지고 한 구에 세 장이 서로를 가리킨다.**
+ *
+ * ## ⭐ 중학교가 쥔 것 — 남중 · 여중
+ *
+ *   전국 남중 334곳 · 여중 310곳 · 남녀공학 2,674곳.
+ *   「우리 구에 여중이 있나」는 부모가 실제로 묻는 질문이고,
+ *   블로그 글보다 **공공데이터가 답하기 좋은** 질문이다. 초등에는 이 축이 없다.
+ *
+ * ## ⛔ 자료가 못박아 둔 것을 그대로 지킨다
+ *
+ *   「⛔ 안 쓰는 말: 명문 · 전통 · 순위 · 몇 위 · 좋은 학교 · 나쁜 학교 ·
+ *     남녀공학이 낫다 · 남중이 낫다」
+ *   「⚠ 설립일은 NEIS 값이라 개교기념일과 다를 수 있다 — 「몇 년째」가 아니라
+ *     「1885년에 문을 열었다」로 쓴다」
+ *   「⚠ 여기에 없는 것: 고교 진학 결과 · 학업성취. 중학교는 그 공시가 없다」
+ *
+ * ⛔ 3,318장을 만들지 않는다. **동네 단위** 258장이다.
+ */
+import HundredYear from '../../../layouts/HundredYear.astro';
+import NextQuestionBrief from '../../../components/NextQuestionBrief.astro';
+import 원본 from '../../../data/100yearmap/middle.json';
+/* ⛔ 주소를 여기서 이어 붙이지 않는다 — lib 가 만든 것을 그대로 쓴다 */
+import { 중등지역목록, 중등지역주소 } from '../../../lib/middle-area';
+
+const 자료 = 원본 as any;
+const 올해 = 자료.올해 as number;
+
+/** 시·군·구 258칸 전부. ⛔ 잘라내지 않는다 — 손님이 찾는 것은 자기 동네 한 칸이다 */
+const 동네 = 중등지역목록(자료).sort((a: any, b: any) => b.곳 - a.곳);
+
+/** ⭐ 여중이 있는 동네 · 남중이 있는 동네. ⛔ 순위가 아니다 — 「어디에 있나」다 */
+const 여중있는곳 = [...동네].filter((r) => r.여중 > 0).sort((a, b) => b.여중 - a.여중);
+const 남중있는곳 = [...동네].filter((r) => r.남중 > 0).sort((a, b) => b.남중 - a.남중);
+/* 🔴 「여중이 한 곳도 없는 동네」도 사실이다. 적지 않으면 그 동네 사람이 헛걸음한다 */
+const 여중없는곳수 = 동네.filter((r) => r.여중 === 0).length;
+const 남중없는곳수 = 동네.filter((r) => r.남중 === 0).length;
+
+/** 시도별로 묶어 본다 — 258칸은 한눈에 안 들어온다 */
+const 시도별 = (() => {
+  const 통 = new Map<string, { 시도: string; 곳: number; 남중: number; 여중: number; 백년: number }>();
+  for (const r of 자료.지역) {
+    const t = 통.get(r.시도) || { 시도: r.시도, 곳: 0, 남중: 0, 여중: 0, 백년: 0 };
+    t.곳 += r.곳; t.남중 += r.남중 ?? 0; t.여중 += r.여중 ?? 0; t.백년 += r.백년;
+    통.set(r.시도, t);
+  }
+  return [...통.values()].sort((a, b) => b.곳 - a.곳);
+})();
+
+const 맨오래 = 자료.가장오래된[0];
+const 공학몫 = Number(((자료.공학수 / 자료.낸곳) * 100).toFixed(1));
+
+const desc =
+  `전국 중학교 ${자료.낸곳.toLocaleString()}곳을 시·군·구로 갈라 모았습니다. ` +
+  `남자중학교 ${자료.남중수}곳 · 여자중학교 ${자료.여중수}곳 · 남녀공학 ${자료.공학수.toLocaleString()}곳입니다. ` +
+  `가장 먼저 문을 연 곳은 ${맨오래.title}로 ${맨오래.설립연}년입니다. 등수를 매기지 않습니다.`;
+
+const jsonLd = {
+  '@context': 'https://schema.org',
+  '@type': 'Dataset',
+  name: '전국 중학교 — 남중·여중·남녀공학과 설립연도',
+  description: desc,
+  license: 'https://www.neis.go.kr',
+  creator: { '@type': 'Organization', name: '백년지도' },
+  sourceOrganization: { '@type': 'Organization', name: '한국교육학술정보원(NEIS 교육정보 개방 포털)' },
+  variableMeasured: ['시·군·구별 중학교 수', '남자중학교·여자중학교·남녀공학 구분', '설립연도'],
+};
+---
+
+<HundredYear
+  title={`중학교 ${자료.낸곳.toLocaleString()}곳 — 우리 동네 남중·여중은 몇 곳인가요`}
+  description={desc}
+  jsonLd={jsonLd}
+>
+  <h1>우리 동네 중학교,<br class="pcbr" /> 남중과 여중은 몇 곳인가요?</h1>
+  <p class="sub">
+    전국 중학교 <strong>{자료.낸곳.toLocaleString()}곳</strong>을 시·군·구{' '}
+    <strong>{자료.지역수}칸</strong>으로 갈라 놓았습니다. 남자중학교{' '}
+    <strong>{자료.남중수}곳</strong> · 여자중학교 <strong>{자료.여중수}곳</strong> · 남녀공학{' '}
+    <strong>{자료.공학수.toLocaleString()}곳</strong>({공학몫}%)입니다.
+  </p>
+
+  <p class="note">
+    ⛔ <strong>어느 쪽이 낫다는 뜻이 아닙니다.</strong> 남중이든 여중이든 남녀공학이든
+    저희는 <strong>몇 곳이 어디에 있는지만</strong> 적습니다. 고르는 것은 보시는 분이 합니다.
+  </p>
+
+  <div class="answer">
+    <p class="answer-label">가장 먼저 문을 연 중학교</p>
+    <p class="answer-num">{맨오래.설립연}년</p>
+    <p class="answer-sub">
+      {맨오래.title} · {맨오래.시도} {맨오래.구} — 올해로 {올해 - 맨오래.설립연}해째 자리에 있습니다
+    </p>
+  </div>
+
+  <h2>여자중학교가 있는 동네</h2>
+  <p class="note">
+    전국 {자료.지역수}칸 가운데 여자중학교가 있는 곳은 <strong>{여중있는곳.length}칸</strong>입니다.
+    나머지 <strong>{여중없는곳수}칸에는 여자중학교가 없습니다</strong> — 그 동네 중학교는 모두
+    남녀공학이거나 남자중학교입니다.
+  </p>
+  <div class="tablewrap">
+    <table>
+      <thead><tr><th>시·군·구</th><th>여중</th><th>중학교 전체</th></tr></thead>
+      <tbody>
+        {여중있는곳.slice(0, 15).map((r: any) => (
+          <tr>
+            <td><a href={중등지역주소(r.slug)}>{r.시도} {r.구}</a></td>
+            <td>{r.여중}곳</td>
+            <td>{r.곳}곳</td>
+          </tr>
+        ))}
+      </tbody>
+    </table>
+  </div>
+
+  <h2>남자중학교가 있는 동네</h2>
+  <p class="note">
+    여자중학교가 있는 곳은 <strong>{남중있는곳.length}칸</strong>이고,{' '}
+    <strong>{남중없는곳수}칸에는 남자중학교가 없습니다.</strong>
+  </p>
+  <div class="tablewrap">
+    <table>
+      <thead><tr><th>시·군·구</th><th>남중</th><th>중학교 전체</th></tr></thead>
+      <tbody>
+        {남중있는곳.slice(0, 15).map((r: any) => (
+          <tr>
+            <td><a href={중등지역주소(r.slug)}>{r.시도} {r.구}</a></td>
+            <td>{r.남중}곳</td>
+            <td>{r.곳}곳</td>
+          </tr>
+        ))}
+      </tbody>
+    </table>
+  </div>
+  <div class="warn">
+    <p><strong>⛔ 이것은 순위가 아닙니다.</strong></p>
+    <p class="note">
+      중학교가 많은 동네면 남중·여중도 많습니다. 그러니 이 표는{' '}
+      <strong>「어디가 낫다」가 아니라 「어디에 있나」</strong>입니다.
+      오른쪽 칸(그 동네 중학교 전체 수)을 함께 보셔야 합니다.
+    </p>
+  </div>
+
+  <h2>시·도로 보면</h2>
+  <div class="tablewrap">
+    <table>
+      <thead><tr><th>시·도</th><th>중학교</th><th>남중</th><th>여중</th><th>100년 넘음</th></tr></thead>
+      <tbody>
+        {시도별.map((r) => (
+          <tr>
+            <td>{r.시도}</td>
+            <td>{r.곳.toLocaleString()}곳</td>
+            <td>{r.남중}곳</td>
+            <td>{r.여중}곳</td>
+            <td>{r.백년}곳</td>
+          </tr>
+        ))}
+      </tbody>
+    </table>
+  </div>
+
+  <h2>먼저 문을 연 열 곳</h2>
+  <div class="tablewrap">
+    <table>
+      <thead><tr><th>설립</th><th>학교</th><th>어디</th></tr></thead>
+      <tbody>
+        {자료.가장오래된.map((r: any) => (
+          <tr>
+            <td>{r.설립연}년</td>
+            <td>{r.title}</td>
+            <td>{r.시도} {r.구}</td>
+          </tr>
+        ))}
+      </tbody>
+    </table>
+  </div>
+  <p class="note">
+    ⚠ 설립일은 <strong>NEIS 공시 값</strong>입니다. 학교가 스스로 세는 개교기념일과 다를 수 있어,
+    「몇 년째」가 아니라 <strong>「몇 년에 문을 열었다」</strong>로 적습니다.
+    전국에서 문 연 지 100년이 넘은 중학교는 <strong>{자료.백년넘은곳수}곳</strong>입니다.
+  </p>
+
+  {/* 🔴 [2026-11-17] **링크가 없으면 258장이 고아가 된다.**
+       초등 261장이 바로 그래서 28일 동안 한 사람도 못 받았다.
+       사이트맵에만 있는 페이지는 수집기가 잘 가져가지 않는다. */}
+  <h2>우리 동네로 찾기</h2>
+  <input
+    id="q"
+    type="search"
+    placeholder="시·군·구를 입력하세요 (예: 화성, 종로, 제주)"
+    autocomplete="off"
+    aria-label="시·군·구 검색"
+  />
+  <p class="note" id="cnt" aria-live="polite"></p>
+  <div class="tablewrap">
+    <table>
+      <thead><tr><th>시·군·구</th><th>중학교</th><th>남중</th><th>여중</th></tr></thead>
+      <tbody id="지역몸">
+        {동네.map((r: any) => (
+          <tr data-name={`${r.시도} ${r.구}`}>
+            <td><a href={중등지역주소(r.slug)}>{r.시도} {r.구}</a></td>
+            <td>{r.곳}곳</td>
+            <td>{r.남중}곳</td>
+            <td>{r.여중}곳</td>
+          </tr>
+        ))}
+      </tbody>
+    </table>
+  </div>
+  <p class="note">
+    ⛔ 학교가 많은 차례로 놓았을 뿐, <strong>순위가 아닙니다.</strong> 시·군·구 {자료.지역수}칸을 다 실었습니다.
+  </p>
+
+  <div class="warn">
+    <p><strong>⚠ 이 페이지에 없는 것</strong></p>
+    <p class="note">
+      고교 진학 결과 · 학업성취는 <strong>없습니다</strong>. 중학교는 그 공시가 없습니다.
+      있는 것은 <strong>문 연 날과 자리, 그리고 남녀 구분</strong>입니다.
+      없는 것을 지어내 채우지 않았습니다.
+    </p>
+    <p class="note">
+      🔴 전국 {자료.전체.toLocaleString()}곳 가운데 <strong>{자료.낸곳.toLocaleString()}곳</strong>을 실었습니다.
+      뺀 {자료.전체 - 자료.낸곳}곳은 재외한국학교 {자료.뺀것.재외한국학교}곳 ·
+      주소가 없는 곳 {자료.뺀것.주소없음}곳 ·{' '}
+      <strong>아직 문을 안 연 곳 {자료.뺀것.아직안엶}곳</strong>입니다.
+      각종학교와 방송통신중학교도 함께 뺐습니다 — 부모가 찾는 중학교가 아닙니다.
+    </p>
+  </div>
+
+  <p class="note">
+    출처 — NEIS 교육정보 개방 포털(한국교육학술정보원) · 공식 OpenAPI 로 받았습니다. 사이트를 긁지 않았습니다.
+  </p>
+
+  {/* 🔴 초·중·고가 서로를 가리킨다. 부모는 셋을 다 본다 */}
+  <p class="note">
+    <a href="/elementary">초등학교는 몇 살인가요 →</a> ·{' '}
+    <a href="/region">지역으로 보기 →</a> · <a href="/school">고등학교 찾기 →</a>
+  </p>
+
+  <NextQuestionBrief 모은것="중학교 자료" />
+</HundredYear>
+
+<style>
+  #q {
+    width: 100%;
+    min-height: 44px;
+    padding: 0.6rem 0.8rem;
+    font-size: var(--fs-body);
+    font-family: inherit;
+    color: var(--ink);
+    background: var(--card);
+    border: 1px solid var(--line);
+    border-radius: 0.5rem;
+    margin: 0 0 0.5rem;
+  }
+  #q:focus { outline: 2px solid var(--accent); outline-offset: 1px; }
+  [hidden] { display: none !important; }
+</style>
+
+<script is:inline>
+  /* ⚠ /elementary 의 찾기와 같은 방식이다. 새로 짓지 않았다.
+     ⛔ 자바스크립트가 꺼져 있어도 표는 그대로 보인다 — 찾기만 안 될 뿐이다 */
+  (function () {
+    var q = document.getElementById('q');
+    var cnt = document.getElementById('cnt');
+    var 몸 = document.getElementById('지역몸');
+    if (!q || !몸) return;
+    var 줄들 = Array.prototype.slice.call(몸.querySelectorAll('tr'));
+
+    function 적용() {
+      var v = q.value.trim();
+      if (!v) {
+        줄들.forEach(function (tr) { tr.hidden = false; });
+        cnt.textContent = '';
+        return;
+      }
+      var n = 0;
+      줄들.forEach(function (tr) {
+        var 맞나 = tr.getAttribute('data-name').indexOf(v) >= 0;
+        tr.hidden = !맞나;
+        if (맞나) n++;
+      });
+      cnt.textContent = n ? '「' + v + '」 ' + n + '칸' : '「' + v + '」 로 찾은 곳이 없습니다';
+    }
+    q.addEventListener('input', 적용);
+  })();
+</script>

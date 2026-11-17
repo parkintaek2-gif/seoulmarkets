@@ -67,6 +67,9 @@ import 요약 from '../../../data/100yearmap/summary.json';
    구마다 고등학교만 걸려 있었다. 초등도 같이 건다. */
 import 초등자료2 from '../../../data/100yearmap/elementary.json';
 import { 초등지역목록 as 초등목록2 } from '../../../lib/elementary-area';
+import 중등자료3 from '../../../data/100yearmap/middle.json';
+import { 중등지역목록 as 중등목록3 } from '../../../lib/middle-area';
+const 중등표3 = new Map(중등목록3(중등자료3 as any).map((a) => [a.slug, a]));
 const 초등표2 = new Map(초등목록2(초등자료2 as any).map((a) => [a.slug, a]));
 /* 🔴 2026-08-14 — 출처에 「언제 받은 자료인가」가 빠져 있었다(8번이 잡음).
    ⛔ 날을 손으로 박지 않는다. 대장에서 가져와 날짜만 남긴다 */
@@ -162,6 +165,11 @@ const jsonLd = {
               {초등표2.get(g.슬러그) && (
                 <a class="gotoarea" href={href(`/elementary/area/${g.슬러그}`)}>
                   초등 {초등표2.get(g.슬러그)!.곳}곳
+                </a>
+              )}
+              {중등표3.get(g.슬러그) && (
+                <a class="gotoarea" href={href(`/middle/area/${g.슬러그}`)}>
+                  중등 {중등표3.get(g.슬러그)!.곳}곳
                 </a>
               )}
               <span class="note"> 고등학교 {g.곳수.toLocaleString()}곳</span>
