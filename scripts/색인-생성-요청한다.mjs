@@ -50,7 +50,7 @@ const 사이트 = (() => {
 const puppeteer = createRequire(import.meta.url)('puppeteer-core');
 let b = null;
 try {
-  b = await puppeteer.connect({ browserURL: (process.env.KLM_CHROME_PORT ? 'http://127.0.0.1:' + process.env.KLM_CHROME_PORT : 'http://127.0.0.1:9223'), defaultViewport: null });
+  b = await puppeteer.connect({ browserURL: (process.env.KLM_CHROME_PORT ? 'http://127.0.0.1:' + process.env.KLM_CHROME_PORT : 'http://127.0.0.1:9222' /* 🔴 [2026-11-17 · 5번] 9223(MCP 공용)에는 구글 로그인이 없다. 로그인된 것은 9222 다 */), defaultViewport: null });
 } catch (e) {
   console.log('⚠ 크롬(9222)에 못 붙었다 — ' + String(e.message).slice(0, 60));
   process.exit(0);                        /* ⛔ 못 한 것으로 막지 않는다 */

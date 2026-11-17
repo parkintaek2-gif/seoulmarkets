@@ -76,13 +76,19 @@ import { fileURLToPath } from 'node:url';
  */
 export const 속성표 = {
   'klifemap.ai': 'https://klifemap.ai/',
+  /* 🔴 [2026-11-17 · 5번] 사장님이 다시 로그인해 주신 뒤 속성 고르개를 눌러 «화면에서 읽었다».
+     아래 셋은 그때까지 「권한 없음」으로 적혀 있었다 — 실제로는 로그인이 풀려 있었을 뿐이다. */
+  'seoulmarkets.com': 'https://seoulmarkets.com/',
+  '100yearmap.com': 'https://100yearmap.com/',
+  'kculturewire.com': 'sc-domain:kculturewire.com',
 };
 
 /** 이 계정으로는 못 들어가는 곳 — 「왜 안 되나」를 자가 말할 수 있게 따로 적는다 */
 export const 못들어가는곳 = {
-  'kculturewire.com': '2026-10-29 재 봄 — 도메인 꼴·주소 꼴 모두 「액세스할 수 없습니다」',
-  'seoulmarkets.com': '2026-10-29 재 봄 — 도메인 꼴·주소 꼴 모두 「액세스할 수 없습니다」',
-  '100yearmap.com': '2026-10-29 재 봄 — 도메인 꼴·주소 꼴 모두 「액세스할 수 없습니다」',
+  /* 🔴 [2026-11-17 · 5번] 비웠다. 셋 다 2026-10-29 에 「액세스할 수 없습니다」로 적혀 있었는데,
+     11-17 에 화면에서 다시 보니 네 속성이 모두 이 계정에 들어 있다.
+     그날은 서치콘솔 로그인이 풀려 있었다 — 「로그아웃」을 「권한 없음」으로 읽은 것이다.
+     ⛔ 「안 보인다」를 「권한이 없다」로 적지 않는다. 로그인부터 본다. */
 };
 
 export function 속성구하기(주소) {
@@ -112,20 +118,24 @@ export const 속성주소 = (속성) =>
 if (process.argv.includes('--자가시험')) {
   const 것 = []; const 다 = (이름, 참) => 것.push({ 이름, 참: !!참 });
   다('klifemap 은 «주소 꼴» 속성이다 — 도메인 꼴은 못 들어간다', 속성구하기('https://klifemap.ai/all') === 'https://klifemap.ai/');
-  다('🔴 seoulmarkets 는 이 계정으로 못 들어간다', 속성구하기('https://seoulmarkets.com/data') === null && 못들어가는곳['seoulmarkets.com']);
+  다('seoulmarkets 는 «주소 꼴» 속성이다 (2026-11-17 화면에서 읽음)', 속성구하기('https://seoulmarkets.com/data') === 'https://seoulmarkets.com/');
+  다('못 들어가는 곳은 이제 없다', Object.keys(못들어가는곳).length === 0);
   다('www 는 뗀다', 속성구하기('https://www.klifemap.ai/x') === 'https://klifemap.ai/');
   다('주소가 아니면 null — 기본값을 몰래 안 쓴다', 속성구하기('그냥글') === null);
   다('빈 것도 null', 속성구하기(null) === null);
   다('속성별로 묶는다', (() => {
+    /* 🔴 [2026-11-17] seoulmarkets 도 이제 속성이 있다 — 묶음이 «둘»이다 */
     const { 묶음 } = 속성별묶기(['https://klifemap.ai/a', 'https://seoulmarkets.com/b', 'https://klifemap.ai/c']);
-    return 묶음.size === 1 && 묶음.get('https://klifemap.ai/').length === 2;
+    return 묶음.size === 2 && 묶음.get('https://klifemap.ai/').length === 2
+      && 묶음.get('https://seoulmarkets.com/').length === 1;
   })());
   다('못 구한 것은 따로 낸다', 속성별묶기(['아무거나']).못구함.length === 1);
   다('속성 주소를 제대로 만든다', 속성주소('sc-domain:klifemap.ai').endsWith('sc-domain%3Aklifemap.ai'));
-  다('🔴 100yearmap 도 못 들어간다', 속성구하기('https://100yearmap.com/age') === null);
+  다('100yearmap 도 «주소 꼴» 속성이다 (2026-11-17 화면에서 읽음)', 속성구하기('https://100yearmap.com/age') === 'https://100yearmap.com/');
+  다('kculturewire 는 «도메인 꼴» 속성이다 (2026-11-17 화면에서 읽음)', 속성구하기('https://www.kculturewire.com/x') === 'sc-domain:kculturewire.com');
   다('⛔ 표에 없는 곳은 지어내지 않는다', 속성구하기('https://naver.com/x') === null);
   다('⛔ 주소가 아니면 null', 속성구하기('그냥 글') === null);
-  다('⛔ 못 들어가는 곳은 까닭을 들고 있다', Object.values(못들어가는곳).every((v) => /재 봄/.test(v)));
+  다('⛔ 못 들어가는 곳에 적을 때는 까닭을 함께 적는다', Object.values(못들어가는곳).every((v) => /재 봄/.test(v)));
   const 진 = 것.filter((x) => !x.참);
   console.log(`구글 색인요청 — 자체 점검 ${것.length - 진.length}/${것.length}`);
   for (const x of 진) console.log('   🔴 ' + x.이름);
@@ -145,7 +155,12 @@ if (!것들.length) {
   console.log('⛔ 쓰는 법: node scripts/구글-색인요청.mjs <주소> [주소...]');
   process.exit(1);
 }
-const b = await puppeteer.connect({ browserURL: (process.env.KLM_CHROME_PORT ? 'http://127.0.0.1:' + process.env.KLM_CHROME_PORT : 'http://127.0.0.1:9223'), defaultViewport: null });
+/* 🔴🔴 [2026-11-17 · 5번] 기본 포트를 9223 → **9222** 로 바꿨다.
+   9223 은 유닛들이 함께 쓰는 Playwright MCP 크롬이고, 구글에 «로그인돼 있는» 것은 9222 다.
+   오늘 세 건이 「검사칸이 안 그려졌다(폭 0)」로 건너뛰어졌다 — 그 크롬에는 서치콘솔이 안 열린다.
+   손으로 9222 에 붙어 보니 검사칸이 650px 로 멀쩡히 떴고, 세 건 모두 대기열에 들어갔다.
+   ⛔ 「폭 0」을 보면 기다림을 늘리기 전에 «어느 크롬에 붙었나»부터 본다. */
+const b = await puppeteer.connect({ browserURL: (process.env.KLM_CHROME_PORT ? 'http://127.0.0.1:' + process.env.KLM_CHROME_PORT : 'http://127.0.0.1:9222'), defaultViewport: null });
 const p = await b.newPage();
 const 잠깐 = (ms) => new Promise((r) => setTimeout(r, ms));
 const { 묶음, 못구함 } = 속성별묶기(것들);
@@ -209,7 +224,10 @@ try {
        면제는 정말 잠긴 날에만 열려야 한다. */
   if (!문.잠겼나 && 문.칸폭 === 0) {
     let 다시 = { ...문 };
-    for (let n = 0; n < 3 && !다시.잠겼나 && 다시.칸폭 === 0; n += 1) {
+    /* 🔴 [2026-11-17 · 5번] 3번(7.5초)으로는 모자랐다 — 손으로 열어 9초 기다리니 검사칸이 650px 로 떴다.
+       속성을 바꾸면 서치콘솔이 화면을 통째로 다시 그린다. 그 사이를 「못 쓴다」로 읽으면 그날 몫이 통째로 샌다.
+       ⇒ 8번(20초)까지 기다린다. 기다리는 것은 싸고, 하루 몫을 버리는 것은 비싸다. */
+    for (let n = 0; n < 8 && !다시.잠겼나 && 다시.칸폭 === 0; n += 1) {
       /* eslint-disable no-await-in-loop */
       await new Promise((r) => setTimeout(r, 2500));
       다시 = await p.evaluate(() => {
