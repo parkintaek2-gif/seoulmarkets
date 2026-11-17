@@ -37,7 +37,9 @@ export const 나갈곳 = 'src/data/100yearmap/lastmod.json';
 export const 갈래 = {
   '/': ['src/pages/100y/index.astro'],
   '/about': ['src/pages/100y/about.astro'],
-  '/price': ['src/pages/100y/price.astro', 'src/lib/price.ts'],
+  /* 🔴 [2026-11-18] /price 지면은 내려갔다(사장님 「유료지역 리포트 없애라」). 301 로 /region 에 간다.
+     표에 남겨 두면 「가리키는 파일이 없다」로 자가시험이 늘 빨갛고, 그 빨강에 익숙해지면
+     진짜 빠진 갈래를 못 본다. ⛔ 지면을 내릴 때는 이 표에서도 뺀다. */
   '/terms': ['src/pages/100y/terms.astro'],
   '/privacy': ['src/pages/100y/privacy.astro'],
   '/refund': ['src/pages/100y/refund.astro'],
@@ -165,6 +167,12 @@ export const 갈래 = {
   '갈래:university': ['src/pages/100y/university/[id].astro', 'src/data/100yearmap/pages-university.json'],
   '갈래:area': ['src/pages/100y/report/area/[slug].astro', 'src/data/100yearmap/areas.json', 'src/data/100yearmap/pages-school.json'],
   '갈래:report': ['src/pages/100y/report/[code].astro', 'src/data/100yearmap/pages-school.json'],
+  /* 🔴 [2026-11-18] 초등·중등 지역 지면에 lastmod 가 없었다 — 열쇠가 빠져 있었다.
+     사이트맵에 날이 없으면 수집기가 «언제 바뀌었는지» 모른다. 초등 261장이
+     28일 동안 0명이던 까닭이 하나 더 있었던 셈이다.
+     ⚠ `/elementary`(마디 하나)와 `갈래:elementary`(마디 둘 이상)는 다른 열쇠다. */
+  '갈래:elementary': ['src/pages/100y/elementary/area/[slug].astro', 'src/lib/elementary-area.ts', 'src/data/100yearmap/elementary.json'],
+  '갈래:middle': ['src/pages/100y/middle/area/[slug].astro', 'src/lib/middle-area.ts', 'src/data/100yearmap/middle.json'],
 };
 
 /** git 이 아는 그 파일의 마지막 커밋 날(YYYY-MM-DD). 모르면 null */
@@ -246,6 +254,11 @@ if (내가실행됐다 && process.argv.includes('--자가시험')) {
   본다('⑥ 고정 지면', 갈래찾기('/price') === '/price');
   본다('⑦ /age 와 /age/32 를 가른다', 갈래찾기('/age') === '/age' && 갈래찾기('/age/32') === '갈래:age');
   본다('⑧ 지역 한 벌', 갈래찾기('/report/area/서울특별시-노원구') === '갈래:area');
+  /* 🔴 [2026-11-18] 이 둘이 빠져 519장이 날 없이 나갔다 */
+  본다('⑧-2 초등 지역', 갈래찾기('/elementary/area/경기도-화성시') === '갈래:elementary');
+  본다('⑧-3 중등 지역', 갈래찾기('/middle/area/경기도-화성시') === '갈래:middle');
+  본다('⑧-4 /elementary 는 다른 열쇠다', 갈래찾기('/elementary') === '/elementary');
+  본다('⑧-5 표에 그 열쇠가 있다', !!갈래['갈래:elementary'] && !!갈래['갈래:middle']);
   본다('⑨ 학교 한 곳 리포트는 다른 갈래', 갈래찾기('/report/7010057') === '갈래:report');
   본다('⑩ 학교', 갈래찾기('/school/7010057') === '갈래:school');
   본다('⑪ 한글 학과 주소', 갈래찾기('/major/조리과') === '갈래:major');
