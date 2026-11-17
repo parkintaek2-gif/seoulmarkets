@@ -207,16 +207,68 @@ if (내가진입점) {
     }
     console.log(`친 글    ${친것.length}자 (${Math.round(들어간비율 * 100)}%)`);
 
+    /* 🔴🔴 [2026-11-18 06:1x · 5번] **알림 하나가 보내기를 막고 있었다.**
+       05:00 회차가 「✅ 시켰다 — 한 덩이 42448자」를 찍었는데 실제로는 글이 입력 칸에
+       그대로 남아 있었다. 화면 가운데에 「이제 자동이 기본값입니다 … [확인했습니다]」
+       알림이 떠 있었고 그것이 보내기 단추를 막고 있었다.
+       ⇒ Enter 를 누르기 «전»에 그 알림을 닫는다. 닫고 나니 바로 보내졌다. */
+    const 확인자리 = await page.evaluate(() => {
+      for (const x of document.querySelectorAll('button, [role="button"]')) {
+        const t = (x.textContent || '').trim();
+        if (t === '확인했습니다' || t === 'Got it' || t === 'Dismiss') {
+          const r = x.getBoundingClientRect();
+          if (r.width > 8 && r.height > 8) {
+            return { x: Math.round(r.x + r.width / 2), y: Math.round(r.y + r.height / 2), 글: t };
+          }
+        }
+      }
+      return null;
+    });
+    if (확인자리) {
+      await page.mouse.click(확인자리.x, 확인자리.y);
+      console.log(`알림     「${확인자리.글}」를 닫았다 — 이것이 보내기를 막는다`);
+      await 잠깐(2500);
+    }
+
+    /* ⛔ 막힌 단추에 Enter 를 쳐 봐야 소용없다. 막혀 있으면 그 자리에서 선다 */
+    const 막혔나 = await page.evaluate(() => {
+      for (const x of document.querySelectorAll('button, [role="button"]')) {
+        const a = x.getAttribute('aria-label') || '';
+        if (/메시지 보내기|Send message/i.test(a)) return x.disabled === true;
+      }
+      return null;
+    });
+    if (막혔나 === true) {
+      console.log('🔴 보내기 단추가 막혀 있다 — 한도이거나 알림이 또 있다. 보내지 않는다');
+      if (찍을곳) await page.screenshot({ path: 찍을곳 });
+      return;
+    }
+
     await page.keyboard.press('Enter');
     await 잠깐(6000);
 
-    /* 눈으로 확인한다 — 내 말이 «한 덩이로» 올라갔나 */
+    /* 🔴🔴 **판정을 「입력 칸이 비었나」로 한다.**
+       앞 판은 「마지막 올라간 글」을 봤는데, 그것이 «어제 올린 글»이면 보내지 않아도
+       통과한다. 실제로 11-18 에 42,448자짜리 어제 글을 보고 「✅ 시켰다」를 냈다.
+       ⛔ 보내지면 입력 칸이 «빈다». 그것만이 보내졌다는 증거다. */
+    let 남은 = -1;
+    for (let i = 0; i < 6 && 남은 !== 0; i += 1) {
+      await 잠깐(3000);
+      남은 = await page.evaluate(() => {
+        const el = document.querySelector('div[contenteditable="true"]');
+        return el ? (el.innerText || '').trim().length : 0;
+      });
+    }
+    if (남은 !== 0) {
+      console.log(`🔴 입력 칸에 ${남은}자가 그대로 남아 있다 — 안 보내졌다`);
+      if (찍을곳) await page.screenshot({ path: 찍을곳 });
+      return;
+    }
     const 올랐나 = await page.evaluate(() => {
       const n = [...document.querySelectorAll('[data-testid="user-message"]')];
       return n.length ? n[n.length - 1].innerText.replace(/\s+/g, ' ').trim() : null;
     });
-    if (!올랐나) { console.log('🔴 내 말이 대화에 안 보인다'); return; }
-    console.log(`✅ 시켰다 — 한 덩이 ${올랐나.length}자`);
+    console.log(`✅ 시켰다 — 입력 칸이 비었다 · 올라간 글 ${올랐나 ? 올랐나.length : '?'}자`);
     끝값 = 0;
     if (찍을곳) await page.screenshot({ path: 찍을곳 });
   };
