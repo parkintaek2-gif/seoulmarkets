@@ -29,6 +29,11 @@ const 묶음표 = [
   { 이름: '백년지도 · 초등학교 지역', 호스트: /100yearmap/i, 경로: /^\/elementary\/area\// },
   { 이름: '백년지도 · 나이 축', 호스트: /100yearmap/i, 경로: /^\/age(\/|$)/ },
   { 이름: '백년지도 · 그 밖', 호스트: /100yearmap/i, 경로: /./ },
+  /* 🔴 [2026-11-18 실측] KLifeMap 28일 2,667명 가운데 1,219명(46%)이 /checkout.html 이다.
+     우리 결제 점검이 매시 여는 화면이지 손님이 아니다 — 네이버 유입에는 한 건도 없다.
+     ⛔ 빼 버리지 않고 «갈라» 적는다. 빼면 다음 사람이 그만큼이 있었다는 것을 모른다.
+     ⚠ 차례가 중요하다 — 사주/운세보다 «위»에 둬야 걸린다. */
+  { 이름: 'KLifeMap · 우리점검(결제·로그인)', 호스트: /klifemap/i, 경로: /^\/(checkout|login|dashboard)\.html/i },
   { 이름: 'KLifeMap · 사주/운세', 호스트: /klifemap/i, 경로: /^\/(saju|horoscope|astro|fortune)/i },
   { 이름: 'KLifeMap · 그 밖', 호스트: /klifemap/i, 경로: /./ },
   { 이름: 'K Culture Wire', 호스트: /kculturewire/i, 경로: /./ },
@@ -60,6 +65,13 @@ function 자가시험() {
     묶음찾기('www.100yearmap.com', '/') === '백년지도 · 그 밖');
   본다('사주가 제 묶음으로 간다',
     묶음찾기('klifemap.ai', '/saju') === 'KLifeMap · 사주/운세');
+  /* 🔴 우리 점검이 사주/운세보다 먼저 걸려야 한다 — 뒤에 두면 손님 수에 섞인다 */
+  본다('결제 점검이 우리점검으로 간다',
+    묶음찾기('klifemap.ai', '/checkout.html') === 'KLifeMap · 우리점검(결제·로그인)');
+  본다('로그인도 우리점검이다',
+    묶음찾기('klifemap.ai', '/login.html') === 'KLifeMap · 우리점검(결제·로그인)');
+  본다('사주는 그대로 사주다',
+    묶음찾기('klifemap.ai', '/saju.html') === 'KLifeMap · 사주/운세');
   본다('모르는 호스트는 null 이다',
     묶음찾기('example.com', '/') === null);
   /* 🔴 /report/area 와 /report 를 가른다 — 「area」가 든 것만 지역 지면이다 */
