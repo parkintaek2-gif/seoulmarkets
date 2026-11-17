@@ -273,7 +273,7 @@ const faqJsonLd = {
     )
   }
 
-  <h2>{구}를 숫자로</h2>
+  <h2>{구} 중학교는 몇 곳인가</h2>
   <div class="nums">
     <div><strong>{곳들.length}</strong><span>중학교</span></div>
     {남중.length > 0 && <div><strong>{남중.length}</strong><span>남중</span></div>}
@@ -296,7 +296,7 @@ const faqJsonLd = {
     )
   }
 
-  <h2>{곳들.length}곳을 한 번에</h2>
+  <h2>{구} 중학교 {곳들.length}곳 전체 목록</h2>
   <p class="note">
     ⛔ <strong>가나다순입니다.</strong> 무엇으로도 줄 세우지 않습니다. 순서에 뜻이 없습니다.
   </p>
@@ -391,7 +391,7 @@ const faqJsonLd = {
   {
     이지역 && 시도가운데값 != null && 시도안곳수들.length > 1 && (
       <>
-        <h2>{시도} 안에서 {구}는</h2>
+        <h2>{시도}에서 {구} 중학교는 몇 번째로 많은가</h2>
         <p class="note">
           {시도}의 시·군·구는 중학교를 <strong>가운데값 {시도가운데값}곳</strong>씩 가지고
           있습니다. {구}는 <strong>{곳들.length}곳</strong>입니다.{' '}
