@@ -111,6 +111,28 @@ const 나인가 = process.argv[1] && process.argv[1].includes('auto-weather-arti
 if (나인가) {
   if (process.argv.includes('--자가시험')) process.exit(자가시험() ? 0 : 1);
 
+  /* 🔴🔴 [2026-11-17 · 사장님] 「**내일 아침에만 날씨기사 쓰지마**」
+     ─────────────────────────────────────────────────────────────
+     «그날 하루만» 거른다. 예약을 끄지 않는다 — 끄면 다시 켜는 것을 잊는다.
+     거를 날을 docs/날씨기사-거를날.txt 에 한 줄씩 적어 둔다(YYYY-MM-DD).
+     지난 날짜는 저절로 쓸모가 없어지므로 치울 것도 없다.
+     ⛔ 「오늘만 안 한다」를 기억에 맡기지 않는다. 파일이 기억한다. */
+  const 거를날길 = path.join(뿌리, 'docs', '날씨기사-거를날.txt');
+  const 이제 = new Date();   /* ⛔ toISOString() 금지 — 이 PC 가 KST 다 */
+  const 오늘글 = 이제.getFullYear() + '-'
+    + String(이제.getMonth() + 1).padStart(2, '0') + '-'
+    + String(이제.getDate()).padStart(2, '0');
+  if (fs.existsSync(거를날길)) {
+    const 거를날들 = fs.readFileSync(거를날길, 'utf8')
+      .split(/\r?\n/).map((x) => x.replace(/#.*$/, '').trim()).filter(Boolean);
+    if (거를날들.includes(오늘글)) {
+      console.log(`■ ${오늘글} 은 날씨 기사를 «거르는 날»이다 — 사장님 지시로 적혀 있다.`);
+      console.log(`   적힌 곳 : docs/날씨기사-거를날.txt`);
+      console.log('   ⚠ 예약은 그대로 살아 있다. 다음 날부터 평소대로 돈다.');
+      process.exit(0);
+    }
+  }
+
   const 때 = new Date().toTimeString().slice(0, 5);
   console.log(`■ ${때} 날씨 기사 — 기상청에서 내일 예보를 받는다`);
 
