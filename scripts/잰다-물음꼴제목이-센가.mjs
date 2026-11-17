@@ -55,6 +55,11 @@ export function 물음인가(제목) {
   if (/(나|가요|까|는가|은가|ㄹ까|을까|냐|니)\s*$/.test(몸)) return true;
   /* 의문사 — 몸통 어디에 있어도 묻는 꼴이다 */
   if (/(몇\s|몇살|몇 살|얼마|어디|언제|무엇|뭐가|왜\s|어떻게|어느)/.test(몸)) return true;
+  /* 🔴 [2026-11-18] **영어 두 사이트를 한국어 규칙으로 재고 있었다.**
+     KCW·SeoulMarkets 제목에 「Who is」·「How many」가 와도 한 장도 안 잡혔다.
+     ⛔ 못 가르는 자로 「물음꼴이 약하다」를 결론 낼 뻔했다.
+     ⚠ 머리에서만 본다 — 「the How of it」 같은 가운데 낱말을 묻는 꼴로 세지 않는다. */
+  if (/^(who|what|when|where|why|how|which|whose|is|are|was|were|do|does|did|can|should|will)\b/i.test(몸)) return true;
   return false;
 }
 
@@ -96,6 +101,14 @@ function 자가시험() {
   본다('⑬ 묶음 이름 — 보통 경로', 묶음이름('/unse/rabbit.html') === 'unse');
   본다('⑭ 묶음 이름 — 홈', 묶음이름('/') === '(홈)' && 묶음이름('') === '(홈)');
   본다('⑮ 묶음 이름 — 물음표 뒤는 버린다', 묶음이름('/age?x=1') === 'age');
+  /* 🔴 영어 두 사이트 — 한국어 규칙만으로는 한 장도 안 잡혔다 */
+  본다('⑯ 영어 의문사를 머리에서 가른다',
+    물음인가('How many BTS albums charted in 2026') && 물음인가('Who tops the Korean box office'));
+  본다('⑰ 영어 평서문은 물음이 아니다',
+    !물음인가('Korean box office revenue by month'));
+  본다('⑱ 가운데 낱말은 안 센다 — 머리에서만 본다',
+    !물음인가('The how and why of Korean cinema'));
+  본다('⑲ 대문자·소문자를 가리지 않는다', 물음인가('WHAT drives the won'));
   let 깨짐 = 0;
   for (const s of 봄) if (!s.참) { console.log('🔴 ' + s.이름); 깨짐 += 1; }
   console.log(깨짐 ? '🔴 ' + 깨짐 + '가지 깨졌다' : '✅ ' + 봄.length + '가지 다 통과');
