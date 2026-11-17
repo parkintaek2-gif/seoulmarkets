@@ -1,5 +1,9 @@
 import type { APIRoute } from 'astro';
 import 지역단위 from '../../data/100yearmap/areas.json';
+import 초등자료 from '../../data/100yearmap/elementary.json';
+import 중등자료 from '../../data/100yearmap/middle.json';
+import { 초등지역목록 } from '../../lib/elementary-area';
+import { 중등지역목록 } from '../../lib/middle-area';
 import { 한벌로팔만한가 } from '../../lib/school-area';
 import { 파는지면검색 } from '../../lib/price';
 
@@ -12,6 +16,30 @@ import { 파는지면검색 } from '../../lib/price';
  *   ⇒ 258개를 이름과 학교 수까지 적어 둔다. 자료에서 뽑으므로 늘거나 줄면 같이 바뀐다.
  * ⚠ 거르는 자는 사이트맵과 «같아야» 한다 — 한쪽만 열면 안내문이 noindex 화면을 가리킨다.
  */
+/**
+ * 🔴 [2026-11-18 · 5번] **초등 261장·중등 258장도 적는다.**
+ *   고등 258장은 2026-11-09 에 넣었는데 그 뒤에 낸 초등·중등은 빠져 있었다.
+ *   AI 는 적히지 않은 것을 인용하지 못한다.
+ *
+ *   ⚠ 이 둘은 지역 목록의 이름 칸이 `구` 다(고등은 `열쇠`). 섞으면 빈 이름이 나간다.
+ *   ⛔ 곳수를 지어내지 않는다 — 자료에 있는 것을 그대로 적는다.
+ */
+const 초등줄 = 초등지역목록(초등자료 as any)
+  .map((a) => `- [${a.시도} ${a.구}](https://100yearmap.com/elementary/area/${a.slug}): `
+    + `elementary schools in ${a.시도} ${a.구} — ${a.곳} schools`
+    + (a.백년 > 0 ? `, ${a.백년} of them opened more than 100 years ago` : ''))
+  .join('\n');
+
+/* ⭐ 중학교에만 있는 칸 — 남중·여중. 부모가 실제로 묻는 질문이다.
+   ⛔ 어느 쪽이 낫다고 쓰지 않는다. 몇 곳인지만 적는다. */
+const 중등줄 = 중등지역목록(중등자료 as any)
+  .map((a) => `- [${a.시도} ${a.구}](https://100yearmap.com/middle/area/${a.slug}): `
+    + `middle schools in ${a.시도} ${a.구} — ${a.곳} schools`
+    + (a.남중 > 0 || a.여중 > 0
+      ? `, of which ${a.남중} boys-only and ${a.여중} girls-only`
+      : ', all co-educational'))
+  .join('\n');
+
 const 지역줄 = ((지역단위 as any).단위 as any[])
   .filter((a) => 파는지면검색.연다 || !한벌로팔만한가(a.곳))
   .map((a) => `- [${a.열쇠}](https://100yearmap.com/report/area/${a.slug}): `
@@ -211,6 +239,27 @@ the schools — the page shows where each sits inside the spread. Source: NEIS s
 disclosure data. Korean-language pages; the district name is in Korean.
 
 ${지역줄}
+
+## Regional elementary-school pages (one page per district)
+
+Each page gathers every elementary school in one city or district onto a single page with
+its founding year, whether it is public or private, and where the district sits among its
+neighbours. Elementary schools in Korea have no published advancement or achievement
+figures, so those columns do not exist here and we say so on the page rather than filling
+them with zeros. Source: NEIS school disclosure data. Korean-language pages.
+
+${초등줄}
+
+## Regional middle-school pages (one page per district)
+
+Each page gathers every middle school in one city or district, with one column the other
+two levels do not have: whether each school is boys-only, girls-only or co-educational
+(nationwide 334 boys-only, 310 girls-only, 2,674 co-educational). Korean parents search
+for this and no published figure answers it district by district. We report the counts and
+do not say which is better. Middle schools have no published achievement or
+high-school-advancement figures. Source: NEIS school disclosure data.
+
+${중등줄}
 
 ## Non-government source (the one exception)
 
