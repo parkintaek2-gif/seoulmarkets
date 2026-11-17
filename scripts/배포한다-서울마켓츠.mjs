@@ -64,6 +64,22 @@ const 아이 = spawn(process.execPath, [위치, 'update', 대상, '-t', 짝], {
   cwd: 뿌리, stdio: 'inherit',
 });
 아이.on('close', (번호) => {
-  console.log(번호 === 0 ? '\n✅ 재배포 명령이 받아들여졌다' : '\n🔴 실패 — 종료 번호 ' + 번호);
-  process.exit(번호 === 0 ? 0 : 1);
+  if (번호 !== 0) { console.log('\n🔴 실패 — 종료 번호 ' + 번호); process.exit(1); }
+  /**
+   * 🔴🔴 [2026-11-18 실측] **이 길은 오류가 잦다.** 클라우드타입 배포 내역을 열어 보니
+   *   최근 일곱 번 가운데 다섯이 「오류」였다. 그런데 `ctype update` 는
+   *   `deployment "web" was deployed` 를 찍고 끝값 0 을 낸다 —
+   *   **명령이 받아들여진 것과 배포가 된 것은 다르다.**
+   *   그 탓에 새벽에 25분을 「곧 되겠지」로 기다렸다.
+   *
+   * ⛔ 이 줄을 「배포됐다」로 읽지 않는다. 도장으로만 판정한다.
+   * ✅ 안 되면 대시보드 단추를 누르는 길이 있다 — 그쪽은 실제로 적용됐다.
+   */
+  console.log('\n⚠ 재배포 «명령»이 받아들여졌다 — 배포가 «됐다»는 뜻이 아니다');
+  console.log('   [2026-11-18] 이 길은 최근 일곱 번 가운데 다섯이 오류로 끝났다.');
+  console.log('   ⛔ 판정은 도장으로만 한다 —');
+  console.log('      curl -sL https://100yearmap.com/deploy-stamp.txt | grep "^커밋"');
+  console.log('   ⇒ 몇 분 뒤에도 옛 커밋이면 이쪽을 쓴다 —');
+  console.log('      node scripts/배포단추-누른다-서울마켓츠.mjs');
+  process.exit(0);
 });
