@@ -24,6 +24,41 @@ const 볼것 = [
   { 말: '성북구 중학교 18곳, 한 장에', 몫: '⚠ 대조군(배포 전)', 슬러그: '서울특별시-성북구' },
 ];
 
+/** 결과에서 우리 것을 알아본다. ⛔ 호스트만 보면 남의 글에 적힌 우리 이름을 센다 */
+export function 우리지면인가(주소, 슬러그) {
+  const s = String(주소 || '');
+  if (!/(?:^|\/\/)(?:www\.)?100yearmap\.com\//.test(s)) return false;
+  try { return decodeURIComponent(s).includes(슬러그); } catch (e) { return s.includes(슬러그); }
+}
+
+/* ── 자가시험 ──────────────────────────────────────────────
+   🔴 [2026-11-18] 이 자의 앞 판은 **거짓이었다.** 주소를 그대로 치면 네이버가
+   「검색어 자체」를 링크로 내주는데 그것을 「쥐고 있다」로 셌다. 아직 배포도 안 된
+   지면이 「쥐고 있다」로 나와서 잡았다.
+   ⛔ 그래서 이 자는 대조군(아직 없어야 할 지면)을 «늘» 함께 잰다. 아래 ⑤가 그 자리다. */
+function 자가시험() {
+  const 봄 = [];
+  const 본다 = (이름, 참) => 봄.push({ 이름, 참 });
+  본다('① 우리 지면을 알아본다',
+    우리지면인가('https://100yearmap.com/report/area/서울특별시-성북구', '서울특별시-성북구'));
+  본다('② 퍼센트 인코딩을 푼다',
+    우리지면인가('https://100yearmap.com/report/area/%EC%84%9C%EC%9A%B8%ED%8A%B9%EB%B3%84%EC%8B%9C-%EC%84%B1%EB%B6%81%EA%B5%AC', '서울특별시-성북구'));
+  본다('③ 다른 동네는 아니다',
+    !우리지면인가('https://100yearmap.com/report/area/경기도-화성시', '서울특별시-성북구'));
+  /* 🔴 남의 블로그에 우리 이름이 적힌 것을 「우리가 떴다」로 세면 안 된다 */
+  본다('④ 남의 글은 우리 것이 아니다',
+    !우리지면인가('https://blog.naver.com/x/100yearmap.com/report/area/서울특별시-성북구', '서울특별시-성북구'));
+  본다('⑤ 대조군이 목록에 들어 있다', 볼것.some((v) => /대조군/.test(v.몫)));
+  본다('⑥ 버는 곳과 못 버는 곳을 나란히 본다',
+    볼것.some((v) => /방문 \d+명/.test(v.몫)) && 볼것.some((v) => /방문 0명/.test(v.몫)));
+  let 깨짐 = 0;
+  for (const x of 봄) if (!x.참) { console.log('🔴 ' + x.이름); 깨짐 += 1; }
+  console.log(깨짐 ? '🔴 ' + 깨짐 + '가지 깨졌다' : '✅ ' + 봄.length + '가지 다 통과');
+  return 깨짐 === 0;
+}
+
+if (process.argv.includes('--selftest')) process.exit(자가시험() ? 0 : 1);
+
 const b = await puppeteer.connect({ browserURL: 'http://127.0.0.1:9222', defaultViewport: null, protocolTimeout: 300000 });
 let p = null;
 try {

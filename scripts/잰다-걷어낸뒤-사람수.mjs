@@ -11,6 +11,29 @@
  */
 import { 토큰받기, 재기, 우리것인가, 사이트이름 } from './lib/ga4.mjs';
 
+/** 걷어낼 것인가. ⛔ 「싱가포르면 무조건」이 아니다 — 직접유입일 때만이다 */
+export function 걷어낼것인가(나라, 유입원) {
+  return 나라 === 'Singapore' && /^\(direct\)$/i.test(String(유입원 || ''));
+}
+
+/* ── 자가시험 ────────────────────────────────────────────── */
+function 자가시험() {
+  const 봄 = [];
+  const 본다 = (이름, 참) => 봄.push({ 이름, 참 });
+  본다('① 싱가포르 직접유입은 걷어낸다', 걷어낼것인가('Singapore', '(direct)') === true);
+  /* 🔴 싱가포르에서 검색으로 온 사람까지 깎으면 사람을 버린다 */
+  본다('② 싱가포르라도 검색으로 왔으면 둔다', 걷어낼것인가('Singapore', 'google') === false);
+  본다('③ ChatGPT 로 왔으면 둔다', 걷어낼것인가('Singapore', 'chatgpt.com') === false);
+  본다('④ 다른 나라의 직접유입은 둔다', 걷어낼것인가('South Korea', '(direct)') === false);
+  본다('⑤ 빈 값은 안 걷어낸다', 걷어낼것인가('', '') === false && 걷어낼것인가(null, null) === false);
+  let 깨짐 = 0;
+  for (const x of 봄) if (!x.참) { console.log('🔴 ' + x.이름); 깨짐 += 1; }
+  console.log(깨짐 ? '🔴 ' + 깨짐 + '가지 깨졌다' : '✅ ' + 봄.length + '가지 다 통과');
+  return 깨짐 === 0;
+}
+
+if (process.argv.includes('--selftest')) process.exit(자가시험() ? 0 : 1);
+
 const t = await 토큰받기();
 if (t.못잼) { console.log('🔴', t.못잼); process.exit(0); }
 
@@ -27,7 +50,7 @@ for (const r of 줄들 || []) {
   const s = 사이트이름(h);
   const c = (표[s] ??= { 전체: 0, 싱가포르직접: 0, 한국: 0 });
   c.전체 += r.수;
-  if (나라 === 'Singapore' && /^\(direct\)$/i.test(원)) c.싱가포르직접 += r.수;
+  if (걷어낼것인가(나라, 원)) c.싱가포르직접 += r.수;
   if (나라 === 'South Korea') c.한국 += r.수;
 }
 
