@@ -4,6 +4,10 @@ import 초등자료 from '../../data/100yearmap/elementary.json';
 import 중등자료 from '../../data/100yearmap/middle.json';
 import { 초등지역목록 } from '../../lib/elementary-area';
 import { 중등지역목록 } from '../../lib/middle-area';
+/* 🔴 [2026-11-18] 학교알리미에서 받은 학급당 학생 수. 지면 제목·소제목·본문·FAQ 넷에
+   그 말을 넣었는데 이 안내문만 옛 글귀였다 — AI 가 읽는 자리라 여기 없으면 못 답한다. */
+import 초등학급자료 from '../../data/100yearmap/class-size-elementary.json';
+import 중등학급자료 from '../../data/100yearmap/class-size-middle.json';
 import { 한벌로팔만한가 } from '../../lib/school-area';
 import { 파는지면검색 } from '../../lib/price';
 
@@ -24,20 +28,40 @@ import { 파는지면검색 } from '../../lib/price';
  *   ⚠ 이 둘은 지역 목록의 이름 칸이 `구` 다(고등은 `열쇠`). 섞으면 빈 이름이 나간다.
  *   ⛔ 곳수를 지어내지 않는다 — 자료에 있는 것을 그대로 적는다.
  */
+/** 지역 열쇠로 학급당 학생 수를 찾는다. ⛔ 없으면 null — 0 으로 채우지 않는다 */
+const 학급당찾기 = (묶음: any) => {
+  const 표 = new Map<string, number>();
+  for (const r of (묶음?.지역 ?? [])) {
+    if (r && r.열쇠 && r.학급당학생 != null) 표.set(String(r.열쇠), r.학급당학생);
+  }
+  return (시도: string, 구: string) => 표.get(`${시도} ${구}`) ?? null;
+};
+const 초등학급당 = 학급당찾기(초등학급자료);
+const 중등학급당 = 학급당찾기(중등학급자료);
+
 const 초등줄 = 초등지역목록(초등자료 as any)
-  .map((a) => `- [${a.시도} ${a.구}](https://100yearmap.com/elementary/area/${a.slug}): `
-    + `elementary schools in ${a.시도} ${a.구} — ${a.곳} schools`
-    + (a.백년 > 0 ? `, ${a.백년} of them opened more than 100 years ago` : ''))
+  .map((a) => {
+    /* ⛔ 여기는 영문이다. 한국어로 적지 않는다 */
+    const c = 초등학급당(a.시도, a.구);
+    return `- [${a.시도} ${a.구}](https://100yearmap.com/elementary/area/${a.slug}): `
+      + `elementary schools in ${a.시도} ${a.구} — ${a.곳} schools`
+      + (c != null ? `, average class size ${c} students` : '')
+      + (a.백년 > 0 ? `, ${a.백년} of them opened more than 100 years ago` : '');
+  })
   .join('\n');
 
 /* ⭐ 중학교에만 있는 칸 — 남중·여중. 부모가 실제로 묻는 질문이다.
    ⛔ 어느 쪽이 낫다고 쓰지 않는다. 몇 곳인지만 적는다. */
 const 중등줄 = 중등지역목록(중등자료 as any)
-  .map((a) => `- [${a.시도} ${a.구}](https://100yearmap.com/middle/area/${a.slug}): `
-    + `middle schools in ${a.시도} ${a.구} — ${a.곳} schools`
-    + (a.남중 > 0 || a.여중 > 0
-      ? `, of which ${a.남중} boys-only and ${a.여중} girls-only`
-      : ', all co-educational'))
+  .map((a) => {
+    const c = 중등학급당(a.시도, a.구);
+    return `- [${a.시도} ${a.구}](https://100yearmap.com/middle/area/${a.slug}): `
+      + `middle schools in ${a.시도} ${a.구} — ${a.곳} schools`
+      + (c != null ? `, average class size ${c} students` : '')
+      + (a.남중 > 0 || a.여중 > 0
+        ? `, of which ${a.남중} boys-only and ${a.여중} girls-only`
+        : ', all co-educational');
+  })
   .join('\n');
 
 const 지역줄 = ((지역단위 as any).단위 as any[])
