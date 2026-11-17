@@ -178,22 +178,41 @@ if (!줄들.length) {
    ⛔ 이것이 바로 「자가 보는 범위를 자가 정하면 못 본 것이 없는 것이 된다」다.
    ⇒ 전체 목록은 **사이트맵에 물어서 받는다.** 내가 짐작해 채우지 않는다.
    ⚠ 못 받으면 못 받았다고 적고 0명 칸을 「못 쟀다」로 둔다 — 0 으로 메우지 않는다. */
+/**
+ * 사이트맵 하나를 읽는다. **인덱스 꼴이면 하위 사이트맵까지 따라간다.**
+ * 🔴 [2026-11-18] 첫 판은 안 따라가서 seoulmarkets 가 「지면 9장」으로 나왔다 —
+ *   잡힌 것이 전부 `sitemap-*.xml` 이라는 «사이트맵 파일 이름»이었다.
+ *   ⛔ 내가 보는 범위를 내가 정하면 못 본 것이 없는 것이 된다.
+ */
+async function 사이트맵주소들(뿌리주소, 깊이 = 0) {
+  if (깊이 > 2) return [];                     /* 서로 가리키는 사이트맵에 안 갇힌다 */
+  const r = await fetch(뿌리주소);
+  if (!r.ok) return [];
+  const xml = await r.text();
+  const 안 = [...xml.matchAll(/<loc>([^<]+)<\/loc>/g)].map((m) => m[1].trim());
+  /* <sitemapindex> 면 안의 것들이 또 사이트맵이다 */
+  if (/<sitemapindex/i.test(xml)) {
+    const 모은것 = [];
+    for (const u of 안) 모은것.push(...await 사이트맵주소들(u, 깊이 + 1));
+    return 모은것;
+  }
+  return 안;
+}
+
 let 사이트맵받았나 = false;
 try {
-  const r = await fetch('https://' + 호스트.replace(/^www\./, '') + '/sitemap.xml');
-  if (r.ok) {
-    const xml = await r.text();
-    const 주소들 = [...xml.matchAll(/<loc>([^<]+)<\/loc>/g)].map((m) => m[1]);
-    for (const u of 주소들) {
-      let 경로 = null;
-      try { 경로 = new URL(u).pathname; } catch (e) { continue; }
-      if (표.has(경로)) continue;
-      /* 제목을 모르는 0명 페이지다. ⛔ 제목을 지어내지 않는다 — 가름에서 뺀다 */
-      표.set(경로, { 경로, 제목: null, 밖에서온사람: 0, 제목모름: true });
-    }
-    사이트맵받았나 = true;
-    console.log('⬜ 사이트맵에서 ' + 주소들.length + '장을 받아 0명 페이지까지 넣었다.\n');
+  const 뿌리주소 = 'https://' + 호스트.replace(/^www\./, '') + '/sitemap.xml';
+  const 주소들 = await 사이트맵주소들(뿌리주소);
+  if (!주소들.length) throw new Error('사이트맵이 비었다');
+  for (const u of 주소들) {
+    let 경로 = null;
+    try { 경로 = new URL(u).pathname; } catch (e) { continue; }
+    if (표.has(경로)) continue;
+    /* 제목을 모르는 0명 페이지다. ⛔ 제목을 지어내지 않는다 — 가름에서 뺀다 */
+    표.set(경로, { 경로, 제목: null, 밖에서온사람: 0, 제목모름: true });
   }
+  사이트맵받았나 = true;
+  console.log('⬜ 사이트맵에서 ' + 주소들.length + '장을 받아 0명 페이지까지 넣었다.\n');
 } catch (e) {
   console.log('⚠ 사이트맵을 못 받았다 (' + e.message.slice(0, 60) + ') — 0명 칸은 「못 쟀다」다.\n');
 }
