@@ -360,6 +360,11 @@ const 환경줄 = (학교환경줄들((학급자료 as any).자료, schools as a
   const 내것 = 축.셈.모든곳.find((x: any) => x.열쇠 === 이동네열쇠) ?? null;
   return { ...축, 내것, 째: 몇째(축.줄, 이동네열쇠, 축.값), 몇곳: 축.줄.length };
 });
+/* 🔴 [2026-11-18] 「학급당 학생 수」는 사람이 네이버에 치는 말인데 지면에 그 말이
+   없었다(실측 — 그 자리에 우리가 0개). 값은 이미 있으니 말로 꺼낸다.
+   ⛔ 못 모은 지역에는 문장을 짓지 않는다. */
+const 학급축 = 환경줄.find((축: any) => 축.길 === '/class-size-by-area') ?? null;
+const 학급글자 = 학급축 && 학급축.내것 ? 학급축.값글자(학급축.내것) : null;
 const 합친jsonLd = [가린표, faqJsonLd].filter(Boolean);
 const 최종jsonLd = 합친jsonLd.length > 1 ? 합친jsonLd : 합친jsonLd[0];
 ---
@@ -656,7 +661,13 @@ const 최종jsonLd = 합친jsonLd.length > 1 ? 합친jsonLd : 합친jsonLd[0];
     </table>
   </div>
 
-  <h2>{구}, 학교 환경으로 보면</h2>
+  <h2>{구} 고등학교 학급당 학생 수와 학교 환경</h2>
+  {학급글자 && (
+    <p class="note">
+      {구}의 고등학교는 <strong>학급당 학생 수가 평균 {학급글자}</strong>입니다.
+      {학급축.째 ? ` 학교가 서른 곳 넘는 시·군·구 ${학급축.몇곳}곳 가운데 ${학급축.째}위입니다.` : ''}
+    </p>
+  )}
   <div class="tablewrap">
     <table>
       <thead><tr><th>항목</th><th>{구}</th><th>전국에서</th></tr></thead>
