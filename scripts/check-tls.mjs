@@ -142,12 +142,21 @@ function 셀프테스트() {
   확인('지난 것은 음수', 남은날('Aug 1 00:00:00 2026 GMT', new Date('2026-08-07T00:00:00Z')), -6);
   확인('판정 · 남의 인증서', 판정('a.com', { authorized: false, altname: 'DNS:*.b.com' }).상태, '⛔ 남의 인증서');
   확인('판정 · 못 붙음', 판정('a.com', { 오류: 'ENOTFOUND' }).상태, '못 붙음');
+  /* 🔴 [2026-11-18] 여기에 'Dec 1 00:00:00 2026 GMT' 라고 «고정 날짜»를 박아 두었더니
+     그 날이 다가오면서 남은 날이 14일 밑으로 떨어져 시험 둘이 저절로 깨졌다
+     (11-18 기준 13일 남음 → 「⚠ 곧 만료」). 묶음 124개 가운데 이 하나가 날마다
+     빨강이었고, 그 빨강이 **진짜 빨강을 가리고 있었다.**
+     ⇒ 날짜를 오늘에서 세어 짓는다. 시험은 시계가 가도 같은 것을 재야 한다. */
+  const 먼앞날 = (일) => new Date(Date.now() + 일 * 86400000).toUTCString().replace(/^\w+, /, '');
   확인(
     '판정 · 정상',
-    판정('a.com', { authorized: true, altname: 'DNS:a.com', valid_to: 'Dec 1 00:00:00 2026 GMT' }).상태,
+    판정('a.com', { authorized: true, altname: 'DNS:a.com', valid_to: 먼앞날(90) }).상태,
     '✅',
   );
-  확인('⭐ 이름이 맞아도 안 믿기면 통과가 아니다', 판정('a.com', { authorized: false, altname: 'DNS:a.com', valid_to: 'Dec 1 00:00:00 2026 GMT' }).상태, '⛔ 못 믿음');
+  확인('⭐ 이름이 맞아도 안 믿기면 통과가 아니다', 판정('a.com', { authorized: false, altname: 'DNS:a.com', valid_to: 먼앞날(90) }).상태, '⛔ 못 믿음');
+  /* ⭐ 「곧 만료」 자리도 고정 날짜 없이 잰다 — 이 칸이 비어 있어 위 둘이 깨진 것을 못 봤다 */
+  확인('열흘 남으면 곧 만료다', 판정('a.com', { authorized: true, altname: 'DNS:a.com', valid_to: 먼앞날(10) }).상태, '⚠ 곧 만료');
+  확인('⭐ 곧 만료가 못 믿음보다 먼저다', 판정('a.com', { authorized: false, altname: 'DNS:a.com', valid_to: 먼앞날(10) }).상태, '⚠ 곧 만료');
   확인('주소 목록에 apex 와 www 가 둘 다 있다', 주소들.includes('kculturewire.com') && 주소들.includes('www.kculturewire.com'), true);
 
   for (const c of 검사) console.log(`${c.통과 ? '✅' : '⛔'} ${c.이름}${c.통과 ? '' : `\n     받은 것 ${JSON.stringify(c.실제)}\n     기대 ${JSON.stringify(c.기대)}`}`);
