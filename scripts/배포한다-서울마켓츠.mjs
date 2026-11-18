@@ -48,11 +48,32 @@ try {
   const 창고 = await import('../src/lib/store.mjs');
   const { 쪽지풀기 } = await import('./올린다-지어진지면.mjs');
   const 쪽지 = 쪽지풀기((await 창고.get('지면/최신.json'))?.toString?.('utf8'));
-  if (!쪽지 || 쪽지.커밋 !== 커밋) {
-    console.log('🔴 이 커밋으로 지은 지면이 R2 에 없다 — ' + 커밋.slice(0, 9));
+  /* 🔴 [2026-11-18 · 5번] **커밋이 다르다고 다 옛 판은 아니다.**
+     형제 파일(`될때까지-배포한다-서울마켓츠.mjs`)에서 이미 고친 자리인데
+     여기까지 안 따라와서 **배포가 또 섰다.** 고친 것은 베껴간 곳까지 따라간다.
+     매시 예약이 기록 파일을 저절로 커밋하므로 15분짜리 빌드가 끝날 때마다
+     HEAD 가 앞서 있고, HEAD 만 보면 방금 올린 묶음이 늘 옛 판이 된다. */
+  /* ⛔ 이 물음은 «아무것도 하지 않는 자리»에서 가져온다 —
+     배포하는 자를 들여오면 **들여오는 것만으로 단추가 눌린다**(오늘 두 번 났다) */
+  const { 올린것을써도되나 } = await import('../src/lib/지면에-닿는가.mjs');
+  let 바뀐것 = null;
+  if (쪽지?.커밋) {
+    try {
+      바뀐것 = execFileSync('git', ['diff', '--name-only', 쪽지.커밋 + '..HEAD'],
+        { cwd: 뿌리, encoding: 'utf8' }).split('\n').map((s) => s.trim()).filter(Boolean);
+    } catch (e) { 바뀐것 = null; }
+  }
+  const 판정 = 올린것을써도되나({ 올린커밋: 쪽지?.커밋, 지금커밋: 커밋, 바뀐것 });
+  if (!판정.써도되나) {
+    console.log('🔴 이 커밋으로 지은 지면이 R2 에 없다 — ' + 커밋.slice(0, 9) + ' · ' + 판정.까닭);
     console.log('   올라가 있는 것 — ' + (쪽지?.커밋?.slice(0, 9) ?? '(쪽지를 못 읽었다)'));
+    for (const f of 판정.걸린것.slice(0, 8)) console.log('   · ' + f);
     console.log('   ⇒ 먼저 돌린다:  node scripts/올린다-지어진지면.mjs');
     process.exit(1);
+  }
+  if (쪽지.커밋 !== 커밋) {
+    console.log('⬜ HEAD 는 ' + 커밋.slice(0, 9) + ' 지만 그 사이 바뀐 것은 **지면에 안 닿는다**'
+      + ' — 올라간 ' + 쪽지.커밋.slice(0, 9) + ' 로 배포한다');
   }
   console.log('■ 지어 올린 것 확인 — ' + (쪽지.크기 / 1024 / 1024).toFixed(0) + 'MB');
 } catch (e) {
