@@ -230,6 +230,87 @@ async function 대표이미지올리기(접속) {
 }
 
 
+/**
+ * 🔴🔴 사진 설명(캡션)을 넣는다 — 사장님 2026-11-18
+ *   「반드시 메뉴에서 사진 선택해서 사진제목과 설명 쓰라니까」 · 「글쓰기 도구 > 사진」
+ *
+ * 올라간 사진 위의 「수정」을 누르면 `photoWriteForm.html` 이 새 창으로 열린다.
+ * 그 창에 설명(캡션) 칸이 있다. 창을 띄우는 대신 그 주소로 바로 간다 — 같은 화면이다.
+ * ⛔ 기사 본문의 「사진 설명」 칸과 다른 것이다. 사장님이 이 메뉴로 넣으라 하셨다.
+ * ⚠ 사진은 저장한 뒤라야 번호가 붙는다. 그래서 저장 «뒤»에 부른다.
+ */
+export const 사진정보읽기 = [
+  '(() => {',
+  '  const 제목 = [...document.querySelectorAll(".accordion-title")]',
+  '    .find((e) => (e.textContent || "").trim() === "사진");',
+  '  if (!제목) return "";',
+  '  const 속 = 제목.closest(".accordion-item").querySelector(".accordion-content");',
+  '  if (!(속 && 속.offsetHeight > 0)) 제목.click();',
+  '  const 장 = document.querySelector(".library-photo");',
+  '  if (!장) return "";',
+  '  return JSON.stringify({',
+  '    사진번호: 장.getAttribute("data-idxno") || "",',
+  '    기사번호: 장.getAttribute("data-article_idxno") || "",',
+  '    방: 장.getAttribute("data-subuploaddir") || "",',
+  '    그림: 장.getAttribute("data-image") || "",',
+  '    걸음: 장.getAttribute("data-step") || "1",',
+  '    대표: 장.getAttribute("data-representation") || "Y",',
+  '    이미적힌설명: (장.querySelector(".caption") || {}).textContent || "",',
+  '  });',
+  '})()',
+].join('\n');
+
+function 사진창주소(것) {
+  return 'https://cms.jbnews.com/news/photoWriteForm.html'
+    + '?mode=modify&idxno=' + encodeURIComponent(것.사진번호)
+    + '&article_idxno=' + encodeURIComponent(것.기사번호)
+    + '&subUploadDir=' + encodeURIComponent(것.방)
+    + '&image=' + encodeURIComponent(것.그림)
+    + '&step=' + encodeURIComponent(것.걸음)
+    + '&representation=' + encodeURIComponent(것.대표);
+}
+
+async function 사진설명넣기(접속, 기사번호, 설명글) {
+  await 접속.보내기('Page.navigate',
+    { url: 'https://cms.jbnews.com/news/adminArticleWriteForm.html?mode=modify&idxno=' + 기사번호 });
+  await new Promise((쉼) => setTimeout(쉼, 11000));
+  let 것 = null;
+  try { 것 = JSON.parse(String(await 재기(접속, 사진정보읽기, 25000))); } catch { 것 = null; }
+  if (!것 || !것.사진번호) return '사진이 없다';
+  if (String(것.이미적힌설명).trim() === String(설명글).trim()) return '이미 적혀 있다';
+
+  await 접속.보내기('Page.navigate', { url: 사진창주소(것) });
+  await new Promise((쉼) => setTimeout(쉼, 10000));
+  const 넣음 = String(await 재기(접속, [
+    '(() => {',
+    '  const 칸 = document.querySelector("textarea#caption, textarea[name=caption]");',
+    '  if (!칸) return "설명 칸이 없다";',
+    '  칸.value = ' + JSON.stringify(설명글) + ';',
+    '  칸.dispatchEvent(new Event("input", { bubbles: true }));',
+    '  칸.dispatchEvent(new Event("change", { bubbles: true }));',
+    '  const 단추 = [...document.querySelectorAll("button,a,input[type=button],input[type=submit]")]',
+    '    .filter((e) => ((e.innerText || e.value || "") + "").trim() === "확인");',
+    '  if (!단추.length) return "확인 단추가 없다";',
+    '  단추[0].click();',
+    '  return "넣고 눌렀다";',
+    '})()',
+  ].join('\n'), 25000));
+  if (넣음 !== '넣고 눌렀다') return 넣음;
+  await new Promise((쉼) => setTimeout(쉼, 9000));
+
+  /* ⛔ 「눌렀다」를 「적혔다」로 읽지 않는다 — 다시 열어 읽는다 */
+  await 접속.보내기('Page.navigate',
+    { url: 'https://cms.jbnews.com/news/adminArticleWriteForm.html?mode=modify&idxno=' + 기사번호 });
+  await new Promise((쉼) => setTimeout(쉼, 11000));
+  let 다시 = null;
+  try { 다시 = JSON.parse(String(await 재기(접속, 사진정보읽기, 25000))); } catch { 다시 = null; }
+  const 적힌것 = 다시 ? String(다시.이미적힌설명).trim() : '';
+  return (적힌것 === String(설명글).trim())
+    ? '적었다 — ' + 적힌것
+    : '🔴 안 적혔다 — 지금 적힌 것: ' + (적힌것 || '(빈 칸)');
+}
+
+
 /* ── 자체검사 ─────────────────────────────────────────────── */
 if (직접실행인가() && process.argv.includes('--자체검사')) {
   let 통 = 0; const 실 = [];
@@ -486,6 +567,12 @@ try {
 
   if (됐나) {
     console.log('🟢 올라갔다 — ' + (승인할까 ? '승인' : '미승인') + ' · ' + 잰것.주소);
+    /* 🔴 사장님 「반드시 메뉴에서 사진 선택해서 사진제목과 설명 쓰라니까」 */
+    const 기사번호 = String(잰것.주소).split('idxno=')[1];
+    if (기사번호) {
+      try { console.log('■ 사진 설명 — ' + (await 사진설명넣기(붙음, 기사번호, o.사진설명))); }
+      catch (설명오류) { console.log('⚠ 사진 설명을 못 적었다 — ' + String(설명오류.message).slice(0, 80)); }
+    }
     종료코드 = 0;
   } else {
     console.log('🔴 올라가지 않았다');
