@@ -333,7 +333,13 @@ try {
     '  const cap = d.querySelector("#caption_ie_mod"); if (cap) cap.value = P;',
     '  const sec = d.querySelector("#sectionCode");',
     '  if (sec) { sec.value = ' + JSON.stringify(큰섹션) + '; sec.dispatchEvent(new Event("change", { bubbles: true })); }',
-    '  const r = d.querySelector(승인 ? "#recog-e" : "#recog-c"); if (r) r.checked = true;',
+    /* 🔴🔴 [2026-11-18] 사장님 「디폴트가 승인이야」 · 「미승인 클릭해」
+     ⛔ r.checked = true 만으로는 저장되지 않는다. 다시 읽으면 승인으로 돌아가 있었다.
+     라디오를 누르고, change 를 알리고, 라벨까지 눌러야 CMS 가 받아들인다. */
+  '  const 칸이름 = 승인 ? "recog-e" : "recog-c";',
+  '  const r = d.querySelector("#" + 칸이름);',
+  '  if (r) { r.click(); r.checked = true; r.dispatchEvent(new Event("change", { bubbles: true }));',
+  '    const lb = d.querySelector("label[for=" + 칸이름 + "]"); if (lb) lb.click(); }',
     '  return "채웠다";',
     '})()',
   ].join('\n');
@@ -400,7 +406,7 @@ try {
 
   /* 자국을 남긴다 — 됐든 안 됐든 */
   if (!fs.existsSync(자국길)) fs.writeFileSync(자국길, '# 날\t올린때(KST)\t승인\t됐나\t그림수\t주소\n', 'utf8');
-  fs.appendFileSync(자국길, [o.일자문자열, 시각문자열(), 승인할까 ? '승인' : '미승인',
+  fs.appendFileSync(자국길, [일자문자열, 시각문자열(), 승인할까 ? '승인' : '미승인',
     됐나 ? '됐다' : '못했다', 잰것 ? 잰것.그림수 : '-', 잰것 ? 잰것.주소 : '-'].join('\t') + '\n', 'utf8');
 } catch (e) {
   console.error('🔴 돌다가 터졌다 — ' + e.message);
