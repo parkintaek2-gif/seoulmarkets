@@ -311,6 +311,62 @@ async function 사진설명넣기(접속, 기사번호, 설명글) {
 }
 
 
+/**
+ * 🔴🔴 키워드를 넣는다 — 사장님 2026-11-19
+ *   「키워드에 두 개를 넣어 <오늘의운세>와 <오늘의별자리> 띄어쓰기 하면 안됨.
+ *     키워드 넣고 반드시 엔터키를 쳐야 함. 해시태그는 저절로 붙음」
+ *
+ * ⛔ 값만 넣으면 안 된다. 엔터를 쳐야 CMS 가 낱말로 받아들인다.
+ * ⛔ 띄어쓰기를 넣지 않는다.
+ */
+export const 키워드들 = ['오늘의운세', '오늘의띠별'];
+
+async function 키워드넣기(접속) {
+  const 자리글 = String(await 재기(접속, [
+    '(() => {',
+    '  const 칸 = [...document.querySelectorAll("input")]',
+    '    .find((e) => /입력 \\(최대/.test(e.placeholder || "") || e.name === "text");',
+    '  if (!칸) return "";',
+    '  칸.scrollIntoView({ block: "center" });',
+    '  const r = 칸.getBoundingClientRect();',
+    '  return JSON.stringify({ x: r.left + r.width / 2, y: r.top + r.height / 2 });',
+    '})()',
+  ].join('\n'), 20000));
+  let 좌표 = null;
+  try { 좌표 = JSON.parse(자리글); } catch { 좌표 = null; }
+  if (!좌표) return '키워드 칸을 못 찾았다';
+
+  for (const 낱말 of 키워드들) {
+    for (const 유형 of ['mouseMoved', 'mousePressed', 'mouseReleased']) {
+      await 접속.보내기('Input.dispatchMouseEvent', {
+        type: 유형, x: 좌표.x, y: 좌표.y,
+        button: 유형 === 'mouseMoved' ? 'none' : 'left',
+        clickCount: 유형 === 'mouseMoved' ? 0 : 1,
+      });
+      await new Promise((쉼) => setTimeout(쉼, 200));
+    }
+    await 접속.보내기('Input.insertText', { text: 낱말 });
+    await new Promise((쉼) => setTimeout(쉼, 600));
+    for (const 유형 of ['rawKeyDown', 'keyUp']) {
+      await 접속.보내기('Input.dispatchKeyEvent', {
+        type: 유형, key: 'Enter', code: 'Enter',
+        windowsVirtualKeyCode: 13, nativeVirtualKeyCode: 13,
+      });
+      await new Promise((쉼) => setTimeout(쉼, 300));
+    }
+    await new Promise((쉼) => setTimeout(쉼, 900));
+  }
+
+  return String(await 재기(접속, [
+    '(() => {',
+    '  const 글 = (document.body.innerText || "");',
+    '  const 든것 = ' + JSON.stringify(['오늘의운세', '오늘의띠별']) + '.filter((낱) => 글.includes("#" + 낱) || 글.includes(낱));',
+    '  return 든것.length + "개 들어갔다 — " + 든것.join(", ");',
+    '})()',
+  ].join('\n'), 20000));
+}
+
+
 /* ── 자체검사 ─────────────────────────────────────────────── */
 if (직접실행인가() && process.argv.includes('--자체검사')) {
   let 통 = 0; const 실 = [];
@@ -533,6 +589,10 @@ try {
     '})()',
   ].join('\n');
   console.log('■ 분류 — ' + String(await 재기(붙음, 작은고르기, 20000)));
+
+  /* 🔴 사장님 2026-11-19 — 키워드 두 개. 넣고 엔터를 쳐야 받아들인다 */
+  try { console.log('■ 키워드 — ' + (await 키워드넣기(붙음))); }
+  catch (키워드오류) { console.log('⚠ 키워드를 못 넣었다 — ' + String(키워드오류.message).slice(0, 80)); }
 
   const 저장 = [
     '(() => {',
