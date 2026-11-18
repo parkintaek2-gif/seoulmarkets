@@ -428,47 +428,48 @@ async function 가운데정렬넣기(접속) {
     { type: 'mouseMoved', x: 사진좌표.x, y: 사진좌표.y, button: 'none' });
   await new Promise((쉼) => setTimeout(쉼, 1500));
 
-  const 단추글 = String(await 재기(접속, [
+  /* ⛔ [2026-11-19] 마우스를 올려도 정렬 단추가 화면 크기로 안 잡힌다.
+     이 CMS 의 단추들은 스크립트 누르기를 받아들인다 — 사진 수정 단추가 그랬다. */
+  const 누름 = String(await 재기(접속, [
     '(() => {',
     '  const 장 = document.querySelector(".library-photo");',
-    '  if (!장) return "";',
-    '  const 모두 = [...장.querySelectorAll(".photo-insert-btn, button[data-tp]")];',
+    '  if (!장) return "사진이 없다";',
+    '  const 모두 = [...장.querySelectorAll("button")];',
     '  const 가운데 = 모두.find((e) => /가운데|중앙|center/i.test(',
     '    (e.getAttribute("title") || "") + (e.getAttribute("data-tp") || "")));',
-    '  if (!가운데) return JSON.stringify({ 없다: 모두.map((e) => ',
-    '    (e.getAttribute("data-tp") || "") + ":" + (e.getAttribute("title") || "")) });',
-    '  const r = 가운데.getBoundingClientRect();',
-    '  if (!r.width || !r.height) return "";',
-    '  return JSON.stringify({ x: r.left + r.width / 2, y: r.top + r.height / 2,',
-    '    이름: (가운데.getAttribute("title") || 가운데.getAttribute("data-tp") || "") });',
+    '  if (!가운데) return "못 찾았다 — " + 모두.map((e) =>',
+    '    (e.getAttribute("data-tp") || "") + ":" + (e.getAttribute("title") || "")).join(",");',
+    '  가운데.click();',
+    '  return "눌렀다 " + (가운데.getAttribute("title") || 가운데.getAttribute("data-tp"));',
     '})()',
-  ].join('\n'), 20000));
-  let 단추좌표 = null;
-  try { 단추좌표 = JSON.parse(단추글); } catch { 단추좌표 = null; }
-  if (!단추좌표 || 단추좌표.없다) {
-    return '가운데 정렬 단추를 못 찾았다 — ' + (단추좌표 ? JSON.stringify(단추좌표.없다) : 단추글);
-  }
-
-  for (const 유형 of ['mouseMoved', 'mousePressed', 'mouseReleased']) {
-    await 접속.보내기('Input.dispatchMouseEvent', {
-      type: 유형, x: 단추좌표.x, y: 단추좌표.y,
-      button: 유형 === 'mouseMoved' ? 'none' : 'left',
-      clickCount: 유형 === 'mouseMoved' ? 0 : 1,
-    });
-    await new Promise((쉼) => setTimeout(쉼, 250));
-  }
+  ].join('\n'), 25000));
+  if (!/눌렀다/.test(누름)) return 누름;
   await new Promise((쉼) => setTimeout(쉼, 3500));
 
-  /* ⛔ 「눌렀다」를 「들어갔다」로 읽지 않는다 — 본문에 그림이 늘었는지 센다 */
+  /* ⛔ 「눌렀다」를 「들어갔다」로 읽지 않는다 — 본문에 그림이 늘었는지 센다.
+     ⚠ 단추가 눌려도 안 들어갈 때가 있다. 그러면 같은 그림을 편집기로 직접 가운데에 넣는다 —
+       사장님이 바라시는 결과(사진이 기사 안에 있는 것)는 같다. */
   return String(await 재기(접속, [
     '(() => {',
     '  if (!window.CKEDITOR || !CKEDITOR.instances.FCKeditor1) return "편집기를 못 찾았다";',
-    '  const 글 = CKEDITOR.instances.FCKeditor1.getData() || "";',
-    '  const 수 = (글.match(/<img /g) || []).length;',
-    '  const 대표있나 = /thumbnail|upload|photo/i.test(글);',
-    '  return "본문 그림 " + 수 + "장 · 대표 " + (대표있나 ? "들어갔다" : "안 보인다");',
+    '  const 판 = CKEDITOR.instances.FCKeditor1;',
+    '  let 글 = 판.getData() || "";',
+    '  const 들었나 = (본문) => /photo\\/|thumbnail|upload/i.test(본문);',
+    '  if (들었나(글)) return "본문에 들어갔다 — 정렬 단추로";',
+    '  const 장 = document.querySelector(".library-photo");',
+    '  if (!장) return "사진이 없다";',
+    '  const 방 = 장.getAttribute("data-subuploaddir") || "";',
+    '  const 파일 = 장.getAttribute("data-image") || "";',
+    '  if (!파일) return "그림 이름을 못 읽었다";',
+    '  /* 🔴 주소 꼴은 사장님이 넣으신 기사에서 그대로 읽어 왔다 — /news/photo/202611/....png */',
+    '  const 주소 = "/news/photo/" + 방 + 파일;',
+    '  const 설명 = (장.querySelector(".caption") || {}).textContent || "";',
+    '  const 넣을것 = \'<p style="text-align:center;"><img alt="\' + 설명 + \'" src="\' + 주소 + \'"></p>\';',
+    '  판.setData(넣을것 + 글);',
+    '  글 = 판.getData() || "";',
+    '  return 들었나(글) ? "본문에 넣었다 — 편집기로" : "넣었는데 안 보인다";',
     '})()',
-  ].join('\n'), 20000));
+  ].join('\n'), 25000));
 }
 
 
@@ -638,8 +639,13 @@ let 탭 = null;
 if (!탭) {
   const r = await fetch(기본뿌리 + '/json/new?' + encodeURIComponent(대상주소), { method: 'PUT' });
   try { 생성한탭 = (await r.json()).id; } catch { 생성한탭 = null; }
-  await new Promise((s) => setTimeout(s, 6000));
-  탭 = await 탭검색(이미 ? /articleView/ : /adminArticleWriteForm/);
+  await new Promise((s) => setTimeout(s, 8000));
+  /* 🔴🔴 [2026-11-19] 무늬로 찾으면 «예전에 열려 있던» 서식 자리를 집는다.
+     그 자리에는 편집기가 없어 「편집기를 못 찾았다」로 멈췄다.
+     ⇒ 내가 방금 연 자리만 쓴다. 못 찾으면 그때만 무늬로 찾는다. */
+  const 목록 = await 탭들();
+  탭 = 생성한탭 ? 목록.find((x) => x.id === 생성한탭) : null;
+  if (!탭) 탭 = await 탭검색(이미 ? /articleView/ : /adminArticleWriteForm/);
 }
 if (!탭) {
   console.error('🔴 기사등록 화면을 못 열었다');
@@ -711,6 +717,10 @@ try {
   for (let 번 = 0; 번 < 20; 번 += 1) {
     const 떴나 = String(await 재기(붙음, '(() => !!(window.CKEDITOR && CKEDITOR.instances && CKEDITOR.instances.FCKeditor1))', 15000));
     if (떴나 === 'true') break;
+    if (번 === 19) {
+      console.error('🔴 편집기가 끝내 안 떴다 — 지금 자리: '
+        + String(await 재기(붙음, '(() => location.href + " | 제목칸=" + !!document.querySelector("input[name=title]"))()', 15000)));
+    }
     await new Promise((쉼) => setTimeout(쉼, 2000));
   }
   const 채운결과 = String(await 재기(붙음, 채우기, 60000));
