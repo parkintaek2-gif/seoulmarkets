@@ -59,12 +59,31 @@ export function 닿았나(도장글, 바라는커밋) {
 export function 지면에닿는것(파일들) {
   const 닿는다 = (f) => {
     const p = String(f).replace(/\\/g, '/');
+    if (빌드가스스로쓰는것.includes(p)) return false;   /* 아래 주석을 본다 */
     if (/^(src|public|content)\//.test(p)) return true;
     if (/^(astro\.config|package\.json|package-lock\.json|tsconfig)/.test(p)) return true;
     return false;
   };
   return (파일들 ?? []).filter(닿는다);
 }
+
+/**
+ * 🔴 **빌드가 돌면서 스스로 다시 쓰는 파일.** `src/` 밑이지만 사람이 고친 것이 아니다.
+ *
+ * `build-once.mjs` 가 빌드 «앞에서» 이 둘을 부른다(112~122줄).
+ * 그러니 방금 올린 묶음은 **이미 새 내용으로 지어진 것**이고,
+ * 커밋에 남은 그 변경은 바로 그 빌드가 낸 자국이다. 그것을 보고
+ * 「지면이 바뀌었으니 다시 지어라」 하면 **영원히 끝나지 않는다** —
+ * 다시 지으면 또 바뀌어 있다.
+ *
+ * ⛔ 「src 밑이니까」로 뭉뚱그리지 않는다. ⛔ 짐작으로 더하지 않는다 —
+ *   `build-once.mjs` 가 실제로 부르는 자의 «나갈곳»을 읽고 적는다.
+ *   지금 부르는 자는 둘뿐이다(한국 중대공시 · 백년지도 lastmod 대장).
+ */
+export const 빌드가스스로쓰는것 = [
+  'src/data/100yearmap/lastmod.json',      /* scripts/build-100y-lastmod.mjs 34줄 */
+  'src/data/korea-disclosures-feed.json',  /* scripts/build-korea-disclosures-feed.mjs 32줄 */
+];
 
 function 자가시험() {
   const 봄 = []; const 본다 = (이름, 참) => 봄.push({ 이름, 참 });
@@ -78,6 +97,14 @@ function 자가시험() {
   본다('⑪ public 과 package.json 도 지면에 닿는다',
     지면에닿는것(['public/robots.txt', 'package.json']).length === 2);
   본다('⑫ 빈 목록은 안 닿는다', 지면에닿는것([]).length === 0 && 지면에닿는것(null).length === 0);
+  /* 🔴 빌드가 스스로 쓰는 것을 「바뀌었다」로 읽으면 다시 지어도 또 바뀌어 있다 — 안 끝난다 */
+  본다('⑬ 빌드가 스스로 쓰는 것은 안 닿는다',
+    지면에닿는것(['src/data/100yearmap/lastmod.json', 'src/data/korea-disclosures-feed.json']).length === 0);
+  본다('⑭ 그 옆의 다른 자료는 그대로 닿는다',
+    지면에닿는것(['src/data/100yearmap/areas.json']).length === 1);
+  본다('⑮ 빌드가 스스로 쓰는 것은 실제로 그 자들의 «나갈곳»이다',
+    빌드가스스로쓰는것.includes('src/data/100yearmap/lastmod.json')
+    && 빌드가스스로쓰는것.length === 2);
   본다('① 도장에서 커밋을 읽는다', 도장커밋('# 머리\n커밋=118c780a7\n온커밋=118c780a70ed') === '118c780a7');
   본다('② 커밋 줄이 없으면 null', 도장커밋('아무것도 없다') === null);
   본다('③ 빈 글도 null', 도장커밋('') === null && 도장커밋(null) === null);
