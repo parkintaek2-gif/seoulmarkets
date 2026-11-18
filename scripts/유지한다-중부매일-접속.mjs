@@ -33,7 +33,13 @@ const 여기 = path.dirname(fileURLToPath(import.meta.url));
 const 뿌리 = path.join(여기, '..');
 
 /** 가벼운 화면 하나. 기사등록 화면은 무겁고 임시저장을 건드릴 수 있어 쓰지 않는다 */
-export const 살필주소 = 'https://cms.jbnews.com/news/adminArticleListForm.html';
+/**
+ * 🔴 로그인하면 실제로 서는 자리. 2026-11-18 실측으로 잡았다.
+ * ⛔ adminArticleListForm.html 로 보지 않는다 — **그 주소는 없는 페이지다.**
+ *   「요청하신 페이지를 찾을 수 없습니다」가 떠서, 로그인돼 있어도 끊긴 것으로 읽혔다.
+ * ⚠ 기사등록 화면으로 보지 않는다 — 무겁고 임시저장을 건드릴 수 있다.
+ */
+export const 살필주소 = 'https://cms.jbnews.com/news/adminArticleIntegrationRecognition.html?sc_area=RW';
 export const 로그인주소 = 'https://cms.jbnews.com/admin/adminLoginForm.html';
 export const 기록길 = path.join(뿌리, 'docs', '중부매일-접속기록.tsv');
 export const 알림간격분 = 180;
@@ -107,9 +113,21 @@ export function 기록하기(상태, 덧말) {
  * 그러니 접속은 언젠가 반드시 끊긴다. 끊길 때마다 사장님을 부르면 자정에 깨우게 된다.
  * ⇒ 크롬이 저장해 둔 아이디·비밀번호를 **크롬이 스스로 채우게** 두고, 단추만 누른다.
  *
+ * 🔴🔴 **아이디 칸을 «진짜 마우스»로 눌러야 채워진다** (사장님 2026-11-18 「아이디 쪽을 클릭해봐」).
+ *   화면이 뜬 것만으로는 비밀번호 칸이 빈 채로 있다. element.click() 으로도 안 된다.
+ *   Input.dispatchMouseEvent 로 그 자리를 실제로 눌러야 크롬이 채운다.
+ *
  * ⛔ 비밀번호를 읽지 않는다. 적지 않는다. 어디로도 보내지 않는다.
  *   이 글에서 비밀번호에 대해 아는 것은 **「비어 있나 아닌가」** 하나뿐이다.
  */
+export const 아이디칸자리말 = `(() => {
+  const i = document.querySelector('#user_id');
+  if (!i) return '';
+  const r = i.getBoundingClientRect();
+  if (!r.width || !r.height) return '';
+  return JSON.stringify({ x: r.left + r.width / 2, y: r.top + r.height / 2 });
+})()`;
+
 export const 들어가는말 = `(() => {
   const i = document.querySelector('#user_id');
   const p = document.querySelector('#user_pw');
@@ -213,6 +231,27 @@ if (직접불렸나() && process.argv.includes('--자가시험')) {
   검('🔴 안 채워졌으면 누르지 않는다',
     /비밀번호가 안 채워졌다/.test(들어가는말) && /아이디가 안 채워졌다/.test(들어가는말));
   검('🔴 로그인 주소가 cms 다', /^https:\/\/cms\.jbnews\.com\//.test(로그인주소));
+  /* 🔴🔴 사장님 2026-11-18 「아이디 쪽을 클릭해봐」 — 눌러야 크롬이 채운다 */
+  검('🔴 아이디 칸 자리를 재는 말이 있다',
+    /getBoundingClientRect/.test(아이디칸자리말) && /#user_id/.test(아이디칸자리말));
+  검('⛔ 아이디 칸 자리 말이 값을 내보내지 않는다', !/\.value/.test(아이디칸자리말));
+  /* 🔴 2026-11-18 — 없는 페이지를 보고 있었다. 그 주소로 되돌아가면 안 된다 */
+  검('⛔ 살필 곳이 없는 페이지가 아니다', !/adminArticleListForm/.test(살필주소));
+  검('🔴 살필 곳이 로그인 뒤 실제로 서는 자리다',
+    /adminArticleIntegrationRecognition/.test(살필주소));
+  {
+    /* 🔴🔴 2026-11-18 — 알림 창이 떠 있으면 화면을 한 글자도 못 읽는다.
+       닫는 자리를 지우면 이 자가 날마다 그 자리에서 선다. 지워지지 않게 못박는다 */
+    const 나글 = fs.readFileSync(fileURLToPath(import.meta.url), 'utf8');
+    검('🔴 알림 창을 스스로 닫는다',
+      /Page\.javascriptDialogOpening/.test(나글) && /Page\.handleJavaScriptDialog/.test(나글));
+    검('🔴 바깥 것을 막고 본다 — 유튜브 틀이 화면을 멈춘다',
+      /Network\.setBlockedURLs/.test(나글) && /youtube\.com/.test(나글));
+    검('🔴 빈 자리로 열고 옮겨 간다',
+      /json\/new\?about:blank/.test(나글));
+    검('🔴 아이디 칸을 진짜 마우스로 누른다',
+      /Input\.dispatchMouseEvent/.test(나글) && /mousePressed/.test(나글));
+  }
 
   if (실.length) { console.error('🔴 실패 ' + 실.length + '개\n - ' + 실.join('\n - ')); process.exit(1); }
   console.log('✅ 중부매일 접속 유지 — 자가시험 ' + 통 + '개 통과');
@@ -225,9 +264,11 @@ if (!직접불렸나()) {
 } else {
   console.log('■ 크롬 — ' + (await 크롬띄우기()));
 
+  /* 🔴 빈 자리로 연다. 2026-11-18 실측 — 무거운 화면(공개 홈은 유튜브 틀이 다섯)으로 바로 열면
+     Runtime.enable 이 30초 안에 안 온다. 빈 자리에 먼저 붙고 그 뒤에 옮겨 간다 */
   let 새탭 = null;
   try {
-    const r = await fetch(기본뿌리 + '/json/new?' + encodeURIComponent(살필주소), { method: 'PUT' });
+    const r = await fetch(기본뿌리 + '/json/new?about:blank', { method: 'PUT' });
     새탭 = (await r.json()).id;
   } catch { 새탭 = null; }
 
@@ -248,8 +289,27 @@ if (!직접불렸나()) {
     const 붙음 = await 탭붙기(탭.webSocketDebuggerUrl);
     try {
       await 붙음.보내기('Runtime.enable');
+      await 붙음.보내기('Page.enable');
+      /* 🔴🔴 2026-11-18 실측 — 접속이 끊긴 채로 관리 주소를 열면 CMS 가 알림 창을 띄운다.
+         알림 창이 떠 있는 동안 Runtime.evaluate 가 «영영 안 온다». 40초를 줘도 안 온다.
+         ⇒ 뜨는 즉시 닫는다. 안 닫으면 이 자가 날마다 그 자리에서 선다 */
+      붙음.듣기('Page.javascriptDialogOpening', () => {
+        붙음.보내기('Page.handleJavaScriptDialog', { accept: true })
+          .catch(() => { /* 이미 닫혔다 */ });
+      });
+      /* 🔴 공개 홈으로 튕기면 유튜브 틀이 다섯 붙어 화면이 멈춘다. 그러면 아무것도 못 읽는다.
+         우리가 보려는 것은 「관리 화면이 떴나」 하나뿐이므로 바깥 것을 막고 본다 */
+      await 붙음.보내기('Network.enable');
+      await 붙음.보내기('Network.setBlockedURLs', {
+        urls: ['*youtube.com*', '*ytimg.com*', '*googlevideo.com*',
+          '*doubleclick.net*', '*googlesyndication.com*', '*google-analytics.com*'],
+      });
+      await 붙음.보내기('Page.navigate', { url: 살필주소 });
+      await new Promise((s) => setTimeout(s, 8000));
+      try { await 붙음.보내기('Page.stopLoading', {}, 8000); } catch { /* 그냥 간다 */ }
+      await new Promise((s) => setTimeout(s, 1200));
       const 답 = await 붙음.보내기('Runtime.evaluate',
-        { expression: 살피는말, returnByValue: true }, 20000);
+        { expression: 살피는말, returnByValue: true }, 40000);
       let 것 = null;
       try { 것 = JSON.parse(String(답?.result?.value ?? '')); } catch { 것 = null; }
       const 어디 = 것 ? String(것.주소) : '(못 읽었다)';
@@ -261,6 +321,25 @@ if (!직접불렸나()) {
         await 붙음.보내기('Page.enable');
         await 붙음.보내기('Page.navigate', { url: 로그인주소 });
         await new Promise((s) => setTimeout(s, 7000));
+
+        /* 🔴🔴 아이디 칸을 진짜 마우스로 누른다 — 안 누르면 비밀번호가 안 채워진다 */
+        const 자리답 = await 붙음.보내기('Runtime.evaluate',
+          { expression: 아이디칸자리말, returnByValue: true }, 20000);
+        let 곳 = null;
+        try { 곳 = JSON.parse(String(자리답?.result?.value ?? '')); } catch { 곳 = null; }
+        if (곳) {
+          for (const 꼴 of ['mouseMoved', 'mousePressed', 'mouseReleased']) {
+            await 붙음.보내기('Input.dispatchMouseEvent', {
+              type: 꼴, x: 곳.x, y: 곳.y, button: 'left',
+              clickCount: 꼴 === 'mouseMoved' ? 0 : 1,
+            });
+            await new Promise((s) => setTimeout(s, 180));
+          }
+          await new Promise((s) => setTimeout(s, 2500));
+        } else {
+          console.log('   ⚠ 아이디 칸을 못 찾았다');
+        }
+
         const 눌 = await 붙음.보내기('Runtime.evaluate',
           { expression: 들어가는말, returnByValue: true }, 20000);
         let 눌것 = null;
