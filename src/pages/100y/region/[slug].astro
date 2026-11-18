@@ -77,11 +77,27 @@ const 이시도못가른곳 = ((지역단위 as any).못가른곳 as any[]).filt
   String(x.주소 ?? '').startsWith(고교지역.replace(/교육청$/, '')),
 ).length;
 
+/* 🔴 [2026-11-18 · 5번] 이 17장의 제목에 **수치 이름이 한 글자도 없었다.**
+   「충북 — 지역으로 보기」. 11-18 아침 측정 — 지역 이름만으로는 안 들고
+   수치 이름이 붙어야 든다(「의정부시 고등학교」 0개 / 「… 진학률」 6개).
+   ⇒ 평가원 원표의 **그 시·도 수능 지원자 수**를 제목과 본문에 얹는다.
+   ⛔ 값이 없는 시·도에는 제목에 달지 않는다. 지어내지 않는다. */
+import { 시도수능뽑기, 제목토막, 시험정보, 출처이름 } from '../../../lib/csat-province';
+const 수능 = 시도수능뽑기(r.짧은);
+const 수능토막 = 제목토막(수능);
+const 시험 = 시험정보();
+
+/** 제목 — 수치 이름을 맨 앞에 세운다. 레이아웃이 뒤에 「 — 백년지도」를 붙인다 */
+const 제목 = 수능토막
+  ? `${r.짧은} ${수능토막} · 고등학교 ${r.고교수.toLocaleString()}곳`
+  : `${r.짧은} 고등학교 ${r.고교수.toLocaleString()}곳 · 대학 ${r.대학수}곳`;
+
 const desc =
   `${r.짧은}의 고등학교 ${r.고교수.toLocaleString()}곳과 대학 ${r.대학수}곳입니다. ` +
   (r.취업
     ? `대학 취업률은 ${r.취업.값}%로 ${견줌말(r.취업)}. `
     : '') +
+  (수능 ? `${수능.학년도}학년도 수능 지원자는 ${수능.지원자.toLocaleString()}명입니다. ` : '') +
   `학교를 고르기 전에 그 지역이 어떤 모습인지 숫자로 봅니다.`;
 import 요약 from '../../../data/100yearmap/summary.json';
 /* 🔴 [2026-11-17] 초등학교 지역 지면으로 가는 길. 28일 0명이던 까닭이
@@ -100,14 +116,14 @@ const 받은날 = String((요약 as any).원천수집시각 ?? '').slice(0, 10);
 const jsonLd = {
   '@context': 'https://schema.org',
   '@type': 'Article',
-  headline: `${r.짧은} — 지역으로 보기`,
+  headline: 제목,
   description: desc,
   inLanguage: 'ko',
   isAccessibleForFree: true,
 };
 ---
 
-<HundredYear title={`${r.짧은} — 지역으로 보기`} description={desc} jsonLd={jsonLd}>
+<HundredYear title={제목} description={desc} jsonLd={jsonLd}>
   <h1>{r.짧은}</h1>
 
   <p class="sub">
@@ -184,6 +200,90 @@ const jsonLd = {
     ⛔ 이 숫자는 <strong>등수가 아닙니다.</strong> 지역끼리 견주라고 만든 것이 아니라,
     학교 한 곳을 볼 때 <strong>기준선</strong>으로 삼으시라고 놓은 것입니다.
   </p>
+
+  {수능 && (
+    <>
+      <h2>수능 지원자</h2>
+
+      <p class="sub">
+        {수능.학년도}학년도 대학수학능력시험에 {r.짧은}에서
+        <strong> {수능.지원자.toLocaleString()}명</strong>이 지원했습니다.
+        전국 지원자의 <strong>{수능.전국몫}%</strong>입니다.
+        {수능.지난해 != null && 수능.증감 != null && (
+          <> 지난 {수능.학년도 - 1}학년도에는 {수능.지난해.toLocaleString()}명이었으니
+          {수능.증감 === 0
+            ? <> 올해와 같습니다.</>
+            : <> 올해는 {Math.abs(수능.증감).toLocaleString()}명 {수능.증감 > 0 ? '늘었습니다' : '줄었습니다'}.</>}</>
+        )}
+      </p>
+
+      <div class="nums">
+        <div class="num">
+          <p class="k">수학 — 미적분을 선택한 비율</p>
+          {수능.미적분율 != null ? (
+            <>
+              <p class="v">{수능.미적분율}%</p>
+              <p class="note">수학 영역을 선택한 지원자 가운데입니다. 확률과 통계·기하를 뺀 몫입니다.</p>
+            </>
+          ) : (
+            <><p class="v">—</p><p class="note">수학 영역을 선택한 지원자가 없어 <strong>못 측정했습니다.</strong></p></>
+          )}
+        </div>
+
+        <div class="num">
+          <p class="k">국어 — 언어와 매체를 선택한 비율</p>
+          {수능.언매율 != null ? (
+            <>
+              <p class="v">{수능.언매율}%</p>
+              <p class="note">국어 영역을 선택한 지원자 가운데입니다. 화법과 작문을 뺀 몫입니다.</p>
+            </>
+          ) : (
+            <><p class="v">—</p><p class="note">국어 영역을 선택한 지원자가 없어 <strong>못 측정했습니다.</strong></p></>
+          )}
+        </div>
+
+        <div class="num">
+          <p class="k">제2외국어·한문을 선택한 비율</p>
+          {수능.제2외율 != null ? (
+            <>
+              <p class="v">{수능.제2외율}%</p>
+              <p class="note">이 시·도 지원자 전체 가운데입니다.</p>
+            </>
+          ) : (
+            <><p class="v">—</p><p class="note">지원자 수가 없어 <strong>못 측정했습니다.</strong></p></>
+          )}
+        </div>
+      </div>
+
+      {/* ⚠ 이 둘은 지우지 않는다 — 지원자와 응시자를 섞으면 숫자가 통째로 다른 것이 된다 */}
+      <p class="note">
+        ⚠ <strong>지원자 수</strong>입니다. 시험 당일 실제로 본 사람(응시자)은 이보다 적습니다 —
+        결시자는 이 표에 없습니다.
+      </p>
+      <p class="note">
+        ⛔ 왜 그 과목을 선택했는지는 이 표가 답하지 않습니다. 이유는 측정하지 않았습니다.
+        그리고 이 숫자는 <strong>등수가 아닙니다.</strong>
+      </p>
+
+      <p class="note">
+        {시험 && <>시험은 {시험.날.slice(5, 7)}월 {시험.날.slice(8, 10)}일,
+        성적 통지는 {시험.성적통지.slice(5, 7)}월 {시험.성적통지.slice(8, 10)}일입니다. </>}
+        출처 — {출처이름()}
+      </p>
+
+      <h3>수능 지원자를 다른 기준으로 보기</h3>
+      <ul class="types">
+        <li><a href={href('/csat-applicants-by-province')}>시·도별 수능 지원자 수</a></li>
+        <li><a href={href('/csat-applicant-mix')}>졸업생·재학생·검정고시 몫</a></li>
+        <li><a href={href('/csat-math-choice-by-province')}>시·도별 수학 선택과목 비율</a></li>
+        <li><a href={href('/csat-korean-choice-by-province')}>시·도별 국어 선택과목 비율</a></li>
+        <li><a href={href('/csat-subject-choice')}>탐구 과목을 무엇으로 선택했나</a></li>
+        <li><a href={href('/csat-inquiry-subject-count')}>탐구 과목별 선택 인원</a></li>
+        <li><a href={href('/csat-vocational-inquiry-by-province')}>시·도별 직업탐구 지원자</a></li>
+        <li><a href={href('/csat-second-language-count')}>제2외국어·한문 과목별 인원</a></li>
+      </ul>
+    </>
+  )}
 
   <h2>고등학교는 어떻게 나뉘어 있나?</h2>
   <ul class="types">
