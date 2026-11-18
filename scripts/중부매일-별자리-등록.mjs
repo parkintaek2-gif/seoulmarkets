@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 /**
- * 올린다-중부매일-별자리.mjs — 그날 별자리 운세를 **중부매일 CMS 에 넣고 승인까지** 한다.
+ * 중부매일-별자리-등록.mjs — 그날 별자리 운세를 **중부매일 CMS 에 넣고 승인까지** 한다.
  *
  * ── 🔴🔴 왜 (2026-11-18 · 사장님) ────────────────────────────────────
  * 사장님 — 「2번대로 하자… cms 열면 자동로그인해서 하면 됨.
@@ -25,10 +25,10 @@
  *   그 자리에 CMS 로그인이 남아 있어 열면 그대로 들어간다(사장님이 북마크로 넣어 두셨다).
  *
  * 쓰는 법
- *   node scripts/올린다-중부매일-별자리.mjs                 오늘치 · 승인까지
- *   node scripts/올린다-중부매일-별자리.mjs --날 2026-11-20
- *   node scripts/올린다-중부매일-별자리.mjs --미승인          승인은 안 켠다
- *   node scripts/올린다-중부매일-별자리.mjs --자가시험
+ *   node scripts/중부매일-별자리-등록.mjs                 오늘치 · 승인까지
+ *   node scripts/중부매일-별자리-등록.mjs --날 2026-11-20
+ *   node scripts/중부매일-별자리-등록.mjs --미승인          승인은 안 켠다
+ *   node scripts/중부매일-별자리-등록.mjs --자체검사
  */
 import fs from 'node:fs';
 import path from 'node:path';
@@ -47,7 +47,7 @@ import { pathToFileURL } from 'node:url';
  *
  * ⚠ 재는 자리는 「들여와지나」가 아니라 **「밖에 닿나」**다. 밖에 닿는 파일은 다 이것을 단다.
  */
-export function 직접불렸나(argv1 = process.argv[1], 나 = import.meta.url) {
+export function 직접실행인가(argv1 = process.argv[1], 나 = import.meta.url) {
   try {
     const a = pathToFileURL(fs.realpathSync(argv1)).href;
     const b = pathToFileURL(fs.realpathSync(fileURLToPath(나))).href;
@@ -55,11 +55,11 @@ export function 직접불렸나(argv1 = process.argv[1], 나 = import.meta.url) 
   } catch { return false; }
 }
 
-export const 크롬자리 = 'C:\\Users\\User\\AppData\\Local\\klm-cms-chrome';
+export const 크롬프로필경로 = 'C:\\Users\\User\\AppData\\Local\\klm-cms-chrome';
 export const 등록주소 = 'https://cms.jbnews.com/news/adminArticleWriteForm.html?mode=input';
 export const 큰섹션 = 'S1N29';    /* 기획·특집 */
 export const 작은섹션 = 'S2N157';  /* 연재 */
-export const 알릴곳 = 'parkintaek2@gmail.com';
+export const 통보주소 = 'parkintaek2@gmail.com';
 
 const 여기 = path.dirname(fileURLToPath(import.meta.url));
 const 뿌리 = path.resolve(여기, '..');
@@ -67,16 +67,16 @@ const KL = 'C:/Users/User/Documents/GitHub/klifemap';
 const K = createRequire(KL + '/package.json');
 
 /** KST 오늘. ⛔ toISOString() 금지 — UTC 라 새벽에 하루가 어긋난다 */
-export function 오늘날(d = new Date()) {
+export function 오늘일자(d = new Date()) {
   return { y: d.getFullYear(), m: d.getMonth() + 1, d: d.getDate() };
 }
 
-export function 날읽기(글) {
+export function 일자해석(글) {
   const m = String(글 ?? '').match(/^(\d{4})-(\d{2})-(\d{2})$/);
   return m ? { y: Number(m[1]), m: Number(m[2]), d: Number(m[3]) } : null;
 }
 
-export function 때글(d = new Date()) {
+export function 시각문자열(d = new Date()) {
   const 두 = (n) => String(n).padStart(2, '0');
   return d.getFullYear() + '-' + 두(d.getMonth() + 1) + '-' + 두(d.getDate())
     + ' ' + 두(d.getHours()) + ':' + 두(d.getMinutes());
@@ -87,16 +87,16 @@ export function 때글(d = new Date()) {
  *   ⛔ 안 보면 0시 1분마다 같은 날 기사가 한 편씩 더 생긴다.
  *   ⚠ 「됐다」로 적힌 줄만 센다. 못한 줄은 다시 해야 하는 것이다.
  */
-export function 이미올렸나(자국글, 날글) {
+export function 등록여부확인(자국글, 일자문자열) {
   const 줄들 = String(자국글 ?? '').split(/\r?\n/).filter((l) => l.trim() && !l.startsWith('#'));
   for (const l of 줄들) {
     const 칸 = l.split('\t');
-    if (칸[0] === 날글 && 칸[3] === '됐다' && /articleView/.test(칸[5] || '')) return 칸[5];
+    if (칸[0] === 일자문자열 && 칸[3] === '됐다' && /articleView/.test(칸[5] || '')) return 칸[5];
   }
   return null;
 }
 
-export async function 포트살았나(뿌리주소 = 기본뿌리) {
+export async function 포트작동확인(뿌리주소 = 기본뿌리) {
   try {
     const r = await fetch(뿌리주소 + '/json/version', { signal: AbortSignal.timeout(4000) });
     return r.ok;
@@ -104,40 +104,40 @@ export async function 포트살았나(뿌리주소 = 기본뿌리) {
 }
 
 /** 전용 크롬을 띄운다. ⛔ 사장님 창은 안 건드린다 */
-export async function 크롬띄우기() {
-  if (await 포트살았나()) return '이미 떠 있다';
+export async function 크롬실행() {
+  if (await 포트작동확인()) return '이미 떠 있다';
   const 크롬 = ['C:\\Program Files\\Google\\Chrome\\Application\\chrome.exe',
     'C:\\Program Files (x86)\\Google\\Chrome\\Application\\chrome.exe'].find((p) => fs.existsSync(p));
   if (!크롬) return '🔴 크롬을 못 찾았다';
-  spawn(크롬, ['--remote-debugging-port=9222', '--user-data-dir=' + 크롬자리,
+  spawn(크롬, ['--remote-debugging-port=9222', '--user-data-dir=' + 크롬프로필경로,
     '--no-first-run', '--no-default-browser-check', 등록주소],
   { detached: true, stdio: 'ignore' }).unref();
   for (let i = 0; i < 20; i++) {
     await new Promise((s) => setTimeout(s, 1500));
-    if (await 포트살았나()) return '띄웠다';
+    if (await 포트작동확인()) return '띄웠다';
   }
   return '🔴 포트가 안 열렸다';
 }
 
 /**
  * 🔴 사장님 2026-11-18 — 「안 될 경우, 못한 경우엔 이메일 보내놔」
- * ⛔ 메일을 못 보내도 이 자가 터지지 않는다. 터지면 까닭이 통째로 사라진다.
+ * ⛔ 메일을 못 보내도 이 자가 터지지 않는다. 터지면 사유이 통째로 사라진다.
  */
-export function 못했다고알린다(날글, 까닭, 더볼것) {
+export function 등록실패통보(일자문자열, 사유, 참고사항) {
   const 글길 = path.join(뿌리, 'docs', '편지-중부매일별자리-못올렸다.txt');
   const 글 = [
     '사장님, 5번입니다.',
     '',
-    날글 + ' 별자리 운세를 중부매일 CMS 에 올리지 못했습니다.',
+    일자문자열 + ' 별자리 운세를 중부매일 CMS 에 올리지 못했습니다.',
     '',
     '■ 어디서 섰나',
-    까닭,
+    사유,
     '',
     '■ 더 볼 것',
-    String(더볼것 ?? '(없음)'),
+    String(참고사항 ?? '(없음)'),
     '',
     '■ 손으로 올리시려면',
-    '  node scripts/올린다-중부매일-별자리.mjs --날 ' + 날글,
+    '  node scripts/중부매일-별자리-등록.mjs --날 ' + 일자문자열,
     '  크롬이 로그아웃돼 있으면 CMS 북마크를 한 번 눌러 로그인해 두시면 됩니다.',
     '',
     '5번 드림',
@@ -145,8 +145,8 @@ export function 못했다고알린다(날글, 까닭, 더볼것) {
   try { fs.writeFileSync(글길, 글, 'utf8'); } catch { /* 적지 못해도 메일은 띄운다 */ }
   try {
     execFileSync('node', [path.join(뿌리, 'scripts', 'send-mail.mjs'),
-      '--받는곳=' + 알릴곳,
-      '--제목=[5번] ' + 날글 + ' 별자리 운세를 올리지 못했습니다',
+      '--받는곳=' + 통보주소,
+      '--제목=[5번] ' + 일자문자열 + ' 별자리 운세를 올리지 못했습니다',
       '--글=' + 글길, '--보낸다'], { cwd: 뿌리, stdio: 'inherit', timeout: 120000 });
     return '메일을 보냈다';
   } catch (e) {
@@ -154,24 +154,24 @@ export function 못했다고알린다(날글, 까닭, 더볼것) {
   }
 }
 
-/* ── 자가시험 ─────────────────────────────────────────────── */
-if (직접불렸나() && process.argv.includes('--자가시험')) {
+/* ── 자체검사 ─────────────────────────────────────────────── */
+if (직접실행인가() && process.argv.includes('--자체검사')) {
   let 통 = 0; const 실 = [];
   const 검 = (이름, 참) => { if (참) 통 += 1; else 실.push(이름); };
 
-  검('날 읽기', JSON.stringify(날읽기('2026-11-20')) === JSON.stringify({ y: 2026, m: 11, d: 20 }));
-  검('⛔ 꼴이 아니면 null', 날읽기('2026/11/20') === null && 날읽기(null) === null);
+  검('날 읽기', JSON.stringify(일자해석('2026-11-20')) === JSON.stringify({ y: 2026, m: 11, d: 20 }));
+  검('⛔ 꼴이 아니면 null', 일자해석('2026/11/20') === null && 일자해석(null) === null);
   /* ⛔ toISOString() 을 쓰면 새벽 0시 1분에 «어제» 운세가 나간다 */
   검('🔴 0시 1분에도 그날이다 (KST)', (() => {
     const d = new Date(2026, 10, 20, 0, 1, 0);
-    const t = 오늘날(d);
+    const t = 오늘일자(d);
     return t.y === 2026 && t.m === 11 && t.d === 20;
   })());
-  검('때글이 KST 꼴이다', 때글(new Date(2026, 10, 20, 0, 1)) === '2026-11-20 00:01');
+  검('시각문자열이 KST 꼴이다', 시각문자열(new Date(2026, 10, 20, 0, 1)) === '2026-11-20 00:01');
   검('분류가 기획·특집 > 연재다', 큰섹션 === 'S1N29' && 작은섹션 === 'S2N157');
   검('등록 주소가 새 기사 자리다', 등록주소.includes('mode=input'));
   검('알릴 곳이 지메일이다 — ⛔ 네이버로 보내지 않는다',
-    알릴곳 === 'parkintaek2@gmail.com' && !알릴곳.includes('naver'));
+    통보주소 === 'parkintaek2@gmail.com' && !통보주소.includes('naver'));
 
   const C = K(KL + '/astro/cms원고.js');
   const { 오늘의별자리자료 } = K(KL + '/astro/오늘의별자리자료.js');
@@ -182,7 +182,7 @@ if (직접불렸나() && process.argv.includes('--자가시험')) {
   검('🔴 본문 글자크기가 16px 다 (사장님 2026-11-18)', o.글.includes('font-size:16px'));
   검('🔴 제목이 샘플 꼴이다', o.제목 === '[오늘의 운세] 11월 19일 별자리 운세');
   검('🔴 사진 설명이 붙는다', o.사진말 === '오늘의 운세 2026년 11월 19일 별자리 운세. / KLifeMap.AI');
-  검('🔴 못했다고알린다 가 있다 — 조용히 실패하지 않는다', typeof 못했다고알린다 === 'function');
+  검('🔴 등록실패통보 가 있다 — 조용히 실패하지 않는다', typeof 등록실패통보 === 'function');
 
   /* 🔴 같은 날 두 편을 만들지 않는다 — 0시 1분마다 한 편씩 쌓이면 지면이 더러워진다 */
   {
@@ -190,76 +190,119 @@ if (직접불렸나() && process.argv.includes('--자가시험')) {
       '2026-11-20\t2026-11-19 00:01\t승인\t됐다\t12\thttps://cms.jbnews.com/news/articleView.html?idxno=1516319',
       '2026-11-21\t2026-11-21 00:01\t승인\t못했다\t-\t-'].join('\n');
     검('🔴 이미 올린 날은 주소를 돌려준다',
-      이미올렸나(자국, '2026-11-20') === 'https://cms.jbnews.com/news/articleView.html?idxno=1516319');
-    검('⛔ 못한 날은 다시 해야 한다 — null 이다', 이미올렸나(자국, '2026-11-21') === null);
-    검('⛔ 없는 날도 null', 이미올렸나(자국, '2026-12-01') === null);
-    검('⬜ 빈 자국에 안 터진다', 이미올렸나('', '2026-11-20') === null && 이미올렸나(null, 'x') === null);
+      등록여부확인(자국, '2026-11-20') === 'https://cms.jbnews.com/news/articleView.html?idxno=1516319');
+    검('⛔ 못한 날은 다시 해야 한다 — null 이다', 등록여부확인(자국, '2026-11-21') === null);
+    검('⛔ 없는 날도 null', 등록여부확인(자국, '2026-12-01') === null);
+    검('⬜ 빈 자국에 안 터진다', 등록여부확인('', '2026-11-20') === null && 등록여부확인(null, 'x') === null);
   }
 
   if (실.length) { console.error('🔴 실패 ' + 실.length + '개\n - ' + 실.join('\n - ')); process.exit(1); }
-  console.log(`✅ 중부매일 별자리 올리기 — 자가시험 ${통}개 통과`);
+  console.log(`✅ 중부매일 별자리 올리기 — 자체검사 ${통}개 통과`);
   process.exit(0);
 }
 
 /* ── 돈다 ─────────────────────────────────────────────── */
 /* ⛔ 들여오기만 했으면 한 줄도 돌지 않는다 — 기사가 저절로 나가는 것을 막는다 */
-if (!직접불렸나()) {
+if (!직접실행인가()) {
   /* 들여오기다. 아무것도 하지 않는다 */
 } else {
 const 자리 = process.argv.indexOf('--날');
-const 날 = 자리 >= 0 ? 날읽기(process.argv[자리 + 1]) : 오늘날();
+const 날 = 자리 >= 0 ? 일자해석(process.argv[자리 + 1]) : 오늘일자();
 if (!날) { console.error('⛔ --날 뒤에 2026-11-20 꼴로 준다'); process.exit(1); }
 const 승인할까 = !process.argv.includes('--미승인');
-const 날글 = 날.y + '-' + String(날.m).padStart(2, '0') + '-' + String(날.d).padStart(2, '0');
+const 일자문자열 = 날.y + '-' + String(날.m).padStart(2, '0') + '-' + String(날.d).padStart(2, '0');
 
 const C = K(KL + '/astro/cms원고.js');
 const { 오늘의별자리자료 } = K(KL + '/astro/오늘의별자리자료.js');
 const o = C.원고만들기(오늘의별자리자료('ko', 날));
 if (!o) {
   console.error('🔴 그날 자료를 못 만들었다');
-  console.log(못했다고알린다(날글, '운세 자료를 만들지 못했습니다 (오늘의별자리자료).', 'klifemap 계산 모듈'));
+  console.log(등록실패통보(일자문자열, '운세 자료를 만들지 못했습니다 (오늘의별자리자료).', 'klifemap 계산 모듈'));
   process.exit(1);
 }
 console.log('■ 원고 — ' + o.제목 + ' (' + o.글.length + '자 · 그림 12장)');
 
+
+/**
+ * 🔴🔴 **금지어가 있으면 올리지 않는다.**
+ *
+ * 2026-11-18 에 「뒷심」·「끌어안」·「길목」이 본문에 들어간 채로 만들어졌다.
+ * 메일 검사가 잡아서 멈췄을 뿐, 등록기에는 검사가 없어 그대로 신문에 나갈 뻔했다.
+ * ⇒ 올리기 전에 본문을 검사한다. 걸리면 등록하지 않고 메일로 알린다.
+ * ⛔ 「메일에서 잡히겠지」로 두지 않는다. 신문으로 가는 길에는 메일이 없다.
+ */
+const 검사파일 = path.join(뿌리, 'docs', '.검사-중부매일-별자리.txt');
+fs.writeFileSync(검사파일, String(o.제목) + '\n' + String(o.부제) + '\n'
+  + String(o.글).replace(/<[^>]+>/g, ' '), 'utf8');
+try {
+  execFileSync('node', [path.join(뿌리, 'scripts', '밖으로나가는말-관문.mjs'), 검사파일],
+    { cwd: 뿌리, stdio: 'pipe', timeout: 120000 });
+  console.log('■ 금지어 검사 — 통과');
+} catch (검사오류) {
+  const 알림 = String(검사오류.stdout ?? '') + String(검사오류.stderr ?? '');
+  console.error('🔴 본문에 금지어가 있다 — 올리지 않는다');
+  console.error(알림.slice(0, 900));
+  console.log(등록실패통보(일자문자열, '본문에 금지어가 있어 등록하지 않았습니다.',
+    알림.slice(0, 500)));
+  process.exit(1);
+}
 /* 🔴 같은 날 두 편을 만들지 않는다 — 이미 올렸으면 그것을 «고쳐» 승인만 켠다 */
 const 자국길 = path.join(뿌리, 'docs', '중부매일-별자리-올린기록.tsv');
-const 이미 = fs.existsSync(자국길) ? 이미올렸나(fs.readFileSync(자국길, 'utf8'), 날글) : null;
+const 이미 = fs.existsSync(자국길) ? 등록여부확인(fs.readFileSync(자국길, 'utf8'), 일자문자열) : null;
 if (이미) console.log('■ 그날 것이 이미 있다 — 새로 쓰지 않고 그것을 연다: ' + 이미);
 
-console.log('■ 크롬 — ' + (await 크롬띄우기()));
-if (!(await 포트살았나())) {
+console.log('■ 크롬 — ' + (await 크롬실행()));
+
+/**
+ * 🔴🔴 올리기 전에 **접속부터 세운다.** 0시 1분에 끊겨 있으면 그대로 못 올린다.
+ * 유지하는 자가 끊김을 잡아내고 스스로 다시 들어간다 — 그 자를 먼저 부른다.
+ * ⛔ 들여오지 않고 «따로 돌린다». 그 자가 이 파일을 들여오므로 서로 물리면 안 된다.
+ * ⚠ 실패해도 그냥 간다 — 접속이 이미 성하면 아무 일도 안 일어난다.
+ */
+try {
+  execFileSync('node', [path.join(뿌리, 'scripts', '중부매일-접속유지.mjs')],
+    { cwd: 뿌리, stdio: 'inherit', timeout: 240000 });
+} catch { console.log('⚠ 접속 세우기가 종료코드 1 로 끝났다 — 그래도 가 본다'); }
+
+if (!(await 포트작동확인())) {
   console.error('🔴 크롬 포트가 없다');
-  console.log(못했다고알린다(날글, '크롬 디버깅 포트(9222)가 안 열렸습니다.', '전용 자리 ' + 크롬자리));
+  console.log(등록실패통보(일자문자열, '크롬 디버깅 포트(9222)가 안 열렸습니다.', '전용 자리 ' + 크롬프로필경로));
   process.exit(1);
 }
 
-const 탭찾기 = async (무늬) => (await 탭들()).find((x) => x.type === 'page' && 무늬.test(x.url || ''));
+const 탭검색 = async (무늬) => (await 탭들()).find((x) => x.type === 'page' && 무늬.test(x.url || ''));
 
 /* 이미 있으면 그 기사를, 없으면 새 기사 자리를 연다 */
-const 열주소 = 이미 || 등록주소;
-let 내가연탭 = null;
-let 탭 = 이미 ? null : await 탭찾기(/adminArticleWriteForm\?mode=input/);
+const 대상주소 = 이미 || 등록주소;
+let 생성한탭 = null;
+let 탭 = 이미 ? null : await 탭검색(/adminArticleWriteForm\?mode=input/);
 if (!탭) {
-  const r = await fetch(기본뿌리 + '/json/new?' + encodeURIComponent(열주소), { method: 'PUT' });
-  try { 내가연탭 = (await r.json()).id; } catch { 내가연탭 = null; }
+  const r = await fetch(기본뿌리 + '/json/new?' + encodeURIComponent(대상주소), { method: 'PUT' });
+  try { 생성한탭 = (await r.json()).id; } catch { 생성한탭 = null; }
   await new Promise((s) => setTimeout(s, 6000));
-  탭 = await 탭찾기(이미 ? /articleView/ : /adminArticleWriteForm/);
+  탭 = await 탭검색(이미 ? /articleView/ : /adminArticleWriteForm/);
 }
 if (!탭) {
   console.error('🔴 기사등록 화면을 못 열었다');
-  console.log(못했다고알린다(날글, '기사등록 화면을 열지 못했습니다.', 등록주소));
+  console.log(등록실패통보(일자문자열, '기사등록 화면을 열지 못했습니다.', 등록주소));
   process.exit(1);
 }
 
 const 붙음 = await 탭붙기(탭.webSocketDebuggerUrl);
-let 끝값 = 1;
+let 종료코드 = 1;
 try {
+  /* 🔴🔴 알림 창이 떠 있으면 화면을 한 글자도 못 읽는다(2026-11-18 실측).
+     뜨는 즉시 닫는다. 안 닫으면 이 자가 자정에 그 자리에서 선다 */
+  await 붙음.보내기('Page.enable');
+  붙음.듣기('Page.javascriptDialogOpening', () => {
+    붙음.보내기('Page.handleJavaScriptDialog', { accept: true })
+      .catch(() => { /* 이미 닫혔다 */ });
+  });
   await 자리잡기(붙음);
   const 어디 = String(await 재기(붙음, 'location.href', 20000));
   if (/adminLoginForm/.test(어디)) {
     console.error('🔴 로그인 화면이다');
-    console.log(못했다고알린다(날글, 'CMS 자동로그인이 풀렸습니다. 로그인 화면이 떴습니다.', 어디));
+    console.log(등록실패통보(일자문자열, 'CMS 자동로그인이 풀렸습니다. 로그인 화면이 떴습니다.', 어디));
     process.exit(1);
   }
 
@@ -297,7 +340,7 @@ try {
   const 채운결과 = String(await 재기(붙음, 채우기, 60000));
   console.log('■ 칸 채우기 — ' + 채운결과);
   if (채운결과 !== '채웠다') {
-    console.log(못했다고알린다(날글, '편집기를 찾지 못했습니다 — ' + 채운결과, 어디));
+    console.log(등록실패통보(일자문자열, '편집기를 찾지 못했습니다 — ' + 채운결과, 어디));
     process.exit(1);
   }
 
@@ -347,29 +390,29 @@ try {
 
   if (됐나) {
     console.log('🟢 올라갔다 — ' + (승인할까 ? '승인' : '미승인') + ' · ' + 잰것.주소);
-    끝값 = 0;
+    종료코드 = 0;
   } else {
     console.log('🔴 올라가지 않았다');
-    console.log(못했다고알린다(날글,
+    console.log(등록실패통보(일자문자열,
       '저장은 눌렀는데 되읽기가 통과하지 못했습니다.',
       JSON.stringify(잰것)));
   }
 
   /* 자국을 남긴다 — 됐든 안 됐든 */
   if (!fs.existsSync(자국길)) fs.writeFileSync(자국길, '# 날\t올린때(KST)\t승인\t됐나\t그림수\t주소\n', 'utf8');
-  fs.appendFileSync(자국길, [o.날글, 때글(), 승인할까 ? '승인' : '미승인',
+  fs.appendFileSync(자국길, [o.일자문자열, 시각문자열(), 승인할까 ? '승인' : '미승인',
     됐나 ? '됐다' : '못했다', 잰것 ? 잰것.그림수 : '-', 잰것 ? 잰것.주소 : '-'].join('\t') + '\n', 'utf8');
 } catch (e) {
   console.error('🔴 돌다가 터졌다 — ' + e.message);
-  console.log(못했다고알린다(날글, '돌다가 터졌습니다 — ' + String(e.message).slice(0, 160), ''));
+  console.log(등록실패통보(일자문자열, '돌다가 터졌습니다 — ' + String(e.message).slice(0, 160), ''));
 } finally {
   붙음.닫기();
   /* ⛔ 연 탭은 그 일이 끝나는 자리에서 닫는다 — 2026-11-05 사장님 지시.
      안 닫으면 날마다 한 장씩 쌓여 빌드가 죽는다(225장까지 간 적이 있다). */
-  if (내가연탭) {
-    try { await fetch(기본뿌리 + '/json/close/' + 내가연탭); console.log('■ 연 탭을 닫았다'); }
+  if (생성한탭) {
+    try { await fetch(기본뿌리 + '/json/close/' + 생성한탭); console.log('■ 연 탭을 닫았다'); }
     catch { console.log('⚠ 연 탭을 못 닫았다'); }
   }
 }
-process.exit(끝값);
+process.exit(종료코드);
 }
