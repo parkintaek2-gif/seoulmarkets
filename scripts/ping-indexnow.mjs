@@ -43,6 +43,8 @@
  */
 import { readFile, readdir } from 'node:fs/promises';
 import { existsSync } from 'node:fs';
+import { pathToFileURL, fileURLToPath } from 'node:url';
+import { realpathSync } from 'node:fs';
 
 /** 인자 배열에서 경로만 뽑는다(순수함수 — 자가시험용). `--host x` 와 `--all`·`--dry` 를 뺀 나머지. */
 export function 경로파싱(인자) {
@@ -104,9 +106,49 @@ function 자가시험() {
   자('⛔ 빈 것에 안 죽는다', 쉼표로이어붙였나(null).length === 0);
   자('아무 인자 없으면 경로 0개', JSON.stringify(경로파싱([])) === JSON.stringify([]));
 
+  /* 🔴 [2026-11-18] 들여오기만 했는데 통보 8,108장이 나갔다 — 문이 도는지 «검사로» 지킨다 */
+  자('나를 직접 부르면 참이다',
+    직접불렸나(fileURLToPath(import.meta.url)) === true);
+  자('남이 들여오면 거짓이다', 직접불렸나('/어딘가/다른자.mjs') === false);
+  자('⛔ 부른 길이 없으면 거짓이다 (들여온 것이다)', 직접불렸나(null) === false);
+  자('⛔ 빈 글자도 거짓이다', 직접불렸나('') === false);
+
   console.log(실패 === 0 ? `✅ 자가시험 통과(${셈}개)` : `🔴 자가시험 실패 ${실패}/${셈}건`);
   return 실패 === 0;
 }
+
+/**
+ * 🔴🔴 [2026-11-18 14:5x · 5번] **들여오기만 했는데 통보가 나갔다.**
+ *
+ *   주소 파일이 제대로 적혔는지 보려고 이 파일에서 `주소파일파싱` 하나만 들여왔다.
+ *   그 순간 아래 본문이 통째로 돌아 **서울마켓츠 8,108장이 IndexNow 로 실제로 나갔다.**
+ *   그날 아침에 이미 8,105장을 보낸 뒤였으니 같은 날 두 번이다.
+ *
+ *   ⛔ 없는 주소를 보낸 것은 아니지만, `docs/indexnow-보낸기록.tsv` 에
+ *     **보내려 하지 않은 줄**이 남았다. 뒤에 그 줄을 보고 「알렸다」로 읽게 된다.
+ *     (「샌 자국이 면죄부가 된다」 — 자국은 「했다」지 「하려 했다」가 아니다)
+ *
+ *   ⇒ 말로 「들여오지 마라」를 적어 두지 않는다. **문으로 막는다.**
+ *     직접 부를 때만 본문이 돌고, 들여오면 함수만 나온다.
+ *
+ * ⚠ 윈도라 대소문자가 갈린다 — 실경로로 펴서 소문자로 견준다.
+ */
+/* ⚠ 이름이 check-indexnow-보냈나.mjs 의 것과 같다 — 한 낱말로 둘 다 찾히게 둔다 */
+export function 직접불렸나(argv1 = process.argv[1], 나 = import.meta.url) {
+  if (!argv1) return false;
+  try {
+    const 편길 = (p) => { try { return realpathSync(p); } catch { return p; } };
+    const 부른것 = pathToFileURL(편길(argv1)).href;
+    const 이파일 = pathToFileURL(편길(fileURLToPath(나))).href;
+    return process.platform === 'win32'
+      ? 부른것.toLowerCase() === 이파일.toLowerCase()
+      : 부른것 === 이파일;
+  } catch { return false; }
+}
+
+if (!직접불렸나()) {
+  /* 들여온 것이다 — 함수만 내주고 **본문은 한 줄도 돌지 않는다** */
+} else {
 
 if (process.argv.includes('--자가시험')) {
   process.exit(자가시험() ? 0 : 1);
@@ -398,3 +440,5 @@ async function 통보(호스트) {
 let 실패 = 0;
 for (const 호스트 of 돌릴것) if (!(await 통보(호스트))) 실패++;
 process.exit(실패 ? 1 : 0);
+
+}
