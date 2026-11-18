@@ -36,6 +36,7 @@ import { createRequire } from 'node:module';
 import { spawn, execFileSync } from 'node:child_process';
 import { fileURLToPath } from 'node:url';
 import { 탭들, 탭붙기, 자리잡기, 재기, 기본뿌리 } from './lib/cdp.mjs';
+import { 묶음관련넣기 } from './lib/중부매일-묶음관련.mjs';
 import { pathToFileURL } from 'node:url';
 
 /**
@@ -767,6 +768,18 @@ try {
   /* 🔴 사장님 2026-11-19 — 키워드 두 개. 넣고 엔터를 쳐야 받아들인다 */
   try { console.log('■ 키워드 — ' + (await 키워드넣기(붙음))); }
   catch (키워드오류) { console.log('⚠ 키워드를 못 넣었다 — ' + String(키워드오류.message).slice(0, 80)); }
+
+  
+  /* 🔴🔴 사장님 2026-11-19 — 「최신 기사 순으로 묶음기사 2건, 관련기사 2건도 꼭 올려」
+     묶음은 같은 종류, 관련은 다른 종류다(사장님 2026-11-18).
+     ⛔ 저장 «전»에 넣는다 — 저장한 뒤에 손대면 그것이 「수정」이 된다.
+     ⛔ 창이 닫히며 서식의 그 칸만 ajax 로 다시 그려진다. 본문·사진·키워드는 그대로다. */
+  try {
+    const 이번호 = String(await 재기(붙음, 'location.href', 15000)).split('idxno=')[1] || '';
+    console.log('■ 묶음·관련 — ' + (await 묶음관련넣기(붙음, {
+      내종류: '띠별', 기사번호: 이번호, 몇건: 2,
+    })));
+  } catch (묶음오류) { console.log('⚠ 묶음·관련을 못 넣었다 — ' + String(묶음오류.message).slice(0, 80)); }
 
   const 저장 = [
     '(() => {',

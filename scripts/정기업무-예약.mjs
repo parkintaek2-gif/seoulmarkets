@@ -56,6 +56,14 @@ export const 일과 = [
        사장님이 샘플을 받아들이시면 --미승인 을 떼고 승인으로 되돌린다. */
     명령: ['scripts/중부매일-별자리-등록.mjs', '--미승인'],
     까닭: '그날 별자리 운세를 CMS 에 올리고 승인까지 켠다. 못 하면 메일로 알린다' },
+  /* 🔴🔴 [2026-11-19 · 사장님] 「일주일에 한번씩, 다음 일주일치를 올려」
+       · 「너무 한번에 올리지마」 — 올리는 자가 한 편마다 90초를 쉰다
+       · 「예약시간 걸었으면 승인까지 해」 · 「승인 선택 > 저장 > 웹출판 까지 다 해야 한다」
+     토요일 새벽에 다음 일요일~토요일 이레치를 올린다. 기사는 띠별 00:05, 별자리 00:30 에 나간다 —
+     그 시각을 지나고 도는 자리라 그날 나갈 기사와 부딪히지 않는다. */
+  { 이름: '중부매일-운세-이레치', 갈래: '기계', 주기: '주마다', 요일: 'Saturday', 시: 2, 분: 0,
+    명령: ['scripts/중부매일-일주일치-올린다.mjs'],
+    까닭: '다음 일주일치 운세 기사를 올리고 승인·웹출판까지 한다. 못 하면 메일로 알린다' },
   { 이름: '결제점검-둘다', 갈래: '기계', 주기: '매시', 분: 5,
     명령: ['scripts/check-결제-둘다.mjs'],
     까닭: '손님이 살 수 있나 — 토스·페이팔. 매출이 두 판 잇따라 0 일 때만 알린다' },
@@ -175,6 +183,10 @@ export function 같은분에몰렸나(목록 = 일과) {
   return Object.entries(칸).filter(([, n]) => n > 1).map(([m]) => Number(m));
 }
 
+/** 윈도 작업 스케줄러가 받는 요일 이름 — 영문이라야 받는다 */
+export const 요일목록 = ['Sunday', 'Monday', 'Tuesday', 'Wednesday',
+  'Thursday', 'Friday', 'Saturday'];
+
 /** 매일 것이 업무시간 밖이어도 된다 — 사람이 아니라 기계가 도는 것이므로. 다만 0~23 이어야 한다 */
 export function 시각이말이되나(x) {
   if (x.갈래 !== '기계') return true;
@@ -183,6 +195,10 @@ export function 시각이말이되나(x) {
   /* 🔴 [2026-11-18] 한 시간보다 자주 돌아야 하는 것이 생겼다 — 중부매일 CMS 접속 유지.
      접속이 끊기는 때를 모르므로 한 시간에 한 번으로는 늦다. 5~59분 사이만 받는다. */
   if (x.주기 === '되풀이') return Number.isInteger(x.간격분) && x.간격분 >= 5 && x.간격분 <= 59;
+  /* 🔴 [2026-11-19 · 사장님] 「일주일에 한번씩, 다음 일주일치를 올려」 — 주마다 도는 자가 생겼다 */
+  if (x.주기 === '주마다') {
+    return 요일목록.includes(x.요일) && Number.isInteger(x.시) && x.시 >= 0 && x.시 <= 23;
+  }
   return Number.isInteger(x.시) && x.시 >= 0 && x.시 <= 23;
 }
 
@@ -258,7 +274,9 @@ function 잰다() {
   console.log('\n   ── 기계 몫 ──');
   for (const x of 기계몫()) {
     const 있 = 표[x.이름];
-    const 언제 = x.주기 === '되풀이' ? x.간격분 + '분마다'
+    const 언제 = x.주기 === '주마다'
+      ? x.요일 + ' ' + String(x.시).padStart(2, '0') + ':' + String(x.분).padStart(2, '0')
+      : x.주기 === '되풀이' ? x.간격분 + '분마다'
       : x.주기 === '매시' ? '매시 :' + String(x.분).padStart(2, '0')
       : '매일 ' + String(x.시).padStart(2, '0') + ':' + String(x.분).padStart(2, '0');
     const 남 = 겹치는것(x, 표);
@@ -293,6 +311,9 @@ function 설치() {
     if (x.주기 === '되풀이') {
       줄.push('$trg = New-ScheduledTaskTrigger -Once -At (Get-Date -Hour 0 -Minute ' + x.분
         + ' -Second 0) -RepetitionInterval (New-TimeSpan -Minutes ' + x.간격분 + ')');
+    } else if (x.주기 === '주마다') {
+      줄.push('$trg = New-ScheduledTaskTrigger -Weekly -DaysOfWeek ' + x.요일
+        + ' -At (Get-Date -Hour ' + x.시 + ' -Minute ' + x.분 + ' -Second 0)');
     } else if (x.주기 === '매시') {
       줄.push('$trg = New-ScheduledTaskTrigger -Once -At (Get-Date -Hour 0 -Minute ' + x.분
         + ' -Second 0) -RepetitionInterval (New-TimeSpan -Minutes 60)');
