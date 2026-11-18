@@ -367,6 +367,146 @@ async function 키워드넣기(접속) {
 }
 
 
+/**
+ * 🔴🔴 노출시간을 건다 — 사장님 2026-11-19
+ *   「저작권 바로 밑에 +를 클릭하면 노출시간이 있다. 노출시간을 설정하면
+ *     그 시간에 예약이 걸려 승인이 자동으로 되는거야. 이걸 활용해」
+ *
+ * ⇒ 기사를 미리 올려 두고 시간만 걸어 두면 그 시각에 저절로 나간다.
+ *   자정에 사람이 깨어 있을 까닭이 없어진다.
+ * ⚠ 칸은 접혀 있어도 서식 안에 있다. 값을 넣으면 그대로 올라간다.
+ */
+async function 노출시간넣기(접속, 날짜글, 시각글) {
+  if (!날짜글 || !시각글) return '거는 시간이 없다';
+  return String(await 재기(접속, [
+    '(() => {',
+    '  const d = document.querySelector("#embargo_date");',
+    '  const t = document.querySelector("#embargo_time");',
+    '  if (!d || !t) return "노출시간 칸이 없다";',
+    '  d.value = ' + JSON.stringify(날짜글) + ';',
+    '  d.dispatchEvent(new Event("input", { bubbles: true }));',
+    '  d.dispatchEvent(new Event("change", { bubbles: true }));',
+    '  t.value = ' + JSON.stringify(시각글) + ';',
+    '  t.dispatchEvent(new Event("input", { bubbles: true }));',
+    '  t.dispatchEvent(new Event("change", { bubbles: true }));',
+    '  return "걸었다 " + d.value + " " + t.value;',
+    '})()',
+  ].join('\n'), 20000));
+}
+
+
+/**
+ * 🔴🔴 사진을 **가운데 정렬로 본문에 넣는다** — 사장님 2026-11-19
+ *   「사진에 마우스 오버하면 사진 가로 정렬 메뉴가 생성된다.
+ *     이중 가운데 정렬을 클릭하면 사진이 자동으로 기사안에 들어간다. 이것까지 꼭 해야 한다」
+ *
+ * ⚠ 본문을 채운 «뒤»에 넣는다 — 먼저 넣으면 setData 가 덮어 지운다.
+ * ⛔ 스크립트로만 누르면 메뉴가 안 뜬다. 마우스를 올린 뒤 진짜로 누른다.
+ */
+async function 가운데정렬넣기(접속) {
+  const 자리글 = String(await 재기(접속, [
+    '(() => {',
+    '  const 제목 = [...document.querySelectorAll(".accordion-title")]',
+    '    .find((e) => (e.textContent || "").trim() === "사진");',
+    '  if (제목) {',
+    '    const 속 = 제목.closest(".accordion-item").querySelector(".accordion-content");',
+    '    if (!(속 && 속.offsetHeight > 0)) 제목.click();',
+    '  }',
+    '  const 장 = document.querySelector(".library-photo");',
+    '  if (!장) return "";',
+    '  장.scrollIntoView({ block: "center" });',
+    '  const r = 장.getBoundingClientRect();',
+    '  return JSON.stringify({ x: r.left + r.width / 2, y: r.top + r.height / 2 });',
+    '})()',
+  ].join('\n'), 20000));
+  let 사진좌표 = null;
+  try { 사진좌표 = JSON.parse(자리글); } catch { 사진좌표 = null; }
+  if (!사진좌표) return '사진이 없다';
+
+  /* 마우스를 올려야 정렬 메뉴가 뜬다 */
+  await 접속.보내기('Input.dispatchMouseEvent',
+    { type: 'mouseMoved', x: 사진좌표.x, y: 사진좌표.y, button: 'none' });
+  await new Promise((쉼) => setTimeout(쉼, 1500));
+
+  const 단추글 = String(await 재기(접속, [
+    '(() => {',
+    '  const 장 = document.querySelector(".library-photo");',
+    '  if (!장) return "";',
+    '  const 모두 = [...장.querySelectorAll(".photo-insert-btn, button[data-tp]")];',
+    '  const 가운데 = 모두.find((e) => /가운데|중앙|center/i.test(',
+    '    (e.getAttribute("title") || "") + (e.getAttribute("data-tp") || "")));',
+    '  if (!가운데) return JSON.stringify({ 없다: 모두.map((e) => ',
+    '    (e.getAttribute("data-tp") || "") + ":" + (e.getAttribute("title") || "")) });',
+    '  const r = 가운데.getBoundingClientRect();',
+    '  if (!r.width || !r.height) return "";',
+    '  return JSON.stringify({ x: r.left + r.width / 2, y: r.top + r.height / 2,',
+    '    이름: (가운데.getAttribute("title") || 가운데.getAttribute("data-tp") || "") });',
+    '})()',
+  ].join('\n'), 20000));
+  let 단추좌표 = null;
+  try { 단추좌표 = JSON.parse(단추글); } catch { 단추좌표 = null; }
+  if (!단추좌표 || 단추좌표.없다) {
+    return '가운데 정렬 단추를 못 찾았다 — ' + (단추좌표 ? JSON.stringify(단추좌표.없다) : 단추글);
+  }
+
+  for (const 유형 of ['mouseMoved', 'mousePressed', 'mouseReleased']) {
+    await 접속.보내기('Input.dispatchMouseEvent', {
+      type: 유형, x: 단추좌표.x, y: 단추좌표.y,
+      button: 유형 === 'mouseMoved' ? 'none' : 'left',
+      clickCount: 유형 === 'mouseMoved' ? 0 : 1,
+    });
+    await new Promise((쉼) => setTimeout(쉼, 250));
+  }
+  await new Promise((쉼) => setTimeout(쉼, 3500));
+
+  /* ⛔ 「눌렀다」를 「들어갔다」로 읽지 않는다 — 본문에 그림이 늘었는지 센다 */
+  return String(await 재기(접속, [
+    '(() => {',
+    '  if (!window.CKEDITOR || !CKEDITOR.instances.FCKeditor1) return "편집기를 못 찾았다";',
+    '  const 글 = CKEDITOR.instances.FCKeditor1.getData() || "";',
+    '  const 수 = (글.match(/<img /g) || []).length;',
+    '  const 대표있나 = /thumbnail|upload|photo/i.test(글);',
+    '  return "본문 그림 " + 수 + "장 · 대표 " + (대표있나 ? "들어갔다" : "안 보인다");',
+    '})()',
+  ].join('\n'), 20000));
+}
+
+
+/**
+ * 🔴🔴 웹출판을 누른다 — 사장님 2026-11-19
+ *   「승인 후에 웹출판을 반드시 클릭해야 한다. 제일 오른쪽 위에 있어」
+ *
+ * ⛔ 스크립트로만 누르면 CMS 가 받지 않는 자리가 있다. 진짜 마우스로 누른다.
+ */
+async function 웹출판누르기(접속) {
+  const 자리글 = String(await 재기(접속, [
+    '(() => {',
+    '  const 후보 = [...document.querySelectorAll("button,a")]',
+    '    .filter((e) => /웹출판/.test((e.innerText || "") + "")',
+    '      && (e.offsetWidth || e.offsetHeight));',
+    '  if (!후보.length) return "";',
+    '  const e = 후보[0];',
+    '  const r = e.getBoundingClientRect();',
+    '  return JSON.stringify({ x: r.left + r.width / 2, y: r.top + r.height / 2 });',
+    '})()',
+  ].join('\n'), 20000));
+  let 좌표 = null;
+  try { 좌표 = JSON.parse(자리글); } catch { 좌표 = null; }
+  if (!좌표) return '웹출판 단추를 못 찾았다';
+
+  for (const 유형 of ['mouseMoved', 'mousePressed', 'mouseReleased']) {
+    await 접속.보내기('Input.dispatchMouseEvent', {
+      type: 유형, x: 좌표.x, y: 좌표.y,
+      button: 유형 === 'mouseMoved' ? 'none' : 'left',
+      clickCount: 유형 === 'mouseMoved' ? 0 : 1,
+    });
+    await new Promise((쉼) => setTimeout(쉼, 300));
+  }
+  await new Promise((쉼) => setTimeout(쉼, 6000));
+  return '눌렀다';
+}
+
+
 /* ── 자체검사 ─────────────────────────────────────────────── */
 if (직접실행인가() && process.argv.includes('--자체검사')) {
   let 통 = 0; const 실 = [];
@@ -424,6 +564,10 @@ const 자리 = process.argv.indexOf('--날');
 const 날 = 자리 >= 0 ? 일자해석(process.argv[자리 + 1]) : 오늘일자();
 if (!날) { console.error('⛔ --날 뒤에 2026-11-20 꼴로 준다'); process.exit(1); }
 const 승인할까 = !process.argv.includes('--미승인');
+/* 🔴 사장님 2026-11-19 — 노출시간을 걸면 그 시각에 저절로 승인된다 */
+const 노출자리 = process.argv.indexOf('--노출');
+const 노출날 = 노출자리 >= 0 ? process.argv[노출자리 + 1] : null;
+const 노출시각 = 노출자리 >= 0 ? (process.argv[노출자리 + 2] || '00:30') : null;
 const 일자문자열 = 날.y + '-' + String(날.m).padStart(2, '0') + '-' + String(날.d).padStart(2, '0');
 
 const C = K(KL + '/astro/cms원고.js');
@@ -489,7 +633,8 @@ const 탭검색 = async (무늬) => (await 탭들()).find((x) => x.type === 'pag
 /* 이미 있으면 그 기사를, 없으면 새 기사 자리를 연다 */
 const 대상주소 = 이미 || 등록주소;
 let 생성한탭 = null;
-let 탭 = 이미 ? null : await 탭검색(/adminArticleWriteForm\?mode=input/);
+/* ⛔ [2026-11-19] 열려 있던 서식 자리를 다시 쓰지 않는다 - 남의 기사를 고쳐 버렸다 */
+let 탭 = null;
 if (!탭) {
   const r = await fetch(기본뿌리 + '/json/new?' + encodeURIComponent(대상주소), { method: 'PUT' });
   try { 생성한탭 = (await r.json()).id; } catch { 생성한탭 = null; }
@@ -562,6 +707,12 @@ try {
   try { console.log('■ 대표 이미지 — ' + (await 대표이미지올리기(붙음))); }
   catch (그림오류) { console.log('⚠ 대표 이미지를 못 올렸다 — ' + String(그림오류.message).slice(0, 80)); }
 
+  /* 🔴 새 서식은 편집기가 늦게 뜬다. 뜰 때까지 기다린다 — 2026-11-19 에 여기서 멈췄다 */
+  for (let 번 = 0; 번 < 20; 번 += 1) {
+    const 떴나 = String(await 재기(붙음, '(() => !!(window.CKEDITOR && CKEDITOR.instances && CKEDITOR.instances.FCKeditor1))', 15000));
+    if (떴나 === 'true') break;
+    await new Promise((쉼) => setTimeout(쉼, 2000));
+  }
   const 채운결과 = String(await 재기(붙음, 채우기, 60000));
   console.log('■ 칸 채우기 — ' + 채운결과);
   if (채운결과 !== '채웠다') {
@@ -581,6 +732,23 @@ try {
     '})()',
   ].join('\n');
   console.log('■ 분류 — ' + String(await 재기(붙음, 작은고르기, 20000)));
+
+  /* 🔴 사장님 2026-11-19 — 가운데 정렬을 눌러야 사진이 기사 안에 들어간다 */
+  try { console.log('■ 가운데 정렬 — ' + (await 가운데정렬넣기(붙음))); }
+  catch (정렬오류) { console.log('⚠ 가운데 정렬을 못 했다 — ' + String(정렬오류.message).slice(0, 80)); }
+
+  /* 🔴🔴 [2026-11-19] 시각만 넣고 날짜를 비우면 입력시각이 1970-01-01 이 되어 기사가 사라진다.
+     사장님 「노출시간을 선택하면 제대로 날짜를 설정해야지」 — 둘 다 있을 때만 건다. */
+  const 날짜꼴 = String(노출날 || '').length === 10 && String(노출날).split('-').length === 3;
+  const 시각꼴 = String(노출시각 || '').length === 5 && String(노출시각).split(':').length === 2;
+  if (노출날 && !(날짜꼴 && 시각꼴)) {
+    console.error('🔴 노출시간이 온전하지 않다 — ' + 노출날 + ' ' + 노출시각 + '. 걸지 않는다');
+    process.exit(1);
+  }
+  if (날짜꼴 && 시각꼴) {
+    try { console.log('■ 노출시간 — ' + (await 노출시간넣기(붙음, 노출날, 노출시각))); }
+    catch (노출오류) { console.log('⚠ 노출시간을 못 걸었다 — ' + String(노출오류.message).slice(0, 80)); }
+  }
 
   /* 🔴 사장님 2026-11-19 — 키워드 두 개. 넣고 엔터를 쳐야 받아들인다 */
   try { console.log('■ 키워드 — ' + (await 키워드넣기(붙음))); }
@@ -619,6 +787,11 @@ try {
 
   if (됐나) {
     console.log('🟢 올라갔다 — ' + (승인할까 ? '승인' : '미승인') + ' · ' + 잰것.주소);
+    /* 🔴 사장님 2026-11-19 — 승인 뒤 웹출판을 반드시 누른다 */
+    if (승인할까) {
+      try { console.log('■ 웹출판 — ' + (await 웹출판누르기(붙음))); }
+      catch (출판오류) { console.log('⚠ 웹출판을 못 눌렀다 — ' + String(출판오류.message).slice(0, 80)); }
+    }
     /* 🔴 사장님 「반드시 메뉴에서 사진 선택해서 사진제목과 설명 쓰라니까」 */
     const 기사번호 = String(잰것.주소).split('idxno=')[1];
     if (기사번호) {
