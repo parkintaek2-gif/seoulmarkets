@@ -135,7 +135,9 @@ async function 한다() {
   if (!창고.remoteEnabled) { console.log('🔴 R2 가 꺼져 있다 — .env 의 ARCHIVE_S3_* 를 본다'); process.exit(1); }
 
   const 키 = 묶음키(커밋);
-  await 창고.원격에올린다(키, fs.readFileSync(묶음길), 'application/gzip');
+  /* 🔴 [2026-11-18 · 5번] `readFileSync` 로 374MB 를 한 몸으로 보내다 ENOBUFS 로 터졌다.
+     빌드 15분이 버려지고 기사 세 편이 라이브에 못 갔다. **파일째 흘려보낸다.** */
+  await 창고.원격에흘려올린다(키, 묶음길, 'application/gzip');
   console.log('■ 올렸다 — ' + 키);
 
   /* ④ 쪽지는 «묶음을 올린 뒤에» 쓴다. 순서를 바꾸면 없는 묶음을 가리키는 쪽지가 생긴다 */

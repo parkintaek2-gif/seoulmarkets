@@ -30,7 +30,7 @@
 
 import { createHash, createHmac } from 'node:crypto';
 import { mkdir, writeFile, readFile, readdir, rm } from 'node:fs/promises';
-import { readFileSync } from 'node:fs';
+import { readFileSync, createReadStream, statSync } from 'node:fs';
 import path from 'node:path';
 
 /* .env 를 직접 읽는다 — 의존성은 늘리지 않는다(이 저장소의 런타임 의존성은 0개다).
@@ -109,10 +109,17 @@ function encodeKey(key) {
  * @param key     버킷 안의 키. 인코딩은 이 함수가 한다
  * @param body    PUT 일 때만. GET 은 빈 페이로드로 서명한다
  */
-async function signedFetch(method, key, { body = null, contentType = null, timeout = 60_000 } = {}) {
+async function signedFetch(method, key, { body = null,파일 = null, contentType = null, timeout = 60_000 } = {}) {
   const url = new URL(`${CFG.endpoint.replace(/\/$/, '')}/${CFG.bucket}/${encodeKey(key)}`);
-  const payload = body === null ? Buffer.alloc(0) : Buffer.isBuffer(body) ? body : Buffer.from(body, 'utf8');
-  const payloadHash = createHash('sha256').update(payload).digest('hex');
+  /* 🔴 [2026-11-18 · 5번] 파일로 주면 **버퍼에 담지 않고 흘려보낸다.**
+     374MB 묶음을 `readFileSync` 로 읽어 한 몸으로 보냈더니 윈도에서 터졌다 —
+     `ENOBUFS`(소켓 버퍼가 모자라다). undici 가 그 큰 버퍼를 한 번에 써서다.
+     흘려보내면 64KB 씩 나가므로 그 자리에서 안 터진다.
+     ⛔ 서명 길은 그대로 하나다. 해시만 흘려서 구한다. */
+  const payload = 파일 !== null ? null
+    : body === null ? Buffer.alloc(0) : Buffer.isBuffer(body) ? body : Buffer.from(body, 'utf8');
+  const payloadHash = 파일 !== null ? await 파일해시(파일)
+    : createHash('sha256').update(payload).digest('hex');
 
   const now = new Date();
   const amzDate = now.toISOString().replace(/[:-]|\.\d{3}/g, ''); // 20260801T091500Z
@@ -126,6 +133,9 @@ async function signedFetch(method, key, { body = null, contentType = null, timeo
     'x-amz-content-sha256': payloadHash,
     'x-amz-date': amzDate,
   };
+  /* content-length 는 서명에 넣지 않는다 — 서명 헤더를 늘리면 옛 길과 갈린다.
+     흘려보낼 때는 길이를 안 주면 undici 가 chunked 로 보내고 R2 가 411 을 낸다. */
+  const 보낼길이 = 파일 !== null ? statSync(파일).size : null;
   const signedHeaders = Object.keys(headers).sort().join(';');
   const canonicalHeaders = Object.keys(headers)
     .sort()
@@ -155,11 +165,28 @@ async function signedFetch(method, key, { body = null, contentType = null, timeo
     method,
     headers: {
       ...headers,
+      ...(보낼길이 !== null ? { 'content-length': String(보낼길이) } : {}),
       authorization: `AWS4-HMAC-SHA256 Credential=${CFG.keyId}/${scope}, SignedHeaders=${signedHeaders}, Signature=${signature}`,
     },
-    ...(method === 'PUT' ? { body: payload } : {}),
+    ...(method === 'PUT'
+      ? 파일 !== null
+        ? { body: createReadStream(파일), duplex: 'half' }
+        : { body: payload }
+      : {}),
     signal: AbortSignal.timeout(timeout),
   });
+}
+
+/** 파일 하나의 sha256 — **통째로 읽지 않고** 흘려서 구한다. */
+async function 파일해시(파일길) {
+  const h = createHash('sha256');
+  await new Promise((좋다, 틀렸다) => {
+    createReadStream(파일길)
+      .on('data', (조각) => h.update(조각))
+      .on('error', 틀렸다)
+      .on('end', 좋다);
+  });
+  return h.digest('hex');
 }
 
 /** S3 호환 PUT. 성공하면 저장된 키를 돌려준다. */
@@ -203,6 +230,27 @@ async function delRemote(key, { timeout = 30_000 } = {}) {
 export async function 원격에올린다(key, body, contentType = 'application/octet-stream') {
   if (!remoteEnabled) throw new Error('원격 저장이 꺼져 있다 — ARCHIVE_S3_* 가 없다');
   return putRemote(key, body, contentType);
+}
+
+/**
+ * 큰 **파일**을 흘려서 원격에 올린다. 통째로 메모리·소켓에 올리지 않는다.
+ *
+ * 🔴 [2026-11-18 · 5번] `원격에올린다(키, fs.readFileSync(묶음길))` 로 374MB 를 보내다
+ *   **`ENOBUFS` 로 터졌다.** 빌드 15분이 통째로 버려졌고 기사 세 편이 라이브에 못 갔다.
+ *   버퍼 하나를 한 번에 쓰면 윈도 소켓 버퍼가 모자란다. 흘려보내면 조각으로 나간다.
+ *
+ * ⚠ 「메모리가 버티나」와 「소켓이 버티나」는 **다른 물음**이다. 11-17 에 받는 쪽만
+ *   흘리게 고치고 올리는 쪽은 그대로 두었다. 한쪽만 고치면 나머지가 터진다.
+ * @returns 올린 키
+ */
+export async function 원격에흘려올린다(key, 파일길, contentType = 'application/gzip', { timeout = 1_800_000 } = {}) {
+  if (!remoteEnabled) throw new Error('원격 저장이 꺼져 있다 — ARCHIVE_S3_* 가 없다');
+  const res = await signedFetch('PUT', key, { 파일: 파일길, contentType, timeout });
+  if (!res.ok) {
+    const detail = (await res.text().catch(() => '')).slice(0, 300);
+    throw new Error(`S3 PUT(흘림) ${res.status}: ${detail}`);
+  }
+  return key;
 }
 
 /**
