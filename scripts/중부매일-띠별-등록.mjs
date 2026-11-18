@@ -154,6 +154,82 @@ export function 등록실패통보(일자문자열, 사유, 참고사항) {
   }
 }
 
+export const 대표이미지경로 = path.join('C:', 'Users', 'User', 'Documents', 'GitHub',
+  'klifemap', 'public', 'astro', 'ttibyeol-hero-1200x630.png');
+
+/**
+ * 🔴🔴 대표 이미지를 **사진 메뉴로** 올린다 (사장님 2026-11-18).
+ *   「그 메뉴를 통해서 넣어야 사진제목과 사진설명을 넣을 수 있어」
+ *   「모든 운세 기사에 반드시 대표 이미지를 넣어」
+ *
+ * ⛔ 파일 칸에 값을 넣는 방식은 안 된다 — CMS 가 받지 않는다(2026-11-18 실측).
+ *   끌어다 놓는 방식이라야 올라간다. Input.dispatchDragEvent 로 떨군다.
+ * ⚠ 저장하기 전까지는 임시다. 다시 열면 사라진다 — 그래서 저장 앞에서 올린다.
+ * ⚠ 떨구면 본문에도 한 장이 끼어든다. 그래서 **본문을 채우기 전에** 올린다 —
+ *   뒤이은 setData 가 그 한 장을 덮어 지운다.
+ */
+export const 사진펼치기 = [
+  '(() => {',
+  '  const 제목 = [...document.querySelectorAll(".accordion-title")]',
+  '    .find((e) => (e.textContent || "").trim() === "사진");',
+  '  if (!제목) return "사진 칸이 없다";',
+  '  const 속 = 제목.closest(".accordion-item").querySelector(".accordion-content");',
+  '  if (!(속 && 속.offsetHeight > 0)) 제목.click();',
+  '  제목.scrollIntoView({ block: "center" });',
+  '  return "열었다";',
+  '})()',
+].join('\n');
+
+export const 떨굴자리 = [
+  '(() => {',
+  '  const 제목 = [...document.querySelectorAll(".accordion-title")]',
+  '    .find((e) => (e.textContent || "").trim() === "사진");',
+  '  const 속 = 제목 ? 제목.closest(".accordion-item").querySelector(".accordion-content") : null;',
+  '  const 후보 = [...(속 ? 속.querySelectorAll("*") : [])]',
+  '    .filter((e) => /마우스로 이미지를 끌어오거나/.test(e.textContent || ""))',
+  '    .sort((a, b) => a.innerHTML.length - b.innerHTML.length);',
+  '  if (!후보[0]) return "";',
+  '  const 네모 = 후보[0].getBoundingClientRect();',
+  '  return JSON.stringify({ x: 네모.left + 네모.width / 2, y: 네모.top + 네모.height / 2 });',
+  '})()',
+].join('\n');
+
+export const 사진센다 = [
+  '(() => {',
+  '  const 제목 = [...document.querySelectorAll(".accordion-title")]',
+  '    .find((e) => (e.textContent || "").trim() === "사진");',
+  '  const 속 = 제목 ? 제목.closest(".accordion-item").querySelector(".accordion-content") : null;',
+  '  const 수 = 속 ? (속.innerText || "").split("대표").length - 1 : 0;',
+  '  return 수 > 0 ? ("올라갔다 " + 수 + "장") : "안 올라갔다";',
+  '})()',
+].join('\n');
+
+async function 대표이미지올리기(접속) {
+  if (!fs.existsSync(대표이미지경로)) return '🔴 그림 파일이 없다 — ' + 대표이미지경로;
+  const 펼침 = String(await 재기(접속, 사진펼치기, 20000));
+  if (펼침 !== '열었다') return 펼침;
+  await new Promise((쉼) => setTimeout(쉼, 2500));
+
+  /* 🔴🔴 이미 있으면 올리지 않는다 — 2026-11-18 에 같은 그림이 일곱 장까지 쌓였다.
+     날마다 도는 자라서, 막지 않으면 한 해에 삼백예순 장이 된다. */
+  const 이미 = String(await 재기(접속, 사진센다, 20000));
+  if (/^올라갔다/.test(이미)) return '이미 있다 — ' + 이미;
+
+  let 좌표 = null;
+  try { 좌표 = JSON.parse(String(await 재기(접속, 떨굴자리, 20000))); } catch { 좌표 = null; }
+  if (!좌표) return '떨굴 자리를 못 찾았다';
+
+  const 짐 = { files: [대표이미지경로], items: [], dragOperationsMask: 1 };
+  for (const 유형 of ['dragEnter', 'dragOver', 'drop']) {
+    await 접속.보내기('Input.dispatchDragEvent',
+      { type: 유형, x: 좌표.x, y: 좌표.y, data: 짐 }, 30000);
+    await new Promise((쉼) => setTimeout(쉼, 700));
+  }
+  await new Promise((쉼) => setTimeout(쉼, 18000));
+  return String(await 재기(접속, 사진센다, 20000));
+}
+
+
 /* ── 자체검사 ─────────────────────────────────────────────── */
 if (직접실행인가() && process.argv.includes('--자체검사')) {
   let 통 = 0; const 실 = [];
@@ -352,6 +428,11 @@ try {
     '  return "채웠다";',
     '})()',
   ].join('\n');
+  /* 🔴 본문을 채우기 «전»에 대표 이미지를 올린다 — 떨구면 본문에 한 장이 끼어들고,
+     바로 뒤의 setData 가 그것을 덮어 지운다. 순서를 바꾸면 본문에 그림이 남는다. */
+  try { console.log('■ 대표 이미지 — ' + (await 대표이미지올리기(붙음))); }
+  catch (그림오류) { console.log('⚠ 대표 이미지를 못 올렸다 — ' + String(그림오류.message).slice(0, 80)); }
+
   const 채운결과 = String(await 재기(붙음, 채우기, 60000));
   console.log('■ 칸 채우기 — ' + 채운결과);
   if (채운결과 !== '채웠다') {
