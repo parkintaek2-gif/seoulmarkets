@@ -58,14 +58,31 @@ export function 닿았나(도장글, 바라는커밋) {
  */
 export function 지면에닿는것(파일들) {
   const 닿는다 = (f) => {
-    const p = String(f).replace(/\\/g, '/');
+    const p = String(f).replace(/\\/g, '/').replace(/^"|"$/g, '');
     if (빌드가스스로쓰는것.includes(p)) return false;   /* 아래 주석을 본다 */
-    if (/^(src|public|content)\//.test(p)) return true;
-    if (/^(astro\.config|package\.json|package-lock\.json|tsconfig)/.test(p)) return true;
-    return false;
+    if (안닿는곳.test(p)) return false;
+    return true;                                       /* 🔴 모르는 것은 «닿는다» */
   };
   return (파일들 ?? []).filter(닿는다);
 }
+
+/**
+ * 🔴🔴 **거르는 목록이다. 허용 목록이 아니다.**
+ *
+ * [2026-11-18 · 5번] 처음에 `src|public|content` 만 「닿는다」로 잡는 허용 목록으로 썼다.
+ * 그러면 **모르는 것이 「안 닿는다」가 된다** — 내일 지면 자료가 `data/` 로 새로 생기면
+ * 그 변경을 못 보고 옛 묶음을 라이브로 내보낸다. 허용 목록은 틀릴 때 «나쁜 쪽»으로 틀린다.
+ *
+ * ⚠ 형제 파일이 같은 물음에 이미 거르는 목록으로 답하고 있었다 —
+ *   `올린다-지어진지면.mjs` 의 `깨끗한가()`(75줄). 둘이 어긋나 있었다.
+ *   그 자가 겪어서 적어 둔 것까지 함께 가져온다 —
+ *   **git 은 한글 경로를 따옴표로 감싸 낸다.** 따옴표를 안 벗기면 이 거르개가 통째로 헛돈다.
+ *
+ * ⛔ `scripts/` 는 **빼지 않는다.** 짓는 자(`build-once.mjs`)가 거기 있다.
+ *   「이 스크립트는 지면과 상관없을 것」은 짐작이다 — 짐작으로 빼면 옛 판이 나간다.
+ *   스크립트를 고쳐서 한 번 더 짓는 것이 옛 지면을 내보내는 것보다 싸다.
+ */
+export const 안닿는곳 = /^(docs|logs|archive|tmp|dist|out)\/|\.(log|tsv)$/;
 
 /**
  * 🔴 **빌드가 돌면서 스스로 다시 쓰는 파일.** `src/` 밑이지만 사람이 고친 것이 아니다.
@@ -89,7 +106,16 @@ function 자가시험() {
   const 봄 = []; const 본다 = (이름, 참) => 봄.push({ 이름, 참 });
   /* 🔴 14:42 에 올린 묶음을 두고 「옛 판」으로 서 버린 그 자리 */
   본다('⑧ 기록 파일만 바뀐 것은 지면에 안 닿는다',
-    지면에닿는것(['docs/indexnow-보낸기록.tsv', 'docs/보낸메일.tsv', 'scripts/ping-indexnow.mjs']).length === 0);
+    지면에닿는것(['docs/indexnow-보낸기록.tsv', 'docs/보낸메일.tsv']).length === 0);
+  /* 🔴 모르는 것을 「안 닿는다」로 읽으면 옛 지면이 라이브로 나간다 */
+  본다('⑧-나 모르는 자리는 «닿는다»로 친다',
+    지면에닿는것(['data/새자료.json', '어디에도없던곳/무엇.json']).length === 2);
+  본다('⑧-다 scripts 는 빼지 않는다 — 짓는 자가 거기 있다',
+    지면에닿는것(['scripts/build-once.mjs']).length === 1);
+  /* ⚠ git 은 한글 경로를 따옴표로 감싸 낸다 — 형제 파일이 겪어서 적어 둔 것이다 */
+  본다('⑧-라 따옴표로 감싼 한글 경로도 가린다',
+    지면에닿는것(['"docs/보낸메일.tsv"']).length === 0
+    && 지면에닿는것(['"src/pages/100y/index.astro"']).length === 1);
   본다('⑨ src 가 바뀌면 지면에 닿는다',
     지면에닿는것(['docs/보낸메일.tsv', 'src/pages/100y/region/[slug].astro']).length === 1);
   본다('⑩ 윈도 역슬래시 길도 가린다',
