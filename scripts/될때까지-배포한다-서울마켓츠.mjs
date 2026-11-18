@@ -48,8 +48,36 @@ export function 닿았나(도장글, 바라는커밋) {
   return a.startsWith(b) || b.startsWith(a);
 }
 
+/**
+ * 🔴 바뀐 파일 가운데 **지은 지면이 달라지는 것**만 골라낸다.
+ *
+ * ⛔ 넓게 잡는다. 「이건 아마 안 닿을 것」이라고 빼지 않는다 —
+ *   빼서 틀리면 옛 지면이 라이브로 나가고, 넣어서 틀려 봐야 빌드 한 번 더다.
+ * ⚠ `scripts/` 는 뺀다. 짓는 자(`build-once.mjs`)는 scripts 에 있지만 그것이 바뀌면
+ *   어차피 빌드를 다시 돌리는 자리다. 여기서 재는 것은 «기록 커밋이 끼었나»뿐이다.
+ */
+export function 지면에닿는것(파일들) {
+  const 닿는다 = (f) => {
+    const p = String(f).replace(/\\/g, '/');
+    if (/^(src|public|content)\//.test(p)) return true;
+    if (/^(astro\.config|package\.json|package-lock\.json|tsconfig)/.test(p)) return true;
+    return false;
+  };
+  return (파일들 ?? []).filter(닿는다);
+}
+
 function 자가시험() {
   const 봄 = []; const 본다 = (이름, 참) => 봄.push({ 이름, 참 });
+  /* 🔴 14:42 에 올린 묶음을 두고 「옛 판」으로 서 버린 그 자리 */
+  본다('⑧ 기록 파일만 바뀐 것은 지면에 안 닿는다',
+    지면에닿는것(['docs/indexnow-보낸기록.tsv', 'docs/보낸메일.tsv', 'scripts/ping-indexnow.mjs']).length === 0);
+  본다('⑨ src 가 바뀌면 지면에 닿는다',
+    지면에닿는것(['docs/보낸메일.tsv', 'src/pages/100y/region/[slug].astro']).length === 1);
+  본다('⑩ 윈도 역슬래시 길도 가린다',
+    지면에닿는것(['src\\lib\\csat-province.ts']).length === 1);
+  본다('⑪ public 과 package.json 도 지면에 닿는다',
+    지면에닿는것(['public/robots.txt', 'package.json']).length === 2);
+  본다('⑫ 빈 목록은 안 닿는다', 지면에닿는것([]).length === 0 && 지면에닿는것(null).length === 0);
   본다('① 도장에서 커밋을 읽는다', 도장커밋('# 머리\n커밋=118c780a7\n온커밋=118c780a70ed') === '118c780a7');
   본다('② 커밋 줄이 없으면 null', 도장커밋('아무것도 없다') === null);
   본다('③ 빈 글도 null', 도장커밋('') === null && 도장커밋(null) === null);
@@ -121,12 +149,32 @@ if (닿았나(await 도장읽기(), 바라는커밋)) {
     process.exit(1);
   }
   if (!닿았나('커밋=' + 지은커밋, 바라는커밋)) {
-    console.log('🔴 **올린 것이 옛 판이다** — 올린 커밋 ' + 지은커밋 + ' · 바라는 커밋 ' + 바라는커밋);
-    console.log('   ⛔ 이대로 누르면 컨테이너가 «옛 묶음»을 받아서 편다. 몇 번을 눌러도 같다.');
-    console.log('   ⇒ 먼저 이것을 돌린다 —  node scripts/올린다-지어진지면.mjs');
-    process.exit(1);
+    /* 🔴 [2026-11-18 · 5번] 커밋이 다르다고 **다 옛 판인 것은 아니다.**
+       이 저장소는 매시 예약이 기록 파일을 저절로 커밋한다. 15분짜리 빌드를 마치면
+       그 사이에 기록 커밋이 한둘 올라와 있고, HEAD 만 보면 **방금 올린 묶음이 옛 판이 된다.**
+       실제로 14:42 에 올린 묶음을 두고 「옛 판이다」로 서 버렸다 —
+       그 사이 바뀐 것은 `docs/*.tsv` 둘과 `scripts/ping-indexnow.mjs` 뿐이었다.
+       ⇒ **지면에 닿는 것이 바뀌었나**를 본다. 안 바뀌었으면 올린 묶음이 곧 최신이다.
+       ⛔ 못 가려내면(커밋을 모른다 등) 옛 판으로 친다. 모르는 것을 통과로 읽지 않는다. */
+    let 바뀐것 = null;
+    try {
+      바뀐것 = execFileSync('git', ['diff', '--name-only', 지은커밋 + '..HEAD'],
+        { cwd: 뿌리, encoding: 'utf8' }).split('\n').map((s) => s.trim()).filter(Boolean);
+    } catch (e) { 바뀐것 = null; }
+    const 지면이바뀌었나 = 바뀐것 === null ? true : 지면에닿는것(바뀐것).length > 0;
+    if (지면이바뀌었나) {
+      console.log('🔴 **올린 것이 옛 판이다** — 올린 커밋 ' + 지은커밋 + ' · 바라는 커밋 ' + 바라는커밋);
+      if (바뀐것 === null) console.log('   ⚠ 무엇이 바뀌었는지 «못 가렸다» — 옛 판으로 친다');
+      else for (const f of 지면에닿는것(바뀐것).slice(0, 8)) console.log('   · ' + f);
+      console.log('   ⛔ 이대로 누르면 컨테이너가 «옛 묶음»을 받아서 편다. 몇 번을 눌러도 같다.');
+      console.log('   ⇒ 먼저 이것을 돌린다 —  node scripts/올린다-지어진지면.mjs');
+      process.exit(1);
+    }
+    console.log('✅ 올린 것이 최신이다 — ' + 지은커밋
+      + ' (HEAD 는 ' + 바라는커밋 + ' 지만 그 사이 ' + 바뀐것.length + '개는 **지면에 안 닿는다**)');
+  } else {
+    console.log('✅ 올린 것이 최신이다 — ' + 지은커밋);
   }
-  console.log('✅ 올린 것이 최신이다 — ' + 지은커밋);
 }
 
 for (let 회 = 1; 회 <= 최대; 회 += 1) {

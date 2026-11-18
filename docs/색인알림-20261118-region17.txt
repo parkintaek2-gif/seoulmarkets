@@ -4,6 +4,14 @@
 # ⚠ 주소에 한글이 들어 있다 — 셸 인자로 올리지 않는다. 이 파일을 넘긴다.
 #     node scripts/ping-indexnow.mjs --host 100yearmap.com --주소파일 docs/색인알림-20261118-region17.txt
 # ⚠ 글자 꼴은 사이트맵과 같다 — 사이트맵이 토막마다 encodeURIComponent 를 건다(sitemap.xml.ts 90줄).
+#
+# ⭐ 아래 csat 두 장을 여기에 «같이» 넣었다 — 한 호스트를 같은 날 두 번 두드리지 않는다.
+#   보내는 자리가 하나여야 `docs/indexnow-보낸기록.tsv` 에 한 줄로 남고 11-22 에 셀 때 깨끗하다.
+#   두 장은 제목에 사람이 치는 꼬리말(「비율」)을 넣은 것이다. 네이버에 쳐서 0개인 것을 보고 넣었다.
+#   ⛔ 나머지 여섯 장은 **일부러** 안 고쳤다. 대조군이 없으면 무엇이 들게 했는지 못 가린다.
+#   ⚠ 주소는 지어낸 것이 아니라 라이브 사이트맵에서 받은 것이다 — `/100y/` 가 «안» 붙는다.
+https://100yearmap.com/csat-subject-choice
+https://100yearmap.com/csat-math-choice-by-province
 https://100yearmap.com/region/%EA%B0%95%EC%9B%90
 https://100yearmap.com/region/%EC%84%9C%EC%9A%B8
 https://100yearmap.com/region/%EC%9D%B8%EC%B2%9C
