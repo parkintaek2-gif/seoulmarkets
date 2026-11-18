@@ -34,6 +34,7 @@ const 뿌리 = path.join(여기, '..');
 
 /** 가벼운 화면 하나. 기사등록 화면은 무겁고 임시저장을 건드릴 수 있어 쓰지 않는다 */
 export const 살필주소 = 'https://cms.jbnews.com/news/adminArticleListForm.html';
+export const 로그인주소 = 'https://cms.jbnews.com/admin/adminLoginForm.html';
 export const 기록길 = path.join(뿌리, 'docs', '중부매일-접속기록.tsv');
 export const 알림간격분 = 180;
 
@@ -46,10 +47,33 @@ export function 직접불렸나(argv1 = process.argv[1], 나 = import.meta.url) 
   } catch { return false; }
 }
 
-/** 로그인 화면으로 넘어갔나 */
-export function 끊겼나(어디) {
-  return /adminLoginForm|loginForm|\/login/i.test(String(어디 ?? ''));
+/**
+ * 🔴🔴 접속이 살아 있나.
+ *
+ * ⛔ 2026-11-18 에 **거짓 초록불**을 냈다. 「로그인 화면이 아니면 성하다」로 쟀는데,
+ *   cms.jbnews.com 은 접속이 끊기면 로그인 화면을 주지 않고 **공개 홈(www.jbnews.com)으로
+ *   튕긴다.** 그래서 끊긴 채로 「접속이 살아 있다」가 세 번 찍혔다.
+ *
+ * ⇒ 재는 자리를 바꾼다 — 「무엇이 아닌가」가 아니라 **「관리 화면이 실제로 떴나」**다.
+ *   ① 끝에 선 주소가 cms.jbnews.com 이어야 하고
+ *   ② 관리 화면의 표가 보여야 한다(제목 칸이나 편집기).
+ *   목록 화면에는 편집기가 없으므로 둘 중 하나면 된다.
+ */
+export function 살아있나(것) {
+  if (!것 || typeof 것 !== 'object') return false;
+  const 주소 = String(것.주소 ?? '');
+  if (!/^https:\/\/cms\.jbnews\.com\//i.test(주소)) return false;
+  if (/adminLoginForm|loginForm/i.test(주소)) return false;
+  return !!(것.제목칸 || 것.편집기 || 것.목록표);
 }
+
+/** 화면에서 긁어 오는 말 — 한 곳에만 적는다 */
+export const 살피는말 = `(() => JSON.stringify({
+  주소: location.href,
+  제목칸: !!document.querySelector('input[name=title]'),
+  편집기: !!(window.CKEDITOR && CKEDITOR.instances && CKEDITOR.instances.FCKeditor1),
+  목록표: !!document.querySelector('form[name=searchForm], a[href*=adminArticleWriteForm]')
+}))()`;
 
 /** 마지막으로 알린 때부터 몇 분 지났나. 기록이 없으면 Infinity */
 export function 지난분(줄들, 지금 = new Date()) {
@@ -76,6 +100,29 @@ export function 기록하기(상태, 덧말) {
   return 줄;
 }
 
+/**
+ * 🔴🔴 끊겼으면 **스스로 다시 들어간다.**
+ *
+ * 로그인 화면에는 「아이디 저장」만 있고 「로그인 유지」가 없다(2026-11-18 실측).
+ * 그러니 접속은 언젠가 반드시 끊긴다. 끊길 때마다 사장님을 부르면 자정에 깨우게 된다.
+ * ⇒ 크롬이 저장해 둔 아이디·비밀번호를 **크롬이 스스로 채우게** 두고, 단추만 누른다.
+ *
+ * ⛔ 비밀번호를 읽지 않는다. 적지 않는다. 어디로도 보내지 않는다.
+ *   이 글에서 비밀번호에 대해 아는 것은 **「비어 있나 아닌가」** 하나뿐이다.
+ */
+export const 들어가는말 = `(() => {
+  const i = document.querySelector('#user_id');
+  const p = document.querySelector('#user_pw');
+  if (!i || !p) return JSON.stringify({ 됨: false, 왜: '칸이 없다' });
+  /* ⛔ 값을 내보내지 않는다. 길이가 0 인지만 본다 */
+  if (!String(p.value || '').length) return JSON.stringify({ 됨: false, 왜: '비밀번호가 안 채워졌다' });
+  if (!String(i.value || '').length) return JSON.stringify({ 됨: false, 왜: '아이디가 안 채워졌다' });
+  const b = document.querySelector('button[type=submit], input[type=submit]');
+  if (!b) return JSON.stringify({ 됨: false, 왜: '로그인 단추가 없다' });
+  b.click();
+  return JSON.stringify({ 됨: true, 왜: '눌렀다' });
+})()`;
+
 /** 끊겼다고 알린다. ⛔ 메일이 안 나가도 이 자가 터지지 않는다 */
 export function 끊겼다고알린다() {
   const 글길 = path.join(뿌리, 'docs', '편지-중부매일-접속끊김.txt');
@@ -92,7 +139,7 @@ export function 끊겼다고알린다() {
     '',
     '■ 제가 하고 있는 것',
     '  10분마다 CMS 를 열어 접속을 이어 두고 있습니다.',
-    '  끊긴 것을 자정이 아니라 지금 알려 드리는 까닭이 그것입니다.',
+    '  끊긴 것을 자정이 아니라 지금 알려 드리는 이유가 그것입니다.',
     '',
     '5번 드림',
   ].join('\n');
@@ -113,10 +160,24 @@ if (직접불렸나() && process.argv.includes('--자가시험')) {
   let 통 = 0; const 실 = [];
   const 검 = (이름, 참) => { if (참) 통 += 1; else 실.push(이름); };
 
-  검('🔴 로그인 화면을 끊긴 것으로 본다', 끊겼나('https://cms.jbnews.com/admin/adminLoginForm.html'));
-  검('🔴 목록 화면은 끊긴 것이 아니다', !끊겼나(살필주소));
-  검('⛔ 빈 값은 끊긴 것이 아니다', !끊겼나('') && !끊겼나(null) && !끊겼나(undefined));
-  검('대소문자를 가리지 않는다', 끊겼나('HTTPS://CMS.JBNEWS.COM/ADMIN/ADMINLOGINFORM.HTML'));
+  /* 🔴🔴 2026-11-18 에 거짓 초록불을 낸 바로 그 꼴 — 공개 홈으로 튕긴 것 */
+  검('🔴 공개 홈으로 튕기면 끊긴 것이다',
+    !살아있나({ 주소: 'https://www.jbnews.com/', 제목칸: false, 편집기: false, 목록표: false }));
+  검('🔴 공개 홈의 관리 주소도 끊긴 것이다',
+    !살아있나({ 주소: 'https://www.jbnews.com/news/adminArticleListForm.html', 목록표: true }));
+  검('🔴 로그인 화면은 끊긴 것이다',
+    !살아있나({ 주소: 'https://cms.jbnews.com/admin/adminLoginForm.html', 목록표: true }));
+  검('🔴 cms 에서 제목 칸이 보이면 살아 있다',
+    살아있나({ 주소: 'https://cms.jbnews.com/news/adminArticleWriteForm.html?mode=input', 제목칸: true }));
+  검('🔴 cms 목록 화면도 살아 있는 것이다',
+    살아있나({ 주소: 살필주소, 목록표: true }));
+  검('⛔ 주소만 cms 고 표가 하나도 없으면 끊긴 것이다',
+    !살아있나({ 주소: 살필주소, 제목칸: false, 편집기: false, 목록표: false }));
+  검('⛔ 빈 것은 끊긴 것이다', !살아있나(null) && !살아있나(undefined) && !살아있나('성하다'));
+  검('⛔ 생김새만 흉내 낸 주소에 속지 않는다',
+    !살아있나({ 주소: 'https://cms.jbnews.com.evil.example/x', 제목칸: true }));
+  검('살피는 말이 세 가지를 다 본다',
+    /제목칸/.test(살피는말) && /편집기/.test(살피는말) && /목록표/.test(살피는말));
 
   검('기록이 없으면 Infinity', 지난분([]) === Infinity);
   검('알린 줄이 없으면 Infinity', 지난분(['2026-11-18 20:00\t성하다\t']) === Infinity);
@@ -141,6 +202,17 @@ if (직접불렸나() && process.argv.includes('--자가시험')) {
   검('기록 자리가 docs 안이다', 기록길.includes(path.join('docs', '중부매일-접속기록.tsv')));
   검('⛔ 비밀번호를 다루는 곳이 없다',
     !fs.readFileSync(fileURLToPath(import.meta.url), 'utf8').match(/password\s*=|\.value\s*=\s*["'][^"']{4,}/));
+
+  /* 🔴🔴 스스로 다시 들어가는 말 — ⛔ 비밀번호가 밖으로 나가지 않아야 한다 */
+  검('🔴 다시 들어가는 말이 단추를 누른다', /\.click\(\)/.test(들어가는말));
+  검('⛔ 비밀번호 값을 내보내지 않는다 — 길이만 본다',
+    /String\(p\.value \|\| ''\)\.length/.test(들어가는말)
+    && !/비밀번호: *p\.value|pw: *p\.value|값: *p\.value/.test(들어가는말));
+  검('⛔ 비밀번호를 채워 넣지 않는다 — 크롬이 채우게 둔다',
+    !/p\.value\s*=/.test(들어가는말) && !/user_pw[^\n]*=\s*["']/.test(들어가는말));
+  검('🔴 안 채워졌으면 누르지 않는다',
+    /비밀번호가 안 채워졌다/.test(들어가는말) && /아이디가 안 채워졌다/.test(들어가는말));
+  검('🔴 로그인 주소가 cms 다', /^https:\/\/cms\.jbnews\.com\//.test(로그인주소));
 
   if (실.length) { console.error('🔴 실패 ' + 실.length + '개\n - ' + 실.join('\n - ')); process.exit(1); }
   console.log('✅ 중부매일 접속 유지 — 자가시험 ' + 통 + '개 통과');
@@ -177,22 +249,52 @@ if (!직접불렸나()) {
     try {
       await 붙음.보내기('Runtime.enable');
       const 답 = await 붙음.보내기('Runtime.evaluate',
-        { expression: 'location.href', returnByValue: true }, 20000);
-      const 어디 = String(답?.result?.value ?? '');
+        { expression: 살피는말, returnByValue: true }, 20000);
+      let 것 = null;
+      try { 것 = JSON.parse(String(답?.result?.value ?? '')); } catch { 것 = null; }
+      const 어디 = 것 ? String(것.주소) : '(못 읽었다)';
       console.log('■ 지금 어디 — ' + 어디);
 
-      if (끊겼나(어디)) {
+      if (!살아있나(것)) {
+        /* 🔴 먼저 스스로 다시 들어가 본다. 사장님을 부르는 것은 그 다음이다 */
+        console.log('🔴 관리 화면이 안 떴다 — 스스로 다시 들어가 본다');
+        await 붙음.보내기('Page.enable');
+        await 붙음.보내기('Page.navigate', { url: 로그인주소 });
+        await new Promise((s) => setTimeout(s, 7000));
+        const 눌 = await 붙음.보내기('Runtime.evaluate',
+          { expression: 들어가는말, returnByValue: true }, 20000);
+        let 눌것 = null;
+        try { 눌것 = JSON.parse(String(눌?.result?.value ?? '')); } catch { 눌것 = null; }
+        console.log('   ■ 다시 들어가기 — ' + (눌것 ? 눌것.왜 : '못 읽었다'));
+
+        if (눌것 && 눌것.됨) {
+          await new Promise((s) => setTimeout(s, 8000));
+          await 붙음.보내기('Page.navigate', { url: 살필주소 });
+          await new Promise((s) => setTimeout(s, 7000));
+          const 다 = await 붙음.보내기('Runtime.evaluate',
+            { expression: 살피는말, returnByValue: true }, 20000);
+          let 다것 = null;
+          try { 다것 = JSON.parse(String(다?.result?.value ?? '')); } catch { 다것 = null; }
+          if (살아있나(다것)) {
+            console.log('✔ 스스로 다시 들어갔다');
+            기록하기('되들어갔다', String(다것.주소).slice(0, 80));
+            끝값 = 0;
+          }
+        }
+      }
+
+      if (끝값 !== 0 && !살아있나(것)) {
         const 줄들 = 기록읽기();
         if (지난분(줄들) >= 알림간격분) {
           console.log('🔴 끊겼다 — 알린다');
           console.log(끊겼다고알린다());
-          기록하기('알렸다', '로그인 화면으로 넘어갔다');
+          기록하기('알렸다', '관리 화면이 안 떴다 — ' + 어디.slice(0, 70));
         } else {
           console.log('🔴 끊겼다 — 세 시간이 안 지나 이번엔 안 알린다');
           기록하기('끊겼다', '세 시간이 안 지나 안 알렸다');
         }
         끝값 = 1;
-      } else {
+      } else if (살아있나(것)) {
         console.log('✔ 접속이 살아 있다');
         기록하기('성하다', 어디.slice(0, 80));
         끝값 = 0;
