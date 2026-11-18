@@ -20,6 +20,13 @@
  *   node scripts/띄운다-서버.mjs
  *   node scripts/띄운다-서버.mjs --자가시험
  */
+/* 🔴 [2026-11-18 17:2x · 5번] 이미지를 «일부러» 한 글자 바꾼다 — 시험이다.
+   오늘 배포를 여섯 번 걸었는데 여섯 번 다 빌드는 돌고 통은 08:36 그대로였다.
+   a2b9cbc2a(아침에 나간 판) 이후 package.json·Dockerfile·.cloudtype·server.mjs·
+   이 파일까지 «뜨는 데 쓰이는 파일»이 하나도 안 바뀌었다. 그래서 남은 셈은 하나다 —
+   지어진 이미지가 아침 것과 사실상 같아서 플랫폼이 «바꿀 것이 없다»로 보는 것인가.
+   ⇒ 이 주석 한 덩이로 이미지를 다르게 만든다. 통이 다시 뜨면 그 셈이 맞은 것이고,
+     그래도 안 뜨면 그 셈도 버린다. ⛔ 맞든 틀리든 이 주석은 지워도 된다. */
 import fs from 'node:fs';
 import os from 'node:os';
 import path from 'node:path';
