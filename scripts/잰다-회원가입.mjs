@@ -33,13 +33,18 @@ export function 열쇠를읽는다(env글, 이름) {
 
 /** 창구가 준 것을 「날 → 건수」로 고른다. ⛔ 못 읽으면 null 이다 */
 export function 날별로고른다(받은것) {
-  const 들 =받은것?.signups;
+  /* 🔴 [2026-11-19] 서버가 모양을 바꿨다. signups 가 배열이 아니라 객체가 되고
+     날짜별 줄이 signups.날별 로 한 겹 들어갔다. 칸 이름도 count 가 아니라 cnt 다.
+     읽는 쪽이 안 따라가 「못 쟀다」만 내고 있었다 — 사장님 「이게 보고야. 할 일 하고 보고해」
+     ⇒ 두 모양을 다 읽는다. 옛 모양을 버리지 않는다. */
+  const 속 = 받은것?.signups;
+  const 들 = Array.isArray(속) ? 속 : (Array.isArray(속?.날별) ? 속.날별 : null);
   if (!Array.isArray(들)) return null;
   const 표 = new Map();
   for (const x of 들) {
     if (!x) continue;
     const 날 = String(x.day ?? x.날 ?? x.date ?? '').slice(0, 10);
-    const 수 = Number(x.count ?? x.수 ?? x.n);
+    const 수 = Number(x.count ?? x.cnt ?? x.수 ?? x.n);
     if (!/^\d{4}-\d{2}-\d{2}$/.test(날) || !Number.isFinite(수)) continue;
     표.set(날, (표.get(날) || 0) + Math.max(0, Math.floor(수)));
   }
@@ -120,7 +125,36 @@ if (process.argv[1] && import.meta.url === pathToFileURL(process.argv[1]).href) 
 
   const 표 = 날별로고른다(받은것);
   if (!표) {
-    console.log('⬜ 창구가 준 것을 못 읽었다 — 모양이 바뀌었을 수 있다. «못 쟀다»다');
+    console.log('⬜ 서버가 준 것을 못 읽었습니다 — 모양이 바뀌었을 수 있습니다. «못 쟀다»입니다');
+    /* 🔴 [2026-11-19 · 사장님] 「이게 보고야. 할 일 하고 보고해」
+       「못 읽었다」로 끝내면 다음 사람도 똑같이 못 읽는다. 무엇이 왔는지 적어야 고친다.
+       ⛔ 손님 이름·메일 주소는 한 글자도 찍지 않는다 — 칸 «이름»과 수만 본다. */
+    try {
+      const 키들 = 받은것 && typeof 받은것 === 'object' ? Object.keys(받은것) : [];
+      console.log('   받은 것의 칸 이름 — ' + (키들.length ? 키들.join(' · ') : '(객체가 아닙니다)'));
+      for (const k of 키들) {
+        const v = 받은것[k];
+        if (Array.isArray(v)) {
+          console.log(`   · ${k} — 배열 ${v.length}개` +
+            (v[0] && typeof v[0] === 'object' ? ', 한 칸의 이름들: ' + Object.keys(v[0]).join(',') : ''));
+        } else if (v && typeof v === 'object') {
+          console.log(`   · ${k} — 객체, 칸 이름들: ${Object.keys(v).slice(0, 10).join(',')}`);
+          for (const [k2, v2] of Object.entries(v).slice(0, 10)) {
+            if (Array.isArray(v2)) {
+              console.log(`     · ${k}.${k2} — 배열 ${v2.length}개` +
+                (v2[0] && typeof v2[0] === 'object' ? ', 한 칸의 이름들: ' + Object.keys(v2[0]).join(',') : ''));
+            } else if (v2 && typeof v2 === 'object') {
+              console.log(`     · ${k}.${k2} — 객체, 칸 이름들: ${Object.keys(v2).slice(0, 8).join(',')}`);
+            } else {
+              console.log(`     · ${k}.${k2} — ${typeof v2 === 'number' ? v2 : typeof v2}`);
+            }
+          }
+        } else {
+          console.log(`   · ${k} — ${typeof v}`);
+        }
+      }
+      console.log('   ⇒ 이 자는 받은것.signups 를 배열로 기다립니다. 위 이름과 맞춰 고칩니다');
+    } catch (e) { console.log('   (무엇이 왔는지도 못 읽었습니다)'); }
     process.exit(1);
   }
 
