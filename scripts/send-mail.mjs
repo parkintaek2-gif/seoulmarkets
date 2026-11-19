@@ -1446,6 +1446,33 @@ if (내가실행됐다) {
         process.exit(1);
       }
       첨부들.push({ 이름: path.basename(온길), 내용: readFileSync(온길) });
+
+      /* 🔴🔴 [2026-11-19 · 사장님] 「반말이네 미쳤구나」 · 「업무보고가 반말. 그러니 내가 더 뭐라했지」
+         이 자는 «본문»만 보고 첨부는 한 글자도 안 봤다. 그래서 반말투성이 보고서가
+         PDF 로 붙어 두 번 나갔다. 사장님은 첨부를 읽으신다 — 본문이 아니라 그것이 보고다.
+         ⇒ 첨부도 본다. PDF 는 글자를 못 읽으니 «같은 이름의 원본»(.md/.txt)을 찾아 본다.
+         ⛔ 원본을 못 찾으면 그냥 지나간다. 못 본 것을 「깨끗하다」로 읽지 않는다 — 말만 한다. */
+      try {
+        const 볼것 = /\.(md|txt)$/i.test(온길)
+          ? 온길
+          : ['.md', '.txt'].map((확) => 온길.replace(/\.[^.]+$/, 확)).find((x) => existsSync(x));
+        if (!볼것) {
+          console.log(`   ⬜ ${path.basename(온길)} 의 말투는 못 봤다 — 글자 원본(.md·.txt)이 없다`);
+        } else {
+          const { 찾는다: 반말찾기 } = await import('./반말이-들었나.mjs');
+          const 걸린것 = 반말찾기(readFileSync(볼것, 'utf8'));
+          if (걸린것.length) {
+            console.log(`\n🔴 첨부에 반말이 ${걸린것.length}곳 있다 — ${path.basename(볼것)}  **안 보낸다.**`);
+            for (const x of 걸린것.slice(0, 8)) console.log(`   ${String(x.줄).padStart(4)}줄  ${x.글}`);
+            if (걸린것.length > 8) console.log(`   … 그 밖 ${걸린것.length - 8}곳`);
+            console.log('   사장님 2026-11-19 — 「업무보고가 반말」');
+            console.log('   ⇒ 「~다」가 아니라 「~습니다」로 끝내고, PDF·워드는 «다시 만들어» 붙인다.');
+            process.exit(1);
+          }
+        }
+      } catch (e) {
+        console.log('   ⬜ 첨부 말투를 못 쟀다 — ' + String(e.message).slice(0, 60));
+      }
     }
     /* 🔴🔴 [2026-11-11 · 사장님 「이메일 못받았는데」]
        여기가 **원본 바이트**를 재고 있었다. 메일에 실리는 것은 base64 로 감싼 것이라
