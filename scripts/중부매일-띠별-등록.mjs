@@ -474,6 +474,57 @@ async function 가운데정렬넣기(접속) {
 }
 
 
+/* ─────────────────────────────────────────────────────────────────────────
+   🔴🔴 [2026-11-19 · 사장님] 「**대표 이미지에만 넣으라고**」
+     「사진 선택 > 크기 메뉴 바로 위 > 링크」 · 「다 넣지말고 내일 거에만」 「테스트용」
+   ⇒ 대표 사진 **한 장**에만 우리 지면 주소를 건다. 띠 그림 열두 장에는 걸지 않는다 —
+     11-19 에 열두 장에 걸었다가 사장님 말씀대로 거둬들였다.
+   ⛔ 날을 늘리는 것은 사장님 말씀이 있을 때만 한다. 전부에 걸라 하시면
+     `링크걸날인가` 한 줄만 고친다.
+   ⚠ 사장님 「저장만 하고 나오는 건 상관없어. 예약시간이 안되면 외부 표출안됨」
+   ───────────────────────────────────────────────────────────────────────── */
+export const 대표사진링크 = 'https://klifemap.ai/unse/';
+export const 링크넣을날 = new Set(['2026-11-20']);
+
+export function 링크걸날인가(일자문자열) {
+  return 링크넣을날.has(String(일자문자열 ?? ''));
+}
+
+/**
+ * 대표 사진(신문사 사진 `/news/photo/…`) 한 장을 <a> 로 감싼다.
+ * ⛔ 본문 글은 한 글자도 바꾸지 않는다 — 그림을 감싸기만 한다
+ * ⛔ 두 번 감싸지 않는다 · ⛔ 띠 그림(klifemap.ai/astro/…)은 건드리지 않는다
+ */
+export function 대표링크걸기(글, 주소 = 대표사진링크) {
+  let 센것 = 0;
+  const 바뀐것 = String(글 ?? '').replace(
+    /(<a\b[^>]*>\s*)?(<img\b[^>]*src="\/news\/photo\/[^"]+"[^>]*?>)/g,
+    (전체, 앞, 그림) => {
+      if (앞) return 전체;
+      if (센것 >= 1) return 전체;
+      센것 += 1;
+      return '<a href="' + 주소 + '" target="_blank">' + 그림 + '</a>';
+    });
+  return { 글: 바뀐것, 센것 };
+}
+
+async function 대표사진에링크(접속, 일자문자열) {
+  if (!링크걸날인가(일자문자열)) return '안 거는 날이다 — ' + 일자문자열;
+  const 지금글 = String(await 재기(접속,
+    '(() => (window.CKEDITOR && CKEDITOR.instances && CKEDITOR.instances.FCKeditor1)'
+    + ' ? CKEDITOR.instances.FCKeditor1.getData() : "")', 25000));
+  if (!지금글) return '본문을 못 읽었다';
+  const { 글: 새글, 센것 } = 대표링크걸기(지금글);
+  if (!센것) return '대표 사진을 못 찾았다 — 걸지 않았다';
+  /* 🔴 글자가 바뀌면 멈춘다. 링크는 그림을 감싸는 것이지 글을 고치는 것이 아니다 */
+  const 글만 = (x) => x.replace(/<[^>]*>/g, '').replace(/\s+/g, ' ').trim();
+  if (글만(새글) !== 글만(지금글)) return '🔴 글자가 바뀌어 걸지 않았다';
+  return String(await 재기(접속,
+    '(() => { CKEDITOR.instances.FCKeditor1.setData(' + JSON.stringify(새글) + '); return "걸었다"; })()',
+    30000));
+}
+
+
 /**
  * 🔴🔴 웹출판을 누른다 — 사장님 2026-11-19
  *   「승인 후에 웹출판을 반드시 클릭해야 한다. 제일 오른쪽 위에 있어」
@@ -513,6 +564,26 @@ async function 웹출판누르기(접속) {
 if (직접실행인가() && process.argv.includes('--자체검사')) {
   let 통 = 0; const 실 = [];
   const 검 = (이름, 참) => { if (참) 통 += 1; else 실.push(이름); };
+
+  /* 🔴 사장님 2026-11-19 「대표 이미지에만 넣으라고」 */
+  {
+    const 사진 = '<figure class="photo-layout image photo_1 float-center" data-idxno="1">'
+      + '<img alt="x" src="/news/photo/202611/1516329_1372115_4627.png" />\n<figcaption>x</figcaption></figure>';
+    const 띠그림 = '<p><img src="https://klifemap.ai/astro/ddi-color/01-rat.png" /> <strong>쥐띠</strong></p>';
+    const r = 대표링크걸기(사진 + '\n' + 띠그림);
+    검('대표 사진 한 장을 감싼다', r.센것 === 1
+      && /<a href="https:\/\/klifemap\.ai\/unse\/" target="_blank"><img[^>]*news\/photo/.test(r.글));
+    검('⛔ 띠 그림은 안 감싼다', !/<a[^>]*><img[^>]*ddi-color/.test(r.글));
+    검('사진 틀과 사진 설명은 그대로다', /figure/.test(r.글) && /figcaption/.test(r.글));
+    검('글자는 그대로다', r.글.includes('<strong>쥐띠</strong>'));
+    검('⛔ 두 번 감싸지 않는다', 대표링크걸기(r.글).센것 === 0);
+    검('⛔ 신문사 사진이 둘이어도 한 장만',
+      대표링크걸기(사진 + '<figure><img src="/news/photo/202611/b.png" /></figure>').센것 === 1);
+    검('⛔ 사진이 없으면 아무것도 안 한다', 대표링크걸기(띠그림).센것 === 0);
+    검('🔴 링크 거는 날은 11-20 하루뿐이다',
+      링크넣을날.size === 1 && 링크걸날인가('2026-11-20') && !링크걸날인가('2026-11-21'));
+    검('⛔ 빈 날은 안 건다', !링크걸날인가(null) && !링크걸날인가(''));
+  }
 
   검('날 읽기', JSON.stringify(일자해석('2026-11-20')) === JSON.stringify({ y: 2026, m: 11, d: 20 }));
   검('⛔ 꼴이 아니면 null', 일자해석('2026/11/20') === null && 일자해석(null) === null);
@@ -782,6 +853,11 @@ try {
       내종류: '띠별', 기사번호: 이번호, 내날: 일자문자열, 몇건: 2,
     })));
   } catch (묶음오류) { console.log('⚠ 묶음·관련을 못 넣었다 — ' + String(묶음오류.message).slice(0, 80)); }
+
+  /* 🔴 사장님 2026-11-19 「대표 이미지에만 넣으라고」 — 저장 «전»에 건다.
+     사진이 본문에 들어온 뒤라야 감쌀 것이 있다. 그래서 가운데 정렬 뒤, 저장 앞이다 */
+  try { console.log('■ 대표 사진 링크 — ' + (await 대표사진에링크(붙음, 일자문자열))); }
+  catch (링크오류) { console.log('⚠ 대표 사진에 링크를 못 걸었다 — ' + String(링크오류.message).slice(0, 80)); }
 
   const 저장 = [
     '(() => {',
