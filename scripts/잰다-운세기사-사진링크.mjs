@@ -148,5 +148,15 @@ async function 본일() {
   process.exitCode = 다성한가 ? 0 : 1;
 }
 
-if (process.argv.includes('--자체검사')) 자체검사();
-else await 본일();
+/* 🔴 남이 불러 쓸 때 이 파일의 검사가 대신 돌면 안 된다 — 2026-11-19 에
+   `중부매일-사진링크-채운다 --자체검사` 가 이 파일의 12가지를 먼저 찍었다.
+   ⛔ `includes(이름)` 으로 재지 않는다. 파일 이름이 겹치면 또 걸린다 */
+function 직접실행인가() {
+  const 이름 = String(process.argv[1] || '').replace(/\\/g, '/').split('/').pop();
+  return 이름 === '잰다-운세기사-사진링크.mjs';
+}
+
+if (직접실행인가()) {
+  if (process.argv.includes('--자체검사')) 자체검사();
+  else await 본일();
+}
