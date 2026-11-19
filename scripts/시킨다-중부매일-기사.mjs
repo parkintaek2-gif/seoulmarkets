@@ -169,7 +169,23 @@ if (내가진입점) {
     /* 🔴 [2026-09-29] 여기서 `process.exit()` 을 부르면 아래 `finally` 가 «안 돈다» —
        그래서 탭이 남는다. 오늘 그렇게 쌓인 탭이 157개가 되어 PC 메모리가 89% 까지 찼고
        배경 명령 셋이 죽었다. ⛔ 브라우저를 연 뒤에는 exit 하지 않는다. return 한다. */
-    if (!자리) { console.log(`⬜ ${회차번호}시 회차 기록이 없다 — 그 회차가 아직 안 돌았다. 시키지 못했다`); return; }
+    /* 🔴🔴 [2026-11-20] 「안 돌았다」와 「로그인이 끊겼다」를 갈라 적는다.
+       오늘 claude.ai 가 로그아웃돼 회차 지면이 로그인 화면이었는데 이 자리가
+       「그 회차가 아직 안 돌았다」로 찍었다. 거짓 초록불이라 그대로 넘어갈 뻔했다.
+       ⛔ 없는 것을 「안 돌았다」로 읽지 않는다. 무엇이 떴는지를 보고 가른다 */
+    if (!자리) {
+      const 끊겼나 = await page.evaluate(() => /Google로 계속하기|이메일로 계속하기|Continue with Google/
+        .test(document.body.innerText) || /\/login/.test(location.pathname));
+      if (끊겼나) {
+        console.log(`🔴 claude.ai 접속이 끊겼다 — 회차를 열지 못했다. 「안 돌았다」가 아니다`);
+        console.log(`   지금 자리 ${page.url()}`);
+        console.log(`   ⇒ 중부매일 계정(jbnews0001@gmail.com)으로 다시 들어가야 한다`);
+        끝값 = 2;
+        return;
+      }
+      console.log(`⬜ ${회차번호}시 회차 기록이 없다 — 그 회차가 아직 안 돌았다. 시키지 못했다`);
+      return;
+    }
     console.log(`회차 줄  ${자리.글}`);
 
     const 앞 = page.url();
