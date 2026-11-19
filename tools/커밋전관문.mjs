@@ -187,7 +187,12 @@ if (내가실행됐다) {
       '# 커밋 전 관문 — 담긴 KCW 기사의 title·dek 글자 수만 본다 (5번, 2026-09-10)\n' +
       '# 오늘 dek 초과로 «공용 빌드»가 세 번 막혔다. 그래서 검사를 커밋 앞에 둔다.\n' +
       '# 빠져나가려면: git commit --no-verify   ·  떼려면: node tools/커밋전관문.mjs --뗀다\n' +
-      'node "tools/커밋전관문.mjs" || exit 1\n', 'utf8');
+      'node "scripts/직전판.mjs" --찍는다 --조용히 || true\n' +
+      'node "tools/커밋전관문.mjs" || exit 1\n' +
+      '#\n' +
+      '# 🔴 [2026-11-19 · 사장님] 「제 때 보고하면 배포 막힐 일 없잖아」\n' +
+      '#   업무보고를 안 내면 커밋을 막는다. 5번 자리(CLAUDE_SEAT=5)만 막는다.\n' +
+      'node "scripts/보고안내면-커밋막는다.mjs" || exit 1\n', 'utf8');
     try { fs.chmodSync(훅길, 0o755); } catch { /* 윈도에서는 없어도 돈다 */ }
     console.log('✅ 훅을 걸었다 — ' + 훅길);
     for (const 줄 of 끄는법) console.log(줄);
