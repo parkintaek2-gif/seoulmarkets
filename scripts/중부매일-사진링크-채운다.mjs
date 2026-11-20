@@ -88,15 +88,15 @@ function 자체검사() {
 }
 
 /* ── 실제로 건다 ──────────────────────────────────────────────────────── */
-const 편집기있나 = '(() => !!(window.CKEDITOR && CKEDITOR.instances && CKEDITOR.instances.FCKeditor1))';
-const 본문읽기 = '(() => CKEDITOR.instances.FCKeditor1.getData())';
+const 편집기있나 = '(() => !!(window.CKEDITOR && CKEDITOR.instances && CKEDITOR.instances.FCKeditor1))()';
+const 본문읽기 = '(() => CKEDITOR.instances.FCKeditor1.getData())()';
 const 상태읽기 = [
   '(() => JSON.stringify({',
   '  제목: (document.querySelector("[name=title]") || {}).value || "",',
   '  승인: ["recog-e","recog-c","recog-r"].find((id) => (document.getElementById(id) || {}).checked) || "",',
   '  날: (document.querySelector("#embargo_date") || {}).value || "",',
   '  시각: (document.querySelector("#embargo_time") || {}).value || "",',
-  '}))',
+  '}))()',
 ].join('\n');
 const 저장누르기 = [
   '(() => {',

@@ -655,7 +655,19 @@ if (!직접실행인가()) {
 const 자리 = process.argv.indexOf('--날');
 const 날 = 자리 >= 0 ? 일자해석(process.argv[자리 + 1]) : 오늘일자();
 if (!날) { console.error('⛔ --날 뒤에 2026-11-20 꼴로 준다'); process.exit(1); }
-const 승인할까 = !process.argv.includes('--미승인');
+/**
+ * 🔴🔴 [2026-11-20 · 사장님] 「**미승인 하지말고**」 · 「**승인으로 저장**」
+ *
+ *   2026-11-18 에 「샘플을 보시는 동안은 미승인」으로 두었다. 오늘 되돌리셨다.
+ *   ⛔ 예약 작업에 `--미승인` 이 아직 박혀 있는데 예약을 고치려면 사람의 비밀번호가
+ *     필요하다. 예약을 건드리다 깨뜨리는 것보다 **여기서 막는 것**이 낫다.
+ *   ⇒ `--미승인` 이 들어와도 승인으로 간다. 정말 미승인이어야 하면 `--정말미승인` 이다.
+ */
+const 정말미승인 = process.argv.includes('--정말미승인');
+if (process.argv.includes('--미승인') && !정말미승인) {
+  console.log('⚠ --미승인 이 들어왔지만 **승인으로 올린다** — 사장님 2026-11-20 「미승인 하지말고」');
+}
+const 승인할까 = !정말미승인;
 /* 🔴 사장님 2026-11-19 — 노출시간을 걸면 그 시각에 저절로 승인된다 */
 const 노출자리 = process.argv.indexOf('--노출');
 const 노출날 = 노출자리 >= 0 ? process.argv[노출자리 + 1] : null;
@@ -903,7 +915,7 @@ try {
     '    주소: location.href,',
     '    그림수: d.querySelectorAll("img[src*=ddi-color]").length,',
     '    첫줄: t.indexOf(' + JSON.stringify('[중부매일 박인택 기자]') + ') >= 0,',
-    '    도움말: t.indexOf("도움말: KLifeDesign.AI") >= 0,',
+    '    도움말: t.indexOf("도움말:") >= 0 && t.indexOf("KLifeMap.AI") >= 0,',
     '    제목: t.indexOf(' + JSON.stringify(o.제목) + ') >= 0',
     '  });',
     '})()',

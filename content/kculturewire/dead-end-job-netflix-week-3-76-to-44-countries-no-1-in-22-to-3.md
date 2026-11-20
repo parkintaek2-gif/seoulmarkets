@@ -1,7 +1,7 @@
 ---
 title: "Dead-End Job's Third Netflix Week: 76 Countries Down to 44, No. 1 in 22 Down to 3"
 dek: "Netflix's lists for the week ending 15 November 2026 show Dead-End Job at No. 4 on the global non-English TV chart, after No. 1 the week before. Views fell from 8.7 million to 3.7 million. The Devil's Plan season 3 opened at No. 1 in Korea."
-category: drama
+category: titles
 genre: drama
 pubDate: 2026-11-18
 dataAsOf: 2026-11-18T09:30:00+09:00
