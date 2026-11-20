@@ -14,7 +14,7 @@
  * 하는 일
  * ```
  *   ① 그날 원고를 짓는다      klifemap/astro/cms원고.js 가 짓는다 — 글은 한 곳에서만 짓는다
- *   ② 칸을 채운다            제목·부제·본문·사진설명·분류(기획·특집 > 연재)
+ *   ② 칸을 채운다            제목·부제·본문·사진설명·분류(기획·특집 > 운세)
  *   ③ 승인을 켜고 저장한다     recognition = E
  *   ④ 되읽어 판정한다         그림 12장·첫 줄·도움말·제목을 «화면에서» 본다
  *   ⑤ 어긋나면 메일을 보낸다   사장님 지시 — 못한 경우에 알린다
@@ -59,7 +59,10 @@ export function 직접실행인가(argv1 = process.argv[1], 나 = import.meta.ur
 export const 크롬프로필경로 = 'C:\\Users\\User\\AppData\\Local\\klm-cms-chrome';
 export const 등록주소 = 'https://cms.jbnews.com/news/adminArticleWriteForm.html?mode=input';
 export const 큰섹션 = 'S1N29';    /* 기획·특집 */
-export const 작은섹션 = 'S2N157';  /* 연재 */
+/* 🔴 [2026-11-20 · 사장님] 「<섹션분류: 1차섹션: 기획특집, 2차섹션: 운세>로 해」
+   ⚠ 여기에 「연재」라고 적혀 있었는데 CMS 의 실제 라벨은 «운세»다(라이브 실측).
+     값은 처음부터 맞았고 이름만 틀렸다. 이름이 틀리면 다음 사람이 다른 코드를 찾는다. */
+export const 작은섹션 = 'S2N157';  /* 운세 */
 export const 통보주소 = 'parkintaek2@gmail.com';
 
 const 여기 = path.dirname(fileURLToPath(import.meta.url));
@@ -523,7 +526,7 @@ if (직접실행인가() && process.argv.includes('--자체검사')) {
     return t.y === 2026 && t.m === 11 && t.d === 20;
   })());
   검('시각문자열이 KST 꼴이다', 시각문자열(new Date(2026, 10, 20, 0, 1)) === '2026-11-20 00:01');
-  검('분류가 기획·특집 > 연재다', 큰섹션 === 'S1N29' && 작은섹션 === 'S2N157');
+  검('🔴 분류가 기획·특집 > 운세다 (사장님 2026-11-20)', 큰섹션 === 'S1N29' && 작은섹션 === 'S2N157');
   검('등록 주소가 새 기사 자리다', 등록주소.includes('mode=input'));
   검('알릴 곳이 지메일이다 — ⛔ 네이버로 보내지 않는다',
     통보주소 === 'parkintaek2@gmail.com' && !통보주소.includes('naver'));
