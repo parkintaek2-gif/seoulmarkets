@@ -14,7 +14,7 @@ image:
   캡션: "2026 KBO 한국시리즈 시리즈 전적. 삼성 라이온즈가 KT 위즈를 4승 1패로 이겼다."
   제공처: "K Culture Wire"
   제공처유형: own
-  출처주소: "https://m.sports.naver.com/game/77771108KTSS02026/record"
+  출처주소: "https://www.koreabaseball.com/"
 sources:
   - org: "네이버 스포츠"
     api: "경기 기록 — 1차전 11월 3일(수원), 2차전 11월 4일(수원), 3차전 11월 6일(대구), 4차전 11월 7일(대구), 5차전 11월 8일(대구)의 이닝별 점수와 최종 점수"

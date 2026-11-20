@@ -14,7 +14,7 @@ image:
   캡션: "하나은행 K리그1 2026 파이널A 35라운드 (서울 월드컵경기장). 울산 HD FC가 FC서울을 2대1로 이겼다."
   제공처: "K Culture Wire"
   제공처유형: own
-  출처주소: "https://m.sports.naver.com/game/202611080901207/record"
+  출처주소: "https://www.kleague.com/"
 sources:
   - org: "네이버 스포츠(한국프로축구연맹 제공)"
     api: "서울-울산 경기 기록 — 득점 시각과 득점자, 슈팅·유효슈팅·코너킥·오프사이드·파울·경고·점유율, 선수별 출전 시간과 평점"

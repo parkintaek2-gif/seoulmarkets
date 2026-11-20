@@ -42,6 +42,30 @@ const 엠블럼어휘 = [
   '엠블럼', '엠블렘', '로고', '심벌', '심볼', '휘장',
 ];
 
+/**
+ * 🔴 [2026-11-20 · 사장님] 「**사진설명에 사진 출처를 봐**」
+ * ─────────────────────────────────────────────────────────────────────────
+ * 우리가 «지은» 점수판 그림 9편이 지면에 이렇게 나가고 있었다 —
+ *   「사진 — K Culture Wire. **받아 온 곳: https://m.sports.naver.com/…**」
+ * 숫자를 읽어 온 곳을 사진 출처 자리에 적은 탓이다. 남의 사진을 가져온 것으로 읽힌다.
+ * ⇒ 자체 제작(own)의 출처주소는 **그 종목을 주관하는 곳의 공식 주소**로 적는다.
+ * ⛔ 숫자의 출처는 `sources` 가 따로 적는 자리다. 두 자리를 섞지 않는다.
+ */
+const 남의집 = [
+  'naver.com', 'daum.net', 'jbnews.com', 'khan.co.kr', 'osen.co.kr', 'topstarnews.net',
+  'newspim.com', 'nate.com', 'spotvnews.co.kr', 'ize.co.kr', 'koreatimes.co.kr',
+  'tenasia.co.kr', 'wikitree.co.kr', 'newsen.com', 'news1.kr', 'dailian.co.kr',
+  'yna.co.kr', 'newsis.com', 'chosun.com', 'donga.com', 'hankyung.com', 'mk.co.kr',
+];
+
+/** 주소가 포털·언론사의 것인가 — 도메인으로만 본다 */
+export function 남의집인가(주소) {
+  const m = String(주소 ?? '').match(/^[a-z]+:\/\/([^/]+)/i);
+  if (!m) return false;
+  const 집 = m[1].toLowerCase();
+  return 남의집.some((d) => 집 === d || 집.endsWith('.' + d));
+}
+
 /** 주소에서 경로 부분만 추출 — 도메인에 'logo' 가 포함된 곳(예: logos.com)을 오탐하지 않게 */
 function 주소경로(주소) {
   const s = String(주소 ?? '');
@@ -110,6 +134,15 @@ export function 사진위반(리뷰) {
      ⛔ 남이 준 사진(team·league)에는 그대로 건다 — 구단 엠블럼을 받아다 사진 자리에
        걸어 두는 길은 여전히 막혀 있다.
      ⛔ 「own 이라 적으면 통과」가 되지 않는다 — 위 ①(자체 서버 보관)이 함께 선다. */
+  /* ④ 🔴 자체 제작 그림의 출처주소에 포털·언론사 주소를 적지 않는다 (사장님 2026-11-20)
+     ⛔ 지면이 그 주소를 「사진을 받아 온 곳」으로 내보낸다 — 안 가져온 것을 가져왔다고 적는 셈이다 */
+  if (사진.제공처유형 === 'own' && 남의집인가(사진.출처주소)) {
+    위반.push(
+      '자체 제작 그림의 출처주소에 포털·언론사 주소를 적지 않는다 — '
+      + `그 종목을 주관하는 곳의 공식 주소로 적는다 (현재: ${사진.출처주소})`,
+    );
+  }
+
   if (스포츠계열인가(분류코드) && 사진.제공처유형 !== 'own') {
     const 적출어휘 = 엠블럼판별(사진);
     if (적출어휘.length) {
@@ -157,6 +190,33 @@ export function 사진파일없나(리뷰, 존재하나) {
    [실행] node src/lib/리뷰사진규칙.mjs --자가시험
    ⛔ 아래 사례는 가공한 것이 아니다. ①은 금일 오전 실제로 송고된 사진이다. */
 if (process.argv.includes('--자가시험')) {
+  /* 🔴 [2026-11-20 · 사장님] 「사진설명에 사진 출처를 봐」 */
+  {
+    let 흠 = 0;
+    const 검 = (이름, 참) => { if (!참) { 흠 += 1; console.log('🔴 ' + 이름); } };
+    검('🔴 포털 주소를 가려낸다', 남의집인가('https://m.sports.naver.com/game/1/record'));
+    검('🔴 언론사 주소를 가려낸다', 남의집인가('https://www.jbnews.com/news/articleView.html?idxno=1'));
+    검('⛔ 대조군 — 연맹 공식 주소는 남의집이 아니다', 남의집인가('https://www.kbl.or.kr/') === false);
+    검('⛔ 대조군 — 도메인 끝이 같아야 한다', 남의집인가('https://naver.com.evil.example/') === false);
+    검('⛔ 대조군 — 주소가 아니면 거짓이다', 남의집인가('') === false);
+    const 잰것 = 사진위반({
+      category: 'basketball',
+      image: {
+        src: '/review/x.jpg', 제공처: 'K Culture Wire', 제공처유형: 'own',
+        대체텍스트: 'ㄱ', 캡션: 'ㄴ', 출처주소: 'https://m.sports.naver.com/game/1/record',
+      },
+    });
+    검('🔴 자체 그림이 포털을 출처로 적으면 막는다', 잰것.some((s) => s.includes('포털·언론사')));
+    const 성한것 = 사진위반({
+      category: 'basketball',
+      image: {
+        src: '/review/x.jpg', 제공처: 'K Culture Wire', 제공처유형: 'own',
+        대체텍스트: 'ㄱ', 캡션: 'ㄴ', 출처주소: 'https://www.kbl.or.kr/',
+      },
+    });
+    검('⛔ 대조군 — 연맹 주소면 통과한다', 성한것.length === 0);
+    console.log(흠 ? '🔴 사진 출처 검사 ' + 흠 + '가지 실패' : '✅ 사진 출처 검사 통과');
+  }
   let 총건수 = 0; let 실패건수 = 0;
   const 검증 = (항목, 성립여부) => {
     총건수 += 1;

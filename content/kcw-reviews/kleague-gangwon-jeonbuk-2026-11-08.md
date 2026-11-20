@@ -14,7 +14,7 @@ image:
   캡션: "하나은행 K리그1 2026 (강릉하이원아레나). 강원FC가 전북 현대 모터스를 3대2로 이겼다."
   제공처: "K Culture Wire"
   제공처유형: own
-  출처주소: "https://m.sports.naver.com/game/202611082105209/record"
+  출처주소: "https://www.kleague.com/"
 sources:
   - org: "네이버 스포츠(한국프로축구연맹 제공)"
     api: "강원-전북 경기 기록 — 득점 시각과 득점자, 슈팅·유효슈팅·코너킥·파울·경고·점유율"

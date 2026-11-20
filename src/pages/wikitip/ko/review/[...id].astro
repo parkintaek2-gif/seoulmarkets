@@ -179,12 +179,25 @@ const 관련리뷰 = (await getCollection('kcwReviews'))
       </section>
     )}
 
-    {d.image && (
+    {/*
+      🔴 [2026-11-20 · 사장님] 「**사진설명에 사진 출처를 봐**」
+      ─────────────────────────────────────────────────────────────────────
+      ⛔ 우리가 «지은» 그림에 「사진 — … 받아 온 곳: <남의 주소>」를 달면
+        남의 사진을 가져온 것으로 읽힌다. 실제로 9편이 그렇게 나가고 있었다
+        (점수판 그림인데 「받아 온 곳: 네이버 스포츠」).
+      ⇒ 자체 제작(own)은 «지었다»고 적고, 그 주소는 «쓴 자료»로 적는다.
+    */}
+    {d.image && (d.image.제공처유형 === 'own' ? (
+      <p class="photo-src">
+        그림 — {d.image.제공처}가 지었다. 쓴 자료:{' '}
+        <a href={d.image.출처주소} rel="nofollow noopener">{d.image.출처주소}</a>
+      </p>
+    ) : (
       <p class="photo-src">
         사진 — {d.image.제공처}. 받아 온 곳:{' '}
         <a href={d.image.출처주소} rel="nofollow noopener">{d.image.출처주소}</a>
       </p>
-    )}
+    ))}
 
     {d.corrections.length > 0 && (
       <section class="corr">

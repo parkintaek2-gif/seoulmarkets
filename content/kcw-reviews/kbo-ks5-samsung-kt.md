@@ -14,7 +14,7 @@ image:
   캡션: "2026 KBO 한국시리즈 5차전. 삼성 라이온즈가 KT 위즈를 12대1로 이겨 시리즈를 4승 1패로 마쳤다."
   제공처: "K Culture Wire"
   제공처유형: own
-  출처주소: "https://m.sports.naver.com/game/77771108KTSS02026/record"
+  출처주소: "https://www.koreabaseball.com/"
 sources:
   - org: "네이버 스포츠"
     api: "경기 기록 — 이닝별 점수, 안타, 실책, 투수별 이닝·피안타·실점·자책점·삼진, 타자별 기록"

@@ -18,7 +18,7 @@ image:
   캡션: "2026 KBO 한국시리즈 2차전. 삼성 라이온즈가 연장 12회 끝에 KT 위즈를 3대2로 이겨 시리즈를 1승 1패로 맞췄다."
   제공처: "K Culture Wire"
   제공처유형: own
-  출처주소: "https://m.sports.naver.com/game/77771104SSKT02026/record"
+  출처주소: "https://www.koreabaseball.com/"
 sources:
   - org: "네이버 스포츠"
     api: "경기 기록 — 이닝별 점수, 안타·실책·볼넷, 타자·투수 기록, 승리·패전·세이브, 실책·2루타·3루타 기록"
