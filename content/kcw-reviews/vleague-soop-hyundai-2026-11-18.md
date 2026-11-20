@@ -8,6 +8,13 @@ subject:
   유형: match
   일시: 2026-11-18T19:00:00+09:00
   주체: "한국배구연맹(KOVO)"
+image:
+  src: "/review/vleague-soop-hyundai-2026-11-18.jpg"
+  대체텍스트: "SOOP 1, 현대건설 3. 두 팀 이름을 구단 색 글자로 적고 점수를 크게 담은 그림"
+  캡션: "HK흥국금융 2026~2027 V-리그 여자부 정규리그 1라운드 · 제32경기. 현대건설이 SOOP를 3대1로 이겼다."
+  제공처: "K Culture Wire"
+  제공처유형: own
+  출처주소: "https://kovo.co.kr/games/v-leagues/schedules/32?gcode=001&seasonCode=023&leagueCode=201&round=1"
 sources:
   - org: "한국배구연맹(KOVO)"
     api: "경기 상세결과 — 세트 점수, 팀 기록, 공격점유율, 선수별 최고기록"

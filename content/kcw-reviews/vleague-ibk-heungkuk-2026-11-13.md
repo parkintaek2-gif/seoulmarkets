@@ -8,6 +8,13 @@ subject:
   유형: match
   일시: 2026-11-13T19:00:00+09:00
   주체: "한국배구연맹(KOVO)"
+image:
+  src: "/review/vleague-ibk-heungkuk-2026-11-13.jpg"
+  대체텍스트: "IBK기업은행 3, 흥국생명 0. 두 팀 이름을 구단 색 글자로 적고 점수를 크게 담은 그림"
+  캡션: "2026-2027 V-리그 여자부 1라운드. IBK기업은행이 흥국생명을 3대0으로 이겼다."
+  제공처: "K Culture Wire"
+  제공처유형: own
+  출처주소: "https://kovo.co.kr/"
 sources:
   - org: "한국배구연맹(KOVO)"
     api: "13일 여자부 경기 결과 — 세트 점수, 순위(승점)"

@@ -8,6 +8,13 @@ subject:
   유형: match
   일시: 2026-11-14T16:00:00+09:00
   주체: "한국배구연맹(KOVO)"
+image:
+  src: "/review/vleague-gs-soop-2026-11-14.jpg"
+  대체텍스트: "GS칼텍스 3, SOOP 0. 두 팀 이름을 구단 색 글자로 적고 점수를 크게 담은 그림"
+  캡션: "HK흥국금융 2026~2027 V-리그 여자부 정규리그 1라운드 · 제26경기. GS칼텍스가 SOOP를 3대0으로 이겼다."
+  제공처: "K Culture Wire"
+  제공처유형: own
+  출처주소: "https://kovo.co.kr/games/v-leagues/schedules?season=023&gender=2&league=201"
 sources:
   - org: "한국배구연맹(KOVO)"
     api: "경기 상세결과 — 세트별 점수, 팀 기록(공격·블로킹·서브·디그·리시브·세트), 공격점유율과 성공률, 경기 최고기록 선수, 관중수"

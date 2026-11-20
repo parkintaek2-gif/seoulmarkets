@@ -8,6 +8,13 @@ subject:
   유형: match
   일시: 2026-11-14T14:00:00+09:00
   주체: "한국농구연맹(KBL)"
+image:
+  src: "/review/kbl-lg-hyundai-mobis-2026-11-14.jpg"
+  대체텍스트: "창원 LG 78, 울산 현대모비스 79. 두 팀 이름을 구단 색 글자로 적고 점수를 크게 담은 그림"
+  캡션: "2026-2027 KBL 정규리그. 울산 현대모비스가 창원 LG를 79대78로 이겼다."
+  제공처: "K Culture Wire"
+  제공처유형: own
+  출처주소: "https://www.kbl.or.kr/match/record/S49G01N68/20261114"
 sources:
   - org: "한국농구연맹(KBL)"
     api: "경기 기록 — 쿼터별 점수, 선수별 득점·리바운드·어시스트·3점슛"

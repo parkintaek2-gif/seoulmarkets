@@ -41,6 +41,13 @@ subject:
     출처: "디시인사이드 FC 서울 갤러리"
     주소: "https://gall.dcinside.com/board/view/?id=fcseoul&no=530138"
     일시: 2026-10-25T14:31:25+09:00
+image:
+  src: "/review/kleague-seoul-gangwon-title-2026-10-24.jpg"
+  대체텍스트: "FC서울 1, 강원FC 1. 두 팀 이름을 구단 색 글자로 적고 점수를 크게 담은 그림"
+  캡션: "하나은행 K리그1 2026 33라운드. FC서울과 강원FC가 1대1로 비겼다."
+  제공처: "K Culture Wire"
+  제공처유형: own
+  출처주소: "https://www.kleague.com/match.do?year=2026&leagueId=1&gameId=198&meetSeq=1"
 sources:
   - org: "한국프로축구연맹(K리그)"
     api: "33라운드 FC서울-강원FC 경기 기록 — 득점·도움, 교체, 점유율, 슈팅·유효 슈팅, 관중 수"

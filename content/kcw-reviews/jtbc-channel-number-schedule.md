@@ -8,6 +8,13 @@ subject:
   유형: channel
   일시: 2026-11-10T09:00:00+09:00
   주체: "JTBC"
+image:
+  src: "/review/jtbc-channel-number-schedule.jpg"
+  대체텍스트: "채널번호와 편성표. 대회 이름과 날짜를 담은 안내 그림"
+  캡션: "채널번호와 편성표."
+  제공처: "K Culture Wire"
+  제공처유형: own
+  출처주소: "https://jtbc.co.kr/"
 sources:
   - org: "제이티비씨"
     api: "JTBC 채널번호 안내 — IPTV·위성·지역 케이블 사업자별 번호"

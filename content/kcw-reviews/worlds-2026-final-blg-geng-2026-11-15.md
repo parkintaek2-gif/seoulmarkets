@@ -8,6 +8,13 @@ subject:
   유형: match
   일시: 2026-11-15T04:00:00+09:00
   주체: "라이엇 게임즈"
+image:
+  src: "/review/worlds-2026-final-blg-geng-2026-11-15.jpg"
+  대체텍스트: "2026 롤드컵 결승 젠지 대 빌리빌리 게이밍(BLG). 대회 이름과 날짜를 담은 안내 그림"
+  캡션: "2026 롤드컵 결승 젠지 대 빌리빌리 게이밍(BLG)."
+  제공처: "K Culture Wire"
+  제공처유형: own
+  출처주소: "https://lolesports.com/"
 sources:
   - org: "인벤"
     api: "롤드컵 결승 4세트 보도 — 최종 3대1, 4세트 흐름, BLG 창단 첫 우승"

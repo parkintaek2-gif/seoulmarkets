@@ -12,6 +12,13 @@ subject:
   명칭: "2026 APBC 한국 대 대만 · 도쿄돔"
   일시: 2026-11-14T19:00:00+09:00
   주체: "일본야구기구(NPB) 2026 APBC 조직위원회"
+image:
+  src: "/review/apbc-2026-taiwan-australia-2026-11-13.jpg"
+  대체텍스트: "2026 APBC 대만 대 호주. 대회 이름과 날짜를 담은 안내 그림"
+  캡션: "2026 APBC 대만 대 호주."
+  제공처: "K Culture Wire"
+  제공처유형: own
+  출처주소: "https://npb.jp/"
 sources:
   - org: "일본야구기구(NPB) 2026 APBC 공식 사이트"
     api: "호주 대 대만 경기 기록지 — 이닝별 점수, 안타·실책, 홈런, 승패·세이브 투수, 입장 관중"
