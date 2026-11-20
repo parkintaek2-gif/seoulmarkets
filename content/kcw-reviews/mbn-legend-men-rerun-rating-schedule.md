@@ -12,6 +12,13 @@ subject:
   명칭: "「전설의 사내」 18회"
   일시: 2026-12-01T21:40:00+09:00
   주체: "MBN"
+image:
+  src: "/review/mbn-legend-men-rerun-rating-schedule.jpg"
+  대체텍스트: "MBN 「전설의 사내」 프로그램 띠 그림. 파란 바탕에 프로그램 문구가 적혀 있다"
+  캡션: "MBN 「전설의 사내」 프로그램 대표 그림."
+  제공처: "MBN"
+  제공처유형: broadcaster
+  출처주소: "https://www.mbn.co.kr/vod/programMain/1035"
 sources:
   - org: "닐슨코리아"
     api: "유료방송 가구 기준 회차별 시청률 — 1회 4.1%부터 17회 4.1%까지"

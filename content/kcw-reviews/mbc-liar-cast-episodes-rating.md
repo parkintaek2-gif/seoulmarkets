@@ -12,6 +12,13 @@ subject:
   명칭: "「라이어」 5회"
   일시: 2026-11-13T21:50:00+09:00
   주체: "MBC"
+image:
+  src: "/review/mbc-liar-cast-episodes-rating.jpg"
+  대체텍스트: "MBC 금토드라마 「라이어」 홍보 사진. 두 사람이 서로 마주 보고 있다"
+  캡션: "MBC 금토드라마 「라이어」 홍보 사진. MBC는 이 사진의 인물을 유연석과 서현진으로 적었다."
+  제공처: "MBC"
+  제공처유형: broadcaster
+  출처주소: "https://program.imbc.com/ThePerfectLie"
 sources:
   - org: "MBC"
     api: "「라이어」 공식 홈페이지 — 등장인물 소개, 출연진, 편성"
