@@ -77,7 +77,7 @@ export const 못박은_구멍 = {
      seoulmarkets 2→0 · kcw 9→4. 자가 「내려 적으십시오」라고 일러 준 그대로다. */
   seoulmarkets: 0,   /* 10곳을 301 로 이었다 — 라이브에서 전부 200 을 확인했다 */
   kcw: 4,            /* 5곳을 이었다. 남은 것 — /week /market /from /born-in (2번) */
-  '100y': 3,         /* /report · /report/area · /life (1번이 목록 지면을 만든다) */
+  '100y': 5,         /* 2026-11-20 라이브 실측 5 — /elementary/area·/middle/area 입구를 이 배포로 낸다. 배포 뒤 3 으로 내려 적는다. /report · /report/area · /life (1번이 목록 지면을 만든다) */
   klifemap: 0,       /* /unse/ · /data/ 허브를 그날 냈다 */
 };
 
