@@ -51,8 +51,35 @@ if (process.argv.includes('--자가시험')) {
     !require('node:fs').readFileSync(new URL(import.meta.url), 'utf8')
       .includes('[' + String.fromCharCode(39) + 'upd' + 'ate' + String.fromCharCode(39)));
   참('주소가 web 통을 가리킨다', 설정주소.includes('/web#settings'));
+  참('🔴 「올린 것이 옛 판인가」를 누르기 전에 본다',
+    require('node:fs').readFileSync(new URL(import.meta.url), 'utf8').includes('올린것이최신인가'));
   console.log(탈 ? '🔴 자가시험 ' + 탈 + '건 탈' : '✅ 자가시험 ' + 통과 + ' 통과');
   process.exit(탈 ? 1 : 0);
+}
+
+/* 🔴🔴 [2026-11-22 03:4x · 5번] **누르기 전에 「올린 것이 옛 판인가」를 본다.**
+   2026-11-17 부터 컨테이너는 짓지 않고 **받아서 편다.** 그래서 `올린다-지어진지면.mjs`
+   를 안 부르면 이 단추를 몇 번을 눌러도 컨테이너는 옛 묶음을 받아서 편다.
+   11-18 에 만든 `될때까지-배포한다-서울마켓츠.mjs` 는 이 검사를 품고 있었는데,
+   오늘 내가 그 자를 안 거치고 **이 자를 바로 불러** 같은 함정에 또 빠졌다.
+   배포가 2일째 「오류」로 보인 까닭의 절반이 이것이었다.
+   ⇒ 검사가 한 길에만 있으면 다른 길로 가면 그만이다. 판정을 공용 자리에 두고
+     **배포하는 자마다** 들여와 쓴다. */
+{
+  const path = await import('node:path');
+  const { fileURLToPath } = await import('node:url');
+  const { 올린것이최신인가, 먼저할것 } = await import('../src/lib/올린것이-최신인가.mjs');
+  const 뿌리 = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
+  const 판정 = 올린것이최신인가(뿌리);
+  if (!판정.최신인가) {
+    console.log('🔴 **올린 것이 옛 판이다** — ' + 판정.까닭);
+    console.log('   올린 커밋 ' + (판정.올린커밋 ?? '(없다)') + ' · HEAD ' + (판정.HEAD ?? '(모른다)'));
+    for (const f of 판정.지면이바뀐것.slice(0, 8)) console.log('   · ' + f);
+    console.log('   ⛔ 이대로 누르면 컨테이너가 «옛 묶음»을 받아서 편다. 몇 번을 눌러도 같다.');
+    console.log('   ⇒ ' + 먼저할것);
+    process.exit(1);
+  }
+  console.log('✅ 올린 것이 최신이다 — ' + 판정.올린커밋 + ' (' + 판정.까닭 + ')');
 }
 
 const puppeteer = require('puppeteer-core');

@@ -22,12 +22,34 @@
  * ⚠ 분장이 바뀌면 **역할 카드와 함께** 고친다. 여기만 고치면 다음에 또 어긋난다.
  */
 
+/* 🔴🔴🔴 [2026-11-22 04:00 · 사장님] **K Culture Wire 는 더 이상 운영하지 않는다.**
+   원문 — 「**k컬쳐와이어는 더이상 운영안한다. 지금부터 당장. 배포 등 문제없게 되지?**」
+          「**우리가 운영하는 사이트는 케이라이프맵에이아이, 백년지도, 서울마켓츠이다.**」
+   ⇒ 줄을 «지우지 않고» 운영중단으로 표시한다. 지우면 왜 없어졌는지가 함께 사라지고,
+     이 표를 쓰는 자들이 「모르는 호스트」로 보아 엉뚱하게 센다.
+   ⛔ 운영중단은 **새 콘텐트를 내지 않는다**는 뜻이다. 이미 색인된 지면을 404 로
+     만들지 않는다 — 도메인과 기존 지면은 그대로 둔다(사장님 지시가 따로 있을 때까지).
+   ⚠ 「다음 구독부터는 5번만 남고 1번 세션도 운영을 안 한다」 — 그때 유닛 칸을 고친다. */
 export const 자리표 = [
   { 유닛: '1번', 이름: '백년지도', 호스트: ['100yearmap.com', 'www.100yearmap.com'] },
   { 유닛: '1번', 이름: 'KLifeMap', 호스트: ['klifemap.ai', 'www.klifemap.ai'] },
-  { 유닛: '1번', 이름: 'K Culture Wire', 호스트: ['kculturewire.com', 'www.kculturewire.com'] },
+  { 유닛: '1번', 이름: 'K Culture Wire', 호스트: ['kculturewire.com', 'www.kculturewire.com'],
+    운영중단: '2026-11-22', 까닭: '사장님 지시 — 더 이상 운영하지 않는다' },
   { 유닛: '5번·2번', 이름: 'SeoulMarkets', 호스트: ['seoulmarkets.com', 'www.seoulmarkets.com'] },
 ];
+
+/** 지금 «운영하는» 사이트만. 새 콘텐트·색인 요청은 여기에만 낸다 */
+export const 운영중 = 자리표.filter((x) => !x.운영중단);
+
+/** 운영을 멈춘 사이트의 호스트 — 새 글·색인 요청을 여기로 보내면 안 된다 */
+export const 멈춘호스트 = 자리표.filter((x) => x.운영중단).flatMap((x) => x.호스트);
+
+/** 그 호스트가 운영을 멈춘 곳인가 — www 가 붙어도 같게 본다 */
+export function 멈췄나(호스트) {
+  const s = String(호스트 ?? '').trim().toLowerCase().replace(/^www\./, '');
+  if (!s) return false;
+  return 멈춘호스트.some((h) => h.toLowerCase().replace(/^www\./, '') === s);
+}
 
 /** 우리가 만든 것이라 아무 자리 것도 아닌 호스트 */
 export const 우리것 = ['127.0.0.1', 'localhost', 'parkintaek2-gif.github.io'];
@@ -55,6 +77,21 @@ if (process.argv[1] && process.argv.includes('--자가시험')) {
     !자리표.some((x) => x.호스트.some((h) => 우리것.includes(h))));
   검('모든 줄이 유닛·이름·호스트를 갖는다',
     자리표.every((x) => x.유닛 && x.이름 && Array.isArray(x.호스트) && x.호스트.length));
+
+  /* 🔴🔴 [2026-11-22 · 사장님] 운영하는 사이트는 셋이다 */
+  검('🔴 운영하는 사이트는 셋이다 — 백년지도·KLifeMap·SeoulMarkets',
+    운영중.length === 3
+    && ['백년지도', 'KLifeMap', 'SeoulMarkets'].every((n) => 운영중.some((x) => x.이름 === n)));
+  검('🔴 K Culture Wire 는 운영중에 없다 (2026-11-22 부터)',
+    !운영중.some((x) => x.이름 === 'K Culture Wire'));
+  검('🔴 멈춘 줄이 표에서 사라지지 않았다 — 까닭이 함께 남아 있어야 한다',
+    자리표.some((x) => x.이름 === 'K Culture Wire' && x.운영중단 === '2026-11-22' && x.까닭));
+  검('🔴 멈췄나() 가 www 가 붙어도 같게 본다',
+    멈췄나('kculturewire.com') && 멈췄나('www.kculturewire.com') && 멈췄나('WWW.KCultureWire.com'));
+  검('⛔ 멈췄나() 가 운영 중인 곳을 멈췄다고 하지 않는다',
+    !멈췄나('seoulmarkets.com') && !멈췄나('www.100yearmap.com') && !멈췄나('klifemap.ai'));
+  검('⛔ 빈 호스트를 멈췄다고 하지 않는다',
+    !멈췄나('') && !멈췄나(null) && !멈췄나(undefined));
 
   console.log(탈 ? `\n🔴 자가시험 ${탈}건 탈` : `\n✅ 자가시험 ${통} 통과`);
   process.exit(탈 ? 1 : 0);

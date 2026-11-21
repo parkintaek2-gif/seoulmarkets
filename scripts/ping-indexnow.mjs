@@ -234,6 +234,32 @@ if (고른호스트 && !사이트들[고른호스트]) {
   console.error(`아는 것 — ${Object.keys(사이트들).join(' · ')}`);
   process.exit(1);
 }
+/* 🔴🔴 [2026-11-22 04:0x · 사장님] **운영을 멈춘 사이트로는 색인 요청을 내지 않는다.**
+   원문 — 「**k컬쳐와이어는 더이상 운영안한다. 지금부터 당장**」
+   ⛔ 보내기 «전»에 선다 — 검색엔진에 한 번 통보하면 되돌릴 수 없다.
+   ⚠ 이미 색인된 지면을 내리라는 뜻이 아니다. **새로 알리지 않는다**는 뜻이다. */
+{
+  const { 멈췄나, 멈춘호스트 } = await import('../src/lib/유닛자리표.mjs');
+  if (고른호스트 && 멈췄나(고른호스트)) {
+    console.error('⛔ 운영을 멈춘 사이트다 — 색인 요청을 내지 않는다: ' + 고른호스트);
+    console.error('   사장님 2026-11-22 — 「k컬쳐와이어는 더이상 운영안한다. 지금부터 당장」');
+    process.exit(1);
+  }
+  const 뺀것 = Object.keys(사이트들).filter((h) => 멈췄나(h));
+  for (const h of 뺀것) delete 사이트들[h];
+  if (뺀것.length) console.log('⚠ 운영을 멈춘 사이트를 뺐다 — ' + 뺀것.join(' · '));
+  /* 호스트를 안 골라도 주소에 멈춘 곳이 섞여 들어올 수 있다 */
+  const 주소에섞인것 = 경로들.filter((p) => {
+    const m = /^https?:\/\/([^/]+)/i.exec(String(p ?? ''));
+    return m && 멈췄나(m[1]);
+  });
+  if (주소에섞인것.length) {
+    console.error('⛔ 주소에 운영을 멈춘 사이트가 섞였다 — ' + 주소에섞인것.length + '개');
+    for (const x of 주소에섞인것.slice(0, 5)) console.error('   · ' + String(x).slice(0, 90));
+    console.error('   멈춘 호스트 — ' + 멈춘호스트.join(' · '));
+    process.exit(1);
+  }
+}
 /* 🔴 [2026-11-14] 보내기 «전»에 선다. 보내고 나면 되돌릴 수 없다 */
 const 쉼표든것 = 쉼표로이어붙였나(경로들);
 if (쉼표든것.length) {
