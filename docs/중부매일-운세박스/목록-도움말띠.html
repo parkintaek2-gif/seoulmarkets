@@ -1,0 +1,32 @@
+<!-- ===========================================================
+     KLifeMap 도움말 띠
+     만든 날 : 2026년 11월 21일
+
+     넣는 자리 : 중부매일 CMS > 편집 > 기사리스트(데스크탑/모바일)
+
+     보이는 자리 : 운세 목록 화면 하나뿐입니다. 화면 머리칸에
+                   data-sub-code="S2N157"(운세)이 있을 때만 켜집니다.
+                   평소에는 꺼져 있습니다(display:none). :has() 를 읽지 못하는
+                   옛 브라우저에서도 꺼진 채로 남으므로, 다른 카테고리 목록에
+                   나타나는 일이 없습니다.
+
+     되돌리는 길 : 이 박스의 휴지통(삭제)을 누르시면 원래대로 돌아갑니다.
+     =========================================================== -->
+<div class="klm-help-wrap" id="klmHelpWrap">
+<style>
+#klmHelpWrap{display:none}
+html:has(#header-wrapper[data-sub-code="S2N157"]) #klmHelpWrap{display:block}
+#klmHelpWrap .klm-bar{display:flex;align-items:center;justify-content:center;gap:8px;
+ box-sizing:border-box;width:100%;margin:0 0 14px;padding:13px 16px;
+ background:#1b4f9c;color:#fff;text-decoration:none;
+ font-family:'Noto Sans KR','맑은 고딕',Malgun Gothic,sans-serif;
+ font-size:14px;font-weight:700;letter-spacing:-.02em;line-height:1.35;text-align:center}
+#klmHelpWrap .klm-bar:hover{background:#163f7d;color:#fff;text-decoration:none}
+#klmHelpWrap .klm-sub{font-size:12px;font-weight:400;opacity:.9}
+@media screen and (max-width:640px){
+ #klmHelpWrap .klm-bar{flex-direction:column;gap:3px;font-size:13px;padding:12px 14px}
+ #klmHelpWrap .klm-sub{font-size:11px}
+}
+</style>
+ <a class="klm-bar" href="https://klifemap.ai/unse" target="_blank" rel="noopener">도움말: KLifeMap.AI<span class="klm-sub">띠별 &#183; 별자리 운세를 날마다 보실 수 있습니다 &#8594;</span></a>
+</div>

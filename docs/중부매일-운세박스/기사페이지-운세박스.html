@@ -1,0 +1,95 @@
+<!-- ===========================================================
+     KLifeMap 「오늘의 운세」 박스
+     만든 날 : 2026년 11월 21일
+
+     넣는 자리 : 중부매일 CMS > 편집 > 기사뷰(PC) / 기사뷰(모바일)
+                 PC 는 오른쪽 칼럼의 문화NOW 와 뉴스토어 사이,
+                 모바일은 추천콘텐츠와 서울탑플란트치과 사이입니다.
+                 메인 화면에는 넣지 않습니다.
+
+     되돌리는 길 : 이 박스의 휴지통(삭제)을 누르시면 원래대로 돌아갑니다.
+                   저장만 하고 웹출판을 누르지 않으시면 독자 화면은 그대로입니다.
+
+     · 바깥에서 받아 오는 것이 하나도 없습니다. 글꼴과 그림과 스크립트가
+       전부 이 안에 들어 있습니다.
+     · 기사 네 건을 못 받아 와도 빈 박스가 되지 않습니다. 아래 네 줄이
+       그대로 보입니다.
+     =========================================================== -->
+<div class="klm-unse" id="klmUnse">
+<style>
+#klmUnse{box-sizing:border-box;border:1px solid #dcdfe6;border-top:3px solid #1b4f9c;background:#fff;padding:16px 18px 0;margin:0 0 10px;font-family:'Noto Sans KR','맑은 고딕',Malgun Gothic,sans-serif}
+#klmUnse *{box-sizing:border-box}
+#klmUnse .klm-head{display:flex;align-items:baseline;justify-content:space-between;border-bottom:1px solid #e8eaee;padding-bottom:10px;margin-bottom:4px}
+#klmUnse .klm-tit{font-size:19px;font-weight:800;color:#15181d;letter-spacing:-.02em;margin:0}
+#klmUnse .klm-more{font-size:13px;color:#5b6472;text-decoration:none;white-space:nowrap}
+#klmUnse .klm-more:hover{color:#1b4f9c;text-decoration:underline}
+#klmUnse .klm-list{list-style:none;margin:0;padding:0}
+#klmUnse .klm-list li{border-bottom:1px dotted #e3e6ea}
+#klmUnse .klm-list li:last-child{border-bottom:0}
+#klmUnse .klm-list a{display:block;padding:10px 0;text-decoration:none;color:#1a1d23}
+#klmUnse .klm-list a:hover .klm-t{color:#1b4f9c;text-decoration:underline}
+#klmUnse .klm-t{display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;font-size:16px;font-weight:600;line-height:1.45;letter-spacing:-.02em;max-height:2.9em}
+#klmUnse .klm-d{display:block;font-size:12px;color:#8a929d;margin-top:3px}
+#klmUnse .klm-help{display:flex;align-items:center;justify-content:center;gap:6px;margin:12px -18px 0;padding:12px 14px;background:#1b4f9c;color:#fff;font-size:14px;font-weight:700;letter-spacing:-.02em;text-decoration:none;line-height:1.3}
+#klmUnse .klm-help:hover{background:#163f7d;color:#fff;text-decoration:none}
+#klmUnse .klm-help .klm-arrow{font-size:13px;font-weight:400;opacity:.85}
+@media screen and (max-width:640px){
+ #klmUnse{padding:14px 14px 0}
+ #klmUnse .klm-tit{font-size:17px}
+ #klmUnse .klm-t{font-size:15px}
+ #klmUnse .klm-help{margin:12px -14px 0;font-size:13px}
+}
+</style>
+ <div class="klm-head">
+  <p class="klm-tit">오늘의 운세</p>
+  <a class="klm-more" href="/news/articleList.html?sc_section_code=S1N29&amp;sc_sub_section_code=S2N157&amp;view_type=sm">더보기 &#43;</a>
+ </div>
+ <ul class="klm-list" id="klmUnseList">
+  <li><a href="/news/articleView.html?idxno=1516333"><span class="klm-t">[오늘의 운세] 11월 21일 토요일 별자리 운세</span></a></li>
+  <li><a href="/news/articleView.html?idxno=1516332"><span class="klm-t">[오늘의 운세] 11월 21일 토요일 띠별 운세</span></a></li>
+  <li><a href="/news/articleView.html?idxno=1516331"><span class="klm-t">[오늘의 운세] 11월 20일 금요일 별자리 운세</span></a></li>
+  <li><a href="/news/articleView.html?idxno=1516329"><span class="klm-t">[오늘의 운세] 11월 20일 금요일 띠별 운세</span></a></li>
+ </ul>
+ <a class="klm-help" href="https://klifemap.ai/unse" target="_blank" rel="noopener">도움말: KLifeMap.AI<span class="klm-arrow">&#8594;</span></a>
+</div>
+<script>
+/* 운세 목록에서 가장 최근 네 건을 가져와 위 네 줄을 바꿔 끼운다.
+   ⛔ 실패하면 아무것도 안 한다 — 위에 박아 둔 네 줄이 그대로 보인다. */
+(function () {
+  try {
+    var 칸 = document.getElementById('klmUnseList');
+    if (!칸 || !window.fetch || !window.DOMParser) return;
+    var 길 = '/news/articleList.html?sc_section_code=S1N29&sc_sub_section_code=S2N157&view_type=sm';
+    fetch(길, { credentials: 'same-origin' }).then(function (r) {
+      if (!r.ok) throw new Error('목록을 못 받았다');
+      return r.text();
+    }).then(function (글) {
+      var 쪽 = new DOMParser().parseFromString(글, 'text/html');
+      var 본것 = {};
+      var 모음 = [];
+      ['#skin-listTop', '#section-list'].forEach(function (이름) {
+        var c = 쪽.querySelector(이름);
+        if (!c) return;
+        c.querySelectorAll('a[href*="articleView.html?idxno="]').forEach(function (a) {
+          var m = (a.getAttribute('href') || '').match(/idxno=(\d+)/);
+          if (!m || 본것[m[1]]) return;
+          var 제 = a.querySelector('.auto-titles');
+          var t = ((제 ? 제.textContent : a.textContent) || '').trim().replace(/\s+/g, ' ');
+          if (!t || t.length < 4) return;
+          본것[m[1]] = 1;
+          모음.push({ 번호: m[1], 제목: t });
+        });
+      });
+      if (모음.length < 4) return;              /* 모자라면 그대로 둔다 */
+      모음.sort(function (가, 나) { return Number(나.번호) - Number(가.번호); });
+      var 줄 = '';
+      모음.slice(0, 4).forEach(function (x) {
+        var 안전 = x.제목.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
+        줄 += '<li><a href="/news/articleView.html?idxno=' + x.번호 + '">'
+            + '<span class="klm-t">' + 안전 + '</span></a></li>';
+      });
+      칸.innerHTML = 줄;
+    }).catch(function () { /* 조용히 넘어간다 */ });
+  } catch (e) { /* 조용히 넘어간다 */ }
+})();
+</script>
