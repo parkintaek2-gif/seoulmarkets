@@ -163,6 +163,31 @@ console.log('━━━ 운영하는 사이트가 셋인가 ━━━━━━━
     '⑦ CLAUDE.md 에 사이트 셋이 적혀 있다');
 }
 
+/* 🔴🔴 ⑧ [2026-11-22 02:4x] **접은 뒤에 새 콘텐트가 또 들어왔다.**
+   사장님이 「지금부터 당장」이라 하신 지 40분 만에 MAMA 시상식 기사 2편이
+   content/kculturewire 와 content/kcw-reviews 에 생겼다. 1번 세션은 돌고 있지
+   않았고 예약 작업에도 그 일은 없었다 — 무엇이 만들었는지 못 찾았다.
+   ⇒ **누가 만들든 들어가지 못하게** 여기서 막는다. 만드는 쪽을 못 찾아도
+     나가는 길목 하나를 막으면 밖에는 안 닿는다.
+   판정은 「git 이 모르는 파일이 있나」다 — 이미 들어 있던 것은 건드리지 않는다. */
+{
+  const 접은폴더 = ['content/kculturewire', 'content/kcw-reviews'];
+  let 새것 = [];
+  try {
+    const { execFileSync } = await import('node:child_process');
+    const 낸것 = execFileSync('git', ['ls-files', '--others', '--exclude-standard', ...접은폴더],
+      { cwd: 뿌리, encoding: 'utf8' });
+    새것 = 낸것.split('\n').map((s) => s.trim()).filter(Boolean);
+  } catch (e) { 새것 = ['(git 에 물어보지 못했다 — 옛 판으로 친다)']; }
+  알린다(새것.length === 0,
+    '⑧ 접은 사이트에 새 콘텐트가 들어오지 않았다'
+    + (새것.length ? ' — ' + 새것.length + '개: ' + 새것.slice(0, 3).map((s) => path.basename(s)).join(' · ') : ''));
+  if (새것.length) {
+    console.log('     ⇒ 사장님 2026-11-22 — 「k컬쳐와이어는 더이상 운영안한다. 지금부터 당장」');
+    console.log('     ⇒ archive/kcw-접은뒤-들어온것/ 으로 옮기고, 만든 쪽을 찾아 막는다');
+  }
+}
+
 console.log('━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━');
 console.log(탈 ? '🔴 ' + 탈 + '가지가 어긋났다' : '🟢 성하다 — 운영하는 사이트는 셋이다');
 process.exit(탈 ? 1 : 0);
