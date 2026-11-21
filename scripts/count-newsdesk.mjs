@@ -53,7 +53,7 @@ export function 매체센다(값) {
   return { 받은수: 받, 쓸만한수: 쓸, 꼴: '뭉치' };
 }
 
-/** 하루치 파일 하나를 센다. 파일이 없으면 null — 0 으로 채우지 않는다 */
+/** 하루치 파일 하나를 센다. 파일이 없으면 null —  */
 export function 하루센다(날, 저장소 = 뿌리) {
   const 길 = path.join(저장소, 방, `${날}.json`);
   if (!fs.existsSync(길)) return null;

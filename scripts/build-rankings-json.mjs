@@ -107,7 +107,7 @@ export const AXES = [
    * 그런데 이 표는 축 열 개가 전부 사람 축이었다. 재무 축 다섯을 더한다.
    * 출처는 src/data/korea-valuation-tape.json(2,709곳, build-korea-valuation-tape.mjs 산출) —
    * DART 재무제표 원문에서 뽑은 값이라 render-ranking.mjs 의 사람 축 계산과는 별도다.
-   * ⛔ 값이 없으면(총자본≤0·이자비용=0 등) null 로 둔다. 0 으로 채우지 않는다.
+   * ⛔ 값이 없으면(총자본≤0·이자비용=0 등) null 로 둔다. 
    */
   { key: '시가총액', id: 'marketCap', label: 'Market capitalisation', unit: 'KRWtn', dir: 'desc',
     note: 'Latest KRX close × shares outstanding, as of the price date on the valuation tape.' },

@@ -91,7 +91,7 @@ export function 수(v) {
 
 /**
  * 한 행을 우리 꼴로 옮긴다.
- * ⛔ 시총이 0 이거나 없으면 0 으로 채우지 않는다 — null 로 두고 「못 잰 것」으로 센다.
+ * ⛔ 시총이 0 이거나 없으면  — null 로 두고 「못 잰 것」으로 센다.
  */
 export function 한줄옮기기(r, 날짜) {
   const 종목 = String(r?.companySymbol || '').trim();

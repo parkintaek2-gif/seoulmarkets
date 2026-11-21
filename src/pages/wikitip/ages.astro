@@ -19,7 +19,7 @@ import KcwRelatedArticles from '../../components/KcwRelatedArticles.astro';
 import data from '../../data/wikitip-people.json';
 
 const 모두 = (data as any).people ?? [];
-/* ⛔ 생년이 없는 사람은 «빼고» 그 수를 적는다 — 0 으로 채우지 않는다 */
+/* ⛔ 생년이 없는 사람은 «빼고» 그 수를 적는다 —  */
 const 잰것 = 모두.filter((p: any) => p?.born && typeof p.age === 'number' && p.name);
 const 못잰수 = 모두.length - 잰것.length;
 

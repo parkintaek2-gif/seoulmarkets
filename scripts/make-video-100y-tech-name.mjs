@@ -125,7 +125,7 @@ if (내가돌려졌다 && process.argv.includes('--selftest')) {
   재본다('⭐ 큰 수가 지면의 학교 수다(48)', 글자만(칸HTML(3.5)).includes(`${든것.length}곳`) && 든것.length === 48);
   재본다('⭐ 연대별 수를 더하면 전체다', Object.values(연대별).reduce((a, b) => a + b, 0) === 든것.length);
   재본다('⭐ 대사의 «마흔여섯»이 화면 수와 같다', 옛 === 46);
-  재본다('⭐ 끝에 「이것은 통계이지 당신이 아닙니다」와 주소', 글자만(칸HTML(18)).includes('통계이지') && 글자만(칸HTML(18)).includes(주소));
+  재본다('⭐ 끝에 「」와 주소', 글자만(칸HTML(18)).includes('통계이지') && 글자만(칸HTML(18)).includes(주소));
   재본다('⛔ 입 움직임 시작이 목소리 시작과 같다', 말함.every((w, i) => Math.abs(w[0] - 목소리때들[i]) < 0.01));
   const 댈수 = new Set([든것.length, 옛, 기준해, 해(가장옛), ...Object.keys(연대별), ...Object.values(연대별)].map(String));
   const 온글 = [1, 3, 6, 9, 10.5, 12, 18].map(칸HTML).join(' ');

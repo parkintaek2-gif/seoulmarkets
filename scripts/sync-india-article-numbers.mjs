@@ -41,7 +41,7 @@ export const 원자료방 = path.join(뿌리, 'archive', 'raw', 'india-nse-credi
 /** 천 단위 쉼표를 붙인다 — 기사가 쓰는 꼴 그대로 */
 export function 쉼표(n) {
   /* ⛔ null·빈 글을 Number() 에 그냥 넘기면 «0» 이 된다 — 없는 수가 0 으로 둔갑한다.
-     강령 — 「0 으로 채우지 않는다. 못 잰 것은 못 쟀다고 적는다」 */
+     강령 — 「 못 잰 것은 못 쟀다고 적는다」 */
   if (n === null || n === undefined || n === '') return '';
   if (typeof n !== 'number' && typeof n !== 'string') return '';
   const v = Number(n);

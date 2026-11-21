@@ -9,7 +9,7 @@ import { pathToFileURL } from 'node:url';
  *   node scripts/build-korea-mezzanine-tape.mjs --적는다
  *
  * ── 이 자가 지키는 것 ────────────────────────────────────────────────
- * ⛔ `refix_floor_note` 빈칸을 0 으로 채우지 않는다 — EB 는 리픽싱 하한 칸이 «애초에 없다»
+ * ⛔ `refix_floor_note` 빈칸을  — EB 는 리픽싱 하한 칸이 «애초에 없다»
  *   (build-seoulmarkets-mezzanine-page.mjs 가 이미 겪은 함정, 그대로 물려받는다). 값이 없어도
  *   note 가 있으면 「해당 없음」이고, note 도 없으면 「못 쟀다」다 — 둘을 같은 null 로 뭉개지
  *   않게 `refixFloorPriceKrw`(값) 과 `refixFloorNote`(까닭)를 별도 칸으로 낸다.

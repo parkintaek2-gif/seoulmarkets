@@ -169,7 +169,7 @@ if (process.argv[1] && path.resolve(process.argv[1]) === path.resolve(나)) {
   const 모두 = []; const 날들 = [];
   for (const f of 파일들) {
     const 것들 = 하루읽기(fs.readFileSync(path.join(밑감방, f), 'utf8'));
-    if (!것들) { console.log('  ⬜ ' + f + ' 를 못 읽었다 — 0 으로 채우지 않는다'); continue; }
+    if (!것들) { console.log('  ⬜ ' + f + ' 를 못 읽었다 — '); continue; }
     날들.push(f.slice(0, 8));
     모두.push(...것들.map((x) => ({ ...x, 날: f.slice(0, 8) })));
   }

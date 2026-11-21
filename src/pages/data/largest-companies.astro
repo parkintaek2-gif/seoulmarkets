@@ -87,7 +87,7 @@ const axes: Array<{
     asOf: `${fiscalYear} annual report` },
 ];
 
-/** 한 잣대의 내림차순 목록 — 값이 «있는» 것만. ⛔ 없는 것을 0 으로 채우지 않는다 */
+/** 한 잣대의 내림차순 목록 — 값이 «있는» 것만. ⛔ 없는 것을  */
 const orderBy = (key: AxisKey) =>
   rows.filter((r) => r[key] !== null).sort((a, b) => (b[key] as number) - (a[key] as number));
 

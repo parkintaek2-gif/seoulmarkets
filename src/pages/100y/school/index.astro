@@ -105,7 +105,7 @@ const 학과줄 = [...학과셈.entries()].sort((a, b) => b[1] - a[1]);
 const 흔한학과 = 학과줄.slice(0, 8);
 const 한곳뿐인학과 = 학과줄.filter(([, n]) => n === 1).length;
 
-/** 한 학교가 둔 학과 수 — 평균이 아니라 분포로 본다 */
+/** 한 학교가 둔 학과 수 — 로 본다 */
 const 학과수들 = 모두.filter((s) => s.학과수 > 0).map((s) => s.학과수).sort((a, b) => a - b);
 const 가운데학과수 = 학과수들.length ? 학과수들[Math.floor(학과수들.length / 2)] : null;
 const 최다학과수 = 학과수들.length ? 학과수들[학과수들.length - 1] : null;

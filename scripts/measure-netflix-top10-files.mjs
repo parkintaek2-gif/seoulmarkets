@@ -39,7 +39,7 @@ export const 줄나누기 = (원문) => String(원문).split(/\r?\n/).filter((x)
 export const 열이름 = (줄들) => (줄들[0] ?? '').split('\t');
 
 /**
- * 한 파일의 얼굴. ⛔ 없는 열을 0 으로 채우지 않는다 — 없으면 없다고 적는다.
+ * 한 파일의 얼굴. ⛔ 없는 열을  — 없으면 없다고 적는다.
  */
 export function 파일재기(줄들) {
   const 열 = 열이름(줄들);

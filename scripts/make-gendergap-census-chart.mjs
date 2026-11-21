@@ -2,7 +2,7 @@
 /**
  * make-gendergap-census-chart.mjs — 「상위 몇 곳」이 아니라 상장사 전체의 분포.
  * 재료: collect-emp-gendergap-h1.mjs 가 받은 gendergap-h1-2026.ndjson (2026 반기보고서).
- * 강령 「평균이 아니라 분포」 그대로 — 평균 배수 하나를 내지 않고 구간별 몇 %인지를 낸다.
+ * 강령 「」 그대로 — 평균 배수 하나를 내지 않고 구간별 몇 %인지를 낸다.
  * 출력: public/charts/gendergap-census.svg · src/data/gendergap-census.json
  */
 import fs from 'node:fs';

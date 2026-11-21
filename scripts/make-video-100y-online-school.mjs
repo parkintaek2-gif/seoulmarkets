@@ -124,7 +124,7 @@ if (내가돌려졌다 && process.argv.includes('--selftest')) {
   재본다('⭐ 큰 수가 온라인학교 수다', 글자만(칸HTML(3.5)).includes(`${온라인.length}곳`));
   재본다('⭐ 해별 수를 더하면 전체다', Object.values(해별).reduce((a, b) => a + b, 0) === 온라인.length);
   재본다('⭐ 처음·마지막 학교 이름이 있다', 글자만(칸HTML(9)).includes(첫.title) && 글자만(칸HTML(9)).includes(끝학교.title));
-  재본다('⭐ 끝에 「이것은 통계이지 당신이 아닙니다」와 주소', 글자만(칸HTML(18)).includes('통계이지') && 글자만(칸HTML(18)).includes(주소));
+  재본다('⭐ 끝에 「」와 주소', 글자만(칸HTML(18)).includes('통계이지') && 글자만(칸HTML(18)).includes(주소));
   재본다('⛔ 목소리때들이 셋, 시간순', 목소리때들.length === 3 && 목소리때들.every((t, i) => i === 0 || t > 목소리때들[i - 1]));
   재본다('⛔ 입 움직임 시작이 목소리 시작과 같다', 말함.every((w, i) => Math.abs(w[0] - 목소리때들[i]) < 0.01));
   const 댈수 = new Set([온라인.length, ...Object.keys(해별), ...Object.values(해별), 해(첫), 달(첫), 해(끝학교), 달(끝학교)].map(String));

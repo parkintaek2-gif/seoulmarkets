@@ -26,7 +26,7 @@ const 뿌리 = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
 
 /* ── 재는 규칙 (순수 함수 — 자가시험이 여기를 잰다) ───────────── */
 
-/** 남은 날. 만료일이 없으면 null — **0 으로 채우지 않는다.** */
+/** 남은 날. 만료일이 없으면 null — **** */
 export function 남은날(만료, 오늘) {
   if (!/^\d{4}-\d{2}-\d{2}$/.test(String(만료 ?? ''))) return null;
   const a = Date.parse(`${만료}T00:00:00Z`);

@@ -33,7 +33,7 @@ import { 잰때문자 } from './lib/잰때.mjs';
 const 뿌리 = path.resolve(
   path.dirname(new URL(import.meta.url).pathname).replace(/^\/([A-Za-z]:)/, '$1'), '..');
 
-/** 없는 값과 0 을 가른다. ⛔ 없는 것을 0 으로 채우지 않는다 */
+/** 없는 값과 0 을 가른다. ⛔ 없는 것을  */
 export function 수로(v) {
   if (v === null || v === undefined || v === '') return null;
   const n = Number(v);

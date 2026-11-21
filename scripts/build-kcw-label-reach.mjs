@@ -54,7 +54,7 @@ export function 가운데(값들) {
    * 🔴 [2026-09-04 20:5x] **`Number(null)` 이 0 이다.** 자가시험이 잡았다.
    *   처음에 `.map(Number).filter(Number.isFinite)` 로 썼더니 `null` 이 **0 으로 바뀌어
    *   그대로 통과했다.** 그러면 「읽힌 수를 모르는 사람」이 「하루 0회 읽힌 사람」이 된다.
-   *   ⛔ 그것이 바로 우리 강령 ③이 금하는 것이다 — 「0 으로 채우지 않는다」.
+   *   ⛔ 그것이 바로 우리 강령 ③이 금하는 것이다 — 「」.
    *   ⚠ `Number('')` 도 0 이고 `Number(false)` 도 0 이다. 그래서 **수인 것만** 먼저 고른다.
    */
   const v = (값들 ?? []).filter((x) => typeof x === 'number' && Number.isFinite(x))
@@ -66,7 +66,7 @@ export function 가운데(값들) {
 
 /**
  * 회사 하나를 잰다.
- * ⛔ 이어진 사람이 없으면 **아무 말도 하지 않는다** — 0 으로 채우지 않는다.
+ * ⛔ 이어진 사람이 없으면 **아무 말도 하지 않는다** — 
  */
 export function 회사재기(회사, 사람들) {
   const 이어진 = (사람들 ?? []).filter((p) => Number.isFinite(p?.하루평균));

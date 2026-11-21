@@ -73,7 +73,7 @@ export function 걸린말(글, 말들) {
   return 말들.filter((w) => 밑.includes(String(w).toLowerCase()));
 }
 
-/** 폴더 아래 지면 파일을 모은다. 없으면 «없다»를 그대로 돌려준다 (0 으로 채우지 않는다) */
+/** 폴더 아래 지면 파일을 모은다. 없으면 «없다»를 그대로 돌려준다 () */
 export function 지면들(밑, 있나 = fs.existsSync, 읽기 = fs.readdirSync) {
   if (!있나(밑)) return null;
   const 벌 = [];

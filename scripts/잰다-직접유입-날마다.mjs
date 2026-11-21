@@ -58,7 +58,7 @@ export function 접기(줄들, { 우리것인가, 사이트이름 }) {
   return { 표, 날들: [...날들].sort() };
 }
 
-/** 날 목록의 평균 — 날이 없으면 null 이다. ⛔ 0 으로 채우지 않는다 */
+/** 날 목록의 평균 — 날이 없으면 null 이다. ⛔  */
 export function 평균(날별, 날들, 칸이름) {
   if (!날들.length) return null;
   const 합 = 날들.reduce((a, d) => a + ((날별?.[d] || {})[칸이름] || 0), 0);

@@ -114,7 +114,7 @@ const 갈래들 = Object.entries(갈래별).map(([k, 줄]) => {
       const 온전 = 줄.filter((r) => r.seaEditionsWithArticle === 판들.length
         && Number.isFinite(r.seaPerMillionTotal))
         .sort((a, b) => b.seaPerMillionTotal - a.seaPerMillionTotal);
-      if (!온전.length || !(합 > 0)) return null;      /* ⛔ 못 재면 null. 0 으로 채우지 않는다 */
+      if (!온전.length || !(합 > 0)) return null;      /* ⛔ 못 재면 null.  */
       const 첫 = 온전[0];
       return {
         name: 첫.name,

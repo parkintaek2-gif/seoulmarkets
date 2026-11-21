@@ -79,7 +79,7 @@ export function 본다한장(이름, 기록) {
   }
 
   if (Number.isFinite(기록.sitemapPages) && 기록.sitemapPages <= 0) {
-    흠.push(`${이름} — sitemapPages 가 ${기록.sitemapPages} 다. 0 으로 채우지 않는다`);
+    흠.push(`${이름} — sitemapPages 가 ${기록.sitemapPages} 다. `);
   }
   return 흠;
 }

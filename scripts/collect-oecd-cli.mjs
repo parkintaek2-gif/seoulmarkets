@@ -86,7 +86,7 @@ function 자가시험() {
     'REF_AREA,Reference area,TIME_PERIOD,Time period,OBS_VALUE,Observation value',
     'KOR,Korea,2026-08,,,',
   ].join('\n');
-  본다('값이 빈 줄은 버린다 — 0 으로 채우지 않는다', Object.keys(읽는다(값빈줄).나라).length === 0);
+  본다('값이 빈 줄은 버린다 — ', Object.keys(읽는다(값빈줄).나라).length === 0);
 
   const 진 = 것.filter((x) => !x.참);
   console.log('■ 자가시험 ' + (것.length - 진.length) + '/' + 것.length);

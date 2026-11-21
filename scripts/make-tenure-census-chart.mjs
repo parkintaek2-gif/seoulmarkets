@@ -3,7 +3,7 @@
  * make-tenure-census-chart.mjs — 근속연수, 순위가 아니라 «상장사 전체의 분포».
  * 재료: collect-tenure.mjs 가 받은 archive/raw/dart-employment/employment-YYYY.ndjson (사업보고서, 11011).
  * korea-how-long-industries-keep-workers(업종별 순위)와 다르다 — 이건 «회사 하나하나가 어디에 있나»다.
- * 강령 「평균이 아니라 분포」 — 평균 하나를 내지 않고 구간별 몇 %인지를 낸다.
+ * 강령 「」 — 평균 하나를 내지 않고 구간별 몇 %인지를 낸다.
  * 출력: public/charts/tenure-census.svg · src/data/tenure-census.json
  */
 import fs from 'node:fs';

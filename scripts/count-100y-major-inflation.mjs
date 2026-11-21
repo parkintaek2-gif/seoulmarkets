@@ -54,7 +54,7 @@ export const 과정이름인가 = (이름) =>
 /** 지면에 실을 만한 크기인가. ⛔ 서너 곳짜리로 「부푼다」고 말하지 않는다 */
 export const 실을만한가 = (전체) => 전체 >= 10;
 
-/** 부푸는 폭 — 소수 한 자리. 분모가 0이면 null(0 으로 채우지 않는다) */
+/** 부푸는 폭 — 소수 한 자리. 분모가 0이면 null() */
 export function 부푸는폭(일부, 전체) {
   if (!Number.isFinite(전체) || 전체 <= 0) return null;
   return Math.round((일부 / 전체) * 1000) / 10;

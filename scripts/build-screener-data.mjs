@@ -42,7 +42,7 @@
  * UAE 중앙은행(CBUAE) 고시 환율로 달러로 맞추고, 쓴 환율과 날짜를 지면이 적는다.
  * 줄마다 «원래 통화와 원래 값»도 함께 실어 신고서와 맞대어 볼 수 있게 한다.
  *
- * ⛔ 값을 반올림하거나 0 으로 채우지 않는다. 없는 칸은 «없는 채로» 보낸다 —
+ * ⛔ 값을 반올림하거나  없는 칸은 «없는 채로» 보낸다 —
  *   스크리너가 「값이 없어 빠진 곳」을 세려면 null 이 null 인 채로 와야 한다.
  *
  *   node scripts/build-screener-data.mjs
@@ -132,7 +132,7 @@ const 환율광 = 'archive/raw/uae-cbuae-fx';
 const 나가는곳 = 'public/data/screener.json';
 const 머리나가는곳 = 'src/data/screener-meta.json';
 
-/** 값이 있으면 숫자로, 없으면 null 로. ⛔ 0 으로 채우지 않는다 */
+/** 값이 있으면 숫자로, 없으면 null 로. ⛔  */
 export function 수(v) {
   if (v === null || v === undefined || v === '') return null;
   const n = Number(String(v).replace(/,/g, ''));

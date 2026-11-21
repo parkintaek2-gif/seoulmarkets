@@ -34,7 +34,7 @@ type 날 = {
 const 날들 = ((spread as any).날들 || []) as 날[];
 const 끝 = 날들.length ? 날들[날들.length - 1] : null;
 
-/** ⛔ 못 잰 값을 0 으로 채우지 않는다 — 화면에도 「—」로 낸다 */
+/** ⛔ 못 잰 값을  — 화면에도 「—」로 낸다 */
 const 수 = (v: number | null | undefined, 꼬리 = '%') =>
   (v == null || !Number.isFinite(v) ? '—' : v.toFixed(3) + 꼬리);
 

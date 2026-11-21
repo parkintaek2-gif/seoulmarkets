@@ -70,7 +70,7 @@ export function 회사팩트골라내기(raw) {
  * 🔴 [2026-09-14 실측] efsah 는 `labels=` 로 걸러 주지 않는다 — 전부 announcement_type
  *   "Disclosure" 로 한 통에 온다. 「Financial statements for …」로 시작하는 제목만
  *   골라야 재무제표 제출이다(그 밖엔 Press Release·Earnings Call 등이 섞여 있다).
- * ⛔ 0으로 채우지 않는다 — 못 뽑은 수치는 그냥 없는 채로 둔다.
+ * ⛔  — 못 뽑은 수치는 그냥 없는 채로 둔다.
  */
 export function 재무제출이력골라내기(rows) {
   if (!Array.isArray(rows)) return [];

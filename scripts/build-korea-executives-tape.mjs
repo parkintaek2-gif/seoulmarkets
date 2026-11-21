@@ -32,7 +32,7 @@ export const 뿌리 = path.resolve(path.dirname(fileURLToPath(import.meta.url)),
 export const 들머리 = path.join(뿌리, 'archive', 'raw', 'dart-executives', 'executives-2025.ndjson');
 export const 낼곳 = path.join(뿌리, 'src', 'data', 'korea-executives-tape.json');
 
-/** 재직 개월 → 사람이 읽는 말. ⛔ 모르면 null — 0 으로 채우지 않는다 */
+/** 재직 개월 → 사람이 읽는 말. ⛔ 모르면 null —  */
 export function 재직말(개월) {
   const n = Number(개월);
   if (!Number.isFinite(n) || n <= 0) return null;

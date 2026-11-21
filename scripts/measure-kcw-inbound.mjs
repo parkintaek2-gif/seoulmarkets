@@ -59,7 +59,7 @@ export function 나가는링크들(html) {
     .filter((h) => !자원끝.test(h));
 }
 
-/** 가운데값. ⛔ 빈 목록이면 0 이 아니라 null 이다 — 못 잰 것을 0 으로 채우지 않는다 */
+/** 가운데값. ⛔ 빈 목록이면 0 이 아니라 null 이다 — 못 잰 것을  */
 export function 가운데(수들) {
   const s = [...수들].filter(Number.isFinite).sort((a, b) => a - b);
   if (!s.length) return null;

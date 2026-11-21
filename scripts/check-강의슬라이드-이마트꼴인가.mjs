@@ -136,7 +136,7 @@ export function 명반인장인가(xml) {
 }
 
 export function 꾸러미재기(파일) {
-  if (!fs.existsSync(파일)) return null;              /* 못 쟀다 — 0 으로 채우지 않는다 */
+  if (!fs.existsSync(파일)) return null;              /* 못 쟀다 —  */
   const 묶음 = fs.readFileSync(파일);
   const 것들 = 집목록(묶음);
   const 장이름 = 것들.filter((n) => /^ppt\/slides\/slide\d+\.xml$/.test(n));

@@ -37,7 +37,7 @@ export function 배열꺼내기(j) {
   return Object.values(j).find((v) => Array.isArray(v)) || [];
 }
 
-/** 값이 «없는» 것과 0 을 가른다. ⛔ 없는 것을 0 으로 채우지 않는다 */
+/** 값이 «없는» 것과 0 을 가른다. ⛔ 없는 것을  */
 export function 수로(v) {
   if (v === null || v === undefined || v === '') return null;
   const n = Number(v);
@@ -104,7 +104,7 @@ function 자가시험() {
   const 맞다 = (무엇, x) => 봄(무엇, !!x, true);
 
   /* 🔴 어제 이 함정을 밟았다 — Number(null) 은 0 이고 0 은 유한수라, «없는 값»이
-     「0」으로 채워졌다. 우리 강령의 「0 으로 채우지 않는다」를 코드로 어긴 것이다. */
+     「0」으로 채워졌다. 우리 강령의 「」를 코드로 어긴 것이다. */
   봄('null 은 null 로', 수로(null), null);
   봄('undefined 는 null 로', 수로(undefined), null);
   봄('빈 글자는 null 로', 수로(''), null);

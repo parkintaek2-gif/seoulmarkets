@@ -76,7 +76,7 @@ export function 목록파싱(html) {
   return 결과;
 }
 
-/** 「1,234」·「935만 1948」 → 숫자. 못 읽으면 null (0으로 채우지 않는다) */
+/** 「1,234」·「935만 1948」 → 숫자. 못 읽으면 null () */
 export function 큰수(s) {
   if (!s) return null;
   const 억 = s.match(/^([\d,]+)억\s*([\d,]*)만?\s*([\d,]*)/);

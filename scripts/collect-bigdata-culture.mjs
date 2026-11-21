@@ -107,7 +107,7 @@ export function 재기() {
   const c = 쪽셈(머리);
   봄('총건수를 응답 머리에서 읽는다', c.총건수 === 1344);
   봄('총쪽수를 응답 머리에서 읽는다', c.총쪽수 === 224);
-  봄('없으면 null 로 둔다 (0 으로 채우지 않는다)', 쪽셈('<p>아무것도 없다</p>').총건수 === null);
+  봄('없으면 null 로 둔다 ()', 쪽셈('<p>아무것도 없다</p>').총건수 === null);
 
   const 한줄 = '<li><a data-id="008f2300-3af2-11ec-bbc0-d7035fffebeb"><span>좋아요</span></a><span>문화소비</span><span>문화산업</span><span>CSV</span><span>무료</span><strong>공연시설 투자 예보</strong><p>ㅇ데이터 소개 - 전국 시군구별 공연시설명</p><span>유형</span><span>CSV</span><span>가격</span><span>무료</span><span>데이터 갱신주기</span><span>비주기</span><span>2026.07.24 업데이트</span></li>';
   const a = 쪽에서뽑기(머리 + '<ul>' + 한줄 + '</ul>');

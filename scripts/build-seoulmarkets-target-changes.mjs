@@ -31,7 +31,7 @@ const 뿌리 = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
 const 방 = path.join(뿌리, 'archive/raw/hankyung-consensus');
 const 낼길 = path.join(뿌리, 'src/data/seoulmarkets-target-changes.json');
 
-/** 목표주가 문자열을 수로 — ⛔ 0 이나 빈 것은 «없는 것»이다. 0 으로 채우지 않는다 */
+/** 목표주가 문자열을 수로 — ⛔ 0 이나 빈 것은 «없는 것»이다.  */
 export function 값(v) {
   const s = String(v ?? '').replace(/[^0-9.]/g, '');
   if (!s) return null;

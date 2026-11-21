@@ -6,7 +6,7 @@
  * «같은 표본»을 Parquet 으로도 낸다 — 손님이 pandas·DuckDB 로 바로 읽게.
  *
  * ⛔ 이 자가 지키는 것
- * ⛔ 0 으로 채우지 않는다 — null/undefined 는 그대로 null 로 낸다(hyparquet-writer 가
+ * ⛔  — null/undefined 는 그대로 null 로 낸다(hyparquet-writer 가
  *   nullable 컬럼을 기본 지원한다). 숫자 칸에서 Number(null)===0 함정을 만들지 않는다
  * ✅ 칸마다 타입을 «잰다» — 표본 안의 모든 값이 유한수(또는 빈 값)면 DOUBLE, 아니면 STRING.
  *   지어내지 않는다: 한 값이라도 숫자가 아니면 그 칸은 통째로 STRING 이다(섞어 낼 수 없다)

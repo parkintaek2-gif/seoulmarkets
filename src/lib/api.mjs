@@ -1062,7 +1062,7 @@ function accountDictionary(params, tier = 'free') {
 
 /**
  * /v1/financials — 상장사 연간 재무(DART 사업보고서). 2026-09-13 5번.
- * ⛔ DART 에 안 올라온 회사는 measured:false 에 값이 전부 null 이다. 0 으로 채우지 않는다.
+ * ⛔ DART 에 안 올라온 회사는 measured:false 에 값이 전부 null 이다. 
  * ⚠ basis 가 CFS 면 연결, OFS 면 별도다. 밝히지 않고 섞으면 회사끼리 비교가 안 된다.
  */
 function financialsCoverage() {

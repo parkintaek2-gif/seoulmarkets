@@ -47,7 +47,7 @@ const 낼길 = path.join(뿌리, 'src/data/wikitip-where-to-watch.json');
 /**
  * 한 작품이 **어느 나라에서 볼 수 있었나**의 바닥값.
  * ⛔ 「지금 볼 수 있다」가 아니다 — 그 나라 차트에 든 주가 있었다는 뜻이다.
- * ⛔ 못 잰 칸이 있는 나라는 넣지 않는다. 0 으로 채우지 않는다.
+ * ⛔ 못 잰 칸이 있는 나라는 넣지 않는다. 
  */
 export function 볼수있었던나라(작품) {
   return (작품?.byMarket ?? [])

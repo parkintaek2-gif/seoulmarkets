@@ -138,7 +138,7 @@ export function 오늘낸것(오늘, 실행) {
         '--diff-filter=A', '--name-only', '--pretty=format:', 'origin/main'],
       { encoding: 'utf8', maxBuffer: 32 * 1024 * 1024 });
   } catch {
-    return null;   /* ⛔ 못 쟀다. 0 으로 채우지 않는다 */
+    return null;   /* ⛔ 못 쟀다.  */
   }
   const 길들 = [...new Set(String(글).split('\n').map((x) => x.trim()).filter(Boolean))];
   const 센것 = {};

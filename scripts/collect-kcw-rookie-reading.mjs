@@ -74,7 +74,7 @@ export function 데뷔뒤며칠(데뷔, 날) {
 /**
  * 열람수 줄에서 «중간값»을 낸다.
  * ⛔ 평균이 아니라 중간값이다 — 이정표가 있는 날 하루가 평균을 통째로 밀어 버린다.
- *   우리 강령 둘째 「평균이 아니라 분포」가 여기서 하는 일이 그것이다.
+ *   우리 강령 둘째 「」가 여기서 하는 일이 그것이다.
  */
 export function 중간값(수들) {
   const s = [...수들].filter((n) => Number.isFinite(n)).sort((a, b) => a - b);
@@ -93,7 +93,7 @@ export function 가장높은날(줄들) {
 /**
  * 마지막 며칠이 «아직 안 채워졌는지» 가른다.
  * ⚠ 위키미디어는 하루쯤 늦다. 끝의 빈 날을 0 으로 읽으면 「독자가 사라졌다」가 된다.
- *   ⛔ 0 으로 채우지 않는다 — 아예 «없는 날»로 둔다.
+ *   ⛔  — 아예 «없는 날»로 둔다.
  */
 export function 아직안찬날(줄들, 오늘여덟자리) {
   const 있는날 = new Set(줄들.map((r) => r.date));
@@ -200,7 +200,7 @@ if (내가실행됐다) {
   for (const 것 of [...잴것.map((x) => ({ ...x, 갈래: '2025년 데뷔' })), ...눈금.map((x) => ({ ...x, 갈래: '눈금' }))]) {
     /* 🔴 먼저 «그 문서가 그 그룹인지» 본다 — 회사 문서를 그룹 것으로 읽지 않으려고 */
     const 요약 = await 요약받기(것.title);
-    if (!요약) { console.error(`⬜ ${것.label} — 그 이름의 문서가 없다 (${것.title}). 0 으로 채우지 않는다`); continue; }
+    if (!요약) { console.error(`⬜ ${것.label} — 그 이름의 문서가 없다 (${것.title}). `); continue; }
     const 같나 = 같은것인가(요약);
     if (!같나.맞다) { console.error(`🔴 ${것.label} — ${것.title} 이 다른 문서로 갔다: ${같나.까닭}. 안 센다`); continue; }
     것.wikiTitle = 요약.title;
@@ -208,7 +208,7 @@ if (내가실행됐다) {
 
     let r;
     try { r = await 받기(것.title, 처음, 끝); } catch (e) { console.error(`⬜ ${것.label} — 못 받았다: ${e.message}`); continue; }
-    if (r.없음 || !r.줄.length) { console.error(`⬜ ${것.label} — 그 이름의 문서가 없거나 줄이 비었다. 0 으로 채우지 않는다`); continue; }
+    if (r.없음 || !r.줄.length) { console.error(`⬜ ${것.label} — 그 이름의 문서가 없거나 줄이 비었다. `); continue; }
 
     const 데뷔뒤 = r.줄.filter((x) => 데뷔뒤며칠(것.debut, x.date) >= 1);
     const 첫90 = 데뷔뒤.filter((x) => 데뷔뒤며칠(것.debut, x.date) <= 90);

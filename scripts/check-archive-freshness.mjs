@@ -479,7 +479,7 @@ export function 쉰날집합(표 = 재봤더니없는날, 대장길 = 쉰날대�
 }
 
 export function 구멍찾기(날들, { 오늘 = 오늘날(), 거래일 = false, 창 = 10, 쉰날 = null, 장 = 'KRX' } = {}) {
-  if (!Array.isArray(날들) || !날들.length) return null;   /* 못 쟀다 — 0 으로 채우지 않는다 */
+  if (!Array.isArray(날들) || !날들.length) return null;   /* 못 쟀다 —  */
   const 가진 = new Set(날들.map((d) => d.getTime()));
   const 쉰 = 쉰날 || 쉰날집합();
   const 이른 = 날들.reduce((a, b) => (a < b ? a : b));
@@ -575,7 +575,7 @@ export function 재기(갈래, {
       const 있는것 = new Set(날들.map((d) => d.getTime()));
       for (const d of 더할것) if (!있는것.has(d.getTime())) { 날들.push(d); 있는것.add(d.getTime()); }
       날들 = 날들.sort((a, b) => a - b);
-    } catch { /* 못 읽으면 파일 이름만으로 잰다 — 0 으로 채우지 않는다 */ }
+    } catch { /* 못 읽으면 파일 이름만으로 잰다 —  */ }
   }
   if (!날들.length) return { ...갈래, 상태: '못쟀다', 까닭: '이름에서 날짜를 못 읽었다', 마지막: null, 지남: null };
   const 마지막 = 날들[날들.length - 1];
@@ -905,7 +905,7 @@ if (나 && process.argv.includes('--자가시험')) {
       !쉰날대장읽기('2026-10-05\t2026-10-06\tx\t358건\t2026-10-01 → 358건\t받았다').has('2026-10-05'));
     검('⛔ 대장이 비었거나 깨져도 안 터진다 — 빈 집합이다',
       쉰날대장읽기('').size === 0 && 쉰날대장읽기(null).size === 0 && 쉰날대장읽기('아무 글').size === 0);
-    검('🔴 대장을 못 읽으면 빼 주지 않는다 — 0 으로 채우지 않는다',
+    검('🔴 대장을 못 읽으면 빼 주지 않는다 — ',
       쉰날집합([], path.join(뿌리, '없는-대장.tsv')).size === 0);
 
     /* 🔴🔴 장(場)이 다르면 달력도 다르다 — 한국에서 잰 쉰 날을 도쿄에 빼 주지 않는다 */
@@ -920,7 +920,7 @@ if (나 && process.argv.includes('--자가시험')) {
   }
   검('거래일 갈래가 아니면 주말도 센다',
     구멍찾기([D(9, 4), D(9, 7), D(9, 8), D(9, 9)], { 오늘: 오늘10, 거래일: false }).length === 2);
-  검('⛔ 날이 없으면 null — 0 으로 채우지 않는다', 구멍찾기([], { 오늘: 오늘10 }) === null);
+  검('⛔ 날이 없으면 null — ', 구멍찾기([], { 오늘: 오늘10 }) === null);
   검('⛔ 배열이 아니면 null', 구멍찾기(null, { 오늘: 오늘10 }) === null);
   검('🔴 조용한 날이 정상인 갈래(증권사 리포트)에는 구멍을 걸지 않는다',
     갈래들.find((x) => x.길 === 'archive/raw/broker')?.매일 === false);

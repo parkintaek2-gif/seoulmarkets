@@ -17,7 +17,7 @@
  * ── 무엇을 하나 ────────────────────────────────────────────────
  *   1) ECOS StatisticSearch(817Y002, 일별)로 만기별 최근 값을 받는다(며칠 창 — T+1~3 지연 대비).
  *   2) 만기마다 「가장 최근 날짜」를 쓰되, 여럿이 어긋나면 **공통으로 가장 많은 만기가
- *      찍힌 날짜**를 그 날로 정한다(0으로 채우지 않는다 — 못 찍은 만기는 뺀다).
+ *      찍힌 날짜**를 그 날로 정한다( — 못 찍은 만기는 뺀다).
  *   3) archive/raw/bond-yields-ecos/<날짜>.json 으로 원본 저장(put, R2 백업).
  *   4) src/data/bond-yield-curve.json + public/charts/bond-yield-curve.svg 를 덮어 쓴다
  *      (build-bond-yield-curve.mjs 와 같은 자리 — 이제 이 자가 그 자리의 주인이다).

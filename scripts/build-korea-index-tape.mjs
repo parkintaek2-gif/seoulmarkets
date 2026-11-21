@@ -69,7 +69,7 @@ export function 연최저다듬기({ 일자, 연최저, 연최저일 }) {
   return { 값: null, 까닭 };
 }
 
-/** 못 읽으면 null, 있으면 그대로(⛔ 0 으로 채우지 않는다) */
+/** 못 읽으면 null, 있으면 그대로(⛔ ) */
 function 수(v) { return Number.isFinite(v) ? v : null; }
 
 /**

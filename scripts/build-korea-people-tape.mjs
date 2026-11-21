@@ -13,7 +13,7 @@ import { pathToFileURL } from 'node:url';
  *   people-page.mjs)이 퍼센트로 한 번 곱해 낸 것과 다른 목적이다. 여기는 API 원자료라
  *   «가공하지 않은 사실»을 원 단위 그대로 낸다(강령 ③). 필드 이름에 Ratio 를 박아
  *   손님이 다시 헷갈리지 않게 한다.
- * ⛔ 급여비율 빈칸을 0 으로 채우지 않는다 — `payRatioWithheldReason` 이 «해당 없음»과
+ * ⛔ 급여비율 빈칸을  — `payRatioWithheldReason` 이 «해당 없음»과
  *   «못 쟀다»를 가른다(people-page 스크립트가 이미 겪은 함정, 그대로 물려받는다).
  * ⛔ ticker 를 숫자로 바꾸지 않는다 — "0015S0" 처럼 영숫자 6자리 코드가 실제로 있다
  *   (2026-09-12 실측, people-page 스크립트 knownGap 참고).

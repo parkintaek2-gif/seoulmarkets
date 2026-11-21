@@ -263,7 +263,7 @@ if (나 && process.argv.includes('--자가시험')) {
   검('사람줄 — 그래도 en 을 줄에 싣는다 (숨기지 않는다)', 줄.english === 900);
   검('사람줄 — 1위와 2위의 «차»를 낸다', 줄.margin === 100);
   검('사람줄 — 판 이름을 영문으로 낸다', 줄.top === 'Spanish' && 줄.second === 'Japanese');
-  검('⛔ 사람줄 — 수 아닌 칸을 0 으로 채우지 않는다', (() => {
+  검('⛔ 사람줄 — 수 아닌 칸을 ', (() => {
     const r = 사람줄({ name: 'Y', 수들: { en: null, ja: 5 } });
     return r.english === null && r.topCode === 'ja';
   })());

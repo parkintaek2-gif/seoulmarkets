@@ -414,7 +414,7 @@ const DESC = `Every ${g.name} member birthday: ${g.membersWithBirthday} on recor
               <td>{m.born ? `${m.bornText}, ${m.born.slice(0, 4)}` : '—'}</td>
               <td class="tot">{m.age ?? '—'}</td>
               <td>{m.sign ? <a href={`/star-sign/${m.sign.slug}`}>{m.sign.name}</a> : '—'}</td>
-              {/* ⛔ 날짜를 모르면 「—」. 0 으로 채우지 않는다 */}
+              {/* ⛔ 날짜를 모르면 「—」.  */}
               <td>{(() => {
                 const 날 = 같은날(m.born);
                 if (!날) return '—';

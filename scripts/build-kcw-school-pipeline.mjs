@@ -76,7 +76,7 @@ export function 잇기(학교자료, 출생자료) {
       이름: b.name ?? null,
       /* 🔴 [2026-09-04] 여기서 처음에 `Number.isFinite(Number(b.sitelinks))` 로 썼다가
          «자가시험이 잡았다» — Number(null) 은 0 이고 0 은 유한수라, 값이 없는 사람이
-         「언어판 0개」로 «채워졌다». 우리 강령의 「못 잰 것을 0 으로 채우지 않는다」를
+         「언어판 0개」로 «채워졌다». 우리 강령의 「못 잰 것을 」를
          내가 코드로 어긴 것이다.
          ⛔ 그래서 «없음»을 먼저 가른 뒤에 수로 바꾼다. 순서를 바꾸면 다시 0 이 된다. */
       언어판: (b.sitelinks === null || b.sitelinks === undefined || b.sitelinks === '')

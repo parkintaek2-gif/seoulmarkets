@@ -155,7 +155,7 @@ console.log('  스캐너 판별까지 전부 통과');
     ['python-requests/2.31.0', '기타:python-requests'],
     ['curl/8.4.0', '기타:curl'],
     ['axios/1.6.2', '기타:axios'],
-    /* ⚠ UA 가 아예 없는 것도 «없다»고 적는다 — 0 으로 채우지 않는다 */
+    /* ⚠ UA 가 아예 없는 것도 «없다»고 적는다 —  */
     ['', '기타:빈UA'],
     /* ⛔ 이미 이름을 아는 것들은 **그대로**여야 한다 — 이름표가 덮어쓰면 안 된다 */
     ['Mozilla/5.0 (compatible; GPTBot/1.2; +https://openai.com/gptbot)', 'ai:openai학습'],

@@ -31,7 +31,7 @@ if (!process.argv.includes('--약관을-읽었고-라이선스가-있다')) {
  * 방식: HKEX 상장사 MD&A(Management Discussion & Analysis)는 상장규정 부록16에 따라
  * "Revenue ... amounted to approximately HK$X million" / "Profit(loss) ... attributable
  * to owners ... approximately HK$X million" 식 문장이 준정형으로 들어간다. 그 문장을 정규식으로 문다.
- * ⛔ 전 회사가 이 문장꼴을 안 쓴다 — 못 뽑으면 못 뽑았다고 적는다(0으로 채우지 않는다).
+ * ⛔ 전 회사가 이 문장꼴을 안 쓴다 — 못 뽑으면 못 뽑았다고 적는다().
  *
  * 쓰는 법
  *   node scripts/extract-hongkong-financial-figures.mjs --자가시험

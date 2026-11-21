@@ -47,7 +47,7 @@ const 마지막온해 = Number((d as any).마지막온해) || null;
 
 /** 화면에 낼 해 — 표를 2005년부터 낸다. 그 앞은 따로 「가장 큰 코호트」로 낸다 */
 const 표해들 = 해들.filter((y) => y >= 2005);
-/** ⛔ 못 잰 칸을 0 으로 채우지 않는다. 없는 것은 «—» 로 낸다 */
+/** ⛔ 못 잰 칸을  없는 것은 «—» 로 낸다 */
 const 칸 = (y: number, 갈래: string) => {
   const v = 해갈래[String(y)]?.[갈래];
   return Number.isFinite(v) ? Number(v) : null;

@@ -48,7 +48,7 @@ const 압축 = (r, 상세) => ({
   d: r.date ?? null,
   h: r.house ?? null,
   s: r.stock ?? null,
-  /** 목표주가를 **제시하지 않은 리포트가 실제로 있다.** 0 으로 채우지 않는다 */
+  /** 목표주가를 **제시하지 않은 리포트가 실제로 있다.**  */
   p: r.targetPrice ?? null,
   o: r.opinion ?? null,
   /*

@@ -276,7 +276,7 @@ function 자가시험() {
 const 내가실행됐다 = process.argv[1] && fileURLToPath(import.meta.url) === path.resolve(process.argv[1]);
 const 앞 = `https://wikimedia.org/api/rest_v1/metrics/pageviews/per-article/${판}.wikipedia/all-access/user/`;
 
-/** 🔴 429 는 다시 받는다. 못 받은 것을 0 으로 채우지 않는다 */
+/** 🔴 429 는 다시 받는다. 못 받은 것을  */
 async function 한문서(문서, 시도수 = 4) {
   for (let i = 1; i <= 시도수; i += 1) {
     const r = await fetch(`${앞}${encodeURIComponent(문서)}/monthly/${창.처음}/${창.끝}`,

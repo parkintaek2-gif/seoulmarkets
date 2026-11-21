@@ -898,7 +898,7 @@ if (내가실행됐다) {
       console.log(`\n   ▼ 지면 전부 (지면열림 · ${일수}일) — 자가 읽어 가는 자리다`);
       for (const r of 줄들) console.log(`     ${String(r.열림).padStart(6)}  ${r.자리}`);
       console.log('   ▲ 지면 전부 끝');
-      if (!줄들.length) console.log('   ⬜ 줄이 하나도 없다 — 못 쟀다. 0 으로 채우지 않는다.');
+      if (!줄들.length) console.log('   ⬜ 줄이 하나도 없다 — 못 쟀다. ');
     }
   }
 
@@ -951,7 +951,7 @@ if (내가실행됐다) {
     if (지면.오류) {
       console.log(`   ⛔ 못 쟀다 — ${지면.오류.slice(0, 160)}`);
     } else if (!지면.줄.length) {
-      console.log('   ⬜ 줄이 없다 — 못 쟀다 (0 으로 채우지 않는다)');
+      console.log('   ⬜ 줄이 없다 — 못 쟀다 ()');
     } else {
       const 홈줄 = 지면.줄.filter((r) => 홈경로인가(r.키));
       const 데이터줄 = 지면.줄.filter((r) => 데이터지면인가(r.키));

@@ -136,7 +136,7 @@ const 쌍들 = [...쌍.entries()]
       identicalWeeks: s.같은주,
       /* 그 주에 둘 중 적은 쪽이 몇 편이었나 — 이 수가 작으면 겹침이 쉽게 커진다 */
       meanSmallerSet: +(s.크기합 / s.주).toFixed(1),
-      /* ⬜ 다섯 편 이상인 주가 스물이 안 되면 «못 쟀다»로 둔다. 0 으로 채우지 않는다 */
+      /* ⬜ 다섯 편 이상인 주가 스물이 안 되면 «못 쟀다»로 둔다.  */
       thickWeeks: s.굵주,
       thickOverlapPc: s.굵주 >= 20 ? +((100 * s.굵합) / s.굵주).toFixed(1) : null,
     };

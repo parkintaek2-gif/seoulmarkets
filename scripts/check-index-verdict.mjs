@@ -49,7 +49,7 @@ export function 판정가르기(coverageState, verdict) {
   return '그밖';
 }
 
-/** ⭐ 표본에서 몫을 낼 때 «못 물어본 것»을 분모에서 뺀다 — 0 으로 채우지 않는다 */
+/** ⭐ 표본에서 몫을 낼 때 «못 물어본 것»을 분모에서 뺀다 —  */
 export function 몫내기(셈) {
   const 물어본 = Object.entries(셈)
     .filter(([k]) => k !== '못물어봄')
