@@ -20,6 +20,8 @@
 <style>
 #klmHelpWrap{display:none}
 html:has(#header-wrapper[data-sub-code="S2N157"]) #klmHelpWrap{display:block}
+/* 중부매일 머리칸이 아예 없으면 이 파일을 그냥 열어 보시는 것입니다. 그때도 보이게 합니다. */
+html:not(:has(#header-wrapper)) #klmHelpWrap{display:block}
 #klmHelpWrap .klm-bar{display:flex;align-items:center;justify-content:center;gap:8px;
  box-sizing:border-box;width:100%;margin:0 0 14px;padding:13px 16px;
  background:#1b4f9c;color:#fff;text-decoration:none;
