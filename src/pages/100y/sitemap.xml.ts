@@ -411,6 +411,7 @@ export const GET: APIRoute = () => {
     /* 🔴 2026-09-06 — 뉴스 인용(「청년 취업자 45개월째 감소」)을 KOSIS 원자료로
        재계산해 검증. 8월 이후 값이 공표되면(다음 공표 9/9) 다시 재는 monthly. */
     { path: '/youth-employment-streak', priority: '0.8', changefreq: 'monthly' },
+    { path: '/college-job-perception-2026', priority: '0.7', changefreq: 'yearly' },
     /* 🔴 2026-09-07 — 커뮤니티 씨앗(「'80% 선발' 수시 원서접수」)을 계기로 통계청
        장래인구추계 18세 인구를 직접 재 확인. 매년 갱신되는 추계라 yearly. */
     { path: '/college-age-population', priority: '0.7', changefreq: 'yearly' },
