@@ -94,7 +94,7 @@ async function 돈다(묶음, 몇장) {
   console.log('  사이트맵에 있는 장 :', 주소들.length);
   if (!주소들.length) {
     console.log('  🔴 사이트맵에 한 장도 없다 — 네이버·구글이 이 지면을 «알 길이 없다»');
-    console.log('     사이트맵에만 올리면 고아가 되지만, 사이트맵에 없으면 아예 모른다.');
+    console.log('     사이트맵에만 올리면 고립가 되지만, 사이트맵에 없으면 아예 모른다.');
     return;
   }
 
