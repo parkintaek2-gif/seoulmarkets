@@ -1,0 +1,20 @@
+{
+  "v": 5,
+  "createdOnFiles": { "v": 1, "at": "2026-11-23T20:30:00+09:00" },
+  "lists": "css",
+  "format": { "v": 1, "shared": ["project/deck.css"] },
+  "title": "5번 업무보고 2026-11-23",
+  "order": ["cover", "summary", "visitors", "content", "fixes", "doing", "next", "blocked", "close"],
+  "sections": {
+    "s1": { "description": "오늘 하루를 한 장으로 요약한다", "start": "cover" },
+    "s2": { "description": "방문자 수치와 오늘 낸 콘텐츠", "start": "visitors" },
+    "s3": { "description": "고친 것과 다음에 할 일", "start": "fixes" }
+  },
+  "faces": {
+    "noto-sans-kr": {
+      "family": "Noto Sans KR",
+      "href": "https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;700;900&display=swap"
+    }
+  },
+  "designSystems": []
+}
