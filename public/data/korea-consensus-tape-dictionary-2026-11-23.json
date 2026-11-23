@@ -1,0 +1,30 @@
+{
+  "product": "Korea Consensus Tape",
+  "version": "2026-11-23",
+  "publisher": "SeoulMarkets (KLifeDesign Inc.)",
+  "disclaimer": "Not investment advice. target_change records what a broker filed, not a buy/sell recommendation.",
+  "priceStatus": "⬜ Not priced yet. The redistribution scope of the underlying listing has not been confirmed (see notMeasured) — this file ships free until that is resolved.",
+  "whatThisIs": "One row per Hankyung Consensus broker report from consensus-2026-11-11.json (a rolling ~31-day window the source page itself enforces — this is not our archive's full history). 1191 reports · 343 raised/lowered target prices · 218 named analysts · 12 brokers · 269 tickers.",
+  "whatThisIsNot": [
+    "Not a live feed — this is a dated snapshot; it does not update after publication.",
+    "Not a buy/sell signal. target_change is a fact about what the broker filed, not a recommendation.",
+    "Not backfillable. The source page only ever shows ~31 days; a day not collected on time is gone for good (see check-archive-freshness.mjs, \"산업활동동향\" 갈래 pattern applied to this collector too)."
+  ],
+  "source": "Hankyung Consensus (markets.hankyung.com) — collected daily via scripts/collect-seoulmarkets-hankyung-consensus.mjs",
+  "columns": {
+    "report_id": "Source report number — primary key.",
+    "published_on": "Report publish date, ISO 8601 (YYYY-MM-DD).",
+    "analyst_name": "Named analyst as the source lists it. Null if the source did not attribute one.",
+    "broker": "Brokerage house name.",
+    "ticker": "KRX 6-digit code. Null for macro/non-ticker reports.",
+    "sector": "Sector label as the source lists it (Korean). Null if not a sector-tagged report.",
+    "rating": "Analyst rating/opinion as filed (Korean, e.g. 매수/BUY). Not translated — we do not invent an English gloss.",
+    "target_price": "Target price in this report. Null, not 0, if the report did not set one — a filed \"0\" is treated as \"not stated,\" never as a price.",
+    "prev_target_price": "The analyst's previous target for the same stock, when the source states one. Null if none.",
+    "target_change": "\"raised\" | \"lowered\" | \"held\" | \"new\" | null. Computed by us from target_price vs prev_target_price. Null only when this report itself carries no target price."
+  },
+  "notMeasured": [
+    "⬜ Redistribution scope of the Hankyung Consensus listing — we recount the list ourselves (facts: report id, house, analyst, target, rating), but whether the listing itself may be redistributed as a product is not yet confirmed. Do not price this file until that is resolved.",
+    "All pages received this run (못받은쪽 empty)."
+  ]
+}
