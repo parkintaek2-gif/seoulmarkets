@@ -1,0 +1,123 @@
+---
+/**
+ * /100y/irregular-share-by-age — 연령대별 비정규직 비중 (2016·2021·2025·2026년 8월)
+ *
+ * 출처  KOSIS 101/DT_1DE7006S 경제활동인구조사 근로형태별 부가조사(매년 8월).
+ * 비중은 표의 «비정규직 ÷ 임금근로자»(천명)를 이 지면에서 직접 나눈 값이다.
+ * ⛔ 원인 추측·조언은 싣지 않는다. 같은 해 나이별 단면이라 한 사람이 나이 들며 바뀐 값이 아니다.
+ */
+import HundredYear from '../../../layouts/HundredYear.astro';
+import NextQuestionBrief from '../../../components/NextQuestionBrief.astro';
+import HundredAgeWalk from '../../../components/HundredAgeWalk.astro';
+import 원본 from '../../../data/100yearmap/irregular-share-by-age.json';
+
+const 자료 = 원본 as any;
+const 월들: string[] = 자료.월;
+const 연령: string[] = 자료.연령;
+const 이름 = (a: string) => ({ '15-19세': '15~19세', '20-29세': '20대', '30-39세': '30대', '40-49세': '40대', '50-59세': '50대', '60세이상': '60세 이상' } as any)[a] ?? a;
+const 해 = (m: string) => `${m.slice(0, 4)}년`;
+const 비중 = (성: string, a: string, m: string) => {
+  const c = 자료.값[성][a][m];
+  return Math.round((c.비정규직 / c.임금근로자) * 1000) / 10;
+};
+const 만명 = (n: number) => `${(n / 10).toLocaleString('ko-KR', { maximumFractionDigits: 1 })}만명`;
+const 최신 = 월들[월들.length - 1];
+const 처음 = 월들[0];
+const 이십대 = 비중('계', '20-29세', 최신);
+const 이십대처음 = 비중('계', '20-29세', 처음);
+const 전체 = 비중('계', '계', 최신);
+const 삼십대 = 비중('계', '30-39세', 최신);
+const 육십 = 비중('계', '60세이상', 최신);
+const 이십대수 = 자료.값['계']['20-29세'][최신];
+
+const desc =
+  `경제활동인구조사 근로형태별 부가조사(2026년 8월)에서 20대 임금근로자 ${만명(이십대수.임금근로자)} 중 비정규직은 ${만명(이십대수.비정규직)}, ` +
+  `비중은 ${이십대}%입니다. 2016년 8월 ${이십대처음}%였습니다. 같은 조사에서 30대는 ${삼십대}%, 60세 이상은 ${육십}%입니다.`;
+
+const jsonLd = {
+  '@context': 'https://schema.org',
+  '@type': 'Dataset',
+  name: '연령대별 비정규직 비중 — 경제활동인구조사 근로형태별 부가조사',
+  description: desc,
+  dateModified: 자료.만든날,
+  creator: { '@type': 'Organization', name: '백년지도' },
+  sourceOrganization: { '@type': 'Organization', name: 자료.출처.이름 },
+  isBasedOn: 자료.출처.주소,
+  variableMeasured: ['임금근로자 중 비정규직 비중', '연령대', '성별'],
+};
+---
+
+<HundredYear
+  title={`20대 임금근로자 10명 중 4명은 비정규직입니다 (${해(최신)} 8월 기준)`}
+  description={desc}
+  jsonLd={jsonLd}
+>
+  <h1>나이별로 본<br />비정규직 비중</h1>
+  <p class="sub">
+    통계청 경제활동인구조사 근로형태별 부가조사(매년 8월) 값입니다. 임금근로자 가운데 비정규직이 차지하는 비중을 나이대별로 계산했습니다.
+  </p>
+
+  <div class="answer">
+    <p class="answer-label">20대 임금근로자 중 비정규직 ({해(최신)} 8월)</p>
+    <p class="answer-num">{이십대}%</p>
+    <p class="answer-sub">{해(처음)} 8월 {이십대처음}% · 전체 연령 {전체}% · 30대 {삼십대}% · 60세 이상 {육십}%</p>
+  </div>
+
+  <h2>나이대별 비정규직 비중, 네 해 비교</h2>
+  <div class="tablewrap">
+    <table>
+      <thead>
+        <tr><th>나이</th>{월들.map((m) => <th>{해(m)} 8월</th>)}<th>{해(최신)} 임금근로자</th></tr>
+      </thead>
+      <tbody>
+        {연령.map((a) => (
+          <tr>
+            <td>{이름(a)}</td>
+            {월들.map((m) => <td>{m === 최신 ? <strong>{비중('계', a, m)}%</strong> : `${비중('계', a, m)}%`}</td>)}
+            <td>{만명(자료.값['계'][a][최신].임금근로자)}</td>
+          </tr>
+        ))}
+        <tr>
+          <td>전체</td>
+          {월들.map((m) => <td>{m === 최신 ? <strong>{비중('계', '계', m)}%</strong> : `${비중('계', '계', m)}%`}</td>)}
+          <td>{만명(자료.값['계']['계'][최신].임금근로자)}</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <h2>남자와 여자 ({해(최신)} 8월)</h2>
+  <div class="tablewrap">
+    <table>
+      <thead><tr><th>나이</th><th>남자</th><th>여자</th></tr></thead>
+      <tbody>
+        {연령.map((a) => (
+          <tr><td>{이름(a)}</td><td>{비중('남자', a, 최신)}%</td><td>{비중('여자', a, 최신)}%</td></tr>
+        ))}
+        <tr><td>전체</td><td><strong>{비중('남자', '계', 최신)}%</strong></td><td><strong>{비중('여자', '계', 최신)}%</strong></td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <h2>⚠ 이 자료로 말할 수 없는 것</h2>
+  <ul>
+    <li>같은 해 나이대를 나란히 놓은 값입니다. 한 사람이 나이가 들면서 비중이 바뀐 것을 뜻하지 않습니다.</li>
+    <li>비정규직은 통계청 분류(한시적·시간제·비전형 근로자)입니다. 일자리의 질이나 임금을 직접 재는 값이 아닙니다.</li>
+    <li>15~19세는 임금근로자가 {만명(자료.값['계']['15-19세'][최신].임금근로자)}로 표본이 작고, 학업과 일을 함께 하는 경우가 섞여 있을 수 있습니다.</li>
+    <li>이 비중이 나이대마다 다른 이유는 이 표에 없습니다.</li>
+    <li>비중은 표의 천명 단위 값을 나눠 소수 첫째 자리로 반올림한 것으로, 국가데이터처가 발표한 비율과 소수점에서 다를 수 있습니다.</li>
+  </ul>
+
+  <p class="note">
+    출처 — {자료.출처.이름}, 표 {자료.출처.표}. 기준 {월들.map(해).join('·')} 8월. 주소 <a href={자료.출처.주소} rel="noopener">{자료.출처.주소}</a>. 만든날 {자료.만든날}. 이용허락범위: {자료.출처.이용허락범위}.
+  </p>
+
+  <p class="note">
+    <a href="/first-job">← 처음 일자리까지 걸리는 시간</a>
+    <br />
+    <a href="/wage-education">← 학력별 월급여</a>
+  </p>
+
+  <HundredAgeWalk 키="irregular-share-by-age" />
+  <NextQuestionBrief 모은것="경제활동인구조사 근로형태별 부가조사 연령대별 비정규직 비중" />
+</HundredYear>

@@ -1,0 +1,118 @@
+---
+/**
+ * /100y/unemployment-by-age — 연령대별 실업률 (2015·2020·2025, 연간)
+ *
+ * 출처  KOSIS 101/DT_1DA7012S 경제활동인구조사 성/연령별 경제활동인구(연간).
+ * ⛔ 원인 추측·조언은 싣지 않는다. 65세 이상의 성별 값은 이 표에 없다.
+ */
+import HundredYear from '../../../layouts/HundredYear.astro';
+import NextQuestionBrief from '../../../components/NextQuestionBrief.astro';
+import HundredAgeWalk from '../../../components/HundredAgeWalk.astro';
+import 원본 from '../../../data/100yearmap/unemployment-by-age.json';
+
+const 자료 = 원본 as any;
+const 연도: string[] = 자료.연도;
+const 연령: string[] = 자료.연령;
+const 이름 = (a: string) => a.replace('-', '~').replace('세이상', '세 이상');
+const 값 = (성: string, a: string, y: string): number | undefined => 자료.값?.[성]?.[a]?.[y];
+const 칸 = (v: number | undefined) => (v == null ? '표에 없음' : `${v.toFixed(1)}%`);
+const 부호 = (n: number) => `${n > 0 ? '+' : ''}${n.toFixed(1)}%p`;
+const 최신 = 연도[연도.length - 1];
+const 처음 = 연도[0];
+const 전체 = 값('계', '계', 최신)!;
+const 이사 = 값('계', '20-24세', 최신)!;
+const 사오 = 값('계', '45-49세', 최신)!;
+const 오사 = 값('계', '50-54세', 최신)!;
+
+const desc =
+  `경제활동인구조사(국가데이터처 KOSIS) ${최신}년 연간 실업률은 전체 ${전체}%, 20~24세 ${이사}%, 45~49세 ${사오}%입니다. ` +
+  `연령대별로 ${처음}년·2020년·${최신}년 값을 나란히 놓았습니다.`;
+
+const jsonLd = {
+  '@context': 'https://schema.org',
+  '@type': 'Dataset',
+  name: '연령대별 실업률 — 경제활동인구조사 연간',
+  description: desc,
+  dateModified: 자료.만든날,
+  creator: { '@type': 'Organization', name: '백년지도' },
+  sourceOrganization: { '@type': 'Organization', name: 자료.출처.이름 },
+  isBasedOn: 자료.출처.주소,
+  variableMeasured: ['실업률', '연령대', '성별'],
+};
+
+const 성별연령 = 연령.filter((a) => 값('남자', a, 최신) != null);
+---
+
+<HundredYear
+  title={`20~24세 실업률 ${이사}%, 45~49세 ${사오}% — 나이대별 실업률 (${최신}년 기준)`}
+  description={desc}
+  jsonLd={jsonLd}
+>
+  <h1>나이대별 실업률,<br />{최신}년 연간</h1>
+  <p class="sub">
+    통계청 경제활동인구조사 연간 값입니다. 실업률은 경제활동인구(일하고 있거나 일자리를 구하는 사람) 가운데 실업자가 차지하는 비율입니다.
+  </p>
+
+  <div class="answer">
+    <p class="answer-label">20~24세 실업률 ({최신}년)</p>
+    <p class="answer-num">{이사}%</p>
+    <p class="answer-sub">전체 {전체}% · 45~49세 {사오}% · 50~54세 {오사}%</p>
+  </div>
+
+  <h2>나이대별 실업률, 세 해 비교</h2>
+  <div class="tablewrap">
+    <table>
+      <thead>
+        <tr><th>나이</th>{연도.map((y) => <th>{y}년</th>)}<th>{처음}→{최신}</th></tr>
+      </thead>
+      <tbody>
+        {연령.map((a) => (
+          <tr>
+            <td>{이름(a)}</td>
+            {연도.map((y) => <td>{y === 최신 ? <strong>{칸(값('계', a, y))}</strong> : 칸(값('계', a, y))}</td>)}
+            <td>{부호(값('계', a, 최신)! - 값('계', a, 처음)!)}</td>
+          </tr>
+        ))}
+        <tr>
+          <td>전체</td>
+          {연도.map((y) => <td>{y === 최신 ? <strong>{칸(값('계', '계', y))}</strong> : 칸(값('계', '계', y))}</td>)}
+          <td>{부호(값('계', '계', 최신)! - 값('계', '계', 처음)!)}</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <h2>남자와 여자 ({최신}년)</h2>
+  <div class="tablewrap">
+    <table>
+      <thead><tr><th>나이</th><th>남자</th><th>여자</th></tr></thead>
+      <tbody>
+        {성별연령.map((a) => (
+          <tr><td>{이름(a)}</td><td>{칸(값('남자', a, 최신))}</td><td>{칸(값('여자', a, 최신))}</td></tr>
+        ))}
+        <tr><td>65세 이상</td><td>표에 없음</td><td>표에 없음</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <h2>⚠ 이 자료로 말할 수 없는 것</h2>
+  <ul>
+    <li>실업자는 지난 4주 동안 구직 활동을 했고 일자리가 주어지면 바로 일할 수 있는 사람입니다. 구직을 하지 않는 사람은 실업률에 잡히지 않고 비경제활동인구에 들어갑니다.</li>
+    <li>연령대마다 실업률이 다른 이유는 이 표에 없습니다.</li>
+    <li>2020년은 코로나19 유행이 있던 해입니다. 이 표만으로는 그 영향을 따로 가를 수 없습니다.</li>
+    <li>이 표의 성별 값은 60~64세까지만 나뉘어 있어 65세 이상의 남녀 값은 싣지 못했습니다.</li>
+  </ul>
+
+  <p class="note">
+    출처 — {자료.출처.이름}, 표 {자료.출처.표}. 기준 {연도.join('·')}년 연간. 주소 <a href={자료.출처.주소} rel="noopener">{자료.출처.주소}</a>. 만든날 {자료.만든날}. 이용허락범위: {자료.출처.이용허락범위}.
+  </p>
+
+  <p class="note">
+    <a href="/youth-employment-streak">← 청년 취업자, 몇 개월째 줄고 있나</a>
+    <br />
+    <a href="/idle-youth">← 일도 구직도 하지 않는 청년</a>
+  </p>
+
+  <HundredAgeWalk 키="unemployment-by-age" />
+  <NextQuestionBrief 모은것="경제활동인구조사 연령대별 연간 실업률" />
+</HundredYear>
