@@ -349,7 +349,7 @@ export const 붙일수있는갈래 = [
    *   대학·학과 «분석» 지면은 어른갈래에 넣지 않는다(도착지 검증 안 함, 기존 결과대로 학부모·학생 쪽 기본 문이 맞다).
    */
   'apt-parking-age', 'dropout-by-school-type', 'ev-charger-by-age', 'property-tax', 'video',
-  'work-gap', 'business-age', 'youth-employment-streak', 'college-job-perception-2026', 'irregular-share-by-age', 'unemployment-by-age', 'participation-by-age-sex', 'twenties-jan-aug-employment', 'college-age-population',
+  'work-gap', 'business-age', 'youth-employment-streak', 'college-job-perception-2026', 'irregular-share-by-age', 'unemployment-by-age', 'participation-by-age-sex', 'career-interrupted-by-child-age', 'career-interrupted-reason-by-age', 'twenties-jan-aug-employment', 'college-age-population',
   'major-name-gap', 'closed-universities', 'field-employment',
   'university-employment-spread', 'university-enrollment-fill',
   /* 🔴 [2026-09-08 · 3번] 어제(9/7) 이 목록에 새 지면 추가를 빠뜨려 14장이 「at=기타」로

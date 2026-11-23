@@ -1,0 +1,134 @@
+---
+/**
+ * /100y/career-interrupted-by-child-age — 막내 자녀 나이별 기혼여성 미취업·경력보유 (2016·2021·2026)
+ *
+ * 출처  KOSIS 101/DT_1ES4H11J 지역별고용조사 18세 미만 자녀연령별 경력보유여성(연간, 천명).
+ * ⛔ 원인 추측·조언은 싣지 않는다. 표 항목 이름은 «경력보유여성» 이고 미취업여성 안의 한 갈래로 놓여 있다.
+ */
+import HundredYear from '../../../layouts/HundredYear.astro';
+import NextQuestionBrief from '../../../components/NextQuestionBrief.astro';
+import HundredAgeWalk from '../../../components/HundredAgeWalk.astro';
+import 원본 from '../../../data/100yearmap/career-interrupted-by-child-age.json';
+
+const 자료 = 원본 as any;
+const 연도: string[] = 자료.연도;
+const 최신 = 연도[연도.length - 1];
+const 처음 = 연도[0];
+const 구분들 = [
+  { 키: '18세미만자녀없음', 이름: '18세 미만 자녀 없음' },
+  { 키: '6세이하', 이름: '막내 6세 이하' },
+  { 키: '7-12세', 이름: '막내 7~12세' },
+  { 키: '13-17세', 이름: '막내 13~17세' },
+  { 키: '계', 이름: '전체' },
+];
+const 값 = (g: string, 항: string, y: string): number => 자료.값[g][항][y];
+const 비 = (g: string, 항: string, y: string) => (값(g, 항, y) / 값(g, '15~54세기혼여성', y)) * 100;
+const 퍼 = (n: number) => `${n.toFixed(1)}%`;
+const 천 = (n: number) => `${n.toLocaleString('ko-KR', { minimumFractionDigits: 1, maximumFractionDigits: 1 })}천명`;
+const 부호 = (n: number) => `${n > 0 ? '+' : ''}${n.toFixed(1)}%p`;
+
+const 보유_육 = 비('6세이하', '경력보유여성', 최신);
+const 보유_육처음 = 비('6세이하', '경력보유여성', 처음);
+const 미취_육 = 비('6세이하', '미취업여성', 최신);
+const 보유_십삼 = 비('13-17세', '경력보유여성', 최신);
+const 보유_없음 = 비('18세미만자녀없음', '경력보유여성', 최신);
+
+const desc =
+  `지역별고용조사(국가데이터처 KOSIS) ${최신}년, 막내 자녀가 6세 이하인 15~54세 기혼여성 ${천(값('6세이하', '15~54세기혼여성', 최신))} 가운데 ` +
+  `경력보유여성은 ${천(값('6세이하', '경력보유여성', 최신))}(${퍼(보유_육)})입니다. ${처음}년에는 ${퍼(보유_육처음)}였습니다. 막내 7~12세는 ${퍼(비('7-12세', '경력보유여성', 최신))}, 13~17세는 ${퍼(보유_십삼)}입니다.`;
+
+const jsonLd = {
+  '@context': 'https://schema.org',
+  '@type': 'Dataset',
+  name: '막내 자녀 나이별 기혼여성 미취업·경력보유 — 지역별고용조사',
+  description: desc,
+  dateModified: 자료.만든날,
+  creator: { '@type': 'Organization', name: '백년지도' },
+  sourceOrganization: { '@type': 'Organization', name: 자료.출처.이름 },
+  isBasedOn: 자료.출처.주소,
+  variableMeasured: ['15~54세 기혼여성', '미취업여성', '경력보유여성', '막내 자녀 연령'],
+};
+---
+
+<HundredYear
+  title={`막내 6세 이하 기혼여성 ${퍼(보유_육)}가 경력보유여성 — 자녀 나이별 (${최신}년 기준)`}
+  description={desc}
+  jsonLd={jsonLd}
+>
+  <h1>막내 자녀 나이별<br />기혼여성의 경력보유 비중, {최신}년</h1>
+  <p class="sub">
+    통계청 지역별고용조사의 15~54세 기혼여성 자료입니다. 표 이름은 「경력보유여성」이고, 일하고 있지 않은 여성(미취업여성) 가운데 일부로 놓여 있습니다. 아래 비율은 이 표의 사람 수로 이 쪽에서 계산했습니다.
+  </p>
+
+  <div class="answer">
+    <p class="answer-label">막내가 6세 이하인 기혼여성 중 경력보유여성 ({최신}년)</p>
+    <p class="answer-num">{퍼(보유_육)}</p>
+    <p class="answer-sub">{천(값('6세이하', '경력보유여성', 최신))} / {천(값('6세이하', '15~54세기혼여성', 최신))} · {처음}년 {퍼(보유_육처음)}</p>
+  </div>
+
+  <h2>{최신}년, 막내 자녀 나이별</h2>
+  <div class="tablewrap">
+    <table>
+      <thead>
+        <tr><th>구분</th><th>15~54세 기혼여성</th><th>미취업여성</th><th>그중 경력보유여성</th><th>기혼여성 중 경력보유 비중</th></tr>
+      </thead>
+      <tbody>
+        {구분들.map((g) => (
+          <tr>
+            <td>{g.이름}</td>
+            <td>{천(값(g.키, '15~54세기혼여성', 최신))}</td>
+            <td>{천(값(g.키, '미취업여성', 최신))} ({퍼(비(g.키, '미취업여성', 최신))})</td>
+            <td>{천(값(g.키, '경력보유여성', 최신))}</td>
+            <td><strong>{퍼(비(g.키, '경력보유여성', 최신))}</strong></td>
+          </tr>
+        ))}
+      </tbody>
+    </table>
+  </div>
+  <p class="note">미취업여성 칸의 괄호는 같은 구분 기혼여성 중 비율입니다.</p>
+
+  <h2>세 해를 나란히 — 기혼여성 중 경력보유 비중</h2>
+  <div class="tablewrap">
+    <table>
+      <thead>
+        <tr><th>구분</th>{연도.map((y) => <th>{y}년</th>)}<th>{처음}→{최신}</th></tr>
+      </thead>
+      <tbody>
+        {구분들.map((g) => (
+          <tr>
+            <td>{g.이름}</td>
+            {연도.map((y) => <td>{y === 최신 ? <strong>{퍼(비(g.키, '경력보유여성', y))}</strong> : 퍼(비(g.키, '경력보유여성', y))}</td>)}
+            <td>{부호(비(g.키, '경력보유여성', 최신) - 비(g.키, '경력보유여성', 처음))}</td>
+          </tr>
+        ))}
+      </tbody>
+    </table>
+  </div>
+
+  <h2>같은 표에서 읽히는 것</h2>
+  <ul>
+    <li>{최신}년 막내가 6세 이하인 기혼여성의 미취업 비중은 {퍼(미취_육)}, 막내가 13~17세인 기혼여성의 경력보유 비중은 {퍼(보유_십삼)}, 18세 미만 자녀가 없는 기혼여성은 {퍼(보유_없음)}입니다.</li>
+    <li>전체 경력보유여성은 {처음}년 {천(값('계', '경력보유여성', 처음))}에서 {최신}년 {천(값('계', '경력보유여성', 최신))}으로 줄었습니다. 같은 기간 15~54세 기혼여성 수도 {천(값('계', '15~54세기혼여성', 처음))}에서 {천(값('계', '15~54세기혼여성', 최신))}으로 줄었습니다.</li>
+  </ul>
+
+  <h2>⚠ 이 자료로 말할 수 없는 것</h2>
+  <ul>
+    <li>이 표는 같은 사람을 따라간 것이 아니라 매년 다른 표본을 조사한 값입니다. 막내가 자란 뒤 같은 여성이 어떻게 되었는지는 이 표에 없습니다.</li>
+    <li>경력보유여성이 일을 그만둔 이유와 그만둔 시기는 이 표에 없습니다(사유별 값은 <a href="/career-interrupted-reason-by-age">다른 지면</a>에 있습니다).</li>
+    <li>15~54세 기혼여성만 조사 대상이라 55세 이상과 미혼 여성은 들어 있지 않습니다. 남성 값도 없습니다.</li>
+    <li>구분마다 여성의 나이 구성이 달라 비중 차이가 자녀 나이 때문인지 여성 나이 때문인지는 이 표만으로 가를 수 없습니다.</li>
+  </ul>
+
+  <p class="note">
+    출처 — {자료.출처.이름}, 표 {자료.출처.표}. 기준 {연도.join('·')}년. 주소 <a href={자료.출처.주소} rel="noopener">{자료.출처.주소}</a>. 만든날 {자료.만든날}. 이용허락범위: {자료.출처.이용허락범위}.
+  </p>
+
+  <p class="note">
+    <a href="/participation-by-age-sex">← 나이·성별 경제활동참가율</a>
+    <br />
+    <a href="/career-interrupted-reason-by-age">→ 나이대별 경력보유 사유</a>
+  </p>
+
+  <HundredAgeWalk 키="career-interrupted-by-child-age" />
+  <NextQuestionBrief 모은것="지역별고용조사 막내 자녀 나이별 기혼여성 경력보유" />
+</HundredYear>

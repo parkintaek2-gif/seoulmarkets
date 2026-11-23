@@ -591,7 +591,9 @@
   "college-job-perception-2026.json",
   "irregular-share-by-age.json",
   "unemployment-by-age.json",
-  "participation-by-age-sex.json"
+  "participation-by-age-sex.json",
+  "career-interrupted-by-child-age.json",
+  "career-interrupted-reason-by-age.json"
  ],
  "3번감수": {
   "언제": "2026-08-08 14:5x",

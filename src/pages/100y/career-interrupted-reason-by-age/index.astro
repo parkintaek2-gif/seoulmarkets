@@ -1,0 +1,135 @@
+---
+/**
+ * /100y/career-interrupted-reason-by-age — 나이대별 경력보유여성의 사유 (2016·2021·2026)
+ *
+ * 출처  KOSIS 101/DT_1ES4H07J 지역별고용조사 연령대별/사유별 경력보유여성(연간, 천명).
+ * ⛔ 원인 추측·조언은 싣지 않는다. 사유는 표가 나눈 다섯 가지(결혼·임신출산·육아·자녀교육·가족돌봄)뿐이다.
+ */
+import HundredYear from '../../../layouts/HundredYear.astro';
+import NextQuestionBrief from '../../../components/NextQuestionBrief.astro';
+import HundredAgeWalk from '../../../components/HundredAgeWalk.astro';
+import 원본 from '../../../data/100yearmap/career-interrupted-reason-by-age.json';
+
+const 자료 = 원본 as any;
+const 연도: string[] = 자료.연도;
+const 최신 = 연도[연도.length - 1];
+const 처음 = 연도[0];
+const 연령: string[] = 자료.연령.filter((a: string) => a !== '계');
+const 사유: string[] = 자료.사유;
+const 이름 = (a: string) => a.replace('-', '~');
+const 사유이름 = (s: string) => (s === '임신.출산' ? '임신·출산' : s);
+const 값 = (a: string, s: string, y: string): number => 자료.값[a][s][y];
+const 합 = (a: string, y: string) => 값(a, '경력보유여성', y);
+const 비 = (a: string, s: string, y: string) => (값(a, s, y) / 합(a, y)) * 100;
+const 퍼 = (n: number) => `${n.toFixed(1)}%`;
+const 천 = (n: number) => `${n.toLocaleString('ko-KR', { minimumFractionDigits: 1, maximumFractionDigits: 1 })}천명`;
+const 부호 = (n: number) => `${n > 0 ? '+' : ''}${n.toFixed(1)}%p`;
+
+const 육_최신 = 비('계', '육아', 최신);
+const 육_처음 = 비('계', '육아', 처음);
+const 결_최신 = 비('계', '결혼', 최신);
+const 결_처음 = 비('계', '결혼', 처음);
+const 삼 = 비('30-39세', '육아', 최신);
+const 사 = 비('40-49세', '육아', 최신);
+
+const desc =
+  `지역별고용조사(국가데이터처 KOSIS) ${최신}년 경력보유여성 ${천(합('계', 최신))} 가운데 사유가 육아인 사람은 ${천(값('계', '육아', 최신))}(${퍼(육_최신)})로, ${처음}년 ${퍼(육_처음)}보다 높습니다. ` +
+  `결혼은 ${퍼(결_처음)}에서 ${퍼(결_최신)}로 낮아졌습니다. 나이대별로 다섯 가지 사유를 나란히 놓았습니다.`;
+
+const jsonLd = {
+  '@context': 'https://schema.org',
+  '@type': 'Dataset',
+  name: '나이대별 경력보유여성의 사유 — 지역별고용조사',
+  description: desc,
+  dateModified: 자료.만든날,
+  creator: { '@type': 'Organization', name: '백년지도' },
+  sourceOrganization: { '@type': 'Organization', name: 자료.출처.이름 },
+  isBasedOn: 자료.출처.주소,
+  variableMeasured: ['경력보유여성', '사유(결혼·임신출산·육아·자녀교육·가족돌봄)', '연령대'],
+};
+---
+
+<HundredYear
+  title={`경력보유여성 사유 1위는 육아 ${퍼(육_최신)} — 30~39세 ${퍼(삼)}, 40~49세 ${퍼(사)} (${최신}년 기준)`}
+  description={desc}
+  jsonLd={jsonLd}
+>
+  <h1>나이대별 경력보유여성,<br />일을 그만둔 사유 {최신}년</h1>
+  <p class="sub">
+    통계청 지역별고용조사 기혼여성 자료입니다. 표는 경력보유여성을 결혼·임신 출산·육아·자녀교육·가족돌봄 다섯 가지 사유로 나눕니다. 비중은 이 표의 사람 수로 이 쪽에서 계산했습니다.
+  </p>
+
+  <div class="answer">
+    <p class="answer-label">경력보유여성 중 사유가 육아인 비중 ({최신}년)</p>
+    <p class="answer-num">{퍼(육_최신)}</p>
+    <p class="answer-sub">{천(값('계', '육아', 최신))} / {천(합('계', 최신))} · {처음}년 {퍼(육_처음)}</p>
+  </div>
+
+  <h2>{최신}년, 나이대별 사유 비중</h2>
+  <div class="tablewrap">
+    <table>
+      <thead>
+        <tr><th>나이</th><th>경력보유여성</th>{사유.map((s) => <th>{사유이름(s)}</th>)}</tr>
+      </thead>
+      <tbody>
+        {연령.map((a) => (
+          <tr>
+            <td>{이름(a)}</td>
+            <td>{천(합(a, 최신))}</td>
+            {사유.map((s) => <td>{퍼(비(a, s, 최신))}</td>)}
+          </tr>
+        ))}
+        <tr>
+          <td><strong>전체</strong></td>
+          <td>{천(합('계', 최신))}</td>
+          {사유.map((s) => <td><strong>{퍼(비('계', s, 최신))}</strong></td>)}
+        </tr>
+      </tbody>
+    </table>
+  </div>
+  <p class="note">비중은 같은 나이대 경력보유여성 가운데 해당 사유의 비율입니다. 15~29세와 50~54세는 인원이 적어 한두 칸의 값이 크게 움직일 수 있습니다.</p>
+
+  <h2>전체 사유 비중, 세 해</h2>
+  <div class="tablewrap">
+    <table>
+      <thead>
+        <tr><th>사유</th>{연도.map((y) => <th>{y}년</th>)}<th>{처음}→{최신}</th></tr>
+      </thead>
+      <tbody>
+        {사유.map((s) => (
+          <tr>
+            <td>{사유이름(s)}</td>
+            {연도.map((y) => <td>{y === 최신 ? <strong>{퍼(비('계', s, y))}</strong> : 퍼(비('계', s, y))}</td>)}
+            <td>{부호(비('계', s, 최신) - 비('계', s, 처음))}</td>
+          </tr>
+        ))}
+        <tr>
+          <td>경력보유여성 수</td>
+          {연도.map((y) => <td>{천(합('계', y))}</td>)}
+          <td>{((합('계', 최신) / 합('계', 처음) - 1) * 100).toFixed(1)}%</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <h2>⚠ 이 자료로 말할 수 없는 것</h2>
+  <ul>
+    <li>표가 정한 다섯 가지 사유 가운데 한 가지로만 집계된 값입니다. 여러 사정이 겹친 경우는 이 표에서 가를 수 없습니다.</li>
+    <li>사유 비중이 달라진 이유, 경력보유여성이 줄어든 이유는 이 표에 없습니다. 매년 다른 표본을 조사한 값이라 같은 사람이 어떻게 달라졌는지도 알 수 없습니다.</li>
+    <li>15~54세 기혼여성만 조사 대상이라 55세 이상과 미혼 여성, 남성은 들어 있지 않습니다.</li>
+    <li>이 표에는 직장을 그만둔 시기가 없습니다.</li>
+  </ul>
+
+  <p class="note">
+    출처 — {자료.출처.이름}, 표 {자료.출처.표}. 기준 {연도.join('·')}년. 주소 <a href={자료.출처.주소} rel="noopener">{자료.출처.주소}</a>. 만든날 {자료.만든날}. 이용허락범위: {자료.출처.이용허락범위}.
+  </p>
+
+  <p class="note">
+    <a href="/career-interrupted-by-child-age">← 막내 자녀 나이별 경력보유 비중</a>
+    <br />
+    <a href="/participation-by-age-sex">← 나이·성별 경제활동참가율</a>
+  </p>
+
+  <HundredAgeWalk 키="career-interrupted-reason-by-age" />
+  <NextQuestionBrief 모은것="지역별고용조사 나이대별 경력보유여성 사유" />
+</HundredYear>

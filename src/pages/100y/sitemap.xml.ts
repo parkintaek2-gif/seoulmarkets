@@ -416,6 +416,9 @@ export const GET: APIRoute = () => {
     { path: '/irregular-share-by-age', priority: '0.7', changefreq: 'yearly' },
     { path: '/unemployment-by-age', priority: '0.7', changefreq: 'yearly' },
     { path: '/participation-by-age-sex', priority: '0.7', changefreq: 'yearly' },
+    /* 2026-11-23 — 지역별고용조사 기혼여성 경력보유 2장 */
+    { path: '/career-interrupted-by-child-age', priority: '0.7', changefreq: 'yearly' },
+    { path: '/career-interrupted-reason-by-age', priority: '0.7', changefreq: 'yearly' },
     /* 🔴 2026-09-07 — 커뮤니티 씨앗(「'80% 선발' 수시 원서접수」)을 계기로 통계청
        장래인구추계 18세 인구를 직접 재 확인. 매년 갱신되는 추계라 yearly. */
     { path: '/college-age-population', priority: '0.7', changefreq: 'yearly' },
