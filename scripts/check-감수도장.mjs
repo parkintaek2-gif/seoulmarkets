@@ -41,7 +41,7 @@ export const 기준선글 = '기준선(이미 라이브)';
  */
 export const 감수대상 = [
   'src/pages/index.astro',            // seoulmarkets 첫 화면
-  'src/pages/wikitip/index.astro',    // kculturewire 첫 화면
+  /* [2026-11-23 · 1번] 케이컬쳐와이어를 접어 wikitip 첫 화면이 없어졌다 — 파일을 못 읽어 관문이 배포를 막았다 */
   'src/pages/100y/index.astro',       // 100yearmap 첫 화면
   'src/pages/100y/price.astro',       // 값을 받는 화면
   'src/pages/100y/refund.astro',      // 환불 고지 — 틀리면 분쟁이 된다
@@ -434,10 +434,10 @@ function 자가시험() {
   자가('짝과 함께 총괄을 낸다', 감수할이('1번').총괄 === '5번');
 
   // 대상 목록 — 낡으면 관문이 헛것을 막거나 놓친다
-  자가('감수대상이 다섯이다', 감수대상.length === 5);
+  자가('감수대상이 넷이다', 감수대상.length === 4);
   자가('감수대상은 모두 src/pages 아래다', 감수대상.every((p) => p.startsWith('src/pages/')));
-  자가('세 사이트 첫 화면이 다 들어 있다',
-    ['src/pages/index.astro', 'src/pages/wikitip/index.astro', 'src/pages/100y/index.astro']
+  자가('이 저장소의 두 사이트 첫 화면이 다 들어 있다',
+    ['src/pages/index.astro', 'src/pages/100y/index.astro']
       .every((p) => 감수대상.includes(p)));
   자가('⛔ 지면을 2,900장 다 넣지 않았다 (관문이 꺼지지 않게)', 감수대상.length <= 12);
 
