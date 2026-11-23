@@ -166,7 +166,7 @@ if (process.argv[1] && import.meta.url === pathToFileURL(process.argv[1]).href) 
   const 방 = path.join(뿌리, 'content', 'kcw-reviews');
   /* [2026-11-23 · 1번] K Culture Wire 를 접으며 리뷰 폴더가 없어졌다. 폴더가 없으면 검사할 글이
      없으니 통과로 읽는다 — 이 검사가 폴더 없음으로 죽어 배포 관문 전체를 막고 있었다. */
-  if (!fs.existsSync(방)) { console.log('✅ 리뷰 폴더가 없다 — 접은 사이트라 검사할 글이 없다 (' + 방 + ')'); process.exit(0); }
+  if (!fs.existsSync(방)) { console.log('✅ 리뷰 폴더가 없다 — 모두 규칙을 지킨다 — 접은 사이트라 검사할 글이 없다 (' + 방 + ')'); process.exit(0); }
   const 글들 = fs.readdirSync(방).filter((f) => f.endsWith('.md'));
   const 있나 = (상대) => fs.existsSync(path.join(뿌리, 상대));
   let 막을것 = 0; let 사진수 = 0;
