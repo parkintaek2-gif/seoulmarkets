@@ -25,6 +25,8 @@
     "/irregular-share-by-age": "2026-11-23",
     "/unemployment-by-age": "2026-11-23",
     "/participation-by-age-sex": "2026-11-23",
+    "/career-interrupted-by-child-age": "2026-11-23",
+    "/career-interrupted-reason-by-age": "2026-11-23",
     "/college-age-population": "2026-11-22",
     "/major-name-gap": "2026-11-22",
     "/closed-universities": "2026-11-22",
@@ -169,9 +171,9 @@
     "/middle": "2026-11-22",
     "/": "2026-11-20",
     "/about": "2026-10-17",
-    "/terms": "2026-11-10",
+    "/terms": "2026-11-23",
     "/privacy": "2026-11-10",
-    "/refund": "2026-11-10",
+    "/refund": "2026-11-23",
     "/after": "2026-11-23",
     "/work": "2026-10-22",
     "/how-long": "2026-10-09",
@@ -184,7 +186,7 @@
     "/age": "2026-11-22",
     "/major": "2026-09-02",
     "/college-major": "2026-10-09",
-    "/school": "2026-11-22",
+    "/school": "2026-11-23",
     "/university": "2026-10-09",
     "/elementary": "2026-11-22",
     "/tutoring": "2026-10-09",
@@ -268,7 +270,7 @@
     "갈래:university": "2026-11-18",
     "갈래:area": "2026-11-22",
     "갈래:report": "2026-10-22",
-    "갈래:elementary": "2026-11-18",
-    "갈래:middle": "2026-11-22"
+    "갈래:elementary": "2026-11-23",
+    "갈래:middle": "2026-11-23"
   }
 }
