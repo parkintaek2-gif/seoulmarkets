@@ -675,22 +675,27 @@ if (내가실행됐다 && !process.argv.includes('--자가시험')) {
         「2,598장 안 알림」으로 뜬다 — 그것은 정말 안 알린 것이 아니라 «모르는» 것이다.
         ⛔ 그때 놀라서 다시 알려도 해롭지는 않다(IndexNow 는 다시 알려도 된다).
         ⛔ 다만 그 수를 「우리가 41%를 빠뜨렸다」로 «보고에 적지» 않는다. */
+  /* 🔴 [2026-11-23 · 5번] 이 자리가 **보던 사이트가 없어졌다.**
+     K Culture Wire 를 접으면서(사장님 2026-11-22) `check-kcw-indexnow.mjs` 도 들어냈는데
+     여기서 그것을 들여오고 있었다. 그래서 배포할 때마다 「색인 알림 상태를 못 쟀습니다」가
+     찍혔다 — 자리는 남고 재는 것은 없는, 가장 나쁜 꼴이다.
+     ⇒ 운영하는 세 사이트를 보는 `check-indexnow-보냈나.mjs` 로 바꾼다.
+     ⛔ 이것으로 배포를 세우지 않는다 — 알리는 것은 배포 «뒤»의 일이다. */
   try {
-    const { 기록읽기, 기록길 } = await import('./check-kcw-indexnow.mjs');
-    const 기록 = 기록읽기(기록길);
-    /* ⚠ 이 파일은 «저장소 뿌리에서» 돌린다(다른 길도 전부 상대 경로다). 그래서 그대로 쓴다.
-       ⛔ 없는 변수(뿌리)를 썼다가 try/catch 가 그것을 삼켜 조용히 「못 쟀다」가 될 뻔했다. */
-    const 사이트맵 = path.join('dist/wikitip/sitemap.xml');
-    if (fs.existsSync(사이트맵)) {
-      const 주소 = [...fs.readFileSync(사이트맵, 'utf8').matchAll(/<loc>([^<]+)<\/loc>/g)]
-        .map((m) => m[1].replace('https://www.kculturewire.com', ''));
-      const 안알린 = 주소.filter((u) => !(기록.pinged ?? {})[u]);
-      if (안알린.length) {
-        console.log(`\n⚠ 색인 알림을 한 번도 못 받은 지면 **${안알린.length}장** (사이트맵 ${주소.length}장 중)`);
-        console.log('   배포가 «끝난 뒤» 알리십시오 —');
-        console.log('     node scripts/ping-indexnow.mjs --host www.kculturewire.com');
-        console.log('   ⚠ IndexNow 는 Bing·Yandex 용입니다. 구글은 사이트맵으로 옵니다.');
-      }
+    const { 기록길, 줄읽기, 사이트들, 판정 } = await import('./check-indexnow-보냈나.mjs');
+    const 줄들 = 줄읽기(fs.existsSync(기록길) ? fs.readFileSync(기록길, 'utf8') : null);
+    const 운영하는곳 = 사이트들.filter((s) => s.호스트 !== 'www.kculturewire.com');
+    const 늦은곳 = [];
+    for (const s of 운영하는곳) {
+      const r = 판정(s.호스트, 줄들);
+      if (r.빛 !== '✅') 늦은곳.push(`${s.이름}(${s.호스트}) — ${r.말}`);
+    }
+    if (늦은곳.length) {
+      console.log(`\n⚠ 색인 알림이 늦은 곳 **${늦은곳.length}곳**`);
+      for (const x of 늦은곳) console.log('   · ' + x);
+      console.log('   배포가 «끝난 뒤» 알리십시오 —');
+      console.log('     node scripts/ping-indexnow.mjs --host <호스트> --주소파일 <파일>');
+      console.log('   ⚠ IndexNow 는 Bing·Yandex 용입니다. 구글은 사이트맵으로 옵니다.');
     }
   } catch (e) {
     /* ⛔ 못 물었으면 「0장」이 아니라 「못 쟀다」다. 그리고 이것으로 배포를 세우지 않는다 */

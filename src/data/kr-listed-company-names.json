@@ -1,7 +1,7 @@
 {
  "무엇": "DART CORPCODE.xml 중 stock_code 있는(=상장) 법인만. 5번 geo-fit 자가 「실명(회사이름)」을 읽는 사전으로 쓴다.",
  "출처": "opendart.fss.or.kr corpCode.xml, 로컬 archive/raw/dart-corpcode/CORPCODE.xml",
- "잰때": "2026-10-05T18:53:03.147Z",
+ "잰때": "2026-11-23T11:37:36.607Z",
  "개수": 3986,
  "회사들": [
   {

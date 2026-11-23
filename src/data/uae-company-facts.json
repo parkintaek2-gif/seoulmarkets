@@ -1,7 +1,7 @@
 {
  "_meta": {
   "product": "UAE listed-company facts — one record per company, ready for a page",
-  "builtAt": "2026-09-24T07:14:52",
+  "builtAt": "2026-11-23T20:38:36",
   "companies": 111,
   "sources": [
    "src/data/uae-financials-tape.json (ADX/DFM filed statements)",
