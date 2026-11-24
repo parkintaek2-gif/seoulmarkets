@@ -109,6 +109,19 @@ export function 잰다(길) {
     if (c >= 0 && v >= 0 && c < v) 탈.push(`${이름} — cols 가 sheetViews 앞에 있다`);
   }
 
+  /* 🔴 수식 칸에 값이 함께 들어 있나 — 없으면 원드라이브 미리보기와
+     휴대폰 앱에서 빈 칸으로 보인다. 2026-11-24 에 사장님이 받으신 표의
+     합계 줄이 통째로 비어 보였다. 그 자리다 */
+  for (const [이름, 글] of Object.entries(것들)) {
+    if (!/worksheets\/sheet/.test(이름)) continue;
+    let 빈수식 = 0;
+    for (const m of 글.matchAll(/<c [^>]*>(?:(?!<\/c>)[\s\S])*?<\/c>/g)) {
+      const 속 = m[0];
+      if (속.includes('<f>') && !속.includes('<v>')) 빈수식 += 1;
+    }
+    if (빈수식) 탈.push(`${이름} — 값이 안 든 수식 칸 ${빈수식}개 (미리보기에서 빈 칸으로 보인다)`);
+  }
+
   /* 꼴 번호가 styles 의 cellXfs 개수를 넘지 않나 */
   const st = 것들['xl/styles.xml'] ?? '';
   const xf개수 = Number((st.match(/<cellXfs count="([0-9]+)"/) || [])[1] || 0);
