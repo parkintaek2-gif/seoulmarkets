@@ -12,6 +12,9 @@ rem  Step 2 builds the workbook plus CSV fallbacks and mails them.
 rem  Two CMS queries a month: fetching fast and often is what got us 403 on 2026-11-24.
 rem
 rem  ASCII ONLY, CRLF -- cmd mangles Korean to CP949 and a LF-only .cmd dies silently.
+rem  Owner 2026-11-24: run only through 2027-01-01 for now -- the task carries an end
+rem  date of 2027/01/02, so it fires on 12-01 and 01-01 and then stops by itself.
+rem  To extend it, re-create the task with a later /ed.
 rem  Remove with:  schtasks /delete /tn "KLifeDesign-JbnewsMonthlyStat" /f
 
 rem  2026-11-11: send-mail falls back to cs@ without a seat number and cannot send
