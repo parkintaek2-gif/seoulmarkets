@@ -422,6 +422,13 @@ export const GET: APIRoute = () => {
     { path: '/irregular-women-share-by-age', priority: '0.7', changefreq: 'yearly' },
     { path: '/tutoring-per-participant', priority: '0.7', changefreq: 'yearly' },
     { path: '/tutoring-yearly-change', priority: '0.7', changefreq: 'yearly' },
+    /* 2026-11-25 — 초·중학교 시도별 파생 지면 6장 */
+    { path: '/middle-class-size-by-province', priority: '0.7', changefreq: 'yearly' },
+    { path: '/middle-teacher-ratio-by-province', priority: '0.7', changefreq: 'yearly' },
+    { path: '/century-old-middle-schools-by-province', priority: '0.7', changefreq: 'yearly' },
+    { path: '/private-middle-school-by-province', priority: '0.7', changefreq: 'yearly' },
+    { path: '/century-old-elementary-schools-by-province', priority: '0.7', changefreq: 'yearly' },
+    { path: '/school-founding-decade-elementary-middle', priority: '0.7', changefreq: 'yearly' },
     /* 2026-11-23 — 지역별고용조사 기혼여성 경력보유 2장 */
     { path: '/career-interrupted-by-child-age', priority: '0.7', changefreq: 'yearly' },
     { path: '/career-interrupted-reason-by-age', priority: '0.7', changefreq: 'yearly' },

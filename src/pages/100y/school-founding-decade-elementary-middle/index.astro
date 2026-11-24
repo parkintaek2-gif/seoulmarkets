@@ -1,0 +1,149 @@
+---
+/**
+ * /100y/school-founding-decade-elementary-middle — 초등학교·중학교는 언제 문을 열었나 (설립 연대별)
+ *
+ * 출처  NEIS 교육정보 개방 포털 학교기본정보 — src/data/100yearmap/elementary.json·middle.json (학교별 설립연).
+ *       이 쪽에서 한 일은 설립연을 10년 단위로 센 것뿐이다. 지금 문을 연 학교만 있다.
+ * ⛔ 설립일은 NEIS 값이다. 연대별 수를 「그때 학교가 많이 생겼다」의 이유로 풀지 않는다.
+ *   문을 닫거나 합쳐진 학교가 빠져 있어 그 시기에 실제로 문을 연 학교 수와 다르다.
+ */
+import HundredYear from '../../../layouts/HundredYear.astro';
+import HundredAgeWalk from '../../../components/HundredAgeWalk.astro';
+import NextQuestionBrief from '../../../components/NextQuestionBrief.astro';
+import 초 from '../../../data/100yearmap/elementary.json';
+import 중 from '../../../data/100yearmap/middle.json';
+
+const 수 = (n: number) => Number(n).toLocaleString('ko-KR');
+const 몫 = (a: number, b: number) => (b ? ((a / b) * 100).toFixed(1) : '0.0');
+const 초학교 = ((초 as any).자료 as any[]).filter((x) => Number.isFinite(x.설립연) && x.설립연 <= (초 as any).올해);
+const 중학교 = ((중 as any).자료 as any[]).filter((x) => Number.isFinite(x.설립연) && x.설립연 <= (중 as any).올해);
+const 연대 = (n: number) => Math.floor(n / 10) * 10;
+const 셈 = (xs: any[]) => { const m = new Map<number, number>(); for (const x of xs) m.set(연대(x.설립연), (m.get(연대(x.설립연)) ?? 0) + 1); return m; };
+const 초맵 = 셈(초학교);
+const 중맵 = 셈(중학교);
+const 연대들 = [...new Set([...초맵.keys(), ...중맵.keys()])].sort((a, b) => a - b);
+const 최다 = (m: Map<number, number>) => [...m.entries()].sort((a, b) => b[1] - a[1])[0];
+const 초최다 = 최다(초맵);
+const 중최다 = 최다(중맵);
+const 이른초 = [...초학교].sort((a, b) => a.설립연 - b.설립연)[0];
+const 이른중 = [...중학교].sort((a, b) => a.설립연 - b.설립연)[0];
+const 중앙 = (xs: any[]) => { const a = xs.map((x) => x.설립연).sort((p, q) => p - q); return a[Math.floor(a.length / 2)]; };
+const 최근십년 = (xs: any[], 올해: number) => xs.filter((x) => x.설립연 > 올해 - 10).length;
+const 올해초: number = (초 as any).올해;
+const 올해중: number = (중 as any).올해;
+
+const TITLE = `초등학교는 ${초최다[0]}년대 ${수(초최다[1])}곳, 중학교는 ${중최다[0]}년대 ${수(중최다[1])}곳이 가장 많이 문을 열었다 — 설립 연대별`;
+const desc =
+  `NEIS 설립 연도로 초등학교 ${수(초학교.length)}곳과 중학교 ${수(중학교.length)}곳을 10년 단위로 셌습니다. 설립이 가장 많은 연대는 초등학교 ${초최다[0]}년대(${수(초최다[1])}곳), 중학교 ${중최다[0]}년대(${수(중최다[1])}곳)입니다. 설립 연도의 가운데값은 초등학교 ${중앙(초학교)}년, 중학교 ${중앙(중학교)}년입니다.`;
+
+const jsonLd = [
+  {
+    '@context': 'https://schema.org',
+    '@type': 'Dataset',
+    name: '초등학교·중학교 설립 연대별 수 — NEIS 설립 연도',
+    description: desc,
+    creator: { '@type': 'Organization', name: '백년지도' },
+    sourceOrganization: { '@type': 'Organization', name: 'NEIS 교육정보 개방 포털' },
+    spatialCoverage: '대한민국',
+    variableMeasured: ['초등학교 수', '중학교 수', '설립 연도'],
+  },
+  {
+    '@context': 'https://schema.org',
+    '@type': 'FAQPage',
+    mainEntity: [
+      {
+        '@type': 'Question',
+        name: '초등학교와 중학교는 어느 연대에 가장 많이 문을 열었나요?',
+        acceptedAnswer: {
+          '@type': 'Answer',
+          text: `NEIS 설립 연도로 초등학교는 ${초최다[0]}년대 ${수(초최다[1])}곳, 중학교는 ${중최다[0]}년대 ${수(중최다[1])}곳이 가장 많습니다. 지금 문을 연 학교만 센 값입니다.`,
+        },
+      },
+      {
+        '@type': 'Question',
+        name: '가장 오래된 초등학교와 중학교는 어디인가요?',
+        acceptedAnswer: {
+          '@type': 'Answer',
+          text: `NEIS 설립 연도가 가장 이른 학교는 초등학교 ${이른초.title}(${이른초.설립연}년), 중학교 ${이른중.title}(${이른중.설립연}년)입니다. 학교가 스스로 세는 개교 연도와 다를 수 있습니다.`,
+        },
+      },
+    ],
+  },
+];
+---
+
+<HundredYear title={TITLE} description={desc} jsonLd={jsonLd}>
+  <h1>초등학교와 중학교는<br class="pcbr" /> 언제 문을 열었나요</h1>
+  <p class="sub">
+    NEIS 학교기본정보의 설립 연도로 초등학교 {수(초학교.length)}곳과 중학교 {수(중학교.length)}곳을 10년 단위로 셌습니다.
+  </p>
+
+  <div class="answer">
+    <p class="answer-label">설립이 가장 많은 연대</p>
+    <p class="answer-num">초 {초최다[0]}년대 · 중 {중최다[0]}년대</p>
+    <p class="answer-sub">초등학교 {수(초최다[1])}곳({몫(초최다[1], 초학교.length)}%) · 중학교 {수(중최다[1])}곳({몫(중최다[1], 중학교.length)}%)</p>
+  </div>
+
+  <p>
+    ⚠ <strong>지금 문을 연 학교만 센 표입니다.</strong> 문을 닫았거나 다른 학교와 합쳐진 학교는 없고, 설립일은 NEIS 값이라 학교가 스스로 세는 개교 연도와 다를 수 있습니다. 그래서 이 표는 그 연대에 새로 문을 연 학교의 실제 수가 아닙니다.
+  </p>
+
+  <h2>설립 연대별 학교 수</h2>
+  <div class="tablewrap">
+    <table>
+      <thead><tr><th>연대</th><th>초등학교</th><th>초등 몫</th><th>중학교</th><th>중학 몫</th></tr></thead>
+      <tbody>
+        {연대들.map((d) => (
+          <tr>
+            <th>{d}년대</th>
+            <td class="num">{수(초맵.get(d) ?? 0)}곳</td>
+            <td class="num">{몫(초맵.get(d) ?? 0, 초학교.length)}%</td>
+            <td class="num">{수(중맵.get(d) ?? 0)}곳</td>
+            <td class="num">{몫(중맵.get(d) ?? 0, 중학교.length)}%</td>
+          </tr>
+        ))}
+        <tr>
+          <th>합계</th>
+          <td class="num">{수(초학교.length)}곳</td>
+          <td class="num">100%</td>
+          <td class="num">{수(중학교.length)}곳</td>
+          <td class="num">100%</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <h2>초등학교와 중학교를 견주면</h2>
+  <ul>
+    <li>설립 연도의 가운데값은 초등학교 {중앙(초학교)}년, 중학교 {중앙(중학교)}년입니다.</li>
+    <li>가장 이른 설립 연도는 초등학교 {이른초.설립연}년({이른초.title}, {이른초.시도}), 중학교 {이른중.설립연}년({이른중.title}, {이른중.시도})입니다.</li>
+    <li>최근 10년(설립 {올해초 - 9}년 이후)에 문을 연 학교는 초등학교 {수(최근십년(초학교, 올해초))}곳, 중학교 {수(최근십년(중학교, 올해중))}곳입니다.</li>
+    <li>1950년 이전에 설립된 학교는 초등학교 {수(초학교.filter((x) => x.설립연 < 1950).length)}곳({몫(초학교.filter((x) => x.설립연 < 1950).length, 초학교.length)}%), 중학교 {수(중학교.filter((x) => x.설립연 < 1950).length)}곳({몫(중학교.filter((x) => x.설립연 < 1950).length, 중학교.length)}%)입니다.</li>
+  </ul>
+
+  <h2>⚠ 이 자료로 말할 수 없는 것</h2>
+  <ul>
+    <li>문을 닫은 학교가 없어서, 과거 연대일수록 그때 실제로 문을 연 학교보다 적게 잡혔을 수 있습니다.</li>
+    <li>학교가 통합·이전·전환되며 설립일이 새로 잡힌 경우가 있습니다.</li>
+    <li>연대별 수가 늘고 준 이유(학령인구, 지역 개발, 학교 통폐합 등)는 이 자료에 없습니다.</li>
+    <li>아직 문을 열지 않은 학교, 재외한국학교, 설립 연도가 없는 학교는 센 수에서 뺐습니다.</li>
+    <li>고등학교 설립 연대는 <a href="/century-old-high-schools-by-area">설립 100년 넘은 고등학교 지역별</a> 페이지에 있습니다.</li>
+  </ul>
+
+  <p class="note">
+    출처 — {(초 as any).이름}, {(중 as any).이름}. 올해 {올해초}년 기준. 이용허락범위: 공공누리. 연대별로 센 것은 백년지도가 낸 값입니다.
+  </p>
+
+  <p class="note">
+    <a href="/elementary">← 초등학교는 몇 살인가요</a>
+    <br />
+    <a href="/middle">→ 우리 동네 중학교</a>
+  </p>
+
+  <HundredAgeWalk 키="school-founding-decade-elementary-middle" />
+  <NextQuestionBrief 모은것="NEIS 학교기본정보의 설립 연도를 10년 단위로 센 실측" />
+</HundredYear>
+
+<style>
+  .num { text-align: right; font-variant-numeric: tabular-nums; }
+</style>

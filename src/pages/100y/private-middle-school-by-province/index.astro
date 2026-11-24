@@ -1,0 +1,183 @@
+---
+/**
+ * /100y/private-middle-school-by-province — 사립 중학교 시도별 (NEIS 설립 구분)
+ *
+ * 출처  NEIS 교육정보 개방 포털 학교기본정보 — src/data/100yearmap/middle.json (학교별 설립 구분·공학 구분·시도).
+ *       이 쪽에서 한 일은 설립 구분(공립·사립·국립·기타)을 시도로 센 것뿐이다.
+ * ⛔ 사립이 좋다·나쁘다로 읽히게 쓰지 않는다. 조언은 싣지 않는다.
+ * ⛔ 각종학교(중)·방송통신중학교는 middle.json 이 처음부터 뺐다(자료의 「섞지 않은 것」).
+ */
+import HundredYear from '../../../layouts/HundredYear.astro';
+import HundredAgeWalk from '../../../components/HundredAgeWalk.astro';
+import NextQuestionBrief from '../../../components/NextQuestionBrief.astro';
+import 원본 from '../../../data/100yearmap/middle.json';
+
+const 자료 = 원본 as any;
+const 수 = (n: number) => Number(n).toLocaleString('ko-KR');
+const 학교들 = 자료.자료 as any[];
+const 사립들 = 학교들.filter((x) => x.설립 === '사립');
+const 몫 = (a: number, b: number) => (b ? ((a / b) * 100).toFixed(1) : '0.0');
+const 구분들 = ['공립', '사립', '국립', '기타'].map((k) => ({ k, n: 학교들.filter((x) => x.설립 === k).length }));
+const 시도맵 = new Map<string, { 전체: number; 사립: number }>();
+for (const x of 학교들) {
+  const a = 시도맵.get(x.시도) ?? { 전체: 0, 사립: 0 };
+  a.전체 += 1; if (x.설립 === '사립') a.사립 += 1;
+  시도맵.set(x.시도, a);
+}
+const 시도들 = [...시도맵.entries()].map(([이름, v]) => ({ 이름, ...v })).sort((a, b) => b.사립 / b.전체 - a.사립 / a.전체 || b.사립 - a.사립);
+const 맨위 = 시도들[0];
+const 맨아래 = 시도들[시도들.length - 1];
+const 영시도 = 시도들.filter((x) => x.사립 === 0).map((x) => x.이름);
+const 구맵 = new Map<string, { 전체: number; 사립: number }>();
+for (const x of 학교들) {
+  const k = `${x.시도} ${x.구}`;
+  const a = 구맵.get(k) ?? { 전체: 0, 사립: 0 };
+  a.전체 += 1; if (x.설립 === '사립') a.사립 += 1;
+  구맵.set(k, a);
+}
+const 최소 = 5;
+const 구들 = [...구맵.entries()].map(([이름, v]) => ({ 이름, ...v })).filter((x) => x.전체 >= 최소).sort((a, b) => b.사립 / b.전체 - a.사립 / a.전체 || b.사립 - a.사립);
+const 높은구 = 구들.slice(0, 15);
+const 빠진구 = 구맵.size - 구들.length;
+const 공학맵 = ['남녀공학', '남중', '여중'].map((k) => ({ k, 전체: 학교들.filter((x) => x.공학 === k).length, 사립: 사립들.filter((x) => x.공학 === k).length }));
+
+const TITLE = `사립 중학교 ${수(사립들.length)}곳, 전체의 ${몫(사립들.length, 학교들.length)}% — 시도별로 ${맨위.이름} ${몫(맨위.사립, 맨위.전체)}%`;
+const desc =
+  `NEIS 설립 구분으로 중학교 ${수(학교들.length)}곳 가운데 사립은 ${수(사립들.length)}곳(${몫(사립들.length, 학교들.length)}%)입니다. 시도별 사립 몫은 ${맨위.이름} ${몫(맨위.사립, 맨위.전체)}%에서 ${맨아래.이름} ${몫(맨아래.사립, 맨아래.전체)}%까지입니다.`;
+
+const jsonLd = [
+  {
+    '@context': 'https://schema.org',
+    '@type': 'Dataset',
+    name: '사립 중학교 — 시도·시군구별 수와 몫',
+    description: desc,
+    creator: { '@type': 'Organization', name: '백년지도' },
+    sourceOrganization: { '@type': 'Organization', name: 'NEIS 교육정보 개방 포털' },
+    spatialCoverage: '대한민국 시·도, 시·군·구',
+    variableMeasured: ['중학교 수', '설립 구분(공립·사립·국립)'],
+  },
+  {
+    '@context': 'https://schema.org',
+    '@type': 'FAQPage',
+    mainEntity: [
+      {
+        '@type': 'Question',
+        name: '사립 중학교는 전국에 몇 곳인가요?',
+        acceptedAnswer: {
+          '@type': 'Answer',
+          text: `NEIS 설립 구분으로 중학교 ${수(학교들.length)}곳 가운데 사립은 ${수(사립들.length)}곳, 공립은 ${수(구분들[0].n)}곳, 국립은 ${구분들[2].n}곳입니다.`,
+        },
+      },
+      {
+        '@type': 'Question',
+        name: '사립 중학교 비율이 가장 높은 시도는 어디인가요?',
+        acceptedAnswer: {
+          '@type': 'Answer',
+          text: `${시도들.slice(0, 3).map((x) => `${x.이름} ${몫(x.사립, x.전체)}%(${x.전체}곳 중 ${x.사립}곳)`).join(', ')} 순입니다.`,
+        },
+      },
+    ],
+  },
+];
+---
+
+<HundredYear title={TITLE} description={desc} jsonLd={jsonLd}>
+  <h1>사립 중학교는<br class="pcbr" /> 시도마다 얼마나 되나요</h1>
+  <p class="sub">
+    NEIS 학교기본정보의 설립 구분(공립·사립·국립)으로 중학교 {수(학교들.length)}곳을 시도와 시군구별로 셌습니다.
+  </p>
+
+  <div class="answer">
+    <p class="answer-label">중학교 {수(학교들.length)}곳 가운데 사립</p>
+    <p class="answer-num">{수(사립들.length)}곳</p>
+    <p class="answer-sub">전체의 {몫(사립들.length, 학교들.length)}% · 공립 {수(구분들[0].n)}곳 · 국립 {구분들[2].n}곳 · 기타 {구분들[3].n}곳</p>
+  </div>
+
+  <p>
+    ⚠ <strong>설립 구분은 NEIS 가 준 값입니다.</strong> 사립 중학교의 몫이 높고 낮은 것을 학교의 좋고 나쁨으로 읽을 수는 없습니다. 이 표는 학교가 어떤 설립 구분에 속하는지만 셉니다.
+  </p>
+
+  <h2>시도별 — 사립 중학교의 몫</h2>
+  <div class="tablewrap">
+    <table>
+      <thead><tr><th>시·도</th><th>사립</th><th>중학교</th><th>사립 몫</th></tr></thead>
+      <tbody>
+        {시도들.map((x) => (
+          <tr>
+            <th>{x.이름}</th>
+            <td class="num"><strong>{수(x.사립)}곳</strong></td>
+            <td class="num">{수(x.전체)}곳</td>
+            <td class="num">{몫(x.사립, x.전체)}%</td>
+          </tr>
+        ))}
+      </tbody>
+    </table>
+  </div>
+
+  <h2>사립 몫이 높은 시군구 15곳</h2>
+  <p class="note">중학교가 {최소}곳 이상인 시군구 {구들.length}곳 가운데입니다. 그보다 적은 {빠진구}곳은 표에서 뺐습니다.</p>
+  <div class="tablewrap">
+    <table>
+      <thead><tr><th>지역</th><th>사립</th><th>중학교</th><th>사립 몫</th></tr></thead>
+      <tbody>
+        {높은구.map((x) => (
+          <tr>
+            <th>{x.이름}</th>
+            <td class="num"><strong>{x.사립}곳</strong></td>
+            <td class="num">{x.전체}곳</td>
+            <td class="num">{몫(x.사립, x.전체)}%</td>
+          </tr>
+        ))}
+      </tbody>
+    </table>
+  </div>
+
+  <h2>사립 중학교는 남중·여중·공학 가운데 무엇인가</h2>
+  <div class="tablewrap">
+    <table>
+      <thead><tr><th>구분</th><th>중학교 전체</th><th>그 가운데 사립</th><th>사립 몫</th></tr></thead>
+      <tbody>
+        {공학맵.map((x) => (
+          <tr>
+            <th>{x.k === '남녀공학' ? '남녀공학' : x.k === '남중' ? '남자 중학교' : '여자 중학교'}</th>
+            <td class="num">{수(x.전체)}곳</td>
+            <td class="num"><strong>{수(x.사립)}곳</strong></td>
+            <td class="num">{몫(x.사립, x.전체)}%</td>
+          </tr>
+        ))}
+      </tbody>
+    </table>
+  </div>
+
+  <h2>같은 표에서 읽히는 것</h2>
+  <ul>
+    <li>사립 몫이 가장 높은 시도는 {맨위.이름} {몫(맨위.사립, 맨위.전체)}%({맨위.전체}곳 중 {맨위.사립}곳), 가장 낮은 시도는 {맨아래.이름} {몫(맨아래.사립, 맨아래.전체)}%({맨아래.전체}곳 중 {맨아래.사립}곳)입니다.</li>
+    <li>사립 중학교가 한 곳도 없는 시도는 {영시도.length}곳입니다{영시도.length ? `(${영시도.join(' · ')})` : ''}.</li>
+    <li>사립 {수(사립들.length)}곳 가운데 남녀공학은 {수(공학맵[0].사립)}곳, 남자 중학교는 {수(공학맵[1].사립)}곳, 여자 중학교는 {수(공학맵[2].사립)}곳입니다.</li>
+  </ul>
+
+  <h2>⚠ 이 자료로 말할 수 없는 것</h2>
+  <ul>
+    <li>설립 구분만 있고, 사립 중학교의 학비·배정 방식은 이 자료에 없습니다.</li>
+    <li>국립 중학교 {구분들[2].n}곳과 기타 {구분들[3].n}곳은 사립 몫을 계산할 때 사립에 넣지 않았습니다.</li>
+    <li>각종학교(중)와 방송통신중학교는 처음부터 이 자료에 넣지 않았습니다.</li>
+    <li>고등학교 사립 몫은 <a href="/private-high-school-by-area">사립 고등학교 비율 지역별</a> 페이지에 따로 있습니다.</li>
+  </ul>
+
+  <p class="note">
+    출처 — {자료.이름}. 올해 {자료.올해}년 기준. 이용허락범위: 공공누리. 시도·시군구로 센 것은 백년지도가 낸 값입니다.
+  </p>
+
+  <p class="note">
+    <a href="/private-high-school-by-area">← 사립 고등학교 비율 지역별</a>
+    <br />
+    <a href="/middle">→ 우리 동네 중학교</a>
+  </p>
+
+  <HundredAgeWalk 키="private-middle-school-by-province" />
+  <NextQuestionBrief 모은것="NEIS 학교기본정보의 설립 구분을 시도·시군구로 센 실측" />
+</HundredYear>
+
+<style>
+  .num { text-align: right; font-variant-numeric: tabular-nums; }
+</style>

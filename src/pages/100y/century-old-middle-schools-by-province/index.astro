@@ -1,0 +1,186 @@
+---
+/**
+ * /100y/century-old-middle-schools-by-province — 설립 100년이 넘은 중학교 시도별
+ *
+ * 출처  NEIS 교육정보 개방 포털 학교기본정보 — src/data/100yearmap/middle.json (학교별 설립연·시도·구).
+ *       이 쪽에서 한 일은 설립연이 (올해 - 100) 이하인 학교를 시도로 센 것뿐이다. 올해는 자료의 값(2026)을 쓴다.
+ * ⛔ 설립일은 NEIS 값이다. 학교가 스스로 세는 개교기념일과 다를 수 있어 「몇 년째」로 쓰지 않고 「1908년 설립」으로 쓴다.
+ * ⛔ 「명문」·「전통」으로 읽히게 쓰지 않는다. 햇수는 햇수다. 조언은 싣지 않는다.
+ */
+import HundredYear from '../../../layouts/HundredYear.astro';
+import HundredAgeWalk from '../../../components/HundredAgeWalk.astro';
+import NextQuestionBrief from '../../../components/NextQuestionBrief.astro';
+import 원본 from '../../../data/100yearmap/middle.json';
+
+const 자료 = 원본 as any;
+const 수 = (n: number) => Number(n).toLocaleString('ko-KR');
+const 올해: number = 자료.올해;
+const 기준연 = 올해 - 100;
+const 학교들 = (자료.자료 as any[]).filter((x) => Number.isFinite(x.설립연));
+const 오래된 = 학교들.filter((x) => x.설립연 <= 기준연).sort((a, b) => a.설립연 - b.설립연 || a.title.localeCompare(b.title, 'ko'));
+const 시도맵 = new Map<string, { 전체: number; 백년: number }>();
+for (const x of 학교들) {
+  const a = 시도맵.get(x.시도) ?? { 전체: 0, 백년: 0 };
+  a.전체 += 1; if (x.설립연 <= 기준연) a.백년 += 1;
+  시도맵.set(x.시도, a);
+}
+const 시도들 = [...시도맵.entries()].map(([이름, v]) => ({ 이름, ...v })).sort((a, b) => b.백년 - a.백년 || b.백년 / b.전체 - a.백년 / a.전체 || a.이름.localeCompare(b.이름, 'ko'));
+const 몫 = (a: number, b: number) => (b ? ((a / b) * 100).toFixed(1) : '0.0');
+const 몫순 = [...시도들].sort((a, b) => b.백년 / b.전체 - a.백년 / a.전체);
+const 영시도 = 시도들.filter((x) => x.백년 === 0).map((x) => x.이름);
+const 가장이른 = 오래된[0];
+const 구맵 = new Map<string, number>();
+for (const x of 오래된) { const k = `${x.시도} ${x.구}`; 구맵.set(k, (구맵.get(k) ?? 0) + 1); }
+const 많은구 = [...구맵.entries()].sort((a, b) => b[1] - a[1] || a[0].localeCompare(b[0], 'ko')).slice(0, 10);
+const 연대맵 = new Map<number, number>();
+for (const x of 오래된) { const d = Math.floor(x.설립연 / 10) * 10; 연대맵.set(d, (연대맵.get(d) ?? 0) + 1); }
+const 연대들 = [...연대맵.entries()].sort((a, b) => a[0] - b[0]);
+const 맨위 = 시도들[0];
+
+const TITLE = `설립 100년 넘은 중학교 ${수(오래된.length)}곳 — 시도별로 ${맨위.이름} ${맨위.백년}곳`;
+const desc =
+  `NEIS 설립 연도가 ${기준연}년 이전인 중학교는 ${수(학교들.length)}곳 가운데 ${수(오래된.length)}곳(${몫(오래된.length, 학교들.length)}%)입니다. ${맨위.이름} ${맨위.백년}곳이 가장 많고, 가장 이른 설립 연도는 ${가장이른.설립연}년(${가장이른.title})입니다. 시도별로 셌습니다.`;
+
+const jsonLd = [
+  {
+    '@context': 'https://schema.org',
+    '@type': 'Dataset',
+    name: '설립 100년 넘은 중학교 — 시도별 수',
+    description: desc,
+    creator: { '@type': 'Organization', name: '백년지도' },
+    sourceOrganization: { '@type': 'Organization', name: 'NEIS 교육정보 개방 포털' },
+    spatialCoverage: '대한민국 시·도',
+    variableMeasured: ['중학교 수', '설립 연도'],
+  },
+  {
+    '@context': 'https://schema.org',
+    '@type': 'FAQPage',
+    mainEntity: [
+      {
+        '@type': 'Question',
+        name: '설립 100년이 넘은 중학교는 몇 곳인가요?',
+        acceptedAnswer: {
+          '@type': 'Answer',
+          text: `NEIS 설립 연도가 ${기준연}년 이전인 중학교는 ${수(학교들.length)}곳 가운데 ${수(오래된.length)}곳입니다. 시도별로 ${시도들.slice(0, 3).map((x) => `${x.이름} ${x.백년}곳`).join(', ')} 순입니다.`,
+        },
+      },
+      {
+        '@type': 'Question',
+        name: '가장 오래된 중학교는 어디인가요?',
+        acceptedAnswer: {
+          '@type': 'Answer',
+          text: `NEIS 설립 연도로 보면 ${오래된.slice(0, 3).map((x) => `${x.title}(${x.설립연}년)`).join(', ')} 순입니다. 학교가 스스로 세는 개교 연도와 다를 수 있습니다.`,
+        },
+      },
+    ],
+  },
+];
+---
+
+<HundredYear title={TITLE} description={desc} jsonLd={jsonLd}>
+  <h1>설립 100년 넘은 중학교,<br class="pcbr" /> 시도별로 보면</h1>
+  <p class="sub">
+    문을 연 지 100년이 넘은 중학교는 어디에 얼마나 있을까요? NEIS 학교기본정보의 설립일로 중학교 {수(학교들.length)}곳을 셌습니다.
+  </p>
+
+  <div class="answer">
+    <p class="answer-label">NEIS 설립 연도 {기준연}년 이전 — 중학교 {수(학교들.length)}곳 가운데</p>
+    <p class="answer-num">{수(오래된.length)}곳</p>
+    <p class="answer-sub">전체의 {몫(오래된.length, 학교들.length)}% · 가장 이른 설립 {가장이른.설립연}년 · {가장이른.title}({가장이른.시도})</p>
+  </div>
+
+  <p>
+    ⚠ <strong>설립일은 NEIS 가 준 값입니다.</strong> 학교가 스스로 세는 개교 연도와 다를 수 있고, 통합·이전·전환으로 설립일이 새로 잡힌 학교도 있습니다. 그래서 0곳으로 나온 시도({영시도.join(' · ') || '없음'})를 오래된 학교가 없는 곳으로 읽을 수는 없습니다. 오래됐다는 것이 학교의 좋고 나쁨을 뜻하지도 않습니다.
+  </p>
+
+  <h2>시도별 — 설립 100년 넘은 중학교</h2>
+  <div class="tablewrap">
+    <table>
+      <thead><tr><th>시·도</th><th>100년 넘은 곳</th><th>중학교</th><th>몫</th></tr></thead>
+      <tbody>
+        {시도들.map((x) => (
+          <tr>
+            <th>{x.이름}</th>
+            <td class="num"><strong>{수(x.백년)}곳</strong></td>
+            <td class="num">{수(x.전체)}곳</td>
+            <td class="num">{몫(x.백년, x.전체)}%</td>
+          </tr>
+        ))}
+      </tbody>
+    </table>
+  </div>
+
+  <h2>100년 넘은 중학교이 많은 시군구 10곳</h2>
+  <div class="tablewrap">
+    <table>
+      <thead><tr><th>지역</th><th>100년 넘은 곳</th></tr></thead>
+      <tbody>
+        {많은구.map(([k, n]) => (
+          <tr><th>{k}</th><td class="num"><strong>{n}곳</strong></td></tr>
+        ))}
+      </tbody>
+    </table>
+  </div>
+  <p class="note">학교가 지금 있는 곳으로 셌습니다. 문을 연 곳에서 옮겨 온 학교도 있습니다.</p>
+
+  <h2>설립 연도가 가장 이른 중학교 15곳</h2>
+  <div class="tablewrap">
+    <table>
+      <thead><tr><th>학교</th><th>지역</th><th>NEIS 설립 연도</th></tr></thead>
+      <tbody>
+        {오래된.slice(0, 15).map((x) => (
+          <tr>
+            <th>{x.title}</th>
+            <td>{x.시도} {x.구}</td>
+            <td class="num">{x.설립연}년</td>
+          </tr>
+        ))}
+      </tbody>
+    </table>
+  </div>
+
+  <h2>100년 넘은 중학교의 설립 연대</h2>
+  <div class="tablewrap">
+    <table>
+      <thead><tr><th>연대</th><th>문을 연 곳</th></tr></thead>
+      <tbody>
+        {연대들.map(([d, n]) => (
+          <tr><th>{d}년대</th><td class="num">{수(n)}곳</td></tr>
+        ))}
+      </tbody>
+    </table>
+  </div>
+
+  <h2>같은 표에서 읽히는 것</h2>
+  <ul>
+    <li>중학교 {수(학교들.length)}곳 가운데 설립 {기준연}년 이전은 {수(오래된.length)}곳, {몫(오래된.length, 학교들.length)}%입니다.</li>
+    <li>곳 수는 {시도들[0].이름} {시도들[0].백년}곳, {시도들[1].이름} {시도들[1].백년}곳, {시도들[2].이름} {시도들[2].백년}곳 순입니다.</li>
+    <li>그 시도의 중학교 가운데 차지하는 몫은 {몫순[0].이름} {몫(몫순[0].백년, 몫순[0].전체)}%({몫순[0].전체}곳 중 {몫순[0].백년}곳)가 가장 높습니다.</li>
+    <li>가장 이른 설립 연도는 {가장이른.설립연}년이고, {가장이른.title}({가장이른.시도} {가장이른.구})입니다.</li>
+  </ul>
+
+  <h2>⚠ 이 자료로 말할 수 없는 것</h2>
+  <ul>
+    <li>NEIS 설립일 그대로이고, 학교가 스스로 세는 개교기념일과 다를 수 있습니다.</li>
+    <li>지금 문을 연 학교만 셉니다. 문을 닫았거나 다른 학교와 합쳐진 학교는 이 표에 없습니다.</li>
+    <li>학교 이름·위치가 바뀐 경우 처음 학교와 같은 학교로 이어 본 것이 아닙니다.</li>
+    <li>아직 문을 열지 않은 학교, 재외한국학교, 주소가 없는 학교는 시도로 셀 수 없어 뺐습니다.</li>
+  </ul>
+
+  <p class="note">
+    출처 — {자료.이름}. 올해 {올해}년 기준. 이용허락범위: 공공누리. 시도로 센 것은 백년지도가 낸 값입니다.
+  </p>
+
+  <p class="note">
+    <a href="/century-old-high-schools-by-area">← 설립 100년 넘은 고등학교 지역별</a>
+    <br />
+    <a href="/middle">→ 우리 동네 중학교</a>
+  </p>
+
+  <HundredAgeWalk 키="century-old-middle-schools-by-province" />
+  <NextQuestionBrief 모은것="NEIS 학교기본정보의 설립일을 시도로 센 실측" />
+</HundredYear>
+
+<style>
+  .num { text-align: right; font-variant-numeric: tabular-nums; }
+</style>
