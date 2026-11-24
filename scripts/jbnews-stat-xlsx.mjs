@@ -251,6 +251,32 @@ console.log(`적었다: ${낼곳}`);
 console.log(`장 2개 · 기자 ${차례.length}명 · 달 ${달들.length}개 · 수식 ${수식수}개`);
 console.log('✅ 되읽기 검사 통과');
 
+/* ── 진짜 엑셀로 열어 본다 ──────────────────────────────────────
+   🔴 되읽기 검사는 우리가 쓴 검사라 우리 잘못을 같이 가질 수 있다.
+   사장님이 2026-11-24 에 Office 가 깔려 있다고 짚어 주셨다 — 그래서 실물로 연다.
+   ⚠ 첫 시도가 Workbooks.Open 에서 선 까닭은 «경로에 든 한글»이었다.
+     ps1 이 ASCII 임시 자리로 옮겨 연다. 창은 띄우지 않는다 */
+const { execFileSync: 돌린다 } = await import('node:child_process');
+let 엑셀이열었나 = false;
+let 엑셀말 = '';
+try {
+  엑셀말 = 돌린다('powershell', [
+    '-NoProfile', '-ExecutionPolicy', 'Bypass',
+    '-File', path.resolve('scripts/lib/check-xlsx-in-excel.ps1'),
+    '-Path', 낼곳,
+  ], { encoding: 'utf8' });
+  엑셀이열었나 = /\bOK\b/.test(엑셀말);
+} catch (e) {
+  엑셀말 = String((e.stdout || '') + (e.message || '')).slice(0, 300);
+  엑셀이열었나 = false;
+}
+for (const l of 엑셀말.trim().split('\n')) console.log('   ' + l.trim());
+if (엑셀이열었나) {
+  console.log('✅ 엑셀이 열었고 수식 오류가 없다');
+} else {
+  console.error('🔴 엑셀로 열어 보지 못했다 — 메일 글에 그대로 적는다');
+}
+
 /* ────────────────────────── CSV 두 장 ──────────────────────────
    ⭐ 엑셀이 안 열릴 때를 대비해 같은 내용을 CSV 로도 둔다.
    이 PC 에는 엑셀을 열어 볼 수단이 없어 화면으로 확인하지 못하기 때문이다.
@@ -354,9 +380,12 @@ if (안끝난달.length) {
 글.push('');
 글.push('  보도자료와 자동생성 기사는 CMS 통계에서 구분되지 않아 측정하지 못했습니다.');
 글.push('');
-글.push('  이 PC 에는 엑셀을 열어 볼 수단이 없어, 파일 구조와 들어간 값은 확인했으나');
-글.push('  엑셀 화면으로는 확인하지 못했습니다. 혹시 열리지 않으면 CSV 를 보시고');
-글.push('  알려 주시면 바로 고치겠습니다.');
+if (엑셀이열었나) {
+  글.push(`  보내기 전에 엑셀로 열어 확인했습니다. 장 2개, 수식 ${수식수}개, 수식 오류 0개입니다.`);
+} else {
+  글.push('  엑셀로 열어 확인하지 못했습니다. 파일 구조와 들어간 값은 확인했습니다.');
+  글.push('  혹시 열리지 않으면 CSV 를 보시고 알려 주시면 바로 고치겠습니다.');
+}
 
 const 글길 = path.join(폴더, '중부매일-기자통계-메일글.txt');
 fs.writeFileSync(글길, `${글.join('\n')}\n`, 'utf8');
