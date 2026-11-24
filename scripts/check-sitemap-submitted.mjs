@@ -29,7 +29,9 @@ const 뿌리 = path.join(path.dirname(fileURLToPath(import.meta.url)), '..');
 export const 사이트 = [
   { 이름: 'klifemap', 속성: 'sc-domain:klifemap.ai' },
   { 이름: 'seoulmarkets', 속성: 'sc-domain:seoulmarkets.com' },
-  { 이름: 'kcw', 속성: 'sc-domain:kculturewire.com' },
+  /* ⛔ [2026-11-25 · 5번] K Culture Wire 는 2026-11-22 에 접었다 (사장님 — 「k컬쳐와이어는
+     더이상 운영안한다」). 색인 요청을 내지 않는 사이트를 「14일째 안 읽혔다」고 빨강으로
+     내면 그 옆의 «진짜» 빨강이 안 보인다. 운영하는 셋만 본다. */
   { 이름: '100y', 속성: 'sc-domain:100yearmap.com' },
 ];
 
