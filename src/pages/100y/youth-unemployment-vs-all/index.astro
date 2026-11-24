@@ -1,0 +1,110 @@
+---
+/**
+ * /100y/youth-unemployment-vs-all — 청년(15~29세) 실업률과 전체 실업률, 2010~2025
+ *
+ * 출처  KOSIS 101/DT_1DA7102S 경제활동인구조사 연령별 실업률(연간) — src/data/korea-youth-unemployment.json.
+ * 이 쪽에서 한 일은 나눗셈(청년 ÷ 전체)과 연도 사이 뺄셈뿐이다. 원인 추측·조언은 싣지 않는다.
+ */
+import HundredYear from '../../../layouts/HundredYear.astro';
+import NextQuestionBrief from '../../../components/NextQuestionBrief.astro';
+import HundredAgeWalk from '../../../components/HundredAgeWalk.astro';
+import 원본 from '../../../data/korea-youth-unemployment.json';
+
+const 줄들 = (원본 as any).rows as { year: number; youth: number; all: number; ratio: number }[];
+const 처음 = 줄들[0];
+const 최신 = 줄들[줄들.length - 1];
+const 배 = (r: { youth: number; all: number }) => r.youth / r.all;
+const 정점 = [...줄들].sort((a, b) => b.youth - a.youth)[0];
+const 바닥 = [...줄들].sort((a, b) => a.youth - b.youth)[0];
+const 배높 = [...줄들].sort((a, b) => 배(b) - 배(a))[0];
+const 배낮 = [...줄들].sort((a, b) => 배(a) - 배(b))[0];
+const 퍼 = (n: number) => `${n.toFixed(1)}%`;
+const 차 = (r: { youth: number; all: number }) => r.youth - r.all;
+const 퍼p = (n: number) => `${n > 0 ? '+' : ''}${n.toFixed(1)}%p`;
+const 전년 = (i: number) => (i === 0 ? null : 줄들[i].youth - 줄들[i - 1].youth);
+const 늘어난해 = 줄들.filter((_, i) => i > 0 && (전년(i) as number) > 0).map((r) => r.year);
+const 줄어든해 = 줄들.filter((_, i) => i > 0 && (전년(i) as number) < 0).map((r) => r.year);
+
+const desc =
+  `경제활동인구조사(KOSIS)에서 청년(15~29세) 실업률은 ${처음.year}년 ${퍼(처음.youth)}, ${정점.year}년 ${퍼(정점.youth)}까지 올랐다가 ${최신.year}년 ${퍼(최신.youth)}입니다. ` +
+  `같은 해 전체 실업률은 ${퍼(최신.all)}로, 청년 실업률은 전체의 ${배(최신).toFixed(2)}배입니다. ${처음.year}~${최신.year}년을 매년 나란히 놓았습니다.`;
+
+const jsonLd = {
+  '@context': 'https://schema.org',
+  '@type': 'Dataset',
+  name: '청년 실업률과 전체 실업률 — 경제활동인구조사 2010~2025',
+  description: desc,
+  dateModified: (원본 as any).receivedAt,
+  creator: { '@type': 'Organization', name: '백년지도' },
+  sourceOrganization: { '@type': 'Organization', name: 'KOSIS 국가데이터처' },
+  isBasedOn: 'https://kosis.kr/statHtml/statHtml.do?orgId=101&tblId=DT_1DA7102S',
+  variableMeasured: ['청년(15~29세) 실업률', '전체 실업률', '청년 실업률 ÷ 전체 실업률'],
+};
+---
+
+<HundredYear
+  title={`청년 실업률 ${정점.year}년 ${퍼(정점.youth)}에서 ${최신.year}년 ${퍼(최신.youth)}, 전체 실업률의 ${배(최신).toFixed(2)}배 (${처음.year}~${최신.year}년)`}
+  description={desc}
+  jsonLd={jsonLd}
+>
+  <h1>청년 실업률은 전체의<br />몇 배였을까요</h1>
+  <p class="sub">
+    통계청 경제활동인구조사의 연령별 실업률에서 15~29세와 전체를 매년 나란히 놓았습니다. 실업률은 일하고 싶어 구직활동을 한 사람 가운데 일자리가 없던 사람의 비율이라서, 구직을 쉬는 사람은 들어가지 않습니다.
+  </p>
+
+  <div class="answer">
+    <p class="answer-label">{최신.year}년, 청년(15~29세) 실업률</p>
+    <p class="answer-num">{퍼(최신.youth)}</p>
+    <p class="answer-sub">전체 {퍼(최신.all)} · 차이 {퍼p(차(최신))} · 전체의 {배(최신).toFixed(2)}배</p>
+  </div>
+
+  <h2>매년 나란히</h2>
+  <div class="tablewrap">
+    <table>
+      <thead>
+        <tr><th>연도</th><th>청년 실업률</th><th>전체 실업률</th><th>차이</th><th>청년 ÷ 전체</th></tr>
+      </thead>
+      <tbody>
+        {[...줄들].reverse().map((r) => (
+          <tr>
+            <td>{r.year}</td>
+            <td>{퍼(r.youth)}</td>
+            <td>{퍼(r.all)}</td>
+            <td>{퍼p(차(r))}</td>
+            <td>{배(r).toFixed(2)}배</td>
+          </tr>
+        ))}
+      </tbody>
+    </table>
+  </div>
+
+  <h2>같은 표에서 읽히는 것</h2>
+  <ul>
+    <li>청년 실업률이 가장 높았던 해는 {정점.year}년 {퍼(정점.youth)}, 가장 낮았던 해는 {바닥.year}년 {퍼(바닥.youth)}입니다.</li>
+    <li>청년 실업률이 전체의 몇 배인지는 {배높.year}년 {배(배높).toFixed(2)}배로 가장 크고, {배낮.year}년 {배(배낮).toFixed(2)}배로 가장 작습니다. {처음.year}~{최신.year}년 모든 해에서 2배보다 높았습니다.</li>
+    <li>전체 실업률은 {처음.year}년 {퍼(처음.all)}에서 {최신.year}년 {퍼(최신.all)}로, 청년 실업률은 {퍼(처음.youth)}에서 {퍼(최신.youth)}로 바뀌었습니다. 청년 쪽이 {퍼p(최신.youth - 처음.youth)}, 전체가 {퍼p(최신.all - 처음.all)}입니다.</li>
+    <li>청년 실업률이 앞해보다 오른 해는 {늘어난해.length}번({늘어난해.join('·')}년), 내린 해는 {줄어든해.length}번({줄어든해.join('·')}년)이고, 나머지 해는 같았습니다.</li>
+  </ul>
+
+  <h2>⚠ 이 자료로 말할 수 없는 것</h2>
+  <ul>
+    <li>청년은 15~29세 전체이고, 재학 중인 사람도 구직활동을 하면 들어갑니다. 20대 후반만 따로 본 값은 아닙니다.</li>
+    <li>실업률 분모는 경제활동인구입니다. 구직을 쉬거나 시험 준비를 하는 사람은 빠지므로, 일을 못 하는 청년의 수를 모두 담은 값이 아닙니다. 쉬었음 인구는 <a href="/idle-youth">청년 쉬었음</a> 페이지에 따로 있습니다.</li>
+    <li>비율의 배수는 전체 실업률이 낮을수록 같은 차이에서도 커집니다. 배수가 줄었다고 청년 사정이 나아졌다는 뜻은 아닙니다.</li>
+    <li>올라가고 내려간 이유(경기, 학령인구, 조사 방법)는 이 표에 없습니다. 같은 해 표본이 서로 다른 사람들입니다.</li>
+    <li>나이대별 실업률은 <a href="/unemployment-by-age">나이대별 실업률</a> 페이지에서 볼 수 있습니다.</li>
+  </ul>
+
+  <p class="note">
+    출처 — 국가데이터처 KOSIS 경제활동인구조사(101/DT_1DA7102S) 연령별 실업률 연간, {처음.year}~{최신.year}년. 청년은 15~29세. 받은 날 {String((원본 as any).receivedAt).slice(0, 10)}.
+  </p>
+
+  <p class="note">
+    <a href="/unemployment-by-age">← 나이대별 실업률</a>
+    <br />
+    <a href="/idle-youth">→ 청년 쉬었음</a>
+  </p>
+
+  <HundredAgeWalk 키="youth-unemployment-vs-all" />
+  <NextQuestionBrief 모은것="청년 실업률과 전체 실업률" />
+</HundredYear>
