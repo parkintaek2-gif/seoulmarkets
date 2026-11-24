@@ -261,6 +261,13 @@ export const 단계들 = [
      206곳 남아 손님 화면에 빈 글머리표가 사흘 나갔다. 소스에서 막는다 — 지면을 짓기 전이 싸다 */
   "node scripts/check-빈-강조가-있나.mjs --자가시험",
   "node scripts/check-빈-강조가-있나.mjs",
+  /* 🔴🔴 [2026-11-25 · 사장님] 「고아에>>고아 쓰지말라니꺼」
+     11-22 에 저장소 287곳을 고치고 금지어 목록에 「차별어」 갈래까지 세웠는데
+     사흘 뒤 사장님이 다시 짚으셨다. 목록도 검사도 멀쩡했고 **돌린 자리가 없었을 뿐**이다 —
+     기사·메일·지면에는 돌리면서 내가 쓰는 문서와 메모에는 한 번도 안 돌렸다.
+     ⇒ 말로 된 규칙은 잊힌다. 날마다 돌려 내 문서와 메모리까지 훑는다 */
+  "node scripts/check-차별어가-남았나.mjs --자가시험",
+  "node scripts/check-차별어가-남았나.mjs",
   "node scripts/check-100y-live-numbers.mjs --자가시험",
   "node scripts/check-100y-indexable.mjs --selftest",
   "node scripts/check-100y-broken-links.mjs --selftest",
