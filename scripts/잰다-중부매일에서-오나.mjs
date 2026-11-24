@@ -1,0 +1,217 @@
+/**
+ * 잰다-중부매일에서-오나.mjs — **중부매일 운세 박스가 사람을 보내고 있나.**
+ *
+ * ── 왜 이 도구가 생겼나 ─────────────────────────────────────────
+ * 2026-11-24 19:31 에 사장님이 중부매일 모바일·PC 「오늘의 운세」 박스에
+ * 「도움말: KLifeMap.AI →」 배너를 넣으셨다. 그리고 물으셨다 —
+ * 「**내일부터 조금이라도 방문자. 페이지뷰 변화를 체크해.
+ *   중부매일에서 유입되는 지 파악못하지?**」
+ *
+ * 파악된다. GA4 는 `sessionSource` 에 레퍼러 호스트를 그대로 적는다 —
+ * 중부매일에서 눌러서 오면 `www.jbnews.com` / `m.jbnews.com` 으로 찍힌다.
+ * UTM 매개변수가 붙어 있지 않아도 찍힌다. 이 도구는 그것을 **날짜별로** 가른다.
+ *
+ * ── 이 도구가 내는 것 ────────────────────────────────────────────
+ * ① 날짜별 중부매일 유입 — 세션 · 사용자 · 페이지뷰
+ * ② 날짜별 KLifeMap 전체 — 세션 · 사용자 · 페이지뷰 (변화를 견주는 바탕)
+ * ③ 중부매일에서 온 사람이 **어느 지면에 떨어지나**
+ *
+ * ── 말하지 않는 것 ──────────────────────────────────────────────
+ * ⛔ 0 을 「못 쟀다」로 읽지 않는다. 0 이면 0 이라고 적는다
+ * ⛔ GA4 는 광고차단·쿠키거부로 덜 센다 — 바닥값이다
+ * ⛔ 배너를 넣은 날 이전의 줄은 바탕이지 성과가 아니다
+ *
+ * 쓰는 법  node scripts/잰다-중부매일에서-오나.mjs --자가시험
+ *          node scripts/잰다-중부매일에서-오나.mjs --잰다
+ *          node scripts/잰다-중부매일에서-오나.mjs --잰다 --날수=14
+ */
+import { readFileSync, existsSync } from 'node:fs';
+import { createSign } from 'node:crypto';
+import path from 'node:path';
+
+const 속성 = '549135289';
+const 우리집 = 'klifemap.ai';
+const 보내는곳 = 'jbnews';   /* www.jbnews.com · m.jbnews.com 둘 다 걸린다 */
+
+const 인자 = (이름, 기본) => {
+  const 머리 = `--${이름}=`;
+  const a = process.argv.find((x) => x.startsWith(머리));
+  return a ? a.slice(머리.length) : 기본;
+};
+
+/** `.env` 에서 열쇠 자리를 읽는다. 값은 찍지 않는다 */
+function 열쇠자리() {
+  if (process.env.GOOGLE_APPLICATION_CREDENTIALS) return process.env.GOOGLE_APPLICATION_CREDENTIALS;
+  try {
+    const 본문 = readFileSync(path.resolve('.env'), 'utf8');
+    const m = 본문.match(/^GOOGLE_APPLICATION_CREDENTIALS[ \t]*=[ \t]*(.+)$/m);
+    return m ? m[1].trim().replace(/^["']|["']$/g, '') : null;
+  } catch { return null; }
+}
+
+/** GA4 가 주는 20261124 를 2026-11-24 로 */
+export function 날짜꼴(s) {
+  const t = String(s ?? '');
+  if (!/^[0-9]{8}$/.test(t)) return t || '(모름)';
+  return `${t.slice(0, 4)}-${t.slice(4, 6)}-${t.slice(6, 8)}`;
+}
+
+/** 중부매일에서 온 것인가 — 모바일 주소와 PC 주소를 둘 다 받는다 */
+export function 중부매일인가(출처) {
+  return /jbnews/i.test(String(출처 ?? ''));
+}
+
+/** 날짜별로 접는다 — [날짜, {세션, 사람, 지면수}] */
+export function 날짜별로(줄들) {
+  const 통 = new Map();
+  for (const r of 줄들 ?? []) {
+    const 날 = 날짜꼴(r?.dimensionValues?.[0]?.value);
+    const 앞 = 통.get(날) ?? { 세션: 0, 사람: 0, 지면수: 0 };
+    통.set(날, {
+      세션: 앞.세션 + Number(r?.metricValues?.[0]?.value ?? 0),
+      사람: 앞.사람 + Number(r?.metricValues?.[1]?.value ?? 0),
+      지면수: 앞.지면수 + Number(r?.metricValues?.[2]?.value ?? 0),
+    });
+  }
+  return 통;
+}
+
+/* ────────────────────────── 자가시험 ────────────────────────── */
+function 자가시험() {
+  const 시험 = [];
+  const T = (이름, 참) => 시험.push([이름, !!참]);
+
+  T('날짜꼴 — 20261124 를 2026-11-24 로', 날짜꼴('20261124') === '2026-11-24');
+  T('날짜꼴 — 빈 값에 안 터진다', 날짜꼴(undefined) === '(모름)');
+  T('날짜꼴 — 모르는 꼴은 그대로 둔다', 날짜꼴('today') === 'today');
+
+  /* 🔴 모바일 주소를 빠뜨리면 유입의 대부분을 놓친다 —
+     2026-11-15 실측에서 네이버 유입의 80%가 m. 로 들어왔다. 같은 자리다 */
+  T('중부매일 — PC 주소를 알아본다', 중부매일인가('www.jbnews.com'));
+  T('중부매일 — 모바일 주소를 알아본다', 중부매일인가('m.jbnews.com'));
+  T('중부매일 — 대문자도 알아본다', 중부매일인가('WWW.JBNEWS.COM'));
+  T('중부매일 — 네이버는 아니다', !중부매일인가('m.search.naver.com'));
+  T('중부매일 — 빈 값에 안 터진다', !중부매일인가(undefined));
+
+  const 줄 = [
+    { dimensionValues: [{ value: '20261124' }], metricValues: [{ value: '3' }, { value: '3' }, { value: '7' }] },
+    { dimensionValues: [{ value: '20261124' }], metricValues: [{ value: '2' }, { value: '2' }, { value: '4' }] },
+    { dimensionValues: [{ value: '20261123' }], metricValues: [{ value: '0' }, { value: '0' }, { value: '0' }] },
+  ];
+  const t = 날짜별로(줄);
+  T('날짜별 — 같은 날 두 줄을 한 날로 모은다', t.get('2026-11-24').세션 === 5);
+  T('날짜별 — 페이지뷰도 모은다', t.get('2026-11-24').지면수 === 11);
+  T('날짜별 — 0 인 날을 «버리지 않는다»', t.has('2026-11-23') && t.get('2026-11-23').세션 === 0);
+  T('날짜별 — 빈 입력에 안 터진다', 날짜별로(undefined).size === 0);
+
+  T('열쇠자리 — 없으면 null 이다', 열쇠자리() === null || typeof 열쇠자리() === 'string');
+
+  const 진 = 시험.filter(([, ok]) => !ok);
+  for (const [이름] of 진) console.error(`❌ ${이름}`);
+  if (진.length) { console.error(`⛔ 자가시험 ${진.length}개 실패`); process.exit(1); }
+  console.log(`✅ 잰다-중부매일에서-오나 자가시험 통과 (${시험.length})`);
+}
+
+/* ────────────────────────── 실행 ────────────────────────── */
+if (process.argv.includes('--자가시험')) { 자가시험(); process.exit(0); }
+if (!process.argv.includes('--잰다')) {
+  console.error('⛔ --잰다 나 --자가시험 을 준다');
+  process.exit(1);
+}
+
+const 키길 = 열쇠자리();
+if (!키길 || !existsSync(키길)) {
+  console.error('⛔ 서비스 계정 열쇠가 없다 — **측정하지 못했다**. 0 으로 적지 않는다');
+  process.exit(1);
+}
+const 키 = JSON.parse(readFileSync(키길, 'utf8'));
+const now = Math.floor(Date.now() / 1000);
+const h = Buffer.from(JSON.stringify({ alg: 'RS256', typ: 'JWT' })).toString('base64url');
+const b = Buffer.from(JSON.stringify({
+  iss: 키.client_email, scope: 'https://www.googleapis.com/auth/analytics.readonly',
+  aud: 'https://oauth2.googleapis.com/token', iat: now, exp: now + 3600,
+})).toString('base64url');
+const sg = createSign('RSA-SHA256').update(`${h}.${b}`).sign(키.private_key, 'base64url');
+const tr = await fetch('https://oauth2.googleapis.com/token', {
+  method: 'POST',
+  headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+  body: new URLSearchParams({
+    grant_type: 'urn:ietf:params:oauth:grant-type:jwt-bearer',
+    assertion: `${h}.${b}.${sg}`,
+  }),
+});
+if (!tr.ok) { console.error(`⛔ 토큰을 받지 못했다 — HTTP ${tr.status}. 측정하지 못했다`); process.exit(1); }
+const { access_token } = await tr.json();
+
+const 날수 = Number(인자('날수', '10'));
+const 집필터 = { filter: { fieldName: 'hostName', stringFilter: { matchType: 'CONTAINS', value: 우리집 } } };
+const 중부필터 = { filter: { fieldName: 'sessionSource', stringFilter: { matchType: 'CONTAINS', value: 보내는곳 } } };
+
+async function 묻는다(몸통) {
+  const r = await fetch(`https://analyticsdata.googleapis.com/v1beta/properties/${속성}:runReport`, {
+    method: 'POST',
+    headers: { Authorization: `Bearer ${access_token}`, 'Content-Type': 'application/json' },
+    body: JSON.stringify(몸통),
+  });
+  if (!r.ok) return { 못쟀다: `HTTP ${r.status}` };
+  return r.json();
+}
+
+const 셋 = [{ name: 'sessions' }, { name: 'totalUsers' }, { name: 'screenPageViews' }];
+
+const 중부 = await 묻는다({
+  dateRanges: [{ startDate: `${날수}daysAgo`, endDate: 'today' }],
+  dimensions: [{ name: 'date' }],
+  metrics: 셋,
+  dimensionFilter: { andGroup: { expressions: [집필터, 중부필터] } },
+  limit: 400,
+});
+const 전체 = await 묻는다({
+  dateRanges: [{ startDate: `${날수}daysAgo`, endDate: 'today' }],
+  dimensions: [{ name: 'date' }],
+  metrics: 셋,
+  dimensionFilter: 집필터,
+  limit: 400,
+});
+
+if (중부.못쟀다 || 전체.못쟀다) {
+  console.error(`⛔ 측정하지 못했다 — ${중부.못쟀다 || 전체.못쟀다}`);
+  process.exit(1);
+}
+
+const 중부표 = 날짜별로(중부.rows);
+const 전체표 = 날짜별로(전체.rows);
+const 날들 = [...new Set([...중부표.keys(), ...전체표.keys()])].sort();
+
+console.log(`■ 중부매일 → KLifeMap 유입 — 최근 ${날수}일 · 속성 ${속성}`);
+console.log('   배너를 넣은 날: 2026-11-24 19:31 (사장님) — 그 앞줄은 바탕이지 성과가 아니다\n');
+console.log('날짜         중부매일 세션 · 사용자 · 페이지뷰      KLifeMap 전체 세션 · 사용자 · 페이지뷰');
+for (const d of 날들) {
+  const a = 중부표.get(d) ?? { 세션: 0, 사람: 0, 지면수: 0 };
+  const z = 전체표.get(d) ?? { 세션: 0, 사람: 0, 지면수: 0 };
+  console.log(`${d}   ${String(a.세션).padStart(8)} ${String(a.사람).padStart(8)} ${String(a.지면수).padStart(9)}`
+    + `        ${String(z.세션).padStart(8)} ${String(z.사람).padStart(8)} ${String(z.지면수).padStart(9)}`);
+}
+
+const 중부합 = [...중부표.values()].reduce((s, x) => s + x.세션, 0);
+console.log(`\n중부매일에서 온 세션 합계: ${중부합}`);
+if (중부합 === 0) {
+  console.log('⬜ 중부매일에서 온 세션이 «0» 이다. 측정하지 못한 것이 아니라 0 이다.');
+} else {
+  const 어디 = await 묻는다({
+    dateRanges: [{ startDate: `${날수}daysAgo`, endDate: 'today' }],
+    dimensions: [{ name: 'landingPage' }],
+    metrics: [{ name: 'sessions' }, { name: 'totalUsers' }],
+    dimensionFilter: { andGroup: { expressions: [집필터, 중부필터] } },
+    limit: 50,
+  });
+  if (!어디.못쟀다) {
+    console.log('\n■ 중부매일에서 온 사람이 떨어진 지면');
+    for (const r of (어디.rows ?? [])) {
+      const p = r?.dimensionValues?.[0]?.value ?? '(모름)';
+      console.log(`   ${String(p).slice(0, 56).padEnd(58)} 세션 ${r?.metricValues?.[0]?.value} · 사람 ${r?.metricValues?.[1]?.value}`);
+    }
+  }
+}
+console.log('\n⚠ GA4 는 광고차단·쿠키거부로 덜 센다 — 바닥값으로 읽는다.');
+console.log('⚠ 오늘 줄은 하루가 안 끝났으므로 다음 날 다시 읽는다.');
