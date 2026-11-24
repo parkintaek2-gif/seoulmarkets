@@ -1,0 +1,11 @@
+{
+  "site": "sc-domain:100yearmap.com",
+  "dimension": "query",
+  "window": {
+    "from": "2026-10-25",
+    "to": "2026-11-22",
+    "days": 28
+  },
+  "rowLimit": 25000,
+  "rows": []
+}

@@ -257,6 +257,10 @@ export const 단계들 = [
   "node scripts/check-100y-thin.mjs --자가시험",
   "node scripts/check-100y-video-schema.mjs --selftest",
   "node scripts/check-100y-reach-to-buy.mjs --자가시험",
+  /* 🔴🔴 [2026-11-25 · 5번] 2026-11-22 에 문구를 지우면서 껍데기 <strong></strong> 가
+     206곳 남아 손님 화면에 빈 글머리표가 사흘 나갔다. 소스에서 막는다 — 지면을 짓기 전이 싸다 */
+  "node scripts/check-빈-강조가-있나.mjs --자가시험",
+  "node scripts/check-빈-강조가-있나.mjs",
   "node scripts/check-100y-live-numbers.mjs --자가시험",
   "node scripts/check-100y-indexable.mjs --selftest",
   "node scripts/check-100y-broken-links.mjs --selftest",

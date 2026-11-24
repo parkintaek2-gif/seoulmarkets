@@ -1,0 +1,173 @@
+{
+  "site": "sc-domain:seoulmarkets.com",
+  "dimension": "query+page",
+  "window": {
+    "from": "2026-10-25",
+    "to": "2026-11-22",
+    "days": 28
+  },
+  "rowLimit": 25000,
+  "rows": [
+    {
+      "key": "006600",
+      "page": "https://seoulmarkets.com/company/sk-hynix",
+      "impressions": 1,
+      "clicks": 0,
+      "position": 58
+    },
+    {
+      "key": "bolsa de seul",
+      "page": "https://seoulmarkets.com/equities",
+      "impressions": 1,
+      "clicks": 0,
+      "position": 72
+    },
+    {
+      "key": "daoudata",
+      "page": "https://seoulmarkets.com/data/largest-companies",
+      "impressions": 29,
+      "clicks": 0,
+      "position": 6.448275862068965
+    },
+    {
+      "key": "hanwool corporation",
+      "page": "https://seoulmarkets.com/company/hanwool-and-jeju",
+      "impressions": 1,
+      "clicks": 0,
+      "position": 78
+    },
+    {
+      "key": "ineos styrolution korea ltd",
+      "page": "https://seoulmarkets.com/companies",
+      "impressions": 1,
+      "clicks": 0,
+      "position": 78
+    },
+    {
+      "key": "korea trade",
+      "page": "https://seoulmarkets.com/article/korea-trade-surplus-four-partners-customs",
+      "impressions": 1,
+      "clicks": 0,
+      "position": 92
+    },
+    {
+      "key": "korean company",
+      "page": "https://seoulmarkets.com/companies",
+      "impressions": 1,
+      "clicks": 0,
+      "position": 84
+    },
+    {
+      "key": "korean stock market",
+      "page": "https://seoulmarkets.com/equities",
+      "impressions": 1,
+      "clicks": 0,
+      "position": 90
+    },
+    {
+      "key": "kosdaq 041510",
+      "page": "https://seoulmarkets.com/equities",
+      "impressions": 2,
+      "clicks": 0,
+      "position": 63
+    },
+    {
+      "key": "kospi market update",
+      "page": "https://seoulmarkets.com/equities",
+      "impressions": 3,
+      "clicks": 0,
+      "position": 74
+    },
+    {
+      "key": "kostecsys",
+      "page": "https://seoulmarkets.com/companies",
+      "impressions": 1,
+      "clicks": 0,
+      "position": 8
+    },
+    {
+      "key": "luokung technology corp",
+      "page": "https://seoulmarkets.com/companies",
+      "impressions": 1,
+      "clicks": 0,
+      "position": 73
+    },
+    {
+      "key": "nippon express holdings,inc. earnings results",
+      "page": "https://seoulmarkets.com/japan/company/nippon-express-holdings",
+      "impressions": 8,
+      "clicks": 0,
+      "position": 10
+    },
+    {
+      "key": "shinki group shiga",
+      "page": "https://seoulmarkets.com/japan/company/the-shiga-bank",
+      "impressions": 1,
+      "clicks": 0,
+      "position": 53
+    },
+    {
+      "key": "south korea api market",
+      "page": "https://seoulmarkets.com/api",
+      "impressions": 1,
+      "clicks": 0,
+      "position": 77
+    },
+    {
+      "key": "south korea ophthalmic viscoelastic devices market",
+      "page": "https://seoulmarkets.com/companies",
+      "impressions": 3,
+      "clicks": 0,
+      "position": 75.33333333333333
+    },
+    {
+      "key": "south korea silicone rubber market",
+      "page": "https://seoulmarkets.com/companies",
+      "impressions": 2,
+      "clicks": 0,
+      "position": 78.5
+    },
+    {
+      "key": "south korea softgel capsule market",
+      "page": "https://seoulmarkets.com/companies",
+      "impressions": 1,
+      "clicks": 0,
+      "position": 88
+    },
+    {
+      "key": "south korea stock market",
+      "page": "https://seoulmarkets.com/equities",
+      "impressions": 1,
+      "clicks": 0,
+      "position": 83
+    },
+    {
+      "key": "south korea tic industry",
+      "page": "https://seoulmarkets.com/companies",
+      "impressions": 1,
+      "clicks": 0,
+      "position": 96
+    },
+    {
+      "key": "stella chemifa corporation earnings results",
+      "page": "https://seoulmarkets.com/japan/company/stella-chemifa",
+      "impressions": 2,
+      "clicks": 0,
+      "position": 8
+    },
+    {
+      "key": "the shiga bank, ltd. earnings results",
+      "page": "https://seoulmarkets.com/japan/company/the-shiga-bank",
+      "impressions": 1,
+      "clicks": 0,
+      "position": 10
+    },
+    {
+      "key": "韩国快消公司财报 2025",
+      "page": "https://seoulmarkets.com/article/korea-net-profit-concentration-2025-nine-companies-earned-half-of-all-profit",
+      "impressions": 1,
+      "clicks": 0,
+      "position": 56
+    }
+  ]
+}
