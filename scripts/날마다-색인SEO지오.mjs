@@ -47,7 +47,9 @@ const 대장길 = path.join(뿌리, 'docs', '날마다-색인SEO지오-대장.ts
 export const 집들 = [
   { 이름: 'KLifeMap', 호스트: 'klifemap.ai', 한글: true, 말: ['ko', 'en', 'zh', 'ja'] },
   { 이름: '백년지도', 호스트: '100yearmap.com', 한글: true, 말: ['ko'] },
-  { 이름: 'K Culture Wire', 호스트: 'www.kculturewire.com', 한글: false, 말: ['en'] },
+  /* ⛔ [2026-11-25 · 5번] K Culture Wire 는 2026-11-22 에 접었다 (사장님 — 「k컬쳐와이어는
+     더이상 운영안한다」). 색인 요청·통보를 내지 않는 사이트를 세면 「llms 3/4」처럼
+     늘 모자란 수가 나와 거짓 빨강이 된다. 운영하는 셋만 센다. */
   { 이름: 'SeoulMarkets', 호스트: 'seoulmarkets.com', 한글: false, 말: ['en'] },
 ];
 
