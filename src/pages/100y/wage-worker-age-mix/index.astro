@@ -1,0 +1,153 @@
+---
+/**
+ * /100y/wage-worker-age-mix — 임금근로자의 나이 구성 (2016·2021·2025·2026년 8월)
+ *
+ * 출처  KOSIS 101/DT_1DE7006S 경제활동인구조사 근로형태별 부가조사 — irregular-share-by-age.json 의 임금근로자 수.
+ * 이 쪽에서 한 일은 나눗셈뿐이다. 원인 추측·조언은 싣지 않는다.
+ */
+import HundredYear from '../../../layouts/HundredYear.astro';
+import NextQuestionBrief from '../../../components/NextQuestionBrief.astro';
+import HundredAgeWalk from '../../../components/HundredAgeWalk.astro';
+import 원본 from '../../../data/100yearmap/irregular-share-by-age.json';
+
+const 자료 = 원본 as any;
+const 월들: string[] = 자료.월;
+const 처음 = 월들[0];
+const 최신 = 월들[월들.length - 1];
+const 연 = (m: string) => m.slice(0, 4);
+const 연령: string[] = 자료.연령;
+const 임 = (성: string, a: string, m: string): number => 자료.값[성][a][m].임금근로자;
+const 만 = (n: number) => `${(n / 10).toLocaleString('ko-KR', { minimumFractionDigits: 1, maximumFractionDigits: 1 })}만명`;
+const 증감만 = (n: number) => `${n > 0 ? '+' : ''}${(n / 10).toLocaleString('ko-KR', { minimumFractionDigits: 1, maximumFractionDigits: 1 })}만명`;
+const 퍼 = (n: number) => `${n.toFixed(1)}%`;
+const 부호 = (n: number) => `${n > 0 ? '+' : ''}${n.toFixed(1)}%p`;
+const 구성 = (성: string, a: string, m: string) => (임(성, a, m) / 임(성, '계', m)) * 100;
+const 이름 = (a: string) => (a === '60세이상' ? '60세 이상' : a.replace('-', '~'));
+
+const 육십최신 = 구성('계', '60세이상', 최신);
+const 육십처음 = 구성('계', '60세이상', 처음);
+const 이십최신 = 구성('계', '20-29세', 최신);
+const 이십처음 = 구성('계', '20-29세', 처음);
+
+const desc =
+  `경제활동인구조사 8월 부가조사(KOSIS)에서 임금근로자 ${만(임('계', '계', 최신))} 가운데 60세 이상은 ${퍼(육십최신)}로 ${연(처음)}년 ${퍼(육십처음)}보다 높고, ` +
+  `20대는 ${퍼(이십최신)}로 ${연(처음)}년 ${퍼(이십처음)}보다 낮습니다. 나이대별 구성을 이 쪽에서 계산했습니다.`;
+
+const jsonLd = {
+  '@context': 'https://schema.org',
+  '@type': 'Dataset',
+  name: '임금근로자의 나이 구성 — 경제활동인구조사 근로형태별 부가조사',
+  description: desc,
+  dateModified: 자료.만든날,
+  creator: { '@type': 'Organization', name: '백년지도' },
+  sourceOrganization: { '@type': 'Organization', name: 자료.출처.이름 },
+  isBasedOn: 자료.출처.주소,
+  variableMeasured: ['임금근로자 수', '연령대', '성별'],
+};
+---
+
+<HundredYear
+  title={`임금근로자 중 60세 이상 ${퍼(육십처음)}에서 ${퍼(육십최신)}로, 20대 ${퍼(이십처음)}에서 ${퍼(이십최신)}로 (${연(처음)}→${연(최신)}년 8월)`}
+  description={desc}
+  jsonLd={jsonLd}
+>
+  <h1>월급 받는 사람들의<br />나이 구성, {연(처음)}년과 {연(최신)}년</h1>
+  <p class="sub">
+    경제활동인구조사 8월 부가조사의 임금근로자 수를 나이대별로 나눴습니다. 임금근로자는 월급·일당 등 임금을 받고 일하는 사람이고, 자영업자는 들어 있지 않습니다.
+  </p>
+
+  <div class="answer">
+    <p class="answer-label">{연(최신)}년 8월, 임금근로자 중 60세 이상</p>
+    <p class="answer-num">{퍼(육십최신)}</p>
+    <p class="answer-sub">{만(임('계', '60세이상', 최신))} / {만(임('계', '계', 최신))} · {연(처음)}년 {퍼(육십처음)}</p>
+  </div>
+
+  <h2>나이대별 임금근로자 구성, 네 해</h2>
+  <div class="tablewrap">
+    <table>
+      <thead>
+        <tr>
+          <th>나이대</th>
+          {월들.map((m) => <th>{연(m)}년 8월</th>)}
+          <th>{연(처음)}→{연(최신)}</th>
+        </tr>
+      </thead>
+      <tbody>
+        {연령.map((a) => (
+          <tr>
+            <td>{이름(a)}</td>
+            {월들.map((m) => <td>{m === 최신 ? <strong>{퍼(구성('계', a, m))}</strong> : 퍼(구성('계', a, m))}</td>)}
+            <td>{부호(구성('계', a, 최신) - 구성('계', a, 처음))}</td>
+          </tr>
+        ))}
+      </tbody>
+    </table>
+  </div>
+  <p class="note">각 해 임금근로자 전체를 100으로 놓은 나이대별 몫입니다.</p>
+
+  <h2>사람 수로 본 변화</h2>
+  <div class="tablewrap">
+    <table>
+      <thead>
+        <tr><th>나이대</th><th>{연(처음)}년 8월</th><th>{연(최신)}년 8월</th><th>증감</th></tr>
+      </thead>
+      <tbody>
+        {연령.map((a) => (
+          <tr>
+            <td>{이름(a)}</td>
+            <td>{만(임('계', a, 처음))}</td>
+            <td>{만(임('계', a, 최신))}</td>
+            <td><strong>{증감만(임('계', a, 최신) - 임('계', a, 처음))}</strong></td>
+          </tr>
+        ))}
+        <tr>
+          <td><strong>전체</strong></td>
+          <td>{만(임('계', '계', 처음))}</td>
+          <td>{만(임('계', '계', 최신))}</td>
+          <td><strong>{증감만(임('계', '계', 최신) - 임('계', '계', 처음))}</strong></td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <h2>남자와 여자, {연(최신)}년 8월 60세 이상 몫</h2>
+  <div class="tablewrap">
+    <table>
+      <thead>
+        <tr><th>구분</th><th>{연(처음)}년 8월</th><th>{연(최신)}년 8월</th></tr>
+      </thead>
+      <tbody>
+        <tr><td>남자 임금근로자 중 60세 이상</td><td>{퍼(구성('남자', '60세이상', 처음))}</td><td><strong>{퍼(구성('남자', '60세이상', 최신))}</strong></td></tr>
+        <tr><td>여자 임금근로자 중 60세 이상</td><td>{퍼(구성('여자', '60세이상', 처음))}</td><td><strong>{퍼(구성('여자', '60세이상', 최신))}</strong></td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <h2>같은 표에서 읽히는 것</h2>
+  <ul>
+    <li>임금근로자 전체는 {연(처음)}년 {만(임('계', '계', 처음))}에서 {연(최신)}년 {만(임('계', '계', 최신))}으로 {증감만(임('계', '계', 최신) - 임('계', '계', 처음))} 늘었습니다.</li>
+    <li>20대 임금근로자는 같은 기간 {만(임('계', '20-29세', 처음))}에서 {만(임('계', '20-29세', 최신))}으로 {증감만(임('계', '20-29세', 최신) - 임('계', '20-29세', 처음))} 변했고, 60세 이상은 {증감만(임('계', '60세이상', 최신) - 임('계', '60세이상', 처음))} 늘었습니다.</li>
+    <li>{연(최신)}년 8월 기준 30대·40대·50대는 각각 {퍼(구성('계', '30-39세', 최신))}·{퍼(구성('계', '40-49세', 최신))}·{퍼(구성('계', '50-59세', 최신))}입니다.</li>
+  </ul>
+
+  <h2>⚠ 이 자료로 말할 수 없는 것</h2>
+  <ul>
+    <li>매년 다른 표본을 조사한 값입니다. 같은 사람이 나이를 먹으며 어떻게 되었는지는 이 표로 따라갈 수 없습니다.</li>
+    <li>나이대별 몫이 달라진 이유가 인구 구성의 변화인지 일하는 사람 비율의 변화인지는 이 표에 없습니다. 같은 나이대 인구 대비 비율은 <a href="/participation-by-age-sex">경제활동참가율 페이지</a>에 따로 있습니다.</li>
+    <li>임금근로자만 센 표입니다. 자영업자와 무급가족종사자는 들어 있지 않습니다.</li>
+    <li>15~19세는 표본이 작아 매년 값이 크게 움직일 수 있습니다.</li>
+  </ul>
+
+  <p class="note">
+    출처 — {자료.출처.이름}, 표 {자료.출처.표}. 기준 {월들.map(연).join('·')}년 8월. 주소 <a href={자료.출처.주소} rel="noopener">{자료.출처.주소}</a>. 만든날 {자료.만든날}. 이용허락범위: {자료.출처.이용허락범위}.
+  </p>
+
+  <p class="note">
+    <a href="/irregular-change-by-age">← 나이대별 비정규직 증감</a>
+    <br />
+    <a href="/irregular-women-share-by-age">→ 비정규직 안의 여자 몫</a>
+  </p>
+
+  <HundredAgeWalk 키="wage-worker-age-mix" />
+  <NextQuestionBrief 모은것="경제활동인구조사 임금근로자 나이 구성" />
+</HundredYear>

@@ -1,0 +1,152 @@
+---
+/**
+ * /100y/tutoring-yearly-change — 사교육 참여율·사교육비의 매년 증감 (2007~2025, 학교급별)
+ *
+ * 출처  KOSIS 101/DT_1PE301(참여율)·DT_1PE201(학생 1인당 월평균 사교육비) — private-tutoring.json.
+ * 이 쪽에서 한 일은 앞해와의 뺄셈과 나눗셈뿐이다. 금액은 명목값. 원인 추측·조언은 싣지 않는다.
+ */
+import HundredYear from '../../../layouts/HundredYear.astro';
+import NextQuestionBrief from '../../../components/NextQuestionBrief.astro';
+import HundredAgeWalk from '../../../components/HundredAgeWalk.astro';
+import 원본 from '../../../data/100yearmap/private-tutoring.json';
+
+const 자료 = 원본 as any;
+const 해들 = (Object.keys(자료.연도별) as string[]).sort((a, b) => Number(a) - Number(b));
+const 처음 = 해들[0];
+const 최신 = 해들[해들.length - 1];
+const 급들 = ['전체', '초등학교', '중학교', '고등학교'];
+const 참 = (y: string, k: string): number => 자료.연도별[y].참여율[k];
+const 비 = (y: string, k: string): number => 자료.연도별[y].사교육비[k];
+const 앞 = (y: string) => String(Number(y) - 1);
+const 참증감 = (y: string, k: string) => 참(y, k) - 참(앞(y), k);
+const 비증감률 = (y: string, k: string) => (비(y, k) / 비(앞(y), k) - 1) * 100;
+const 퍼 = (n: number) => `${n.toFixed(1)}%`;
+const 퍼p = (n: number) => `${n > 0 ? '+' : ''}${n.toFixed(1)}%p`;
+const 증률 = (n: number) => `${n > 0 ? '+' : ''}${n.toFixed(1)}%`;
+const 만원 = (n: number) => `${n.toFixed(1)}만원`;
+
+const 변화해들 = 해들.slice(1);
+const 참여최대하락 = [...변화해들].sort((a, b) => 참증감(a, '전체') - 참증감(b, '전체'))[0];
+const 비용최대증가 = [...변화해들].sort((a, b) => 비증감률(b, '전체') - 비증감률(a, '전체'))[0];
+const 비용하락해 = 변화해들.filter((y) => 비증감률(y, '전체') < 0);
+const 배 = 비(최신, '전체') / 비(처음, '전체');
+
+const desc =
+  `초중고사교육비조사(KOSIS)에서 학생 1인당 월평균 사교육비는 ${처음}년 ${만원(비(처음, '전체'))}에서 ${최신}년 ${만원(비(최신, '전체'))}으로 ${배.toFixed(2)}배가 됐습니다. ` +
+  `${최신}년에는 참여율은 전년보다 ${Math.abs(참증감(최신, '전체')).toFixed(1)}%p, 사교육비는 ${Math.abs(비증감률(최신, '전체')).toFixed(1)}% 낮아졌습니다. 앞해와의 증감을 학교급별로 계산했습니다.`;
+
+const jsonLd = {
+  '@context': 'https://schema.org',
+  '@type': 'Dataset',
+  name: '사교육 참여율·사교육비 매년 증감 — 초중고사교육비조사 학교급별',
+  description: desc,
+  dateModified: 자료.받은때,
+  creator: { '@type': 'Organization', name: '백년지도' },
+  sourceOrganization: { '@type': 'Organization', name: 자료.출처.이름 },
+  isBasedOn: 'https://kosis.kr/statHtml/statHtml.do?orgId=101&tblId=DT_1PE201',
+  variableMeasured: ['사교육 참여율 증감', '학생 1인당 월평균 사교육비 증감률'],
+};
+---
+
+<HundredYear
+  title={`사교육비 ${처음}년 ${만원(비(처음, '전체'))}에서 ${최신}년 ${만원(비(최신, '전체'))}, ${최신}년 증감 ${증률(비증감률(최신, '전체'))} (학교급별 매년)`}
+  description={desc}
+  jsonLd={jsonLd}
+>
+  <h1>사교육 참여율과 사교육비,<br />매년 얼마나 움직였을까요</h1>
+  <p class="sub">
+    통계청 초중고사교육비조사의 학교급별 값을 앞해와 견줬습니다. 참여율은 %p 차이, 사교육비는 증감률입니다. 금액은 물가를 빼지 않은 명목값이고, 받지 않는 학생도 포함한 전체 학생 평균입니다.
+  </p>
+
+  <div class="answer">
+    <p class="answer-label">{최신}년, 전체 학생 1인당 월평균 사교육비</p>
+    <p class="answer-num">{만원(비(최신, '전체'))}</p>
+    <p class="answer-sub">전년 {만원(비(앞(최신), '전체'))} ({증률(비증감률(최신, '전체'))}) · 참여율 {퍼(참(최신, '전체'))} ({퍼p(참증감(최신, '전체'))})</p>
+  </div>
+
+  <h2>전체 학생, 매년</h2>
+  <div class="tablewrap">
+    <table>
+      <thead>
+        <tr><th>연도</th><th>참여율</th><th>전년 대비</th><th>월평균 사교육비</th><th>전년 대비</th></tr>
+      </thead>
+      <tbody>
+        {[...변화해들].reverse().map((y) => (
+          <tr>
+            <td>{y}</td>
+            <td>{퍼(참(y, '전체'))}</td>
+            <td>{퍼p(참증감(y, '전체'))}</td>
+            <td>{만원(비(y, '전체'))}</td>
+            <td>{증률(비증감률(y, '전체'))}</td>
+          </tr>
+        ))}
+        <tr><td>{처음}</td><td>{퍼(참(처음, '전체'))}</td><td>-</td><td>{만원(비(처음, '전체'))}</td><td>-</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <h2>학교급별 최근 {Math.min(7, 변화해들.length)}년 사교육비 증감률</h2>
+  <div class="tablewrap">
+    <table>
+      <thead>
+        <tr><th>연도</th>{급들.map((k) => <th>{k}</th>)}</tr>
+      </thead>
+      <tbody>
+        {[...변화해들].reverse().slice(0, 7).map((y) => (
+          <tr>
+            <td>{y}</td>
+            {급들.map((k) => <td>{증률(비증감률(y, k))}</td>)}
+          </tr>
+        ))}
+      </tbody>
+    </table>
+  </div>
+
+  <h2>학교급별 최근 {Math.min(7, 변화해들.length)}년 참여율 증감</h2>
+  <div class="tablewrap">
+    <table>
+      <thead>
+        <tr><th>연도</th>{급들.map((k) => <th>{k}</th>)}</tr>
+      </thead>
+      <tbody>
+        {[...변화해들].reverse().slice(0, 7).map((y) => (
+          <tr>
+            <td>{y}</td>
+            {급들.map((k) => <td>{퍼p(참증감(y, k))}</td>)}
+          </tr>
+        ))}
+      </tbody>
+    </table>
+  </div>
+
+  <h2>같은 표에서 읽히는 것</h2>
+  <ul>
+    <li>전체 학생 1인당 월평균 사교육비는 {처음}년 {만원(비(처음, '전체'))}에서 {최신}년 {만원(비(최신, '전체'))}으로 {배.toFixed(2)}배가 됐습니다.</li>
+    <li>전체 참여율이 앞해보다 가장 크게 내려간 해는 {참여최대하락}년으로 {퍼p(참증감(참여최대하락, '전체'))}입니다. 그해 초등학교는 {퍼p(참증감(참여최대하락, '초등학교'))}, 고등학교는 {퍼p(참증감(참여최대하락, '고등학교'))}입니다.</li>
+    <li>사교육비가 앞해보다 가장 크게 늘어난 해는 {비용최대증가}년으로 {증률(비증감률(비용최대증가, '전체'))}입니다.</li>
+    <li>{처음}~{최신}년 가운데 전체 사교육비가 앞해보다 줄어든 해는 {비용하락해.length}번이며 {비용하락해.join('·')}년입니다.</li>
+    <li>{최신}년에는 참여율과 사교육비가 모두 앞해보다 낮아졌습니다(참여율 {퍼p(참증감(최신, '전체'))}, 사교육비 {증률(비증감률(최신, '전체'))}).</li>
+  </ul>
+
+  <h2>⚠ 이 자료로 말할 수 없는 것</h2>
+  <ul>
+    <li>금액은 명목값입니다. 물가가 오른 만큼을 빼면 증감이 달라집니다.</li>
+    <li>증감의 이유(제도, 학령인구, 감염병, 소득 등)는 이 표에 없습니다.</li>
+    <li>표본조사라서 한 해의 증감이 표본 오차 범위 안일 수 있습니다.</li>
+    <li>사교육을 받는 학생만 놓은 금액은 <a href="/tutoring-per-participant">참여 학생 환산액 페이지</a>에 따로 있습니다.</li>
+    <li>지역·소득별 값은 <a href="/tutoring-region">지역별</a>·<a href="/tutoring-income">소득별</a> 페이지에 있습니다.</li>
+  </ul>
+
+  <p class="note">
+    출처 — {자료.출처.이름} ({자료.출처.표.참여율} · {자료.출처.표.사교육비}). {처음}~{최신}년. 이용허락범위: {자료.출처.이용허락범위}. 받은 날 {자료.받은때}.
+  </p>
+
+  <p class="note">
+    <a href="/tutoring-per-participant">← 사교육 받는 학생만 놓은 월 환산액</a>
+    <br />
+    <a href="/tutoring">→ 사교육 참여율·비용</a>
+  </p>
+
+  <HundredAgeWalk 키="tutoring-yearly-change" />
+  <NextQuestionBrief 모은것="초중고사교육비조사 매년 증감" />
+</HundredYear>

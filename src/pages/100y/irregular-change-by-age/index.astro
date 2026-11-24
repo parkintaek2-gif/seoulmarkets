@@ -1,0 +1,143 @@
+---
+/**
+ * /100y/irregular-change-by-age — 비정규직 증감을 나이대별로 가른 값 (2016·2021·2025·2026년 8월)
+ *
+ * 출처  KOSIS 101/DT_1DE7006S 경제활동인구조사 근로형태별 부가조사 — irregular-share-by-age.json 의 사람 수.
+ * 이 쪽에서 한 일은 뺄셈과 나눗셈뿐이다. 원인 추측·조언은 싣지 않는다.
+ */
+import HundredYear from '../../../layouts/HundredYear.astro';
+import NextQuestionBrief from '../../../components/NextQuestionBrief.astro';
+import HundredAgeWalk from '../../../components/HundredAgeWalk.astro';
+import 원본 from '../../../data/100yearmap/irregular-share-by-age.json';
+
+const 자료 = 원본 as any;
+const 월들: string[] = 자료.월;
+const 처음 = 월들[0];
+const 최신 = 월들[월들.length - 1];
+const 연 = (m: string) => m.slice(0, 4);
+const 연령: string[] = 자료.연령;
+const 수 = (a: string, m: string): number => 자료.값['계'][a][m].비정규직;
+const 임금 = (a: string, m: string): number => 자료.값['계'][a][m].임금근로자;
+const 만 = (n: number) => `${(n / 10).toLocaleString('ko-KR', { minimumFractionDigits: 1, maximumFractionDigits: 1 })}만명`;
+const 증감만 = (n: number) => `${n > 0 ? '+' : ''}${(n / 10).toLocaleString('ko-KR', { minimumFractionDigits: 1, maximumFractionDigits: 1 })}만명`;
+const 퍼 = (n: number) => `${n.toFixed(1)}%`;
+
+const 전체증감 = 수('계', 최신) - 수('계', 처음);
+const 증감 = (a: string) => 수(a, 최신) - 수(a, 처음);
+const 이름 = (a: string) => (a === '60세이상' ? '60세 이상' : a.replace('세', '세').replace('-', '~'));
+const 육십 = 증감('60세이상');
+const 육십몫 = (육십 / 전체증감) * 100;
+const 전체최신 = 수('계', 최신);
+const 육십구성 = (수('60세이상', 최신) / 전체최신) * 100;
+const 육십구성처음 = (수('60세이상', 처음) / 수('계', 처음)) * 100;
+const 사십대 = 증감('40-49세');
+
+const desc =
+  `경제활동인구조사 8월 부가조사(KOSIS)에서 비정규직은 ${연(처음)}년 ${만(수('계', 처음))}에서 ${연(최신)}년 ${만(전체최신)}으로 ${만(전체증감)} 늘었습니다. ` +
+  `60세 이상에서만 ${만(육십)} 늘었고, 40대는 ${만(-사십대)} 줄었습니다. 나이대별 증감을 이 쪽에서 뺄셈으로 계산했습니다.`;
+
+const jsonLd = {
+  '@context': 'https://schema.org',
+  '@type': 'Dataset',
+  name: '나이대별 비정규직 증감 — 경제활동인구조사 근로형태별 부가조사',
+  description: desc,
+  dateModified: 자료.만든날,
+  creator: { '@type': 'Organization', name: '백년지도' },
+  sourceOrganization: { '@type': 'Organization', name: 자료.출처.이름 },
+  isBasedOn: 자료.출처.주소,
+  variableMeasured: ['비정규직 취업자 수', '임금근로자 수', '연령대'],
+};
+---
+
+<HundredYear
+  title={`비정규직 ${연(처음)}~${연(최신)}년 ${증감만(전체증감)} 증가, 60세 이상이 ${증감만(육십)} — 나이대별 증감`}
+  description={desc}
+  jsonLd={jsonLd}
+>
+  <h1>비정규직이 늘어난 만큼,<br />나이대별로 얼마였을까요</h1>
+  <p class="sub">
+    경제활동인구조사 8월 부가조사에는 나이대별 비정규직 수가 있습니다. {연(처음)}년 8월과 {연(최신)}년 8월의 수를 이 쪽에서 빼고 나눠, 늘어난 사람이 어느 나이대에 있는지 놓았습니다.
+  </p>
+
+  <div class="answer">
+    <p class="answer-label">{연(처음)}→{연(최신)}년 8월, 60세 이상 비정규직 증가분</p>
+    <p class="answer-num">{증감만(육십)}</p>
+    <p class="answer-sub">전체 증가 {증감만(전체증감)} · 60세 이상 비정규직 {만(수('60세이상', 처음))} → {만(수('60세이상', 최신))}</p>
+  </div>
+
+  <h2>나이대별 비정규직 수와 증감</h2>
+  <div class="tablewrap">
+    <table>
+      <thead>
+        <tr>
+          <th>나이대</th>
+          {월들.map((m) => <th>{연(m)}년 8월</th>)}
+          <th>{연(처음)}→{연(최신)} 증감</th>
+        </tr>
+      </thead>
+      <tbody>
+        {연령.map((a) => (
+          <tr>
+            <td>{이름(a)}</td>
+            {월들.map((m) => <td>{만(수(a, m))}</td>)}
+            <td><strong>{증감만(증감(a))}</strong></td>
+          </tr>
+        ))}
+        <tr>
+          <td><strong>전체</strong></td>
+          {월들.map((m) => <td>{만(수('계', m))}</td>)}
+          <td><strong>{증감만(전체증감)}</strong></td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+  <p class="note">단위는 만명(표의 천명 값을 10으로 나눔)입니다. 나이대별 값의 합은 반올림 때문에 전체와 0.1만명 안팎으로 다를 수 있습니다.</p>
+
+  <h2>비정규직 안에서 나이대가 차지하는 몫</h2>
+  <div class="tablewrap">
+    <table>
+      <thead>
+        <tr><th>나이대</th><th>{연(처음)}년 8월</th><th>{연(최신)}년 8월</th></tr>
+      </thead>
+      <tbody>
+        {연령.map((a) => (
+          <tr>
+            <td>{이름(a)}</td>
+            <td>{퍼((수(a, 처음) / 수('계', 처음)) * 100)}</td>
+            <td><strong>{퍼((수(a, 최신) / 수('계', 최신)) * 100)}</strong></td>
+          </tr>
+        ))}
+      </tbody>
+    </table>
+  </div>
+
+  <h2>같은 표에서 읽히는 것</h2>
+  <ul>
+    <li>{연(최신)}년 8월 비정규직 {만(전체최신)} 가운데 60세 이상은 {만(수('60세이상', 최신))}로 {퍼(육십구성)}입니다. {연(처음)}년에는 {퍼(육십구성처음)}였습니다.</li>
+    <li>전체 증가분({증감만(전체증감)})에서 60세 이상 증가분({증감만(육십)})이 차지하는 비율은 {퍼(육십몫)}입니다.</li>
+    <li>같은 기간 40~49세 비정규직은 {증감만(사십대)}, 15~19세는 {증감만(증감('15-19세'))}으로 줄었습니다.</li>
+    <li>60세 이상 임금근로자 자체도 {만(임금('60세이상', 처음))}에서 {만(임금('60세이상', 최신))}으로 늘었습니다(비정규직 비중은 <a href="/irregular-share-by-age">비정규직 비중 페이지</a>에 있습니다).</li>
+  </ul>
+
+  <h2>⚠ 이 자료로 말할 수 없는 것</h2>
+  <ul>
+    <li>매년 다른 표본을 조사한 값입니다. 같은 사람이 {연(처음)}년에는 50대였다가 {연(최신)}년에 60세 이상이 된 것까지 이 표로 따라갈 수는 없습니다.</li>
+    <li>나이대별 증가가 새로 비정규직이 된 사람의 수인지, 나이가 들어 옮겨 온 사람의 수인지는 이 표에 없습니다.</li>
+    <li>비정규직은 통계청 분류(한시적·시간제·비전형 근로자)이며, 일자리의 질이나 임금을 직접 재는 값이 아닙니다.</li>
+    <li>임금근로자만 조사 대상입니다. 자영업자와 무급가족종사자는 들어 있지 않습니다.</li>
+    <li>15~19세는 표본이 작아 매년 값이 크게 움직일 수 있습니다.</li>
+  </ul>
+
+  <p class="note">
+    출처 — {자료.출처.이름}, 표 {자료.출처.표}. 기준 {월들.map(연).join('·')}년 8월. 주소 <a href={자료.출처.주소} rel="noopener">{자료.출처.주소}</a>. 만든날 {자료.만든날}. 이용허락범위: {자료.출처.이용허락범위}.
+  </p>
+
+  <p class="note">
+    <a href="/irregular-share-by-age">← 나이대별 비정규직 비중</a>
+    <br />
+    <a href="/wage-worker-age-mix">→ 임금근로자의 나이 구성</a>
+  </p>
+
+  <HundredAgeWalk 키="irregular-change-by-age" />
+  <NextQuestionBrief 모은것="경제활동인구조사 나이대별 비정규직 증감" />
+</HundredYear>

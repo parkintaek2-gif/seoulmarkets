@@ -416,6 +416,12 @@ export const GET: APIRoute = () => {
     { path: '/irregular-share-by-age', priority: '0.7', changefreq: 'yearly' },
     { path: '/unemployment-by-age', priority: '0.7', changefreq: 'yearly' },
     { path: '/participation-by-age-sex', priority: '0.7', changefreq: 'yearly' },
+    /* 2026-11-24 — 비정규직·임금근로자·사교육 파생 지면 5장 */
+    { path: '/irregular-change-by-age', priority: '0.7', changefreq: 'yearly' },
+    { path: '/wage-worker-age-mix', priority: '0.7', changefreq: 'yearly' },
+    { path: '/irregular-women-share-by-age', priority: '0.7', changefreq: 'yearly' },
+    { path: '/tutoring-per-participant', priority: '0.7', changefreq: 'yearly' },
+    { path: '/tutoring-yearly-change', priority: '0.7', changefreq: 'yearly' },
     /* 2026-11-23 — 지역별고용조사 기혼여성 경력보유 2장 */
     { path: '/career-interrupted-by-child-age', priority: '0.7', changefreq: 'yearly' },
     { path: '/career-interrupted-reason-by-age', priority: '0.7', changefreq: 'yearly' },
