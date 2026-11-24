@@ -391,6 +391,32 @@ const 글길 = path.join(폴더, '중부매일-기자통계-메일글.txt');
 fs.writeFileSync(글길, `${글.join('\n')}\n`, 'utf8');
 console.log(`메일 글 적었다: ${글길}`);
 
+/* ── 원드라이브에도 둔다 ────────────────────────────────────────
+   사장님 2026-11-24 — 「pc에 onedrive, ms 연간 구독 중」
+   메일 첨부는 받은편지함에 묻히고 휴대폰에서 열다 깨지기도 한다.
+   원드라이브에 두면 휴대폰·PC 어디서나 같은 파일을 여신다.
+   ⛔ 메일 발송을 대신하지 않는다 — 둘 다 한다. 한쪽이 막혀도 나머지로 닿는다 */
+const 원드라이브 = process.env.OneDrive || process.env.OneDriveConsumer;
+if (원드라이브) {
+  const 받을곳 = path.join(원드라이브, '중부매일', '네이버 제휴심사');
+  try {
+    fs.mkdirSync(받을곳, { recursive: true });
+    for (const f of [낼곳, csv1길, csv2길]) {
+      fs.copyFileSync(f, path.join(받을곳, path.basename(f)));
+    }
+    console.log(`원드라이브에도 두었다: ${받을곳}`);
+    글.push('');
+    글.push('같은 파일을 원드라이브에도 두었습니다 —');
+    글.push('  OneDrive > 중부매일 > 네이버 제휴심사');
+    글.push('  휴대폰에서도 같은 파일이 열립니다.');
+    fs.writeFileSync(글길, `${글.join('\n')}\n`, 'utf8');
+  } catch (e) {
+    console.error('⚠ 원드라이브에 두지 못했다 — ' + String(e.message).slice(0, 120));
+  }
+} else {
+  console.error('⚠ OneDrive 환경변수가 없다 — 원드라이브에 두지 못했다');
+}
+
 if (!process.argv.includes('--send') && !process.argv.includes('--보낸다')) {
   console.log('→ 메일을 보내려면 --send 를 준다.');
   process.exit(0);
