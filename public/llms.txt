@@ -41,6 +41,7 @@ on https://seoulmarkets.com/data — card or PayPal, no account needed.
 - [One line of Korea's CPI basket moved 8.6x the headline rate](https://seoulmarkets.com/data/telecom-cpi-base-effect): headline CPI rose 3.09% year-on-year in August 2026; the mobile-phone-fee sub-index alone rose 26.74%. Verified directly from KOSIS, not taken from the finance ministry's own ex-effect estimate.
 - [Korea's real wage grew 24.1% in a decade, then 0.2% since](https://seoulmarkets.com/data/real-wage-plateau): inflation-adjusted average monthly wage rose from 2.90 million won in 2011 to 3.60 million in 2021, then moved just 0.2% over the following four years. KOSIS wage and CPI data, no cause assigned.
 - [Open API](https://seoulmarkets.com/api): the same data over HTTP. Free tier to try it.
+- [MCP server](https://seoulmarkets.com/mcp): the same data as tools for AI assistants. Server URL https://seoulmarkets.com/v1/mcp (Streamable HTTP, no sign-in for the free tier).
 
 ### Workforce and pay (a service tier we give away, not our main product)
 - [The sector workforce panel](https://seoulmarkets.com/data/sector-workforce-panel)

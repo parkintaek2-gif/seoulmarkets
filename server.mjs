@@ -15,6 +15,7 @@ import { join, extname, normalize } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { renderAdmin, renderRaw } from './src/lib/admin.mjs';
 import { handleApi } from './src/lib/api.mjs';
+import { handleMcp } from './src/lib/mcp.mjs';
 /* 🔴 과속 막이 — 사장님 2026-10-03. 판정은 src/lib/과속막이.mjs 한 곳에만 둔다 */
 import { 분당한도, 과속인가, 보낸곳, 쓸기시작 } from './src/lib/과속막이.mjs';
 쓸기시작();
@@ -306,6 +307,8 @@ const handle = async (req, res) => {
   /* 🔴 [2026-09-28 · 5번] `/v1/trial`(체험 신청)을 여기·본문읽을경로·공유경로 «셋 다»에 넣었다.
      셋 가운데 하나만 빠져도 지면은 멀쩡한데 접수만 조용히 깨진다. 2026-09-15 의 결제 사고가 그것이다. */
   const POST허용 = req.method === 'POST' && (parsed.pathname === '/v1/subscribe' || parsed.pathname === '/api/comments' || parsed.pathname === '/v1/keys' || parsed.pathname === '/v1/trial'
+    /* 🔴 [2026-11-26 · 5번] MCP 서버 — JSON-RPC 는 POST 다. 본문읽을경로는 `/v1/` 로 이미 든다 */
+    || parsed.pathname === '/v1/mcp'
     || parsed.pathname === '/api/pay/order' || parsed.pathname === '/api/pay/capture' || parsed.pathname === '/api/pay/subscription-confirm' || parsed.pathname === '/api/vote'
     || parsed.pathname === '/api/account/signup' || parsed.pathname === '/api/account/login'
     /* 🔴 [2026-10-31 · 1번] 칼럼 저장·삭제. 로그인 확인은 아래 /admin 분기가 먼저 한다 */
@@ -611,6 +614,17 @@ const handle = async (req, res) => {
         req.on('end', () => 마감(Buffer.concat(조각).toString('utf8')));
         req.on('error', () => 마감(null));
       });
+    }
+
+    /* 🔴 [2026-11-26 · 5번] MCP 서버(`/v1/mcp`) — 손님의 AI 가 우리 자료를 직접 부르는 길.
+       새 자료 길이 아니다: 도구 하나가 /v1 GET 하나를 그대로 부른다(등급·한도·출처 표기 그대로). */
+    if (pathname === '/v1/mcp') {
+      const 답 = await handleMcp(req.method, 본문, (길, 쿼리) => handleApi(길, 쿼리, {
+        headers: req.headers, ip: 클라이언트IP, method: 'GET', body: null,
+      }));
+      res.writeHead(답.status, { ...BASE_HEADERS, ...답.headers });
+      res.end(req.method === 'HEAD' ? undefined : 답.body);
+      return;
     }
 
     const api = await handleApi(pathname, parsed.searchParams, {
