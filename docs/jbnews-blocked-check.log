@@ -102,3 +102,27 @@ Assertion failed: !(handle->flags & UV_HANDLE_CLOSING), file src\win\async.c, li
    앞선 상태: 열림
    → 상태가 바뀌지 않았다. 메일을 보내지 않는다.
 Assertion failed: !(handle->flags & UV_HANDLE_CLOSING), file src\win\async.c, line 94
+
+===== jbnews reachability 2026-11-25  8:17:05.79 =====
+✅ 중부매일 접속 — 열림   (2026. 11. 25. 8시 17분 6초)
+   본지   HTTP 200  →  열림
+   CMS  HTTP 307  →  열림
+   앞선 상태: 열림
+   → 상태가 바뀌지 않았다. 메일을 보내지 않는다.
+Assertion failed: !(handle->flags & UV_HANDLE_CLOSING), file src\win\async.c, line 94
+
+===== jbnews reachability 2026-11-25  9:17:05.30 =====
+✅ 중부매일 접속 — 열림   (2026. 11. 25. 9시 17분 5초)
+   본지   HTTP 200  →  열림
+   CMS  HTTP 307  →  열림
+   앞선 상태: 열림
+   → 상태가 바뀌지 않았다. 메일을 보내지 않는다.
+Assertion failed: !(handle->flags & UV_HANDLE_CLOSING), file src\win\async.c, line 94
+
+===== jbnews reachability 2026-11-25 10:17:05.81 =====
+✅ 중부매일 접속 — 열림   (2026. 11. 25. 10시 17분 6초)
+   본지   HTTP 200  →  열림
+   CMS  HTTP 307  →  열림
+   앞선 상태: 열림
+   → 상태가 바뀌지 않았다. 메일을 보내지 않는다.
+Assertion failed: !(handle->flags & UV_HANDLE_CLOSING), file src\win\async.c, line 94
