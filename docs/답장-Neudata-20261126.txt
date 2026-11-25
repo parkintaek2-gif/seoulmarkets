@@ -1,0 +1,37 @@
+Hi Tom,
+
+Thank you for the quick reply.
+
+We are a small team in Korea (KST, UTC+9), so it would help us to start in writing: email lets us answer precisely and across the time difference. If a call is still useful after that, we will gladly arrange one.
+
+A short overview of what we would list.
+
+SeoulMarkets (https://seoulmarkets.com) publishes Korean financial-market data in English, built only from Korean public sources (FSS DART filings, the Korea Public Data Portal, the Korea Customs Service).
+
+Datasets available today
+- Valuation multiples (PER, PBR, ROE, debt-to-equity) for about 2,700 listed Korean companies, with the price date and fiscal year shipped as columns
+- Brokerage target prices and ratings: 21 brokers, 678 companies, from June 2026 (facts only, no report text)
+- Convertible bond, bond-with-warrant and exchangeable bond filings: about 5,000 records
+- Substantial-shareholding (5%+) and officer ownership filings: about 21,800 filings
+- Workforce filings: headcount, tenure and pay by gender for about 2,900 listed companies
+- Daily levels for 168 KRX indices, with English names
+- Monthly Korean exports and imports, national totals and by partner country
+
+How it is delivered
+- HTTP API (JSON): https://seoulmarkets.com/api
+- Downloadable files and samples: https://seoulmarkets.com/data
+- MCP server for AI assistants: https://seoulmarkets.com/mcp
+- Live coverage, row counts and known gaps: https://seoulmarkets.com/v1/meta
+
+What we want buyers to know up front
+- History is short for some datasets. The broker target-price series starts in June 2026.
+- Values we could not measure are returned as null with the reason in a separate column. We never fill them with zero.
+- Pricing is public: https://seoulmarkets.com/pricing
+
+Could you tell us what you need from us to complete the listing, and whether there is a questionnaire or data due-diligence form we should fill in? We will answer by email.
+
+Best regards,
+
+SeoulMarkets team, on behalf of Mi-hee Kim
+KLifeDesign InC.
+admin@klifedesign.net
