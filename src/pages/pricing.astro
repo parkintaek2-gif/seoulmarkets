@@ -10,6 +10,10 @@
  *   이 문 앞에도 같은 커버리지 줄을 놓아 들어오자마자 보이게 한다.
  */
 import Base from '../layouts/Base.astro';
+import { 상품 } from '../data/licence-products.mjs';
+
+/* 값은 상품표 한 곳에서만 읽는다 — 화면에 따로 적으면 결제창의 값과 갈린다 */
+const 달러 = (코드) => '$' + Number(상품[코드].usd).toLocaleString('en-US');
 
 const TITLE = 'Pricing';
 const DESC = 'What SeoulMarkets offers, market by market — Korea, Japan, Taiwan and the UAE now, more in build. '
@@ -40,6 +44,37 @@ const DESC = 'What SeoulMarkets offers, market by market — Korea, Japan, Taiwa
           「파는 지면은 맨 위에 값과 결제창이 뜨고, 글이 길면 중간과 마지막에도 있어야 한다」.
           ⇒ 값 셋을 맨 위에 세우고, 위·아래 두 곳에서 결제창(/data#buy)으로 바로 보낸다.
           ⛔ 값만 적어 두고 「자세한 것은 카탈로그에서」로 넘기지 않는다. 그것이 지금까지였다. */}
+      {/* 🔴 [2026-11-26 · 5번] 사장님 「에스마켓츠 어디에 팔 지 정했으니 팔기 시작해」
+          월간 정기결제(single_monthly·all_monthly)는 2026-09-13 부터 «실제로 팔고» 있었는데
+          이 화면에는 연간 값($990·$2,990)만 서 있었다. 한국 자료를 영어로 파는 다른 곳의
+          공개된 값이 월 $29~$249 이라 손님은 여기서 한 자리 높은 수만 보고 떠난다.
+          ⇒ 이미 있는 월간·단건 상품을 맨 위에 올린다. ⛔ 새 값을 만들지 않았다 —
+            값은 상품표(licence-products.mjs)에서 읽는다. 결제창과 같은 수다. */}
+      <h2 class="rowhead">Pay monthly — cancel any time</h2>
+      <div class="tiers">
+        <div class="tier">
+          <p class="tname">One file</p>
+          <p class="tprice">{달러('trade')}<span>one-time</span></p>
+          <p class="tnote">The Korea trade dataset — every partner country, every month. The smallest thing we sell.</p>
+          <a class="tbuy" href="/data/korea-trade-dataset">See the file →</a>
+        </div>
+        <div class="tier best">
+          <p class="tname">Single dataset</p>
+          <p class="tprice">{달러('single_monthly')}<span>per month</span></p>
+          <p class="tnote">One dataset complete — CSV + Parquet + dictionary — with every release while you subscribe.</p>
+          <a class="tbuy" href="/data#buy">Subscribe →</a>
+        </div>
+        <div class="tier">
+          <p class="tname">All datasets</p>
+          <p class="tprice">{달러('all_monthly')}<span>per month</span></p>
+          <p class="tnote">Every dataset in the catalogue, with every release while you subscribe.</p>
+          <a class="tbuy" href="/data#buy">Subscribe →</a>
+        </div>
+      </div>
+      <p class="fine rownote">Monthly plans renew each month until you cancel. Paying for the year costs less in total —
+        the annual licences below have no automatic renewal.</p>
+
+      <h2 class="rowhead">Pay for the year</h2>
       <div class="tiers">
         <div class="tier">
           <p class="tname">Academic</p>
@@ -118,6 +153,8 @@ const DESC = 'What SeoulMarkets offers, market by market — Korea, Japan, Taiwa
            gap: .7rem; margin: 0 0 .9rem; }
   .tier { padding: .95rem 1rem; background: var(--card); border: 1px solid var(--line);
           border-radius: 8px; display: flex; flex-direction: column; }
+  .rowhead { font-size: 1.05rem; margin: 1.1rem 0 .55rem; }
+  .rownote { margin: 0 0 1.2rem; }
   .tier.best { border-color: var(--accent, #b4884a); border-width: 2px; }
   .tname { margin: 0 0 .25rem; font-weight: 700; font-size: .95rem; }
   .tprice { margin: 0 0 .45rem; font-size: 1.5rem; font-weight: 800; line-height: 1.1; }
