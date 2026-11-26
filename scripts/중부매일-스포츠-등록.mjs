@@ -232,12 +232,28 @@ if (process.argv.includes('--첫걸음')) {
     try { console.log('■ 키워드 — ' + (await 키워드넣는다(붙음, 기사.키워드 || []))); }
     catch (오류) { console.log('⚠ 키워드를 못 넣었다 — ' + String(오류.message).slice(0, 80)); }
 
+    /* 🔴🔴 사장님 2026-11-26 「다른 기사를 작성할 때도 입력 시간이 1970년이 아닌 작성 날짜가 되게 꼭 해」
+       기사노출날짜·노출시간 칸을 비운 채 올린 기사 두 건(1516931·1516943)이, 뒤에 수정 화면에서
+       승인 저장되자 입력 시각이 1970.01.01 09:00 이 됐다. 그래서 처음 저장할 때부터 «작성 시각»을 적어 넣는다.
+       ⛔ 지금보다 1분 앞 시각을 넣는다 — 앞날이면 예약이 된다. */
+    const 작성때 = new Date(Date.now() - 60 * 1000);
+    const 두자 = (n) => String(n).padStart(2, '0');
+    const 작성날 = 작성때.getFullYear() + '-' + 두자(작성때.getMonth() + 1) + '-' + 두자(작성때.getDate());
+    const 작성시 = 두자(작성때.getHours()) + ':' + 두자(작성때.getMinutes());
+    await 재기(붙음, [
+      '(() => { const d = document.querySelector("#embargo_date") || document.getElementsByName("embargo_date")[0];',
+      '  const t = document.querySelector("#embargo_time") || document.getElementsByName("embargo_time")[0];',
+      '  if (!d || !t) return "노출시간 칸이 없다";',
+      '  d.value = ' + JSON.stringify(작성날) + '; d.dispatchEvent(new Event("input", { bubbles: true })); d.dispatchEvent(new Event("change", { bubbles: true }));',
+      '  t.value = ' + JSON.stringify(작성시) + '; t.dispatchEvent(new Event("input", { bubbles: true })); t.dispatchEvent(new Event("change", { bubbles: true }));',
+      '  return "넣었다"; })()',
+    ].join('\n'), 20000);
     const 저장전 = JSON.parse(String(await 재기(붙음, 상태읽기, 25000)));
     console.log('■ 저장 전 — ' + JSON.stringify(저장전));
     const 맞나 = 저장전.user_id === 기사.기자.user_id && 저장전.user_name === 기사.기자.user_name
       && 저장전.user_email === 기사.기자.user_email && /^recog-c=/.test(저장전.상태)
       && 저장전.제목 === 기사.제목 && 저장전.큰섹션 === 기사.큰섹션 && 저장전.작은섹션 === 기사.작은섹션
-      && !저장전.노출날 && !저장전.노출시각 && 저장전.본문길이 > 500 && 저장전.사진수 === 기사.사진.length;
+      && 저장전.노출날 === 작성날 && 저장전.노출시각 === 작성시 && 저장전.본문길이 > 500 && 저장전.사진수 === 기사.사진.length;
     if (!맞나) return { 멈춤: '저장 전 확인이 안 맞는다 — 저장하지 않았다', 잡은번호, 저장전 };
 
     const 누름 = String(await 재기(붙음, [
@@ -502,19 +518,28 @@ if (process.argv.includes('--날짜고치고승인')) {
     if (!(await 편집기기다린다(붙음))) return { 멈춤: '편집기가 안 떴다' };
     const 앞 = JSON.parse(String(await 재기(붙음, 상태읽기, 25000)));
     console.log('■ 고치기 전 — ' + JSON.stringify(앞));
-    if (앞.번호 !== 번호 || 앞.제목 !== 기사.제목) return { 멈춤: '열린 기사가 다르다', 앞 };
+    if (앞.번호 !== 번호 || ![기사.제목, 기사.새제목].includes(앞.제목)) return { 멈춤: '열린 기사가 다르다', 앞 };
     const 앞본문 = String(await 재기(붙음, 'CKEDITOR.instances.FCKeditor1.getData() || ""', 20000));
+    /* 날짜가 이미 성하면(1970 이 아니고 오늘이면) 그 값을 그대로 다시 넣는다 — 입력 시각을 또 옮기지 않는다 */
+    const 성한날 = 앞.노출날 === 날 && /^[0-9]{2}:[0-9]{2}$/.test(앞.노출시각);
+    const 쓸날 = 성한날 ? 앞.노출날 : 날;
+    const 쓸시 = 성한날 ? 앞.노출시각 : 시;
 
     const 넣음 = String(await 재기(붙음, [
       '(() => {',
       '  const d = document.querySelector("#embargo_date") || document.getElementsByName("embargo_date")[0];',
       '  const t = document.querySelector("#embargo_time") || document.getElementsByName("embargo_time")[0];',
       '  if (!d || !t) return "노출시간 칸이 없다";',
-      '  d.value = ' + JSON.stringify(날) + '; d.dispatchEvent(new Event("input", { bubbles: true })); d.dispatchEvent(new Event("change", { bubbles: true }));',
-      '  t.value = ' + JSON.stringify(시) + '; t.dispatchEvent(new Event("input", { bubbles: true })); t.dispatchEvent(new Event("change", { bubbles: true }));',
+      '  d.value = ' + JSON.stringify(쓸날) + '; d.dispatchEvent(new Event("input", { bubbles: true })); d.dispatchEvent(new Event("change", { bubbles: true }));',
+      '  t.value = ' + JSON.stringify(쓸시) + '; t.dispatchEvent(new Event("input", { bubbles: true })); t.dispatchEvent(new Event("change", { bubbles: true }));',
+      '  const 새부제 = ' + JSON.stringify(기사.새부제 || '') + ';',
+      '  if (새부제) { const 부 = document.getElementsByName("subTitle")[0]; if (!부) return "부제 칸이 없다"; 부.value = 새부제; 부.dispatchEvent(new Event("input", { bubbles: true })); 부.dispatchEvent(new Event("change", { bubbles: true })); }',
       '  const r = document.querySelector("#recog-e"); if (!r) return "승인 칸이 없다";',
       '  r.click(); r.checked = true; r.dispatchEvent(new Event("change", { bubbles: true })); const lb = document.querySelector("label[for=recog-e]"); if (lb) lb.click();',
-      '  return "넣었다 " + d.value + " " + t.value;',
+      /* 사장님 2026-11-26 「제목도 바꿔」 — 기사 자료에 «새제목»이 있으면 제목 칸도 바꾼다 */
+      '  const 새제목 = ' + JSON.stringify(기사.새제목 || '') + ';',
+      '  if (새제목) { const 칸 = document.getElementsByName("title")[0]; if (!칸) return "제목 칸이 없다"; 칸.value = 새제목; 칸.dispatchEvent(new Event("input", { bubbles: true })); 칸.dispatchEvent(new Event("change", { bubbles: true })); }',
+      '  return "넣었다 " + d.value + " " + t.value + (새제목 ? " · 제목 " + document.getElementsByName("title")[0].value : "");',
       '})()',
     ].join('\n'), 20000));
     console.log('■ 날짜·상태 — ' + 넣음);
@@ -523,7 +548,8 @@ if (process.argv.includes('--날짜고치고승인')) {
     const 저장전 = JSON.parse(String(await 재기(붙음, 상태읽기, 25000)));
     const 뒤본문 = String(await 재기(붙음, 'CKEDITOR.instances.FCKeditor1.getData() || ""', 20000));
     console.log('■ 저장 전 — ' + JSON.stringify(저장전));
-    const 맞나 = 저장전.노출날 === 날 && 저장전.노출시각 === 시 && /^recog-e=/.test(저장전.상태)
+    const 맞나 = 저장전.노출날 === 쓸날 && 저장전.노출시각 === 쓸시 && /^recog-e=/.test(저장전.상태)
+      && (!기사.새제목 || 저장전.제목 === 기사.새제목) && (!기사.새부제 || 저장전.부제 === 기사.새부제)
       && 저장전.user_id === 기사.기자.user_id && 저장전.user_name === 기사.기자.user_name && 저장전.user_email === 기사.기자.user_email
       && 저장전.본문사진 === 앞.본문사진 && 저장전.본문설명 === 앞.본문설명 && 뒤본문 === 앞본문 && 앞본문.length > 500;
     if (!맞나) return { 멈춤: '저장 전 확인이 안 맞는다 — 저장하지 않았다', 저장전 };
