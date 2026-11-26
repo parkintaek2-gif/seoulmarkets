@@ -383,3 +383,104 @@ if (process.argv.includes('--둘째걸음')) {
   });
   console.log(JSON.stringify(결과, null, 1));
 }
+
+/* ── 셋째걸음: 사진을 CMS 의 «가운데 정렬» 단추로 본문에 넣고 미승인으로 저장한다 ──
+   사장님 2026-11-26 「사진은 기사에 넣어」 · 사진설명은 사장님이 직접 입력하신다.
+   ⚠ 가운데 정렬 단추는 사진을 편집기 «위젯»으로 넣는다. 한 장을 넣은 직후 다음 장을 넣으면
+     고른 채로 남은 앞 장을 덮어쓴다(2026-11-26 실측). 그래서 한 장씩 넣어 CMS 가 만든 태그만
+     받아 두고, 마지막에 문단 사이에 끼워 한 번에 적는다.
+   ⛔ 이 탭을 다른 주소로 옮기거나 새로 고치지 않는다. */
+if (process.argv.includes('--셋째걸음')) {
+  const 번호 = 인자('번호');
+  if (!/^[0-9]{6,9}$/.test(번호)) { console.error('⛔ --번호= 를 준다'); process.exit(1); }
+  const 결과 = await 새탭에서(수정주소(번호), async (붙음) => {
+    대화상자받기(붙음);
+    await 자리잡기(붙음, { 최대: 45000 });
+    if (!(await 편집기기다린다(붙음))) return { 멈춤: '편집기가 안 떴다' };
+    await 재기(붙음, 사진펼치기, 20000);
+    await 쉰다(2500);
+    const 사진들 = JSON.parse(String(await 재기(붙음, 사진목록, 25000))).sort((a, b) => Number(a.걸음) - Number(b.걸음));
+    if (사진들.length !== 기사.사진.length) return { 멈춤: '사진 수가 다르다 — ' + 사진들.length };
+    const 앞 = JSON.parse(String(await 재기(붙음, 상태읽기, 25000)));
+    if (앞.본문길이 < 500 || 앞.user_id !== 기사.기자.user_id) return { 멈춤: '열린 기사가 기대와 다르다', 앞 };
+    if (앞.본문사진 > 0) return { 멈춤: '본문에 이미 사진이 있다 — 손대지 않았다', 앞 };
+
+    const 글만 = 본문만든다(기사);
+    const 적는다글 = (본문) => '(() => new Promise((끝) => { CKEDITOR.instances.FCKeditor1.setData(' + JSON.stringify(본문) + ', { callback: () => 끝("적었다") }); }))()';
+    const 태그들 = [];
+    for (let i = 0; i < 사진들.length; i += 1) {
+      await 재기(붙음, 적는다글(글만), 40000);
+      await 쉰다(1500);
+      const 자리글 = String(await 재기(붙음, '(() => { const 장 = document.querySelectorAll(".library-photo")[' + i + ']; if (!장) return ""; 장.scrollIntoView({ block: "center" }); const r = 장.getBoundingClientRect(); return JSON.stringify({ x: r.left + r.width / 2, y: r.top + r.height / 2 }); })()', 20000));
+      let 좌표 = null;
+      try { 좌표 = JSON.parse(자리글); } catch { 좌표 = null; }
+      if (!좌표) return { 멈춤: '사진 ' + (i + 1) + ' 자리를 못 찾았다' };
+      await 붙음.보내기('Input.dispatchMouseEvent', { type: 'mouseMoved', x: 좌표.x, y: 좌표.y, button: 'none' });
+      await 쉰다(1500);
+      const 누름 = String(await 재기(붙음, [
+        '(() => { const 장 = document.querySelectorAll(".library-photo")[' + i + '];',
+        '  const 모두 = [...장.querySelectorAll("button")];',
+        '  const 가운데 = 모두.find((e) => /가운데|중앙|center/i.test((e.getAttribute("title") || "") + (e.getAttribute("data-tp") || "")));',
+        '  if (!가운데) return "못 찾았다";',
+        '  가운데.click(); return "눌렀다"; })()',
+      ].join('\n'), 25000));
+      await 쉰다(4000);
+      const 태그 = String(await 재기(붙음, [
+        '(() => { const 글 = CKEDITOR.instances.FCKeditor1.getData() || "";',
+        '  const 파일 = ' + JSON.stringify(사진들[i].그림) + ';',
+        '  const 자리 = 글.indexOf(파일); if (자리 < 0) return "";',
+        '  const 앞 = 글.lastIndexOf("<figure", 자리); const 뒤 = 글.indexOf("</figure>", 자리);',
+        '  if (앞 < 0 || 뒤 < 0) return "";',
+        '  return 글.slice(앞, 뒤 + 9); })()',
+      ].join('\n'), 20000));
+      console.log('■ 사진 ' + (i + 1) + ' 가운데 정렬 — ' + 누름 + ' · ' + (태그 ? 태그.slice(0, 400) : '태그를 못 받았다'));
+      if (!태그 && 태그들[0] && 기사.사진[i].넓이) {
+        /* 단추가 두 번째부터 반응하지 않을 때 — CMS 가 첫 장에 만든 태그를 그대로 본떠 번호·파일·넓이만 바꾼다 */
+        /* ⛔ 파일 이름을 먼저 바꾼다 — 번호부터 바꾸면 파일 이름 속 번호가 같이 바뀌어 없는 파일이 된다 */
+        const 본 = 태그들[0].split(사진들[0].그림).join(사진들[i].그림).split(사진들[0].사진번호).join(사진들[i].사진번호)
+          .replace(/max-width:\s*[0-9]+px/, 'max-width:' + 기사.사진[i].넓이 + 'px');
+        console.log('   첫 장의 태그를 본떠 만든다 — ' + 본.slice(0, 300));
+        태그들.push(본);
+        continue;
+      }
+      if (!태그) return { 멈춤: '사진 ' + (i + 1) + ' 태그를 못 받았다 — 저장하지 않았다' };
+      태그들.push(태그);
+    }
+
+    const 조각 = 기사.문단.map((글, i) => '<p>' + (i === 0 ? 기사.첫머리 + ' ' : '') + 글 + '</p>');
+    const 끼움 = [];
+    조각.forEach((p, i) => {
+      기사.사진.forEach((장, k) => { if (장.문단앞 === i) 끼움.push(태그들[k]); });
+      끼움.push(p);
+    });
+    await 재기(붙음, 적는다글(끼움.join('\n')), 40000);
+    await 쉰다(2500);
+    const 뼈대 = String(await 재기(붙음, '(() => (CKEDITOR.instances.FCKeditor1.getData() || "").replace(/<p>([^<]{0,14})[^<]*<\\/p>/g, "<p>$1…</p>").split(/\\s+/).join(" ").slice(0, 1800))()', 20000));
+    console.log('■ 본문 뼈대 — ' + 뼈대);
+
+    await 재기(붙음, [
+      '(() => { const d = document; const r = d.querySelector("#recog-c"); if (!r) return "미승인 칸이 없다";',
+      '  r.click(); r.checked = true; r.dispatchEvent(new Event("change", { bubbles: true })); const lb = d.querySelector("label[for=recog-c]"); if (lb) lb.click(); return "눌렀다"; })()',
+    ].join('\n'), 20000);
+    await 쉰다(1500);
+    const 저장전 = JSON.parse(String(await 재기(붙음, 상태읽기, 25000)));
+    const 센것 = JSON.parse(String(await 재기(붙음, '(() => { const 글 = CKEDITOR.instances.FCKeditor1.getData() || ""; return JSON.stringify({ 그림: (글.match(/<img/g) || []).length, 문단: (글.match(/<p>/g) || []).length, 다든파일: ' + JSON.stringify(사진들.map((x) => x.그림)) + '.every((f) => 글.includes(f)) }); })()', 15000)));
+    console.log('■ 저장 전 — ' + JSON.stringify(센것) + ' · ' + JSON.stringify(저장전));
+    const 맞나 = 저장전.번호 === 번호 && 저장전.user_id === 기사.기자.user_id && 저장전.user_name === 기사.기자.user_name
+      && 저장전.user_email === 기사.기자.user_email && /^recog-c=/.test(저장전.상태) && 저장전.제목 === 기사.제목
+      && 저장전.큰섹션 === 기사.큰섹션 && 저장전.작은섹션 === 기사.작은섹션
+      && 센것.그림 === 기사.사진.length && 센것.문단 === 기사.문단.length && 센것.다든파일 === true;
+    if (!맞나) return { 멈춤: '저장 전 확인이 안 맞는다 — 저장하지 않았다', 저장전 };
+
+    const 누름 = String(await 재기(붙음, [
+      '(() => { const b = document.querySelectorAll("button");',
+      '  for (let i = 0; i < b.length; i++) if ((b[i].innerText || "").trim() === "저장") { b[i].click(); return "눌렀다"; }',
+      '  return "저장 단추를 못 찾았다"; })()',
+    ].join('\n'), 20000));
+    console.log('■ 저장 — ' + 누름);
+    await 쉰다(10000);
+    await 자리잡기(붙음, { 최대: 30000 });
+    return { 뒤주소: String(await 재기(붙음, 'location.href', 20000)) };
+  });
+  console.log(JSON.stringify(결과, null, 1));
+}
