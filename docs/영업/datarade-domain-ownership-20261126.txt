@@ -1,0 +1,29 @@
+Hello Datarade team,
+
+Our provider application for SeoulMarkets (seoulmarkets.com) was rejected today with the note "Email domain does not match website URL". We would like to explain the mismatch and ask you to review it again.
+
+SeoulMarkets is a brand, not a separate company. It is published and operated by KLifeDesign Inc. (Republic of Korea), and klifedesign.net is the company's own domain. The applicant address admin@klifedesign.net is the company mailbox. The application already lists the legal name as KLifeDesign Inc. and the brand name as SeoulMarkets.
+
+You can verify this on the public website, without relying on our word:
+
+1. Footer of every page on https://seoulmarkets.com/ - "Published by KLifeDesign Inc.", with the registered address (Unit 101, Commercial Bldg. 1, 441 Namsejong-ro, Boram-dong, Sejong, Republic of Korea), business registration number 456-87-03384 and mail-order licence 2026-Sejong-0591.
+2. https://seoulmarkets.com/pricing - under the payment button: "invoice on request (admin@klifedesign.net)". This is the same address used in the application.
+3. https://seoulmarkets.com/contact - the contact address is cs@klifedesign.net.
+
+Attached:
+- seoulmarkets-footer-publisher.png - footer of seoulmarkets.com showing the publisher
+- seoulmarkets-pricing-invoice-email.png - pricing page showing admin@klifedesign.net and the publisher footer
+- seoulmarkets-contact-email.png - contact page showing cs@klifedesign.net
+- registrar-domain-portfolio.jpg - our registrar account, where seoulmarkets.com and klifedesign.net are held together
+- adsense-account-seoulmarkets.png - the admin@klifedesign.net account managing seoulmarkets.com
+
+We can also send the Korean business registration certificate of KLifeDesign Inc. if that helps.
+
+Could you reopen the application, or tell us whether we should submit it again with this information?
+
+Thank you,
+
+Kim Mi-hee
+KLifeDesign Inc. (publisher of SeoulMarkets)
+admin@klifedesign.net
+https://seoulmarkets.com/
