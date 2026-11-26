@@ -202,6 +202,23 @@ if (결과 === 0) {
 }
 
 /**
+ * 2026-11-27 (unit 5) — markdown editions for the /data pages too (ChatGPT traffic lands there).
+ * Same rule as above: separate process, exit code ignored — a missing .md never blocks a deploy.
+ */
+if (결과 === 0) {
+  try {
+    const dataMd = spawnSync(process.execPath, ['scripts/build-seoulmarkets-data-markdown.mjs'], {
+      cwd: 뿌리,
+      stdio: 'inherit',
+      timeout: 60000,
+    });
+    if (dataMd.status !== 0) console.log('⚠ SeoulMarkets data markdown editions failed — deploy continues (.html is fine)');
+  } catch (e) {
+    console.log('⚠ SeoulMarkets data markdown editions error (ignored) — ' + e.message);
+  }
+}
+
+/**
  * 🔴 2026-09-03(5번) — KCW 기사마다 .md 판을 낸다.
  *   같은 GEO 지시를 3번·6번은 했는데 **5번만 빠져 있었다.** 오늘 낸 여섯 편의 .md 판이
  *   라이브에서 전부 404 인 것을 재서 알았다.

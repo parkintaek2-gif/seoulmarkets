@@ -6,6 +6,10 @@ Every article below also has a plain-markdown version at the same path with .md
 appended (e.g. https://seoulmarkets.com/article/korea-top-pay-firms-gender-gap.md) —
 tables, sources, and verification notes included, without the page chrome.
 
+Every data page under https://seoulmarkets.com/data/ has the same kind of plain-markdown
+version (e.g. https://seoulmarkets.com/data/kospi-weights.md) — the tables shown on the page,
+as text.
+
 ## What we sell — Asia & Gulf filings data in English
 
 Markets live today: **Korea** (KOSPI 830, KOSDAQ 1,772, KONEX 107 — KRX / DART) and the
