@@ -484,3 +484,172 @@ if (process.argv.includes('--셋째걸음')) {
   });
   console.log(JSON.stringify(결과, null, 1));
 }
+
+/* ── 날짜를 바로잡고 승인·웹출판한다 ──
+   사장님 2026-11-26 「날짜바꾸고 승인, 웹출판해」 (기사 1516931 의 입력 시각이 1970.01.01 09:00 으로 저장돼 있었다)
+   ⛔ 본문·사진·사진설명·기자 정보는 건드리지 않는다. 노출날짜·노출시간과 상태만 바꾼다.
+   ⛔ 노출시간은 지금보다 2분 앞으로 넣는다 — 앞날이면 예약이 되어 그 자리에서 나가지 않는다. */
+if (process.argv.includes('--날짜고치고승인')) {
+  const 번호 = 인자('번호');
+  if (!/^[0-9]{6,9}$/.test(번호)) { console.error('⛔ --번호= 를 준다'); process.exit(1); }
+  const 두 = (n) => String(n).padStart(2, '0');
+  const 때 = new Date(Date.now() - 2 * 60 * 1000);
+  const 날 = 때.getFullYear() + '-' + 두(때.getMonth() + 1) + '-' + 두(때.getDate());
+  const 시 = 두(때.getHours()) + ':' + 두(때.getMinutes());
+  const 결과 = await 새탭에서(수정주소(번호), async (붙음) => {
+    대화상자받기(붙음);
+    await 자리잡기(붙음, { 최대: 45000 });
+    if (!(await 편집기기다린다(붙음))) return { 멈춤: '편집기가 안 떴다' };
+    const 앞 = JSON.parse(String(await 재기(붙음, 상태읽기, 25000)));
+    console.log('■ 고치기 전 — ' + JSON.stringify(앞));
+    if (앞.번호 !== 번호 || 앞.제목 !== 기사.제목) return { 멈춤: '열린 기사가 다르다', 앞 };
+    const 앞본문 = String(await 재기(붙음, 'CKEDITOR.instances.FCKeditor1.getData() || ""', 20000));
+
+    const 넣음 = String(await 재기(붙음, [
+      '(() => {',
+      '  const d = document.querySelector("#embargo_date") || document.getElementsByName("embargo_date")[0];',
+      '  const t = document.querySelector("#embargo_time") || document.getElementsByName("embargo_time")[0];',
+      '  if (!d || !t) return "노출시간 칸이 없다";',
+      '  d.value = ' + JSON.stringify(날) + '; d.dispatchEvent(new Event("input", { bubbles: true })); d.dispatchEvent(new Event("change", { bubbles: true }));',
+      '  t.value = ' + JSON.stringify(시) + '; t.dispatchEvent(new Event("input", { bubbles: true })); t.dispatchEvent(new Event("change", { bubbles: true }));',
+      '  const r = document.querySelector("#recog-e"); if (!r) return "승인 칸이 없다";',
+      '  r.click(); r.checked = true; r.dispatchEvent(new Event("change", { bubbles: true })); const lb = document.querySelector("label[for=recog-e]"); if (lb) lb.click();',
+      '  return "넣었다 " + d.value + " " + t.value;',
+      '})()',
+    ].join('\n'), 20000));
+    console.log('■ 날짜·상태 — ' + 넣음);
+    if (!/^넣었다/.test(넣음)) return { 멈춤: 넣음 + ' — 저장하지 않았다' };
+    await 쉰다(1500);
+    const 저장전 = JSON.parse(String(await 재기(붙음, 상태읽기, 25000)));
+    const 뒤본문 = String(await 재기(붙음, 'CKEDITOR.instances.FCKeditor1.getData() || ""', 20000));
+    console.log('■ 저장 전 — ' + JSON.stringify(저장전));
+    const 맞나 = 저장전.노출날 === 날 && 저장전.노출시각 === 시 && /^recog-e=/.test(저장전.상태)
+      && 저장전.user_id === 기사.기자.user_id && 저장전.user_name === 기사.기자.user_name && 저장전.user_email === 기사.기자.user_email
+      && 저장전.본문사진 === 앞.본문사진 && 저장전.본문설명 === 앞.본문설명 && 뒤본문 === 앞본문 && 앞본문.length > 500;
+    if (!맞나) return { 멈춤: '저장 전 확인이 안 맞는다 — 저장하지 않았다', 저장전 };
+
+    const 누름 = String(await 재기(붙음, [
+      '(() => { const b = document.querySelectorAll("button");',
+      '  for (let i = 0; i < b.length; i++) if ((b[i].innerText || "").trim() === "저장") { b[i].click(); return "눌렀다"; }',
+      '  return "저장 단추를 못 찾았다"; })()',
+    ].join('\n'), 20000));
+    console.log('■ 저장 — ' + 누름);
+    await 쉰다(10000);
+    await 자리잡기(붙음, { 최대: 30000 });
+    const 뒤주소 = String(await 재기(붙음, 'location.href', 20000));
+    console.log('■ 저장 뒤 주소 — ' + 뒤주소);
+    if (!/articleView/.test(뒤주소)) return { 멈춤: '저장 뒤 기사 화면으로 가지 않았다 — 웹출판을 누르지 않았다', 뒤주소 };
+
+    /* 웹출판 — 진짜 마우스로 누른다 */
+    const 자리글 = String(await 재기(붙음, [
+      '(() => { const 후보 = [...document.querySelectorAll("button,a")].filter((e) => /웹출판/.test((e.innerText || "") + "") && (e.offsetWidth || e.offsetHeight));',
+      '  if (!후보.length) return ""; const r = 후보[0].getBoundingClientRect();',
+      '  return JSON.stringify({ x: r.left + r.width / 2, y: r.top + r.height / 2, 글: (후보[0].innerText || "").trim() }); })()',
+    ].join('\n'), 20000));
+    let 좌표 = null;
+    try { 좌표 = JSON.parse(자리글); } catch { 좌표 = null; }
+    if (!좌표) return { 멈춤: '웹출판 단추를 못 찾았다 — 저장(승인)까지만 됐다', 뒤주소 };
+    for (const 유형 of ['mouseMoved', 'mousePressed', 'mouseReleased']) {
+      await 붙음.보내기('Input.dispatchMouseEvent', { type: 유형, x: 좌표.x, y: 좌표.y, button: 유형 === 'mouseMoved' ? 'none' : 'left', clickCount: 유형 === 'mouseMoved' ? 0 : 1 });
+      await 쉰다(300);
+    }
+    await 쉰다(8000);
+    console.log('■ 웹출판 — 눌렀다 (' + 좌표.글 + ')');
+    return { 뒤주소, 넣은날: 날, 넣은시각: 시 };
+  });
+  console.log(JSON.stringify(결과, null, 1));
+}
+
+/* ── 사진넣기: 이미 저장된 미승인 기사에 사진 한 장을 올려 본문 맨 위에 가운데로 넣고, 사진 밑 칸에 설명을 적는다 ──
+   사장님 2026-11-26 「사진 박스에서 사진 바로 밑을 클릭하면 사진설명 넣을 수 있다. 앞으로 그렇게 해」
+   ⛔ 설명은 받은 글 그대로 넣는다. 상태는 미승인으로 둔다. 노출날짜가 바뀌면 저장하지 않는다. */
+if (process.argv.includes('--사진넣기')) {
+  const 번호 = 인자('번호');
+  const 파일 = 인자('파일');
+  const 설명길 = 인자('설명글');
+  if (!/^[0-9]{6,9}$/.test(번호) || !파일 || !설명길) { console.error('⛔ --번호= --파일= --설명글=<글 파일> 을 준다'); process.exit(1); }
+  const 설명 = fs.readFileSync(path.resolve(뿌리, 설명길), 'utf8').trim();
+  const 파일길 = path.resolve(뿌리, 파일);
+  if (!fs.existsSync(파일길) || !설명) { console.error('🔴 사진 파일이나 설명이 없다'); process.exit(1); }
+  const 결과 = await 새탭에서(수정주소(번호), async (붙음) => {
+    대화상자받기(붙음);
+    await 자리잡기(붙음, { 최대: 45000 });
+    if (!(await 편집기기다린다(붙음))) return { 멈춤: '편집기가 안 떴다' };
+    const 앞 = JSON.parse(String(await 재기(붙음, 상태읽기, 25000)));
+    console.log('■ 넣기 전 — ' + JSON.stringify(앞));
+    if (앞.번호 !== 번호 || 앞.제목 !== 기사.제목) return { 멈춤: '열린 기사가 다르다', 앞 };
+    /* 수정 화면에서 올린 사진은 기사를 저장하지 않아도 사진 칸에 남는다(2026-11-26 실측). 한 장이 이미 있으면 그것을 쓴다 */
+    if (앞.사진수 > 1 || 앞.본문사진 !== 0) return { 멈춤: '이미 사진이 있다 — 손대지 않았다', 앞 };
+    if (!/^20[0-9]{2}-/.test(앞.노출날) || 앞.노출날.startsWith('1970')) return { 멈춤: '노출날짜가 이상하다 — 손대지 않았다', 앞 };
+    const 앞본문 = String(await 재기(붙음, 'CKEDITOR.instances.FCKeditor1.getData() || ""', 20000));
+
+    const 올림 = 앞.사진수 === 1 ? '올라갔다' : await 사진올린다(붙음, 파일길);
+    console.log('■ 사진 올리기 — ' + (앞.사진수 === 1 ? '앞서 올린 한 장을 쓴다' : 올림));
+    if (앞.사진수 === 1) { await 재기(붙음, 사진펼치기, 20000); await 쉰다(2500); }
+    if (올림 !== '올라갔다') return { 멈춤: '사진을 못 올렸다 — 저장하지 않았다' };
+    await 쉰다(2000);
+    const 사진들 = JSON.parse(String(await 재기(붙음, 사진목록, 25000)));
+    if (사진들.length !== 1) return { 멈춤: '사진 수가 하나가 아니다 — ' + 사진들.length };
+    const 것 = 사진들[0];
+
+    /* 본문을 글만 있는 처음 상태로 되돌린 뒤(떨굴 때 끼어든 그림을 지운다) 가운데 정렬 단추를 누른다 */
+    const 적는다글 = (본문) => '(() => new Promise((끝) => { CKEDITOR.instances.FCKeditor1.setData(' + JSON.stringify(본문) + ', { callback: () => 끝("적었다") }); }))()';
+    await 재기(붙음, 적는다글(앞본문), 40000);
+    await 쉰다(1500);
+    const 자리글 = String(await 재기(붙음, '(() => { const 장 = document.querySelector(".library-photo"); if (!장) return ""; 장.scrollIntoView({ block: "center" }); const r = 장.getBoundingClientRect(); return JSON.stringify({ x: r.left + r.width / 2, y: r.top + r.height / 2 }); })()', 20000));
+    let 좌표 = null;
+    try { 좌표 = JSON.parse(자리글); } catch { 좌표 = null; }
+    if (좌표) {
+      await 붙음.보내기('Input.dispatchMouseEvent', { type: 'mouseMoved', x: 좌표.x, y: 좌표.y, button: 'none' });
+      await 쉰다(1500);
+    }
+    /* 본문을 다시 적은 뒤에는 편집기에 커서가 없어 단추가 넣을 자리를 못 찾는다 — 맨 앞에 커서를 둔다 */
+    await 재기(붙음, '(() => { const 판 = CKEDITOR.instances.FCKeditor1; 판.focus(); const r = 판.createRange(); r.moveToElementEditStart(판.editable()); 판.getSelection().selectRanges([r]); return "커서"; })()', 20000);
+    await 쉰다(800);
+    const 누름 = String(await 재기(붙음, [
+      '(() => { const 장 = document.querySelector(".library-photo"); if (!장) return "사진이 없다";',
+      '  const 가운데 = [...장.querySelectorAll("button")].find((e) => /가운데|중앙|center/i.test((e.getAttribute("title") || "") + (e.getAttribute("data-tp") || "")));',
+      '  if (!가운데) return "못 찾았다"; 가운데.click(); return "눌렀다"; })()',
+    ].join('\n'), 25000));
+    await 쉰다(4000);
+    const 태그 = String(await 재기(붙음, [
+      '(() => { const 글 = CKEDITOR.instances.FCKeditor1.getData() || ""; const 자리 = 글.indexOf(' + JSON.stringify(것.그림) + '); if (자리 < 0) return "";',
+      '  const 앞 = 글.lastIndexOf("<figure", 자리); const 뒤 = 글.indexOf("</figure>", 자리); if (앞 < 0 || 뒤 < 0) return ""; return 글.slice(앞, 뒤 + 9); })()',
+    ].join('\n'), 20000));
+    console.log('■ 가운데 정렬 — ' + 누름 + ' · ' + (태그 ? 태그.slice(0, 330) : '태그를 못 받았다'));
+    if (!태그 || !/<figcaption><\/figcaption>/.test(태그)) return { 멈춤: '사진 태그를 못 받았다 — 저장하지 않았다' };
+
+    const 글자 = 설명.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+    const 새태그 = 태그.replace('<figcaption></figcaption>', '<figcaption>' + 글자 + '</figcaption>')
+      .replace('alt=""', 'alt="' + 글자.replace(/"/g, '&quot;') + '"');
+    await 재기(붙음, 적는다글(새태그 + '\n' + 앞본문), 40000);
+    await 쉰다(2500);
+
+    await 재기(붙음, [
+      '(() => { const d = document; const r = d.querySelector("#recog-c"); if (!r) return "미승인 칸이 없다";',
+      '  r.click(); r.checked = true; r.dispatchEvent(new Event("change", { bubbles: true })); const lb = d.querySelector("label[for=recog-c]"); if (lb) lb.click(); return "눌렀다"; })()',
+    ].join('\n'), 20000);
+    await 쉰다(1500);
+    const 저장전 = JSON.parse(String(await 재기(붙음, 상태읽기, 25000)));
+    const 센것 = JSON.parse(String(await 재기(붙음, '(() => { const 글 = CKEDITOR.instances.FCKeditor1.getData() || ""; const m = 글.match(/<figcaption>([^<]*)<\\/figcaption>/); return JSON.stringify({ 그림: (글.match(/<img/g) || []).length, 문단: (글.match(/<p>/g) || []).length, 설명: m ? m[1] : "" }); })()', 15000)));
+    console.log('■ 저장 전 — ' + JSON.stringify(센것) + ' · ' + JSON.stringify(저장전));
+    const 맞나 = 저장전.번호 === 번호 && /^recog-c=/.test(저장전.상태) && 저장전.user_id === 앞.user_id && 저장전.user_name === 앞.user_name
+      && 저장전.노출날 === 앞.노출날 && 저장전.노출시각 === 앞.노출시각 && 저장전.큰섹션 === 앞.큰섹션 && 저장전.작은섹션 === 앞.작은섹션
+      && 센것.그림 === 1 && 센것.문단 === 기사.문단.length && 센것.설명.replace(/&amp;/g, '&') === 설명;
+    if (!맞나) return { 멈춤: '저장 전 확인이 안 맞는다 — 저장하지 않았다', 저장전 };
+
+    const 저장누름 = String(await 재기(붙음, [
+      '(() => { const b = document.querySelectorAll("button");',
+      '  for (let i = 0; i < b.length; i++) if ((b[i].innerText || "").trim() === "저장") { b[i].click(); return "눌렀다"; }',
+      '  return "저장 단추를 못 찾았다"; })()',
+    ].join('\n'), 20000));
+    console.log('■ 저장 — ' + 저장누름);
+    let 뒤주소 = '';
+    for (let 번 = 0; 번 < 12 && !/articleView/.test(뒤주소); 번 += 1) {
+      await 쉰다(2500);
+      try { 뒤주소 = String(await 재기(붙음, 'location.href', 6000)); } catch { 뒤주소 = ''; }
+    }
+    return { 뒤주소 };
+  });
+  console.log(JSON.stringify(결과, null, 1));
+}
