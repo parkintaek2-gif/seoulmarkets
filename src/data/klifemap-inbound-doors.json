@@ -1,27 +1,18 @@
 {
-  "지은때": "2026. 9. 8. 오후 9:15:19",
+  "지은때": "2026. 11. 26. 오후 4:31:28",
   "무엇을잰것": "klifemap.ai 사이트맵 지면이 홈에서 몇 걸음인가 (쪽 넘김 ?page=N 도 따라간다)",
   "⛔ 이 자는 고치지 않는다": "klifemap 은 매출이 나는 서비스다. 재기만 한다",
   "⚠ 첫 판이 틀렸다": "「문이 0인 지면 104장」이라고 냈다. 쪽 넘김을 떼어 버려 링크를 잃은 것이었다 — 4번이 잡아 줬다",
-  "사이트맵장수": 528,
-  "훑은장수": 537,
+  "사이트맵장수": 2163,
+  "훑은장수": 2236,
   "못받은장수": 0,
-  "닿은장수": 518,
-  "못닿은장수": 10,
-  "걸음중앙값": 4,
+  "닿은장수": 2162,
+  "못닿은장수": 1,
+  "걸음중앙값": 2,
   "열걸음이상": 0,
   "열걸음이상목록": [],
   "못닿은목록": [
-    "/videos.html",
-    "/api.html",
-    "/privacy.html",
-    "/today",
-    "/content/zodiac-signs-and-dates-ja",
-    "/content/tian-zhengguo-bazi-zh",
-    "/content/liz-hien-bazi-zh",
-    "/content/ohtani-shohei-shichuu-suimei-ja",
-    "/content/yong-shen-meaning-en",
-    "/content/food-god-shishen-meaning-en"
+    "/ai-report.html"
   ],
   "못받은것": []
 }

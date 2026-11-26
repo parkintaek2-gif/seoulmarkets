@@ -5,6 +5,6 @@
   "brokers": 22,
   "subjects": 680,
   "with_target_price": 2144,
-  "generated_at_kst": "2026-11-26 16:00:15",
+  "generated_at_kst": "2026-11-27 04:00:07",
   "note": "scripts/build-research-index.mjs 가 만든다. 손으로 고치지 말 것 — 다음 실행에 덮인다."
 }
