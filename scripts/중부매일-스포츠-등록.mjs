@@ -140,7 +140,14 @@ async function 키워드넣는다(붙음, 낱말들) {
     ].join('\n'), 20000)));
   } catch { 좌표 = null; }
   if (!좌표) return '키워드 칸을 못 찾았다';
-  for (const 낱말 of 낱말들) {
+  const 자리글 = '(() => { const 칸 = [...document.querySelectorAll("input")].find((e) => /입력 \\(최대/.test(e.placeholder || "") || e.name === "text"); if (!칸) return ""; 칸.scrollIntoView({ block: "center" }); const r = 칸.getBoundingClientRect(); return JSON.stringify({ x: r.left + r.width / 2, y: r.top + r.height / 2 }); })()';
+  const 든것글 = '((document.getElementsByName("keyword")[0] || {}).value || "")';
+  for (const 낱말 of 낱말들.flatMap((x) => [x, x])) {
+    /* 낱말이 하나 들어갈 때마다 입력 칸이 밀린다 — 셋째 낱말이 빠지던 까닭으로 본다. 매번 자리를 다시 읽고,
+       이미 들어간 낱말은 건너뛴다(한 낱말을 두 번까지 해 본다) */
+    const 지금든 = String(await 재기(붙음, 든것글, 15000)).split(',').map((x) => x.trim());
+    if (지금든.includes(낱말)) continue;
+    try { 좌표 = JSON.parse(String(await 재기(붙음, 자리글, 20000))); } catch { /* 앞 자리를 그대로 쓴다 */ }
     for (const 유형 of ['mouseMoved', 'mousePressed', 'mouseReleased']) {
       await 붙음.보내기('Input.dispatchMouseEvent', { type: 유형, x: 좌표.x, y: 좌표.y, button: 유형 === 'mouseMoved' ? 'none' : 'left', clickCount: 유형 === 'mouseMoved' ? 0 : 1 });
       await 쉰다(200);
@@ -153,7 +160,9 @@ async function 키워드넣는다(붙음, 낱말들) {
     }
     await 쉰다(900);
   }
-  return String(await 재기(붙음, '(() => { const 글 = document.body.innerText || ""; const 든 = ' + JSON.stringify(낱말들) + '.filter((낱) => 글.includes(낱)); return 든.length + "개 보인다 — " + 든.join(", "); })()', 20000));
+  const 끝든 = String(await 재기(붙음, 든것글, 15000)).split(',').map((x) => x.trim()).filter(Boolean);
+  const 빠진 = 낱말들.filter((낱) => !끝든.includes(낱));
+  return (빠진.length ? '🔴 빠졌다 ' + 빠진.join(', ') + ' · ' : '다 들어갔다 · ') + '키워드 칸: ' + 끝든.join(', ');
 }
 
 /* ── 읽기만 ── */
@@ -544,6 +553,12 @@ if (process.argv.includes('--날짜고치고승인')) {
     ].join('\n'), 20000));
     console.log('■ 날짜·상태 — ' + 넣음);
     if (!/^넣었다/.test(넣음)) return { 멈춤: 넣음 + ' — 저장하지 않았다' };
+    /* 사장님 2026-11-26 — 날씨 키워드 일곱 개 「바로 해. 왜 미루나」. 기사 자료에 «추가키워드»가 있으면 빠진 것을 넣는다 */
+    if ((기사.추가키워드 || []).length) {
+      const 키결과 = await 키워드넣는다(붙음, 기사.추가키워드);
+      console.log('■ 키워드 — ' + 키결과);
+      if (/빠졌다/.test(키결과)) return { 멈춤: '키워드가 다 들어가지 않았다 — 저장하지 않았다' };
+    }
     await 쉰다(1500);
     const 저장전 = JSON.parse(String(await 재기(붙음, 상태읽기, 25000)));
     const 뒤본문 = String(await 재기(붙음, 'CKEDITOR.instances.FCKeditor1.getData() || ""', 20000));
@@ -673,6 +688,66 @@ if (process.argv.includes('--사진넣기')) {
     let 뒤주소 = '';
     for (let 번 = 0; 번 < 12 && !/articleView/.test(뒤주소); 번 += 1) {
       await 쉰다(2500);
+      try { 뒤주소 = String(await 재기(붙음, 'location.href', 6000)); } catch { 뒤주소 = ''; }
+    }
+    return { 뒤주소 };
+  });
+  console.log(JSON.stringify(결과, null, 1));
+}
+
+/* ── 키워드넣기: 이미 있는 기사에 빠진 키워드만 넣고 저장한다 ──
+   사장님 2026-11-26 「추천키워드(해시태크) 내일날씨 청주날씨 대전날씨 세종날씨 천안날씨 충주날씨 오늘날씨」 「바로 해. 왜 미루나」
+   ⛔ 키워드 말고는 아무것도 바꾸지 않는다. 상태는 지금 저장돼 있는 그대로 둔다(승인된 기사면 승인, 미승인이면 미승인).
+   ⛔ 웹출판을 누르지 않는다. 노출날짜가 1970 이면 손대지 않는다. */
+if (process.argv.includes('--키워드넣기')) {
+  const 번호 = 인자('번호');
+  const 지금상태 = 인자('지금상태');   /* 승인 | 미승인 — 공개 화면으로 확인한 값을 사람이 적어 준다 */
+  if (!/^[0-9]{6,9}$/.test(번호) || !['승인', '미승인'].includes(지금상태)) { console.error('⛔ --번호= --지금상태=승인|미승인 을 준다'); process.exit(1); }
+  const 넣을것 = 기사.추가키워드 || [];
+  if (!넣을것.length) { console.error('⛔ 기사 자료에 추가키워드가 없다'); process.exit(1); }
+  const 칸이름 = 지금상태 === '승인' ? 'recog-e' : 'recog-c';
+  const 결과 = await 새탭에서(수정주소(번호), async (붙음) => {
+    대화상자받기(붙음);
+    await 자리잡기(붙음, { 최대: 45000 });
+    if (!(await 편집기기다린다(붙음))) return { 멈춤: '편집기가 안 떴다' };
+    const 앞 = JSON.parse(String(await 재기(붙음, 상태읽기, 25000)));
+    console.log('■ 넣기 전 — 키워드 칸: ' + 앞.키워드칸 + ' · 노출 ' + 앞.노출날 + ' ' + 앞.노출시각 + ' · ' + 앞.제목);
+    if (앞.번호 !== 번호 || ![기사.제목, 기사.새제목].includes(앞.제목)) return { 멈춤: '열린 기사가 다르다', 앞 };
+    if (!/^20[0-9]{2}-/.test(앞.노출날) || 앞.노출날.startsWith('1970')) return { 멈춤: '노출날짜가 이상하다 — 손대지 않았다', 앞 };
+    const 앞본문 = String(await 재기(붙음, 'CKEDITOR.instances.FCKeditor1.getData() || ""', 20000));
+
+    const 키결과 = await 키워드넣는다(붙음, 넣을것);
+    console.log('■ 키워드 — ' + 키결과);
+    if (/빠졌다/.test(키결과)) return { 멈춤: '키워드가 다 들어가지 않았다 — 저장하지 않았다' };
+
+    /* 상태 칸은 열릴 때 «승인»으로 떠 있다. 지금 저장돼 있는 상태와 같은 칸을 눌러 그대로 둔다. 날짜도 읽은 값을 그대로 다시 적는다 */
+    await 재기(붙음, [
+      '(() => { const d = document; const r = d.querySelector("#' + 칸이름 + '"); if (!r) return "상태 칸이 없다";',
+      '  r.click(); r.checked = true; r.dispatchEvent(new Event("change", { bubbles: true })); const lb = d.querySelector("label[for=' + 칸이름 + ']"); if (lb) lb.click();',
+      '  const 날 = d.querySelector("#embargo_date"); const 시 = d.querySelector("#embargo_time");',
+      '  if (날 && 시) { 날.value = ' + JSON.stringify(앞.노출날) + '; 날.dispatchEvent(new Event("change", { bubbles: true })); 시.value = ' + JSON.stringify(앞.노출시각) + '; 시.dispatchEvent(new Event("change", { bubbles: true })); }',
+      '  return "그대로 두었다"; })()',
+    ].join('\n'), 20000);
+    await 쉰다(1500);
+    const 저장전 = JSON.parse(String(await 재기(붙음, 상태읽기, 25000)));
+    const 뒤본문 = String(await 재기(붙음, 'CKEDITOR.instances.FCKeditor1.getData() || ""', 20000));
+    const 든 = 저장전.키워드칸.split(',').map((x) => x.trim());
+    const 맞나 = 저장전.번호 === 번호 && 저장전.상태.startsWith(칸이름 + '=') && 저장전.노출날 === 앞.노출날 && 저장전.노출시각 === 앞.노출시각
+      && 저장전.제목 === 앞.제목 && 저장전.부제 === 앞.부제 && 저장전.user_id === 앞.user_id && 저장전.큰섹션 === 앞.큰섹션 && 저장전.작은섹션 === 앞.작은섹션
+      && 뒤본문 === 앞본문 && 넣을것.every((낱) => 든.includes(낱));
+    console.log('■ 저장 전 — 키워드 칸: ' + 저장전.키워드칸 + ' · 상태 ' + 저장전.상태 + ' · 노출 ' + 저장전.노출날 + ' ' + 저장전.노출시각);
+    if (!맞나) return { 멈춤: '저장 전 확인이 안 맞는다 — 저장하지 않았다', 저장전 };
+
+    const 누름 = String(await 재기(붙음, [
+      '(() => { const b = document.querySelectorAll("button");',
+      '  for (let i = 0; i < b.length; i++) if ((b[i].innerText || "").trim() === "저장") { b[i].click(); return "눌렀다"; }',
+      '  return "저장 단추를 못 찾았다"; })()',
+    ].join('\n'), 20000));
+    console.log('■ 저장 — ' + 누름);
+    let 뒤주소 = '';
+    for (let 번 = 0; 번 < 12 && !/articleView/.test(뒤주소); 번 += 1) {
+      await 쉰다(2500);
+      try { await 붙음.보내기('Page.handleJavaScriptDialog', { accept: true }, 4000); } catch { /* 창이 없다 */ }
       try { 뒤주소 = String(await 재기(붙음, 'location.href', 6000)); } catch { 뒤주소 = ''; }
     }
     return { 뒤주소 };
