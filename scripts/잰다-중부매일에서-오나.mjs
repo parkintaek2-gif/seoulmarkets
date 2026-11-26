@@ -71,11 +71,40 @@ export function 검색엔진갈래(출처, 매체) {
   const s = String(출처 ?? '').toLowerCase();
   const m = String(매체 ?? '').toLowerCase();
   if (!s || 중부매일인가(s)) return null;
+  if (AI갈래(s)) return null;   /* gemini.google.com 은 구글 검색이 아니다 — AI 칸에서 센다 */
   if (s.includes('naver')) return '네이버';
   if (s.includes('google')) return '구글';
   if (/(^|\.)(daum|bing|yahoo|duckduckgo|zum|yandex|baidu|ecosia|brave|nate)(\.|$)/.test(s)) return '기타';
   if (m === 'organic') return '기타';
   return null;
+}
+
+/**
+ * AI 갈래 — 사장님 2026-11-27 「항목 추가: AI (1) 챗gpt (2) 구글gemini (3) 클로드 (4) 기타」
+ *   출처 이름으로 가른다. 검색엔진 칸보다 먼저 판정한다(gemini.google.com 이 구글로 새지 않게).
+ *   ⚠ AI 서비스가 레퍼러를 안 넘기면 GA4 에는 direct 로 잡힌다 — 이 칸은 바닥값이다.
+ */
+export function AI갈래(출처) {
+  const s = String(출처 ?? '').toLowerCase();
+  if (!s) return null;
+  if (/chatgpt|openai/.test(s)) return '챗GPT';
+  if (/gemini|bard\.google/.test(s)) return '제미나이';
+  if (/claude|anthropic/.test(s)) return '클로드';
+  if (/perplexity|copilot|deepseek|grok|(^|\.)x\.ai$|(^|\.)you\.com$|phind|(^|\.)poe\.com$|mistral|meta\.ai|wrtn|kagi|felo|genspark|doubao|kimi|qwen|clova-x|(^|\.)liner\./.test(s)) return 'AI기타';
+  return null;
+}
+
+/** 날짜별 AI 사용자 — [날짜, {챗GPT, 제미나이, 클로드, AI기타}] */
+export function AI별로(줄들) {
+  const 통 = new Map();
+  for (const r of 줄들 ?? []) {
+    const 날 = 날짜꼴(r?.dimensionValues?.[0]?.value);
+    const 갈래 = AI갈래(r?.dimensionValues?.[1]?.value);
+    const 앞 = 통.get(날) ?? { 챗GPT: 0, 제미나이: 0, 클로드: 0, AI기타: 0 };
+    if (갈래) 앞[갈래] += Number(r?.metricValues?.[0]?.value ?? 0);
+    통.set(날, 앞);
+  }
+  return 통;
 }
 
 /** 날짜별 검색엔진 사용자 — [날짜, {네이버, 구글, 기타}] */
@@ -147,6 +176,21 @@ function 자가시험() {
   ]);
   T('검색엔진별 — 같은 날 네이버 두 줄을 모은다', 검.get('2026-11-25').네이버 === 7);
   T('검색엔진별 — 없는 갈래는 0 이다', 검.get('2026-11-25').구글 === 0 && 검.get('2026-11-25').기타 === 0);
+
+  T('AI — 챗GPT 두 주소', AI갈래('chatgpt.com') === '챗GPT' && AI갈래('chat.openai.com') === '챗GPT');
+  T('AI — 제미나이', AI갈래('gemini.google.com') === '제미나이');
+  T('🔴 AI — 제미나이는 구글 검색 칸에 안 든다', 검색엔진갈래('gemini.google.com', 'referral') === null);
+  T('AI — 클로드', AI갈래('claude.ai') === '클로드');
+  T('AI — 퍼플렉시티·코파일럿은 기타', AI갈래('perplexity.ai') === 'AI기타' && AI갈래('copilot.microsoft.com') === 'AI기타');
+  T('🔴 AI — 퍼플렉시티는 기타 검색엔진 칸에 안 든다', 검색엔진갈래('perplexity', 'organic') === null);
+  T('AI — 네이버·구글·직접 유입은 AI 가 아니다', AI갈래('m.search.naver.com') === null && AI갈래('google') === null && AI갈래('(direct)') === null);
+  const 에 = AI별로([
+    { dimensionValues: [{ value: '20261126' }, { value: 'chatgpt.com' }, { value: 'referral' }], metricValues: [{ value: '2' }] },
+    { dimensionValues: [{ value: '20261126' }, { value: 'chatgpt.com' }, { value: '(not set)' }], metricValues: [{ value: '1' }] },
+    { dimensionValues: [{ value: '20261126' }, { value: 'naver' }, { value: 'organic' }], metricValues: [{ value: '9' }] },
+  ]);
+  T('AI별 — 같은 날 챗GPT 두 줄을 모은다', 에.get('2026-11-26').챗GPT === 3);
+  T('AI별 — 없는 갈래는 0 이다', 에.get('2026-11-26').클로드 === 0 && 에.get('2026-11-26').AI기타 === 0);
 
   T('열쇠자리 — 없으면 null 이다', 열쇠자리() === null || typeof 열쇠자리() === 'string');
 
@@ -237,12 +281,16 @@ const 검색표 = 검색엔진별로(검색.rows);
 const 날들 = [...new Set([...중부표.keys(), ...전체표.keys()])].sort();
 
 /* 사장님 2026-11-26 — 항목을 이 순서로 바꾼다 */
-const 머리 = ['날짜', '중부매일 세션', '중부매일 사용자', '네이버 사용자', '구글 사용자', '기타 검색엔진', '전체 세션', '전체 사용자', '전체 페이지뷰'];
+/* 사장님 2026-11-27 — AI 네 칸을 더한다(챗GPT · 구글 Gemini · 클로드 · 기타) */
+const AI표 = AI별로(검색.rows);
+const 머리 = ['날짜', '중부매일 세션', '중부매일 사용자', '네이버 사용자', '구글 사용자', '기타 검색엔진',
+  'AI 챗GPT', 'AI 구글 Gemini', 'AI 클로드', 'AI 기타', '전체 세션', '전체 사용자', '전체 페이지뷰'];
 const 표 = 날들.map((d) => {
   const a = 중부표.get(d) ?? { 세션: 0, 사람: 0, 지면수: 0 };
   const z = 전체표.get(d) ?? { 세션: 0, 사람: 0, 지면수: 0 };
   const g = 검색표.get(d) ?? { 네이버: 0, 구글: 0, 기타: 0 };
-  return [d, a.세션, a.사람, g.네이버, g.구글, g.기타, z.세션, z.사람, z.지면수];
+  const i = AI표.get(d) ?? { 챗GPT: 0, 제미나이: 0, 클로드: 0, AI기타: 0 };
+  return [d, a.세션, a.사람, g.네이버, g.구글, g.기타, i.챗GPT, i.제미나이, i.클로드, i.AI기타, z.세션, z.사람, z.지면수];
 });
 
 console.log(`■ 중부매일 → KLifeMap 유입 — 최근 ${날수}일 · 속성 ${속성}`);
