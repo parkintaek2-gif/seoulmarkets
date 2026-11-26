@@ -61,6 +61,36 @@ export function 중부매일인가(출처) {
   return /jbnews/i.test(String(출처 ?? ''));
 }
 
+/**
+ * 검색엔진 갈래 — 사장님 2026-11-26 「네이버 사용자, 구글 사용자, 기타 검색엔진」
+ *   네이버·구글은 출처 이름으로 가른다(검색 말고 블로그·카페에서 온 것도 네이버에 든다).
+ *   기타 검색엔진은 이름이 알려진 곳이거나 매체가 organic 인 나머지다.
+ *   ⛔ 중부매일(jbnews)은 여기에 넣지 않는다 — 따로 세는 칸이 있다.
+ */
+export function 검색엔진갈래(출처, 매체) {
+  const s = String(출처 ?? '').toLowerCase();
+  const m = String(매체 ?? '').toLowerCase();
+  if (!s || 중부매일인가(s)) return null;
+  if (s.includes('naver')) return '네이버';
+  if (s.includes('google')) return '구글';
+  if (/(^|\.)(daum|bing|yahoo|duckduckgo|zum|yandex|baidu|ecosia|brave|nate)(\.|$)/.test(s)) return '기타';
+  if (m === 'organic') return '기타';
+  return null;
+}
+
+/** 날짜별 검색엔진 사용자 — [날짜, {네이버, 구글, 기타}] */
+export function 검색엔진별로(줄들) {
+  const 통 = new Map();
+  for (const r of 줄들 ?? []) {
+    const 날 = 날짜꼴(r?.dimensionValues?.[0]?.value);
+    const 갈래 = 검색엔진갈래(r?.dimensionValues?.[1]?.value, r?.dimensionValues?.[2]?.value);
+    const 앞 = 통.get(날) ?? { 네이버: 0, 구글: 0, 기타: 0 };
+    if (갈래) 앞[갈래] += Number(r?.metricValues?.[0]?.value ?? 0);
+    통.set(날, 앞);
+  }
+  return 통;
+}
+
 /** 날짜별로 접는다 — [날짜, {세션, 사람, 지면수}] */
 export function 날짜별로(줄들) {
   const 통 = new Map();
@@ -103,6 +133,20 @@ function 자가시험() {
   T('날짜별 — 페이지뷰도 모은다', t.get('2026-11-24').지면수 === 11);
   T('날짜별 — 0 인 날을 «버리지 않는다»', t.has('2026-11-23') && t.get('2026-11-23').세션 === 0);
   T('날짜별 — 빈 입력에 안 터진다', 날짜별로(undefined).size === 0);
+
+  T('검색엔진 — 네이버 모바일 검색', 검색엔진갈래('m.search.naver.com', 'referral') === '네이버');
+  T('검색엔진 — 구글 자연검색', 검색엔진갈래('google', 'organic') === '구글');
+  T('검색엔진 — 다음·빙은 기타', 검색엔진갈래('search.daum.net', 'referral') === '기타' && 검색엔진갈래('bing', 'organic') === '기타');
+  T('검색엔진 — 직접 유입은 어디에도 안 든다', 검색엔진갈래('(direct)', '(none)') === null);
+  T('검색엔진 — ChatGPT 는 검색엔진으로 안 센다', 검색엔진갈래('chatgpt.com', 'referral') === null);
+  T('🔴 검색엔진 — 중부매일은 넣지 않는다', 검색엔진갈래('m.jbnews.com', 'referral') === null);
+  const 검 = 검색엔진별로([
+    { dimensionValues: [{ value: '20261125' }, { value: 'naver' }, { value: 'organic' }], metricValues: [{ value: '4' }] },
+    { dimensionValues: [{ value: '20261125' }, { value: 'm.search.naver.com' }, { value: 'referral' }], metricValues: [{ value: '3' }] },
+    { dimensionValues: [{ value: '20261125' }, { value: '(direct)' }, { value: '(none)' }], metricValues: [{ value: '9' }] },
+  ]);
+  T('검색엔진별 — 같은 날 네이버 두 줄을 모은다', 검.get('2026-11-25').네이버 === 7);
+  T('검색엔진별 — 없는 갈래는 0 이다', 검.get('2026-11-25').구글 === 0 && 검.get('2026-11-25').기타 === 0);
 
   T('열쇠자리 — 없으면 null 이다', 열쇠자리() === null || typeof 열쇠자리() === 'string');
 
@@ -174,23 +218,43 @@ const 전체 = await 묻는다({
   limit: 400,
 });
 
-if (중부.못쟀다 || 전체.못쟀다) {
-  console.error(`⛔ 측정하지 못했다 — ${중부.못쟀다 || 전체.못쟀다}`);
+const 검색 = await 묻는다({
+  dateRanges: [{ startDate: `${날수}daysAgo`, endDate: 'today' }],
+  dimensions: [{ name: 'date' }, { name: 'sessionSource' }, { name: 'sessionMedium' }],
+  metrics: [{ name: 'totalUsers' }],
+  dimensionFilter: 집필터,
+  limit: 5000,
+});
+
+if (중부.못쟀다 || 전체.못쟀다 || 검색.못쟀다) {
+  console.error(`⛔ 측정하지 못했다 — ${중부.못쟀다 || 전체.못쟀다 || 검색.못쟀다}`);
   process.exit(1);
 }
 
 const 중부표 = 날짜별로(중부.rows);
 const 전체표 = 날짜별로(전체.rows);
+const 검색표 = 검색엔진별로(검색.rows);
 const 날들 = [...new Set([...중부표.keys(), ...전체표.keys()])].sort();
+
+/* 사장님 2026-11-26 — 항목을 이 순서로 바꾼다 */
+const 머리 = ['날짜', '중부매일 세션', '중부매일 사용자', '네이버 사용자', '구글 사용자', '기타 검색엔진', '전체 세션', '전체 사용자', '전체 페이지뷰'];
+const 표 = 날들.map((d) => {
+  const a = 중부표.get(d) ?? { 세션: 0, 사람: 0, 지면수: 0 };
+  const z = 전체표.get(d) ?? { 세션: 0, 사람: 0, 지면수: 0 };
+  const g = 검색표.get(d) ?? { 네이버: 0, 구글: 0, 기타: 0 };
+  return [d, a.세션, a.사람, g.네이버, g.구글, g.기타, z.세션, z.사람, z.지면수];
+});
 
 console.log(`■ 중부매일 → KLifeMap 유입 — 최근 ${날수}일 · 속성 ${속성}`);
 console.log('   배너를 넣은 날: 2026-11-24 19:31 (사장님) — 그 앞줄은 바탕이지 성과가 아니다\n');
-console.log('날짜         중부매일 세션 · 사용자 · 페이지뷰      KLifeMap 전체 세션 · 사용자 · 페이지뷰');
-for (const d of 날들) {
-  const a = 중부표.get(d) ?? { 세션: 0, 사람: 0, 지면수: 0 };
-  const z = 전체표.get(d) ?? { 세션: 0, 사람: 0, 지면수: 0 };
-  console.log(`${d}   ${String(a.세션).padStart(8)} ${String(a.사람).padStart(8)} ${String(a.지면수).padStart(9)}`
-    + `        ${String(z.세션).padStart(8)} ${String(z.사람).padStart(8)} ${String(z.지면수).padStart(9)}`);
+console.log(머리.join(' | '));
+for (const 줄 of 표) console.log(줄.join(' | '));
+
+const 자료길 = 인자('자료', '');
+if (자료길) {
+  const { writeFileSync } = await import('node:fs');
+  writeFileSync(자료길, JSON.stringify({ head: 머리, rows: 표 }), 'utf8');
+  console.log(`\n자료를 적었다 — ${자료길}`);
 }
 
 const 중부합 = [...중부표.values()].reduce((s, x) => s + x.세션, 0);
