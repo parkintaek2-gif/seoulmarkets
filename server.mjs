@@ -241,7 +241,7 @@ async function resolveFile(pathname) {
     if (clean === '/' || clean === '\\') candidates.push('index.html');
     else if (extname(clean)) candidates.push(clean);
     // 확장자가 없으면 clean URL 로 보고 .html 과 디렉터리 index 를 차례로 찾는다
-    else candidates.push(`${clean}.html`, join(clean, 'index.html'));
+    else candidates.push(`${clean}.html`, join(clean, 'index.html'), clean);   /* the bare name last: extension-less files such as /.well-known/mcp-registry-auth */
   }
 
   for (const c of candidates) {
