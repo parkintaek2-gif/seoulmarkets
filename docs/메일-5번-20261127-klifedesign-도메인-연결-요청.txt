@@ -1,0 +1,30 @@
+[5번] 도움 요청 — klifedesign.net 주소 연결에 DNS 설정이 필요합니다 (2026-11-27)
+
+회사 홈페이지(B안)는 만들어 서버에 올렸습니다. klifedesign.net 주소로 열리려면 도메인 구입처(Spaceship)의 DNS 설정에 값 세 개를 넣어야 합니다. Spaceship은 크롬에 로그인이 되어 있지 않아 제가 넣지 못했습니다.
+
+1. 방법 두 가지 (하나만 하시면 됩니다)
+
+- (가) 크롬에서 spaceship.com 에 로그인만 해 두시면 제가 아래 값을 넣고 연결까지 마칩니다.
+- (나) 직접 넣으실 경우: Spaceship > 도메인 klifedesign.net > DNS 설정(Advanced DNS)에서 아래 세 줄을 추가합니다.
+
+2. 넣을 값
+
+- 종류 ALIAS (없으면 A), 호스트 @, 값 ms8nmh0n689e433f.sel3.cloudtype.app (A로 넣을 때는 34.8.247.175)
+- 종류 CNAME, 호스트 www, 값 ms8nmh0n689e433f.sel3.cloudtype.app
+- 종류 TXT, 호스트 @, 값 cloudtype-space=@parkintaek2
+
+3. 주의
+
+- 호스트 @ 에는 CNAME을 쓰지 않습니다. 회사 메일(구글)이 같은 도메인을 쓰고 있어서, @ 에 CNAME을 넣으면 메일 수신이 끊길 수 있습니다. 반드시 ALIAS 또는 A로 넣습니다.
+- 이미 있는 MX 줄(smtp.google.com)과 다른 TXT 줄은 지우지 않습니다.
+- 서울마켓츠와 백년지도도 같은 방식(@ 가 34.8.247.175 로 연결)으로 되어 있습니다.
+
+4. 넣은 뒤 제가 할 일
+
+- 클라우드타입에서 klifedesign.net 과 www.klifedesign.net 을 인증하고 연결합니다. 인증서 발급까지 몇 시간 걸릴 수 있다고 안내되어 있습니다.
+- 열리면 화면과 링크 세 개를 직접 눌러 확인하고 알리겠습니다.
+
+5. 지금 상태
+
+- 서버에는 올라가 있고, 이 PC에서 주소를 klifedesign.net 으로 지정해 시험했을 때 B안 화면이 정상으로 열렸습니다. www 는 klifedesign.net 으로 넘어가고, 없는 주소는 회사 홈페이지용 안내 화면이 나옵니다.
+- 접은 K Culture Wire 주소 2개는 클라우드타입에 그대로 연결해 두었습니다. 연결 수 제한에 걸리면 그 2개를 빼고 넣겠습니다.
