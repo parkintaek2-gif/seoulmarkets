@@ -12,6 +12,8 @@ const change = Object.values(M).find((v) => typeof v === 'function' && v.constru
 const plan = {
   1512171: { want: ['S1N7', 'S2N149', 'SRN552'], time: '2026-09-22 17:48' },
   1513261: { want: ['S1N31', '', ''], time: '2026-10-12 15:27' },
+  1513985: { want: ['S1N30', 'S2N207', ''] },
+  1503680: { want: ['S1N30', 'S2N207', ''] },
   1511116: { want: ['S1N7', 'S2N149', 'SRN549'], time: '2026-09-07 16:50' },
 };
 const logPath = 'docs/jb-table4-log-20261127.json';
