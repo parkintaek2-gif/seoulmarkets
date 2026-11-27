@@ -146,6 +146,9 @@ console.log('━━━ 운영하는 사이트가 셋인가 ━━━━━━━
   for (const 밑 of [path.join(뿌리, 'src'), path.join(뿌리, 'public'),
     path.join(klifemap뿌리, 'public')]) {
     for (const f of 훑는다(밑)) {
+      /* 2026-11-27 — 회사 홈페이지 자신(src/pages/klifedesign, public/klifedesign)은 뺀다.
+         사장님이 B안을 고르셔서 만드는 중이다. 다른 사이트가 klifedesign.net 으로 링크를 거는 것은 홈페이지가 열릴 때까지 계속 막는다 */
+      if (/[\\/](src[\\/]pages|public)[\\/]klifedesign[\\/]/.test(f)) continue;
       let 글; try { 글 = fs.readFileSync(f, 'utf8'); } catch (e) { continue; }
       for (const 줄 of 글.split('\n')) {
         if (홈페이지링크인가(줄)) { 걸린것.push(path.basename(f)); break; }

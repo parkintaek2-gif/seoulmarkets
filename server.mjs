@@ -384,6 +384,7 @@ const handle = async (req, res) => {
     'kculturewire.com': 'www.kculturewire.com',
     'www.100yearmap.com': '100yearmap.com',
     'www.seoulmarkets.com': 'seoulmarkets.com',
+    'www.klifedesign.net': 'klifedesign.net',   /* 2026-11-27 company home page; non-www is canonical */
   };
   const 날호스트 = String(req.headers.host ?? '').split(':')[0].toLowerCase();
   const 정본 = 정본호스트[날호스트];
@@ -438,6 +439,7 @@ const handle = async (req, res) => {
   const SITE_PREFIX = {
     '100yearmap.com': '/100y',
     'hundredyearmap.com': '/100y',
+    'klifedesign.net': '/klifedesign',   /* 2026-11-27 company home page (one page) */
     'kculturewire.com': '/wikitip',
     'wiki-tip.com': '/wikitip',   /* 옛 주소. 301 을 걸기 전까지 살려 둔다 */
   };
