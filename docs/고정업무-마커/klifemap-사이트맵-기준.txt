@@ -1,5 +1,5 @@
-# 잰날 2026-11-27
-# 오늘셈 33
+# 잰날 2026-11-28
+# 오늘셈 7
 # ⛔ 이 파일을 지우면 「오늘 새로 난 지면」을 하루 동안 못 센다
 https://klifemap.ai/
 https://klifemap.ai/content
@@ -157,6 +157,13 @@ https://klifemap.ai/articles/zh-3.html
 https://klifemap.ai/articles/zh-4.html
 https://klifemap.ai/articles/zh-5.html
 https://klifemap.ai/today
+https://klifemap.ai/content/ilzin-2026-11-28
+https://klifemap.ai/content/saju-iljin-2031-december-daeseol-dec-7-month-pillar-change
+https://klifemap.ai/content/saju-iljin-2031-november-ipdong-nov-8-month-pillar-change
+https://klifemap.ai/content/saju-iljin-2031-october-hanro-oct-8-month-pillar-change
+https://klifemap.ai/content/saju-iljin-2031-september-baekro-sep-8-month-pillar-change
+https://klifemap.ai/content/saju-iljin-2031-august-ipchu-aug-8-month-pillar-change
+https://klifemap.ai/content/saju-iljin-2031-july-soseo-jul-7-month-pillar-change
 https://klifemap.ai/content/saju-iljin-2031-june-mangjong-jun-6-month-pillar-change
 https://klifemap.ai/content/saju-iljin-2031-may-ipha-may-6-month-pillar-change
 https://klifemap.ai/content/saju-iljin-2031-april-cheongmyeong-apr-5-month-pillar-change
