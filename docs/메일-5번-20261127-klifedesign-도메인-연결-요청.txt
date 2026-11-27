@@ -5,7 +5,7 @@
 1. 방법 두 가지 (하나만 하시면 됩니다)
 
 - (가) 크롬에서 spaceship.com 에 로그인만 해 두시면 제가 아래 값을 넣고 연결까지 마칩니다.
-- (나) 직접 넣으실 경우: Spaceship > 도메인 klifedesign.net > DNS 설정(Advanced DNS)에서 아래 세 줄을 추가합니다.
+- (나) 직접 입력하실 경우: Spaceship > 도메인 klifedesign.net > DNS 설정(Advanced DNS)에서 아래 세 줄을 추가합니다.
 
 2. 넣을 값
 
