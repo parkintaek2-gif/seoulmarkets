@@ -100,6 +100,8 @@ import FINANCIALS_TAPE from '../data/korea-financials-tape.json' with { type: 'j
 import CONSENSUS_TAPE from '../data/korea-consensus-tape.json' with { type: 'json' };
 import INDICES_HISTORY from '../data/korea-indices-history.json' with { type: 'json' };
 import UAE_FINANCIALS_TAPE from '../data/uae-financials-tape.json' with { type: 'json' };
+import JAPAN_FINANCIALS_TAPE from '../data/japan-financials-tape.json' with { type: 'json' };
+import TAIWAN_FINANCIALS_TAPE from '../data/taiwan-financials-tape.json' with { type: 'json' };
 import { tierOf, rateCheck, LIMITS, ENFORCE_FROM, tierNote, TIER_CATALOG } from './tiers.mjs';
 import { openapi } from './openapi.mjs';
 import { subscribe } from './subscribe.mjs';
@@ -1174,6 +1176,110 @@ function uaeFinancials(params, tier = 'free') {
 }
 
 /**
+ * /v1/japan-financials - latest annual accounts of Tokyo-listed companies as filed with EDINET (2026-11-27).
+ * One row per company. Representative names are not served here. price_jpy is the fiscal-year-end
+ * price implied by the filed PER x EPS, not a market quote.
+ */
+const JAPAN_ROW_KEYS = ['code', 'edinet_code', 'name', 'name_en', 'market', 'sector', 'year', 'period_end', 'basis',
+  'assets_jpy', 'equity_jpy', 'revenue_jpy', 'operating_profit_jpy', 'net_profit_jpy', 'shares', 'bps_jpy', 'eps_jpy',
+  'per', 'price_jpy', 'market_cap_jpy', 'pbr'];
+function japanRow(r) {
+  const o = {};
+  for (const k of JAPAN_ROW_KEYS) o[k] = r[k] ?? null;
+  const notes = Object.keys(r).filter((k) => /^(market|pbr)_/.test(k) && !JAPAN_ROW_KEYS.includes(k));
+  o.market_note = r[notes.find((k) => k.startsWith('market_'))] ?? null;
+  o.pbr_note = r[notes.find((k) => k.startsWith('pbr_'))] ?? null;
+  return o;
+}
+function japanFinancialsCoverage(rows) {
+  const have = (k) => rows.filter((r) => r[k] !== null && r[k] !== undefined).length;
+  return {
+    source: 'Financial Services Agency of Japan, EDINET (annual securities reports)',
+    licence: 'Public Data License 1.0 (PDL1.0) - commercial use permitted with attribution',
+    companies: rows.length,
+    with_revenue: have('revenue_jpy'),
+    with_net_profit: have('net_profit_jpy'),
+    with_per: have('per'),
+    with_pbr: have('pbr'),
+    not_this: [
+      'One row per company: the most recent annual filing only, not a time series.',
+      'price_jpy and market_cap_jpy are fiscal-year-end values implied by the filed PER x EPS, not live quotes.',
+      'market is null for every row: the EDINET code list does not state the market segment.',
+      'Empty cells are null, never zero. Not investment advice.',
+    ],
+  };
+}
+function japanFinancials(params, tier = 'free') {
+  const rows = Array.isArray(JAPAN_FINANCIALS_TAPE?.rows) ? JAPAN_FINANCIALS_TAPE.rows : [];
+  const coverage = japanFinancialsCoverage(rows);
+  const codeQ = (params.get('code') || '').trim().toUpperCase();
+  if (codeQ) {
+    const hit = rows.filter((r) => String(r.code).toUpperCase() === codeQ || String(r.edinet_code ?? '').toUpperCase() === codeQ);
+    if (!hit.length) {
+      return err(404, 'unknown_code', 'No annual filing on file for: ' + codeQ,
+        'Use the 4-character securities code or the EDINET code, e.g. code=7203 or code=E02144.');
+    }
+    return json(200, { count: hit.length, results: hit.map(japanRow), coverage });
+  }
+  const cap = LIMITS[tier]?.maxPageSize ?? LIMITS.free.maxPageSize;
+  const limit = Math.min(Number(params.get('limit')) || 50, cap);
+  const sectorQ = (params.get('sector') || '').trim().toLowerCase();
+  const nameQ = (params.get('name') || '').trim();
+  let filtered = rows;
+  if (sectorQ) filtered = filtered.filter((r) => String(r.sector ?? '').toLowerCase() === sectorQ);
+  if (nameQ) filtered = filtered.filter((r) => String(r.name_en ?? '').toLowerCase().includes(nameQ.toLowerCase()) || String(r.name ?? '').includes(nameQ));
+  const sliced = filtered.slice(0, limit);
+  return json(200, { count: sliced.length, returned_of: filtered.length, results: sliced.map(japanRow), coverage });
+}
+
+/**
+ * /v1/taiwan-financials - latest quarterly accounts of TWSE-listed companies from the TWSE OpenAPI (2026-11-27).
+ * Income figures are year-to-date, not single-quarter. Empty cells are null.
+ */
+function taiwanFinancialsCoverage(rows) {
+  const have = (k) => rows.filter((r) => r[k] !== null && r[k] !== undefined).length;
+  const dates = rows.map((r) => r.price_date).filter(Boolean).sort();
+  return {
+    source: 'Taiwan Stock Exchange (TWSE) OpenAPI',
+    licence: 'Open Government Data License, Taiwan, version 1.0 - commercial use permitted with attribution',
+    companies: rows.length,
+    with_revenue: have('revenue_twd'),
+    with_net_profit: have('net_profit_twd'),
+    with_per: have('per'),
+    with_pbr: have('pbr'),
+    latest_price_date: dates.length ? dates[dates.length - 1] : null,
+    not_this: [
+      'One row per company: the most recent quarter only, not a time series.',
+      'Income-statement figures are cumulative from the start of the year (quarter 2 = six months), not a single quarter.',
+      'Amounts are in New Taiwan dollars (units, not thousands).',
+      'Empty cells are null, never zero. Not investment advice.',
+    ],
+  };
+}
+function taiwanFinancials(params, tier = 'free') {
+  const rows = Array.isArray(TAIWAN_FINANCIALS_TAPE?.rows) ? TAIWAN_FINANCIALS_TAPE.rows : [];
+  const coverage = taiwanFinancialsCoverage(rows);
+  const codeQ = (params.get('code') || '').trim().toUpperCase();
+  if (codeQ) {
+    const hit = rows.filter((r) => String(r.code).toUpperCase() === codeQ);
+    if (!hit.length) {
+      return err(404, 'unknown_code', 'No quarterly filing on file for: ' + codeQ,
+        'Use the TWSE securities code, e.g. code=2330.');
+    }
+    return json(200, { count: hit.length, results: hit, coverage });
+  }
+  const cap = LIMITS[tier]?.maxPageSize ?? LIMITS.free.maxPageSize;
+  const limit = Math.min(Number(params.get('limit')) || 50, cap);
+  const industryQ = (params.get('industry') || '').trim().toLowerCase();
+  const nameQ = (params.get('name') || '').trim();
+  let filtered = rows;
+  if (industryQ) filtered = filtered.filter((r) => String(r.industry_en ?? '').toLowerCase() === industryQ || String(r.industry_code ?? '') === industryQ);
+  if (nameQ) filtered = filtered.filter((r) => String(r.name_en ?? '').toLowerCase().includes(nameQ.toLowerCase()) || String(r.name ?? '').includes(nameQ));
+  const sliced = filtered.slice(0, limit);
+  return json(200, { count: sliced.length, returned_of: filtered.length, results: sliced, coverage });
+}
+
+/**
  * /v1/consensus — 증권사 리포트 목록과 애널리스트 순위. 2026-09-13 5번.
  * 🔴 원 지면이 창을 30일에서 자른다 — 그날 안 받으면 영영 없는 자료다.
  *   그래서 우리가 받아 쌓은 스냅숏이 곧 기록이다. coverage 에 어느 날들인지 적는다.
@@ -1362,6 +1468,10 @@ async function root() {
         'Large-holding reports and executive share filings from DART — who moved a stake in a listed company, and when. ?kind=filings (default) or ?kind=executives, ?ticker= for one company, ?name= to search.',
       'GET /v1/financials':
         'Annual financial statements for listed Korean companies as filed with DART (annual report, reprt_code 11011) — assets, equity, revenue, operating profit and net profit. ?ticker= for one company (6-digit KRX code), ?year= to pick a fiscal year, ?market= to filter, ?measured=true to drop companies with nothing on file. basis says CFS (consolidated) or OFS (separate-only); companies with no statement on file carry nulls, never zeros.',
+      'GET /v1/japan-financials':
+        'Latest annual accounts of Tokyo-listed companies as filed with EDINET (Financial Services Agency of Japan) - assets, equity, revenue, operating and net profit, shares, BPS, EPS and the filed PER. One row per company. ?code= for one company (securities code or EDINET code), ?sector=, ?name=, ?limit=.',
+      'GET /v1/taiwan-financials':
+        'Latest quarterly accounts of TWSE-listed companies from the Taiwan Stock Exchange OpenAPI - revenue, operating, pre-tax and net profit (year-to-date), assets, liabilities, equity, BPS, closing price, PER, PBR and dividend yield. One row per company. ?code= for one company, ?industry=, ?name=, ?limit=.',
       'GET /v1/uae-financials':
         'Quarterly financial highlights for ADX (Abu Dhabi) and DFM (Dubai) listed companies — revenue, net profit, EPS, and total assets/liabilities/equity where the balance sheet reconciles. ADX figures come from the exchange’s own AI-extracted disclosure summary; DFM figures are parsed directly from the filed PDF by us. ?symbol= for one company, ?exchange=ADX|DFM to filter, ?period= (e.g. "Q2 2026"), ?balance_sheet=true to keep only rows with assets/liabilities/equity. liabilities_derived=true means total_liabilities_aed was computed as assets minus equity, not read from the filing; unit_hint carries the unit as printed (e.g. AED’000) and figures are never rescaled.',
       'GET /v1/consensus':
@@ -1960,6 +2070,14 @@ async function 라우팅(pathname, searchParams, tier) {
   if (pathname === '/v1/financials') {
     meter('financials');
     return financials(searchParams, tier);
+  }
+  if (pathname === '/v1/japan-financials') {
+    meter('japan-financials');
+    return japanFinancials(searchParams, tier);
+  }
+  if (pathname === '/v1/taiwan-financials') {
+    meter('taiwan-financials');
+    return taiwanFinancials(searchParams, tier);
   }
   if (pathname === '/v1/uae-financials') {
     meter('uae-financials');

@@ -95,6 +95,16 @@ export function buildLive(stats) {
       example: '/v1/account-dictionary?type=account&limit=5',
     },
     {
+      path: '/v1/japan-financials',
+      what: 'Latest annual accounts of Tokyo-listed companies as filed with EDINET - revenue, profit, equity, EPS and the filed PER.',
+      example: '/v1/japan-financials?code=7203',
+    },
+    {
+      path: '/v1/taiwan-financials',
+      what: 'Latest quarterly accounts of TWSE-listed companies - revenue, profit, balance sheet, price, PER, PBR and dividend yield.',
+      example: '/v1/taiwan-financials?code=2330',
+    },
+    {
       path: '/v1/uae-financials',
       what: 'Revenue, net profit, EPS and (where reconciled) balance sheet for ADX and DFM filers.',
       example: '/v1/uae-financials?symbol=ALDAR',

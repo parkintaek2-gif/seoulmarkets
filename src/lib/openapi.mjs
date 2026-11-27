@@ -701,6 +701,50 @@ export function openapi(baseUrl) {
           },
         },
       },
+      '/japan-financials': {
+        get: {
+          tags: ['Japan'],
+          operationId: 'getJapanFinancials',
+          summary: 'Latest annual accounts of Tokyo-listed companies, as filed with EDINET',
+          description:
+            'One row per company: the most recent annual securities report filed with the Financial Services Agency of Japan (EDINET, Public Data License 1.0). Assets, equity, revenue, operating and net profit, shares, BPS, EPS and the filed PER. `price_jpy` and `market_cap_jpy` are fiscal-year-end values implied by the filed PER x EPS, not live quotes. `market` is null for every row because the EDINET code list does not state the market segment. Empty cells are null, never zero.',
+          parameters: [
+            { name: 'code', in: 'query', required: false, schema: { type: 'string' }, description: 'Securities code or EDINET code, e.g. 7203 or E02144.' },
+            { name: 'sector', in: 'query', required: false, schema: { type: 'string' }, description: 'Exact sector name, e.g. Transportation Equipment.' },
+            { name: 'name', in: 'query', required: false, schema: { type: 'string' }, description: 'Part of the company name (English or Japanese).' },
+            { name: 'limit', in: 'query', required: false, schema: { type: 'integer' }, description: 'Max rows; capped by plan.' },
+          ],
+          responses: {
+            200: { description: 'Annual-account rows with source and coverage notes' },
+            404: {
+              description: 'code did not match any filer.',
+              content: { 'application/json': { schema: ERROR_SCHEMA } },
+            },
+          },
+        },
+      },
+      '/taiwan-financials': {
+        get: {
+          tags: ['Taiwan'],
+          operationId: 'getTaiwanFinancials',
+          summary: 'Latest quarterly accounts of TWSE-listed companies, from the TWSE OpenAPI',
+          description:
+            'One row per company: the most recent quarter published through the Taiwan Stock Exchange OpenAPI (Open Government Data License, Taiwan, version 1.0). Income-statement figures are cumulative from the start of the year, not a single quarter. Amounts are in New Taiwan dollars (units). Includes closing price with its date, PER, PBR and dividend yield as published by the exchange. Empty cells are null, never zero.',
+          parameters: [
+            { name: 'code', in: 'query', required: false, schema: { type: 'string' }, description: 'TWSE securities code, e.g. 2330.' },
+            { name: 'industry', in: 'query', required: false, schema: { type: 'string' }, description: 'Exact English industry name or the two-digit industry code.' },
+            { name: 'name', in: 'query', required: false, schema: { type: 'string' }, description: 'Part of the company name (English or Chinese).' },
+            { name: 'limit', in: 'query', required: false, schema: { type: 'integer' }, description: 'Max rows; capped by plan.' },
+          ],
+          responses: {
+            200: { description: 'Quarterly-account rows with source and coverage notes' },
+            404: {
+              description: 'code did not match any listed company.',
+              content: { 'application/json': { schema: ERROR_SCHEMA } },
+            },
+          },
+        },
+      },
       '/uae-financials': {
         get: {
           tags: ['Gulf'],

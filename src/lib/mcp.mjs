@@ -44,6 +44,8 @@ export const 도구표 = [
   { name: 'workforce_filings', 길: '/v1/people', description: 'Workforce filings for listed Korean companies: headcount, tenure and pay, by gender.', 인자: { ticker: 글('6-digit KRX ticker.'), market: 글('KOSPI or KOSDAQ.'), name: 글('Company name.'), limit: 한도 } },
   { name: 'account_dictionary', 길: '/v1/account-dictionary', description: 'Korean financial-statement account names mapped to standard English.', 인자: { q: 글('Korean or English account name.'), type: 글('Statement type filter.'), limit: 한도 } },
   { name: 'uae_company_financials', 길: '/v1/uae-financials', description: 'Revenue, net profit, EPS and (where reconciled) balance sheet for Abu Dhabi (ADX) and Dubai (DFM) listed companies.', 인자: { symbol: 글('Exchange symbol.'), exchange: 글('ADX or DFM.'), period: 글('Reporting period.'), limit: 한도 } },
+  { name: 'japan_company_financials', 길: '/v1/japan-financials', description: 'Latest annual accounts of Tokyo-listed companies as filed with EDINET: revenue, operating and net profit, equity, EPS and the filed PER. One row per company.', 인자: { code: 글('Securities code or EDINET code, e.g. 7203.'), sector: 글('Exact sector name.'), name: 글('Part of the company name.'), limit: 한도 } },
+  { name: 'taiwan_company_financials', 길: '/v1/taiwan-financials', description: 'Latest quarterly accounts of TWSE-listed companies: revenue and profit (year-to-date), balance sheet, closing price, PER, PBR and dividend yield. One row per company.', 인자: { code: 글('TWSE securities code, e.g. 2330.'), industry: 글('English industry name or two-digit code.'), name: 글('Part of the company name.'), limit: 한도 } },
 ];
 
 const 안내 = 'SeoulMarkets serves Korean (KRX/DART/customs) and UAE (ADX/DFM) market data normalised to English. '

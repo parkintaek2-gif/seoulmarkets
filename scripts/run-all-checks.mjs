@@ -299,6 +299,7 @@ export const 단계들 = [
   "node scripts/build-100y-markdown.mjs --selftest",
   "node scripts/build-seoulmarkets-markdown.mjs --selftest",
   "node scripts/build-seoulmarkets-data-markdown.mjs --selftest",
+  "node scripts/build-asia-financials-samples.mjs --selftest",
   "node scripts/build-kcw-markdown.mjs --selftest",
   "node scripts/check-llms-coverage.mjs --자가시험",
   "node scripts/make-cvbd-dilution-chart.mjs --자가시험",

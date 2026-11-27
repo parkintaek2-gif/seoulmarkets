@@ -8,6 +8,8 @@ tables, sources, and verification notes included, without the page chrome.
 
 Every data page under https://seoulmarkets.com/data/ has the same kind of plain-markdown
 version (e.g. https://seoulmarkets.com/data/kospi-weights.md) — the tables shown on the page,
+
+Japan and Taiwan company financials are served by the same API: https://seoulmarkets.com/v1/japan-financials?code=7203 (latest annual accounts of 3,706 Tokyo-listed companies, filed with EDINET, Public Data License 1.0) and https://seoulmarkets.com/v1/taiwan-financials?code=2330 (latest quarterly accounts of 1,098 TWSE-listed companies, Open Government Data License Taiwan 1.0). Sample files: https://seoulmarkets.com/data/japan-financials-sample.csv and https://seoulmarkets.com/data/taiwan-financials-sample.csv. One row per company; empty cells are null, never zero. Not investment advice.
 as text.
 
 ## What we sell — Asia & Gulf filings data in English
