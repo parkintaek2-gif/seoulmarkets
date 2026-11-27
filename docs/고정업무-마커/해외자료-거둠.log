@@ -2439,3 +2439,203 @@ Node.js v26.3.1
 
 ⬜ 재기만 했다. 쌓으려면 --적는다
 ===== 2026-11-27  6:44:54.86 끝 ===== 
+ 
+===== 2026-11-28  6:40:08.08 시작 ===== 
+--- 일본 EDINET --- 
+■ 일본 EDINET 재무제표 — 2026-11-27 · 적는다
+
+── 2026-11-27 : 유가증권보고서(상장) 11건
+   ✅ 9252 株式会社ラストワンマイル — 매출 14465330000 · 순이익 342420000
+   ✅ 5129 株式会社ＦＩＸＥＲ — 매출 3122000000 · 순이익 -2347000000
+   ✅ 3987 エコモット株式会社 — 매출 2216889000 · 순이익 -182042000
+   ✅ 9983 株式会社ファーストリテイリング — 매출 — · 순이익 344920000000
+   ✅ 245A 株式会社ＩＮＧＳ — 매출 9353852000 · 순이익 390016000
+
+■ 받음 11 · 이미 있음 0 · 못 뽑음 0
+■ 둔 곳 archive/raw/japan-edinet-financials/<날짜>/<docID>.json
+
+── 2026-11-27 : 임시보고서(상장) 50건
+   ✅ 8848 LEOPALACE21 CORPORATION — major-shareholder-change
+   ✅ 7590 TAKASHO CO., LTD. — financial-covenant
+   ✅ 9331 Caster Co. Ltd. — agm-outcome
+   ✅ 618A KOMPEITO Inc. — agm-outcome
+   ✅ 4439 TOUMEI CO.,LTD — agm-outcome
+   ✅ 373A LIPPS CO.,LTD — agm-outcome
+   ✅ 6025 Japan PC Service Co.,Ltd. — agm-outcome
+   ✅ 3046 JINS HOLDINGS Inc. — agm-outcome
+
+── 2026-11-26 : 임시보고서(상장) 42건
+
+── 2026-11-25 : 임시보고서(상장) 28건
+
+── 2026-11-24 : 임시보고서(상장) 19건
+
+── 2026-11-23 : 임시보고서(상장) 0건
+
+■ 받음 50 · 이미 있음 87 · 못 담음 2
+  갈래별 — agm-outcome 32 · stock-options 4 · major-shareholder-change 3 · control-change 3 · material-event-group 3 · financial-covenant 2 · ceo-change 1 · private-placement 1 · subsidiary-acquisition 1 · material-event 1 · auditor-change 1
+
+⬜ 표에 없는 요소 — 이름을 보고 사건 표에 올린다(안 올리면 그 사건은 영영 안 잡힌다)
+     1  DecisionOnTransferOrAcquisitionOfBusinessOfConsolidatedSubsidiaryTextBlock
+     1  CommencementOrResolutionOfLitigationTextBlock
+■ 둔 곳 archive/raw/japan-edinet-breaking/<날짜>/<docID>.json
+■ 대만 TWSE OpenAPI — 상장사 재무제표
+  ⛔ www.twse.com.tw 를 긁지 않는다. openapi 만 부른다 (使用條款)
+
+■ 회사 기본정보 1098곳
+  손익 일반      1053행
+  손익 금융지주      10행
+  손익 증권선물       3행
+  손익 보험         5행
+  손익 이업종        4행
+  대차 일반      1053행
+  대차 금융지주       8행
+  대차 증권선물       3행
+  대차 보험         5행
+  대차 이업종        4행
+  업종 이름    1085행
+  시세         1395행
+  PER·PBR      1088행
+
+■ 합쳐서 1098곳
+   매출 1058/1098 · 자산 1061/1098 · 영문 이름 1098/1098
+   업종 이름 1085/1098 (영문으로 옮긴 곳 1085)
+   종가 1097/1098 · 시가총액 1097/1098 · PER 876/1098
+   🔴 주가 검산 — 1071곳을 «종가» 대 «PBR × 주당순자산» 두 길로 맞대어 봤다
+      5% 넘게 어긋난 곳 0곳 — ⛔ 수를 고치지 않고 표시만 남긴다
+📁 적었다 — src\data\taiwan-financials-tape.json
+📁 원본 — archive/raw/twse-financials/twse-20261128.json
+   명부 3818곳을 읽었다
+■ 일본 재무제표 탭
+   서류 3871건 → 회사 3709곳 (상장 3,818사의 97.1%)
+   assets_jpy             3709 (100.0%)
+   equity_jpy             3708 (100.0%)
+   revenue_jpy            3406 (91.8%)
+   operating_profit_jpy   3649 (98.4%)
+   net_profit_jpy         3708 (100.0%)
+   shares                 3632 (97.9%)
+   bps_jpy                3640 (98.1%)
+   eps_jpy                3596 (97.0%)
+   per                    3163 (85.3%)
+   price_jpy              3163 (85.3%)
+   market_cap_jpy         3133 (84.5%)
+   pbr                    0 (0.0%)
+   영문명 붙은 곳 3709 · 업종 붙은 곳 3681
+   결산 해 2025:884 · 2026:2825
+
+✅ 적었다 — src/data/japan-financials-tape.json (3.8MB)
+■ 일본 중대공시 — 2665건 · 회사 1804곳 · 2026-06-30 ~ 2026-11-27
+   갈래 19 · 영문명 없는 줄 0
+   → src\data\japan-disclosures-feed.json
+--- UAE ADX --- 
+■ 자가시험 18/18
+
+종목 목록을 받는다 — scrollingTicker
+96개 종목
+  ✅ 2POINTZERO  재무공시 7건 중 AI표 있음 4건 → C:\Users\User\Documents\GitHub\dataeconomics\archive\raw\uae-adx-financials\2POINTZERO.json
+  ✅ ABNIC  재무공시 11건 중 AI표 있음 4건 → C:\Users\User\Documents\GitHub\dataeconomics\archive\raw\uae-adx-financials\ABNIC.json
+  ✅ ADAVIATION  재무공시 13건 중 AI표 있음 4건 → C:\Users\User\Documents\GitHub\dataeconomics\archive\raw\uae-adx-financials\ADAVIATION.json
+  ✅ ADCB  재무공시 10건 중 AI표 있음 4건 → C:\Users\User\Documents\GitHub\dataeconomics\archive\raw\uae-adx-financials\ADCB.json
+  ✅ ADIB  재무공시 10건 중 AI표 있음 4건 → C:\Users\User\Documents\GitHub\dataeconomics\archive\raw\uae-adx-financials\ADIB.json
+  ✅ ADID  재무공시 19건 중 AI표 있음 3건 → C:\Users\User\Documents\GitHub\dataeconomics\archive\raw\uae-adx-financials\ADID.json
+  ✅ ADNH  재무공시 13건 중 AI표 있음 4건 → C:\Users\User\Documents\GitHub\dataeconomics\archive\raw\uae-adx-financials\ADNH.json
+  ✅ ADNHC  재무공시 15건 중 AI표 있음 4건 → C:\Users\User\Documents\GitHub\dataeconomics\archive\raw\uae-adx-financials\ADNHC.json
+  ✅ ADNIC  재무공시 16건 중 AI표 있음 4건 → C:\Users\User\Documents\GitHub\dataeconomics\archive\raw\uae-adx-financials\ADNIC.json
+  ✅ ADNOCDIST  재무공시 10건 중 AI표 있음 4건 → C:\Users\User\Documents\GitHub\dataeconomics\archive\raw\uae-adx-financials\ADNOCDIST.json
+  ✅ ADNOCDRILL  재무공시 11건 중 AI표 있음 4건 → C:\Users\User\Documents\GitHub\dataeconomics\archive\raw\uae-adx-financials\ADNOCDRILL.json
+  ✅ ADNOCGAS  재무공시 15건 중 AI표 있음 4건 → C:\Users\User\Documents\GitHub\dataeconomics\archive\raw\uae-adx-financials\ADNOCGAS.json
+  ✅ ADNOCLS  재무공시 14건 중 AI표 있음 4건 → C:\Users\User\Documents\GitHub\dataeconomics\archive\raw\uae-adx-financials\ADNOCLS.json
+  ✅ ADPORTS  재무공시 16건 중 AI표 있음 4건 → C:\Users\User\Documents\GitHub\dataeconomics\archive\raw\uae-adx-financials\ADPORTS.json
+  ✅ ADSB  재무공시 15건 중 AI표 있음 4건 → C:\Users\User\Documents\GitHub\dataeconomics\archive\raw\uae-adx-financials\ADSB.json
+  ✅ AGILITY  재무공시 10건 중 AI표 있음 4건 → C:\Users\User\Documents\GitHub\dataeconomics\archive\raw\uae-adx-financials\AGILITY.json
+  ✅ AGTHIA  재무공시 15건 중 AI표 있음 4건 → C:\Users\User\Documents\GitHub\dataeconomics\archive\raw\uae-adx-financials\AGTHIA.json
+  ✅ AIPOWR  재무공시 2건 중 AI표 있음 0건 → C:\Users\User\Documents\GitHub\dataeconomics\archive\raw\uae-adx-financials\AIPOWR.json
+  ✅ ALDAR  재무공시 9건 중 AI표 있음 4건 → C:\Users\User\Documents\GitHub\dataeconomics\archive\raw\uae-adx-financials\ALDAR.json
+  ✅ ALEFEDT  재무공시 13건 중 AI표 있음 4건 → C:\Users\User\Documents\GitHub\dataeconomics\archive\raw\uae-adx-financials\ALEFEDT.json
+  ✅ ALPHADATA  재무공시 11건 중 AI표 있음 4건 → C:\Users\User\Documents\GitHub\dataeconomics\archive\raw\uae-adx-financials\ALPHADATA.json
+  ✅ ALPHADHABI  재무공시 17건 중 AI표 있음 4건 → C:\Users\User\Documents\GitHub\dataeconomics\archive\raw\uae-adx-financials\ALPHADHABI.json
+  ✅ AMR  재무공시 6건 중 AI표 있음 4건 → C:\Users\User\Documents\GitHub\dataeconomics\archive\raw\uae-adx-financials\AMR.json
+  ✅ ANAN  재무공시 4건 중 AI표 있음 2건 → C:\Users\User\Documents\GitHub\dataeconomics\archive\raw\uae-adx-financials\ANAN.json
+  ✅ APEX  재무공시 12건 중 AI표 있음 4건 → C:\Users\User\Documents\GitHub\dataeconomics\archive\raw\uae-adx-financials\APEX.json
+  ✅ ARAM  재무공시 12건 중 AI표 있음 4건 → C:\Users\User\Documents\GitHub\dataeconomics\archive\raw\uae-adx-financials\ARAM.json
+  ✅ ASM  재무공시 8건 중 AI표 있음 2건 → C:\Users\User\Documents\GitHub\dataeconomics\archive\raw\uae-adx-financials\ASM.json
+  ✅ BONDAE  재무공시 2건 중 AI표 있음 0건 → C:\Users\User\Documents\GitHub\dataeconomics\archive\raw\uae-adx-financials\BONDAE.json
+  ✅ BOROUGE  재무공시 14건 중 AI표 있음 4건 → C:\Users\User\Documents\GitHub\dataeconomics\archive\raw\uae-adx-financials\BOROUGE.json
+  ✅ BOS  재무공시 11건 중 AI표 있음 4건 → C:\Users\User\Documents\GitHub\dataeconomics\archive\raw\uae-adx-financials\BOS.json
+  ✅ BURJEEL  재무공시 16건 중 AI표 있음 3건 → C:\Users\User\Documents\GitHub\dataeconomics\archive\raw\uae-adx-financials\BURJEEL.json
+  ✅ CHADX15  재무공시 2건 중 AI표 있음 0건 → C:\Users\User\Documents\GitHub\dataeconomics\archive\raw\uae-adx-financials\CHADX15.json
+  ✅ CHHK  재무공시 2건 중 AI표 있음 0건 → C:\Users\User\Documents\GitHub\dataeconomics\archive\raw\uae-adx-financials\CHHK.json
+  ✅ DANA  재무공시 16건 중 AI표 있음 4건 → C:\Users\User\Documents\GitHub\dataeconomics\archive\raw\uae-adx-financials\DANA.json
+  ✅ E7  재무공시 12건 중 AI표 있음 4건 → C:\Users\User\Documents\GitHub\dataeconomics\archive\raw\uae-adx-financials\E7.json
+  ✅ E7W  재무공시 0건 중 AI표 있음 0건 → C:\Users\User\Documents\GitHub\dataeconomics\archive\raw\uae-adx-financials\E7W.json
+  ✅ EMOBILITY  재무공시 10건 중 AI표 있음 4건 → C:\Users\User\Documents\GitHub\dataeconomics\archive\raw\uae-adx-financials\EMOBILITY.json
+  ✅ EMSTEEL  재무공시 9건 중 AI표 있음 4건 → C:\Users\User\Documents\GitHub\dataeconomics\archive\raw\uae-adx-financials\EMSTEEL.json
+  ✅ ESG  재무공시 14건 중 AI표 있음 4건 → C:\Users\User\Documents\GitHub\dataeconomics\archive\raw\uae-adx-financials\ESG.json
+  ✅ ESHRAQ  재무공시 9건 중 AI표 있음 4건 → C:\Users\User\Documents\GitHub\dataeconomics\archive\raw\uae-adx-financials\ESHRAQ.json
+  ✅ ETISALAT  재무공시 12건 중 AI표 있음 4건 → C:\Users\User\Documents\GitHub\dataeconomics\archive\raw\uae-adx-financials\ETISALAT.json
+  ✅ FAB  재무공시 10건 중 AI표 있음 4건 → C:\Users\User\Documents\GitHub\dataeconomics\archive\raw\uae-adx-financials\FAB.json
+  ✅ FERTIGLB  재무공시 14건 중 AI표 있음 4건 → C:\Users\User\Documents\GitHub\dataeconomics\archive\raw\uae-adx-financials\FERTIGLB.json
+  ✅ GCCDIV  재무공시 1건 중 AI표 있음 0건 → C:\Users\User\Documents\GitHub\dataeconomics\archive\raw\uae-adx-financials\GCCDIV.json
+  ✅ GCEM  재무공시 11건 중 AI표 있음 4건 → C:\Users\User\Documents\GitHub\dataeconomics\archive\raw\uae-adx-financials\GCEM.json
+  ✅ GHITHA  재무공시 9건 중 AI표 있음 4건 → C:\Users\User\Documents\GitHub\dataeconomics\archive\raw\uae-adx-financials\GHITHA.json
+  ✅ GMPC  재무공시 10건 중 AI표 있음 4건 → C:\Users\User\Documents\GitHub\dataeconomics\archive\raw\uae-adx-financials\GMPC.json
+  ✅ GQGU  재무공시 4건 중 AI표 있음 0건 → C:\Users\User\Documents\GitHub\dataeconomics\archive\raw\uae-adx-financials\GQGU.json
+  ✅ GRMNY  재무공시 2건 중 AI표 있음 0건 → C:\Users\User\Documents\GitHub\dataeconomics\archive\raw\uae-adx-financials\GRMNY.json
+  ✅ HAYAH  재무공시 12건 중 AI표 있음 4건 → C:\Users\User\Documents\GitHub\dataeconomics\archive\raw\uae-adx-financials\HAYAH.json
+  ✅ ICAP  재무공시 8건 중 AI표 있음 4건 → C:\Users\User\Documents\GitHub\dataeconomics\archive\raw\uae-adx-financials\ICAP.json
+  ✅ IHC  재무공시 15건 중 AI표 있음 4건 → C:\Users\User\Documents\GitHub\dataeconomics\archive\raw\uae-adx-financials\IHC.json
+  ✅ INB  재무공시 13건 중 AI표 있음 4건 → C:\Users\User\Documents\GitHub\dataeconomics\archive\raw\uae-adx-financials\INB.json
+  ✅ INDI  재무공시 2건 중 AI표 있음 0건 → C:\Users\User\Documents\GitHub\dataeconomics\archive\raw\uae-adx-financials\INDI.json
+  ✅ JPANI  재무공시 2건 중 AI표 있음 0건 → C:\Users\User\Documents\GitHub\dataeconomics\archive\raw\uae-adx-financials\JPANI.json
+  ✅ JULPHAR  재무공시 10건 중 AI표 있음 4건 → C:\Users\User\Documents\GitHub\dataeconomics\archive\raw\uae-adx-financials\JULPHAR.json
+  ✕ KDEF  Unexpected end of JSON input
+  ✅ KICO  재무공시 12건 중 AI표 있음 4건 → C:\Users\User\Documents\GitHub\dataeconomics\archive\raw\uae-adx-financials\KICO.json
+  ✅ KWEB  재무공시 0건 중 AI표 있음 0건 → C:\Users\User\Documents\GitHub\dataeconomics\archive\raw\uae-adx-financials\KWEB.json
+  ✅ KWTI  재무공시 2건 중 AI표 있음 0건 → C:\Users\User\Documents\GitHub\dataeconomics\archive\raw\uae-adx-financials\KWTI.json
+  ✅ LULU  재무공시 16건 중 AI표 있음 4건 → C:\Users\User\Documents\GitHub\dataeconomics\archive\raw\uae-adx-financials\LULU.json
+  ✅ MAIR  재무공시 15건 중 AI표 있음 4건 → C:\Users\User\Documents\GitHub\dataeconomics\archive\raw\uae-adx-financials\MAIR.json
+  ✅ MANAZEL  재무공시 2건 중 AI표 있음 2건 → C:\Users\User\Documents\GitHub\dataeconomics\archive\raw\uae-adx-financials\MANAZEL.json
+  ✅ MODON  재무공시 4건 중 AI표 있음 2건 → C:\Users\User\Documents\GitHub\dataeconomics\archive\raw\uae-adx-financials\MODON.json
+  ✅ NBQ  재무공시 10건 중 AI표 있음 4건 → C:\Users\User\Documents\GitHub\dataeconomics\archive\raw\uae-adx-financials\NBQ.json
+  ✅ NCTH  재무공시 11건 중 AI표 있음 4건 → C:\Users\User\Documents\GitHub\dataeconomics\archive\raw\uae-adx-financials\NCTH.json
+  ✅ NMDC  재무공시 15건 중 AI표 있음 4건 → C:\Users\User\Documents\GitHub\dataeconomics\archive\raw\uae-adx-financials\NMDC.json
+  ✅ NMDCENR  재무공시 17건 중 AI표 있음 4건 → C:\Users\User\Documents\GitHub\dataeconomics\archive\raw\uae-adx-financials\NMDCENR.json
+  ✅ OEIHC  재무공시 18건 중 AI표 있음 4건 → C:\Users\User\Documents\GitHub\dataeconomics\archive\raw\uae-adx-financials\OEIHC.json
+  ✅ ORAS  재무공시 6건 중 AI표 있음 4건 → C:\Users\User\Documents\GitHub\dataeconomics\archive\raw\uae-adx-financials\ORAS.json
+  ✅ ORDS  재무공시 16건 중 AI표 있음 4건 → C:\Users\User\Documents\GitHub\dataeconomics\archive\raw\uae-adx-financials\ORDS.json
+  ✅ PALMS  재무공시 9건 중 AI표 있음 4건 → C:\Users\User\Documents\GitHub\dataeconomics\archive\raw\uae-adx-financials\PALMS.json
+  ✅ PHX  재무공시 12건 중 AI표 있음 4건 → C:\Users\User\Documents\GitHub\dataeconomics\archive\raw\uae-adx-financials\PHX.json
+  ✅ PRESIGHT  재무공시 9건 중 AI표 있음 4건 → C:\Users\User\Documents\GitHub\dataeconomics\archive\raw\uae-adx-financials\PRESIGHT.json
+  ✅ PUREHEALTH  재무공시 13건 중 AI표 있음 4건 → C:\Users\User\Documents\GitHub\dataeconomics\archive\raw\uae-adx-financials\PUREHEALTH.json
+  ✅ QUANTM  재무공시 2건 중 AI표 있음 0건 → C:\Users\User\Documents\GitHub\dataeconomics\archive\raw\uae-adx-financials\QUANTM.json
+  ✅ RAKBANK  재무공시 12건 중 AI표 있음 4건 → C:\Users\User\Documents\GitHub\dataeconomics\archive\raw\uae-adx-financials\RAKBANK.json
+  ✅ RAKCEC  재무공시 11건 중 AI표 있음 4건 → C:\Users\User\Documents\GitHub\dataeconomics\archive\raw\uae-adx-financials\RAKCEC.json
+  ✅ RAKPROP  재무공시 9건 중 AI표 있음 4건 → C:\Users\User\Documents\GitHub\dataeconomics\archive\raw\uae-adx-financials\RAKPROP.json
+  ✅ RAKWCT  재무공시 8건 중 AI표 있음 4건 → C:\Users\User\Documents\GitHub\dataeconomics\archive\raw\uae-adx-financials\RAKWCT.json
+  ✅ RAPCO  재무공시 9건 중 AI표 있음 4건 → C:\Users\User\Documents\GitHub\dataeconomics\archive\raw\uae-adx-financials\RAPCO.json
+  ✅ RPM  재무공시 9건 중 AI표 있음 2건 → C:\Users\User\Documents\GitHub\dataeconomics\archive\raw\uae-adx-financials\RPM.json
+  ✅ SAUDIA  재무공시 2건 중 AI표 있음 0건 → C:\Users\User\Documents\GitHub\dataeconomics\archive\raw\uae-adx-financials\SAUDIA.json
+  ✅ SCIDC  재무공시 10건 중 AI표 있음 4건 → C:\Users\User\Documents\GitHub\dataeconomics\archive\raw\uae-adx-financials\SCIDC.json
+  ✅ SIB  재무공시 10건 중 AI표 있음 4건 → C:\Users\User\Documents\GitHub\dataeconomics\archive\raw\uae-adx-financials\SIB.json
+  ✅ SPACE42  재무공시 16건 중 AI표 있음 4건 → C:\Users\User\Documents\GitHub\dataeconomics\archive\raw\uae-adx-financials\SPACE42.json
+  ✅ SUDATEL  재무공시 14건 중 AI표 있음 5건 → C:\Users\User\Documents\GitHub\dataeconomics\archive\raw\uae-adx-financials\SUDATEL.json
+  ✅ SUKUK  재무공시 2건 중 AI표 있음 0건 → C:\Users\User\Documents\GitHub\dataeconomics\archive\raw\uae-adx-financials\SUKUK.json
+  ✅ TKFL  재무공시 6건 중 AI표 있음 4건 → C:\Users\User\Documents\GitHub\dataeconomics\archive\raw\uae-adx-financials\TKFL.json
+  ✅ TURKI  재무공시 2건 중 AI표 있음 0건 → C:\Users\User\Documents\GitHub\dataeconomics\archive\raw\uae-adx-financials\TURKI.json
+  ✅ UAB  재무공시 13건 중 AI표 있음 4건 → C:\Users\User\Documents\GitHub\dataeconomics\archive\raw\uae-adx-financials\UAB.json
+  ✅ UAEA  재무공시 1건 중 AI표 있음 0건 → C:\Users\User\Documents\GitHub\dataeconomics\archive\raw\uae-adx-financials\UAEA.json
+  ✅ UAED  재무공시 2건 중 AI표 있음 0건 → C:\Users\User\Documents\GitHub\dataeconomics\archive\raw\uae-adx-financials\UAED.json
+  ✅ USGRWTH  재무공시 2건 중 AI표 있음 0건 → C:\Users\User\Documents\GitHub\dataeconomics\archive\raw\uae-adx-financials\USGRWTH.json
+  ✅ USVALUE  재무공시 2건 중 AI표 있음 0건 → C:\Users\User\Documents\GitHub\dataeconomics\archive\raw\uae-adx-financials\USVALUE.json
+  ✅ WAHA  재무공시 15건 중 AI표 있음 4건 → C:\Users\User\Documents\GitHub\dataeconomics\archive\raw\uae-adx-financials\WAHA.json
+
+합계 성공 95 · 실패 1 · 커버리지: 시도 96 · 데이터있음 75 · 빔 21 · archive/raw/uae-adx-financials/
+--- 인도 NSE --- 
+■ equities — 받은 줄 61,426 · 사건 25,300 · 그대로 36,126 · 🔴 모르는 말 2 · ⚠ 날짜 수상 3
+■ sme — 받은 줄 1,964 · 사건 1,221 · 그대로 743 · ⚠ 날짜 수상 3
+
+■ 쌓을 것 — 사건 26,521줄 · 회사 1,461
+   upgrade 3,114 · other 20,598 · new 1,921 · downgrade 886 · unknown 2
+
+⬜ 재기만 했다. 쌓으려면 --적는다
+===== 2026-11-28  6:43:47.53 끝 ===== 
