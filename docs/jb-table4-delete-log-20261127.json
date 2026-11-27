@@ -1,0 +1,30 @@
+{
+ "at": "2026-11-27 09:36:44",
+ "id": "1513024",
+ "result": {
+  "pressed": true,
+  "before": {
+   "rows": 100,
+   "hasRow": true,
+   "hasChk": true,
+   "chkValue": "1513024",
+   "rowText": "1513024번 기사\n\t\n누리호 5차 발사…위성 15기 모두 분리 성공 (754) \n이미지기사\n\t포토뉴스\t중부매일\t10-07 16:24\t\n일 중 헤\n\t\nN D Z K\n\t\n포털검색\n\t\n기사\n 취소",
+   "del": 1
+  },
+  "on": [
+   "chkbox_1513024=1513024"
+  ],
+  "after": {
+   "rows": 20,
+   "hasRow": false,
+   "hasChk": false,
+   "chkValue": "",
+   "rowText": "",
+   "del": 1
+  }
+ },
+ "dialogs": [
+  "선택하신 기사를 삭제하시겠습니까? 삭제 시 복구가 불가능합니다.",
+  "일괄 삭제 되었습니다."
+ ]
+}
