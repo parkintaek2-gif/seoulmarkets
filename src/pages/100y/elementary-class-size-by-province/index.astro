@@ -1,0 +1,204 @@
+---
+/**
+ * /100y/elementary-class-size-by-province — 초등학교 학급당 학생 수 시도별·시군구별 (2024 공시)
+ *
+ * 출처  학교알리미 공개용데이터 「학년별·학급별 학생수」 2024 공시 초등학교 — src/data/100yearmap/class-size-elementary.json
+ *       (시군구별 학교 수·학생·학급·수업교원 합이 이미 들어 있다). 이 쪽에서 한 일은 시도로 더하고 나눈 것뿐이다.
+ * ⛔ 「수업교원」을 「교원 수」라 쓰지 않는다. 공표 통계와 맞춰 본 적이 없다.
+ * ⛔ 원인 추측·조언은 싣지 않는다.
+ */
+import HundredYear from '../../../layouts/HundredYear.astro';
+import HundredAgeWalk from '../../../components/HundredAgeWalk.astro';
+import NextQuestionBrief from '../../../components/NextQuestionBrief.astro';
+import 원본 from '../../../data/100yearmap/class-size-elementary.json';
+
+const 자료 = 원본 as any;
+const 수 = (n: number) => Number(n).toLocaleString('ko-KR');
+const 명 = (n: number) => `${n.toFixed(1)}명`;
+const 최소학교수 = 5;
+const 나눔 = (x: any) => (x.학급 ? x.학생 / x.학급 : 0);
+
+const 시도맵 = new Map<string, { 학교수: number; 학생: number; 학급: number; 수업교원: number }>();
+const 시도정리 = (s: string) => (s === '전라남도' ? '전남광주통합특별시' : s);
+for (const r0 of 자료.지역 as any[]) {
+  const r = { ...r0, 시도: 시도정리(r0.시도) };
+  const a = 시도맵.get(r.시도) ?? { 학교수: 0, 학생: 0, 학급: 0, 수업교원: 0 };
+  a.학교수 += r.학교수; a.학생 += r.학생; a.학급 += r.학급; a.수업교원 += r.수업교원;
+  시도맵.set(r.시도, a);
+}
+const 시도들 = [...시도맵.entries()].map(([이름, v]) => ({ 이름, ...v })).sort((a, b) => 나눔(b) - 나눔(a));
+const 전체 = 시도들.reduce((s, x) => ({ 학교수: s.학교수 + x.학교수, 학생: s.학생 + x.학생, 학급: s.학급 + x.학급, 수업교원: s.수업교원 + x.수업교원 }), { 학교수: 0, 학생: 0, 학급: 0, 수업교원: 0 });
+const 전체값 = 나눔(전체);
+const 중간 = 자료.통계.학급당학생_중간값; // 학교별 중간값(자료.통계)
+const 곳들 = (자료.지역 as any[]).filter((r) => r.학교수 >= 최소학교수).map((r) => ({ ...r, 값: 나눔(r) })).sort((a, b) => b.값 - a.값);
+const 높은쪽 = 곳들.slice(0, 15);
+const 낮은쪽 = 곳들.slice(-10).reverse();
+const 빠진곳 = (자료.지역 as any[]).length - 곳들.length;
+const 학교들 = (자료.자료 as any[]).map((r) => ({ ...r, 값: 나눔(r) }));
+const 구간 = [['15명 미만', 0, 15], ['15~20명 미만', 15, 20], ['20~25명 미만', 20, 25], ['25명 이상', 25, 999]];
+const 구간수 = 구간.map(([이름, 낮, 높]: any) => ({ 이름, n: 학교들.filter((r) => r.값 >= 낮 && r.값 < 높).length }));
+const 맨위시도 = 시도들[0];
+const 맨아래시도 = 시도들[시도들.length - 1];
+const 맨위곳 = 높은쪽[0];
+const 맨아래곳 = 곳들[곳들.length - 1];
+const 높은쪽경기 = 높은쪽.filter((r) => r.시도 === '경기도').length;
+
+const TITLE = `초등학교 학급당 학생 수 ${명(전체값)} — 시도별로 ${맨아래시도.이름} ${명(나눔(맨아래시도))}에서 ${맨위시도.이름} ${명(나눔(맨위시도))}`;
+const desc =
+  `학교알리미 ${자료.출처.공시연도}년 공시의 초등학교 ${수(전체.학교수)}곳을 시도로 더해 학생 수를 학급 수로 나눴습니다. 전체는 ${명(전체값)}이고, 가장 높은 곳 ${맨위시도.이름} ${명(나눔(맨위시도))}, 가장 낮은 곳 ${맨아래시도.이름} ${명(나눔(맨아래시도))}입니다. 학교별 중간값은 ${중간}명입니다.`;
+
+const jsonLd = [
+  {
+    '@context': 'https://schema.org',
+    '@type': 'Dataset',
+    name: '초등학교 학급당 학생 수 — 시도·시군구별 학생 수 ÷ 학급 수',
+    description: desc,
+    dateModified: 자료.통계.받은때,
+    creator: { '@type': 'Organization', name: '백년지도' },
+    sourceOrganization: { '@type': 'Organization', name: 자료.출처.이름 },
+    spatialCoverage: '대한민국 시·도, 시·군·구',
+    variableMeasured: ['초등학교 수', '학생 수', '학급 수', '학급당 학생 수'],
+  },
+  {
+    '@context': 'https://schema.org',
+    '@type': 'FAQPage',
+    mainEntity: [
+      {
+        '@type': 'Question',
+        name: '초등학교 학급당 학생 수는 시도별로 얼마나 다른가요?',
+        acceptedAnswer: {
+          '@type': 'Answer',
+          text: `${시도들.slice(0, 3).map((x) => `${x.이름} ${명(나눔(x))}`).join(', ')} 순으로 높고, 가장 낮은 곳은 ${맨아래시도.이름} ${명(나눔(맨아래시도))}입니다. 전체는 ${명(전체값)}입니다.`,
+        },
+      },
+      {
+        '@type': 'Question',
+        name: '초등학교 학급당 학생 수가 가장 많은 시군구는 어디인가요?',
+        acceptedAnswer: {
+          '@type': 'Answer',
+          text: `학교가 ${최소학교수}곳 이상인 시군구 ${곳들.length}곳 가운데 ${맨위곳.시도} ${맨위곳.구} ${명(맨위곳.값)}이 가장 높고, 가장 낮은 곳은 ${맨아래곳.시도} ${맨아래곳.구} ${명(맨아래곳.값)}입니다.`,
+        },
+      },
+    ],
+  },
+];
+---
+
+<HundredYear title={TITLE} description={desc} jsonLd={jsonLd}>
+  <h1>초등학교 한 학급에<br class="pcbr" /> 학생이 몇 명인가요 — 시도별</h1>
+  <p class="sub">
+    학교알리미가 공개한 {자료.출처.공시연도}년 공시에서 초등학교 {수(전체.학교수)}곳의 학생 수와 학급 수를 시도로 더해 나눴습니다.
+  </p>
+
+  <div class="answer">
+    <p class="answer-label">학급당 학생 수 — 전국 초등학교 {수(전체.학교수)}곳</p>
+    <p class="answer-num">{명(전체값)}</p>
+    <p class="answer-sub">학생 {수(전체.학생)}명 ÷ 학급 {수(전체.학급)}명 · 학교별 중간값 {중간}명 · 시도 {시도들.length}곳</p>
+  </div>
+
+  <p>
+    ⚠ <strong>전체 값과 학교별 중간값이 다릅니다.</strong> 전체 값은 학생 전부를 학급 전부로 나눈 것이고, 중간값은 학교 {수(학교들.length)}곳을 줄 세워 가운데 학교의 값입니다. 학생이 많은 학교가 전체 값을 높이기 때문에 두 수는 같지 않습니다.
+  </p>
+
+  <h2>시도별 학급당 학생 수</h2>
+  <div class="tablewrap">
+    <table>
+      <thead><tr><th>시·도</th><th>학교</th><th>학생</th><th>학급</th><th>학급당 학생</th></tr></thead>
+      <tbody>
+        {시도들.map((x) => (
+          <tr>
+            <th>{x.이름}</th>
+            <td class="num">{수(x.학교수)}곳</td>
+            <td class="num">{수(x.학생)}명</td>
+            <td class="num">{수(x.학급)}</td>
+            <td class="num"><strong>{명(나눔(x))}</strong></td>
+          </tr>
+        ))}
+      </tbody>
+    </table>
+  </div>
+
+  <h2>학급당 학생 수가 많은 시군구 15곳</h2>
+  <p class="note">초등학교가 {최소학교수}곳 이상인 시군구 {곳들.length}곳 가운데입니다. 그보다 적은 {빠진곳}곳은 표에서 뺐습니다.</p>
+  <div class="tablewrap">
+    <table>
+      <thead><tr><th>지역</th><th>학교</th><th>학급당 학생</th></tr></thead>
+      <tbody>
+        {높은쪽.map((r) => (
+          <tr>
+            <th>{r.시도} {r.구}</th>
+            <td class="num">{r.학교수}곳</td>
+            <td class="num"><strong>{명(r.값)}</strong></td>
+          </tr>
+        ))}
+      </tbody>
+    </table>
+  </div>
+
+  <h2>학급당 학생 수가 적은 시군구 10곳</h2>
+  <div class="tablewrap">
+    <table>
+      <thead><tr><th>지역</th><th>학교</th><th>학급당 학생</th></tr></thead>
+      <tbody>
+        {낮은쪽.map((r) => (
+          <tr>
+            <th>{r.시도} {r.구}</th>
+            <td class="num">{r.학교수}곳</td>
+            <td class="num"><strong>{명(r.값)}</strong></td>
+          </tr>
+        ))}
+      </tbody>
+    </table>
+  </div>
+
+  <h2>학교별로 보면 — 학급당 학생 수 구간별 학교 수</h2>
+  <div class="tablewrap">
+    <table>
+      <thead><tr><th>구간</th><th>학교</th><th>몫</th></tr></thead>
+      <tbody>
+        {구간수.map((x) => (
+          <tr>
+            <th>{x.이름}</th>
+            <td class="num">{수(x.n)}곳</td>
+            <td class="num">{((x.n / 학교들.length) * 100).toFixed(1)}%</td>
+          </tr>
+        ))}
+      </tbody>
+    </table>
+  </div>
+
+  <h2>같은 표에서 읽히는 것</h2>
+  <ul>
+    <li>시도 가운데 가장 높은 곳은 {맨위시도.이름} {명(나눔(맨위시도))}, 가장 낮은 곳은 {맨아래시도.이름} {명(나눔(맨아래시도))}입니다. 두 곳의 차이는 {(나눔(맨위시도) - 나눔(맨아래시도)).toFixed(1)}명입니다.</li>
+    <li>시군구 {곳들.length}곳 가운데 가장 높은 곳은 {맨위곳.시도} {맨위곳.구} {명(맨위곳.값)}, 가장 낮은 곳은 {맨아래곳.시도} {맨아래곳.구} {명(맨아래곳.값)}입니다.</li>
+    <li>높은 쪽 15곳 가운데 경기도 시군구는 {높은쪽경기}곳입니다.</li>
+    <li>학교 {수(학교들.length)}곳 가운데 {구간수[구간수.length - 1].이름} 구간은 {수(구간수[구간수.length - 1].n)}곳입니다.</li>
+  </ul>
+
+  <h2>⚠ 이 자료로 말할 수 없는 것</h2>
+  <ul>
+    <li>학교알리미 공시를 이은 초등학교는 {수(자료.통계.학교수)}곳이고, NEIS 학교 목록 {수(자료.통계.우리학교수)}곳 가운데 {수(자료.통계.못이은것)}곳은 이어지지 않아 빠졌습니다.</li>
+    <li>이 공시의 「수업교원」은 수업을 맡은 교원이라서, 공표 통계의 교원 수와 같은 수가 아닙니다. 공표 통계와는 맞춰 보지 않았습니다.</li>
+    <li>학교 안에서 학년·과목·반마다 다른 값은 이 표에 없습니다.</li>
+    <li>공시에 시도가 「전라남도」로 적힌 학교 1곳은 시도 표에서 전남광주통합특별시에 더했습니다. 시군구 표는 공시에 적힌 이름 그대로입니다.</li>
+    <li>숫자가 크고 작은 이유(학령인구, 학교 배치, 도시 구조 등)는 이 자료에 없습니다.</li>
+    <li>중학교 값은 <a href="/middle-class-size-by-province">중학교 학급당 학생 수</a>·<a href="/middle-teacher-ratio-by-province">수업교원 1명당 학생 수</a>, 고등학교 값은 <a href="/class-size-by-area">고등학교 학급당 학생 수</a>·<a href="/teacher-ratio-by-area">교원 1명당 학생 수</a> 페이지에 따로 있습니다.</li>
+  </ul>
+
+  <p class="note">
+    출처 — {자료.출처.이름} 「{자료.출처.공시항목}」 {자료.출처.공시연도}년 공시, 초등학교. 이용허락범위: {자료.출처.이용허락범위}. 받은 날 {자료.통계.받은때}.
+  </p>
+
+  <p class="note">
+    <a href="/middle-class-size-by-province">← 중학교 학급당 학생 수 시도별</a>
+    <br />
+    <a href="/elementary">→ 우리 동네 초등학교</a>
+  </p>
+
+  <HundredAgeWalk 키="elementary-class-size-by-province" />
+  <NextQuestionBrief 모은것="학교알리미 초등학교 학급·수업교원 공시를 시도로 더한 실측" />
+</HundredYear>
+
+<style>
+  .num { text-align: right; font-variant-numeric: tabular-nums; }
+</style>

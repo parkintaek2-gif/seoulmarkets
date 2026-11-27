@@ -1,0 +1,165 @@
+---
+/**
+ * /100y/new-schools-last-decade-by-province — 최근 10년 새로 문 연 초등학교·중학교, 시도별
+ *
+ * 출처  NEIS 교육정보 개방 포털 학교기본정보 — src/data/100yearmap/elementary.json·middle.json (학교별 설립연).
+ *       이 쪽에서 한 일은 설립연이 (올해 - 9)년 이후인 학교를 시도로 센 것뿐이다. 지금 문을 연 학교만 있다.
+ * ⛔ 설립연은 NEIS 값이다. 옮겨 지은 학교나 합쳐진 학교가 새 학교로 잡혔는지는 확인하지 못했다.
+ * ⛔ 원인 추측(신도시·인구 이동 등)은 싣지 않는다.
+ */
+import HundredYear from '../../../layouts/HundredYear.astro';
+import HundredAgeWalk from '../../../components/HundredAgeWalk.astro';
+import NextQuestionBrief from '../../../components/NextQuestionBrief.astro';
+import 초 from '../../../data/100yearmap/elementary.json';
+import 중 from '../../../data/100yearmap/middle.json';
+
+const 수 = (n: number) => Number(n).toLocaleString('ko-KR');
+const 퍼 = (a: number, b: number) => (b ? (a / b) * 100 : 0);
+const 퍼글 = (a: number, b: number) => `${퍼(a, b).toFixed(1)}%`;
+const 올해: number = (초 as any).올해;
+const 시작 = 올해 - 9;
+const 시도정리 = (s: string) => (s === '전라남도' ? '전남광주통합특별시' : s === '평택시' ? '경기도' : s);
+
+const 열기 = (자료: any) => (자료.자료 as any[]).filter((x) => Number.isFinite(x.설립연) && x.설립연 <= 올해).map((x) => ({ ...x, 시도: 시도정리(x.시도) }));
+const 초학교 = 열기(초);
+const 중학교 = 열기(중);
+const 새것 = (x: any) => x.설립연 >= 시작;
+
+const 시도맵 = new Map<string, { 이름: string; 초: number; 초새: number; 중: number; 중새: number }>();
+const 얻기 = (k: string) => { let a = 시도맵.get(k); if (!a) { a = { 이름: k, 초: 0, 초새: 0, 중: 0, 중새: 0 }; 시도맵.set(k, a); } return a; };
+for (const x of 초학교) { const a = 얻기(x.시도); a.초 += 1; if (새것(x)) a.초새 += 1; }
+for (const x of 중학교) { const a = 얻기(x.시도); a.중 += 1; if (새것(x)) a.중새 += 1; }
+const 시도들 = [...시도맵.values()].sort((a, b) => 퍼(b.초새 + b.중새, b.초 + b.중) - 퍼(a.초새 + a.중새, a.초 + a.중));
+const 합 = (k: '초' | '초새' | '중' | '중새') => 시도들.reduce((s, x) => s + x[k], 0);
+const 초전체 = 합('초');
+const 초새전체 = 합('초새');
+const 중전체 = 합('중');
+const 중새전체 = 합('중새');
+const 맨위 = 시도들[0];
+const 둘째 = 시도들[1];
+const 개수많은 = [...시도들].sort((a, b) => b.초새 + b.중새 - (a.초새 + a.중새))[0];
+const 한곳도없는 = 시도들.filter((x) => x.초새 + x.중새 === 0);
+const 해별 = Array.from({ length: 10 }, (_, i) => 시작 + i).map((y) => ({ 해: y, 초: 초학교.filter((x) => x.설립연 === y).length, 중: 중학교.filter((x) => x.설립연 === y).length }));
+const 합새 = (x: any) => x.초새 + x.중새;
+const 합곳 = (x: any) => x.초 + x.중;
+
+const TITLE = `최근 10년 새로 문 연 학교 — 초등학교 ${수(초새전체)}곳·중학교 ${수(중새전체)}곳, 시도별로 ${맨위.이름} ${퍼글(합새(맨위), 합곳(맨위))}, ${둘째.이름} ${퍼글(합새(둘째), 합곳(둘째))}`;
+const desc =
+  `NEIS 설립 연도가 ${시작}~${올해}년인 학교를 시도별로 셌습니다. 초등학교 ${수(초전체)}곳 중 ${수(초새전체)}곳(${퍼글(초새전체, 초전체)}), 중학교 ${수(중전체)}곳 중 ${수(중새전체)}곳(${퍼글(중새전체, 중전체)})입니다. 초·중을 합친 비중이 가장 높은 시도는 ${맨위.이름} ${퍼글(합새(맨위), 합곳(맨위))}, 개수가 가장 많은 시도는 ${개수많은.이름} ${수(합새(개수많은))}곳입니다.`;
+
+const jsonLd = [
+  {
+    '@context': 'https://schema.org',
+    '@type': 'Dataset',
+    name: `최근 10년(${시작}~${올해}년) 새로 문 연 초등학교·중학교 — 시도별`,
+    description: desc,
+    creator: { '@type': 'Organization', name: '백년지도' },
+    sourceOrganization: { '@type': 'Organization', name: 'NEIS 교육정보 개방 포털' },
+    spatialCoverage: '대한민국 시·도',
+    variableMeasured: ['초등학교 수', '중학교 수', '설립 연도'],
+  },
+  {
+    '@context': 'https://schema.org',
+    '@type': 'FAQPage',
+    mainEntity: [
+      {
+        '@type': 'Question',
+        name: '최근 10년 새로 문 연 초등학교·중학교는 몇 곳인가요?',
+        acceptedAnswer: {
+          '@type': 'Answer',
+          text: `NEIS 설립 연도 ${시작}~${올해}년인 학교는 초등학교 ${수(초새전체)}곳(전체의 ${퍼글(초새전체, 초전체)}), 중학교 ${수(중새전체)}곳(${퍼글(중새전체, 중전체)})입니다.`,
+        },
+      },
+      {
+        '@type': 'Question',
+        name: '새 학교 비중이 가장 높은 시도는 어디인가요?',
+        acceptedAnswer: {
+          '@type': 'Answer',
+          text: `초·중을 합친 비중은 ${시도들.slice(0, 3).map((x) => `${x.이름} ${퍼글(합새(x), 합곳(x))}`).join(', ')} 순입니다. 개수로는 ${개수많은.이름}이 ${수(합새(개수많은))}곳으로 가장 많습니다.`,
+        },
+      },
+    ],
+  },
+];
+---
+
+<HundredYear title={TITLE} description={desc} jsonLd={jsonLd}>
+  <h1>최근 10년 새로 문 연 학교는<br class="pcbr" /> 어느 시도에 많나요</h1>
+  <p class="sub">
+    NEIS 학교기본정보의 설립 연도가 {시작}~{올해}년인 초등학교와 중학교를 시도별로 셌습니다.
+  </p>
+
+  <div class="answer">
+    <p class="answer-label">{시작}~{올해}년에 문 연 학교</p>
+    <p class="answer-num">초등 {수(초새전체)}곳 · 중 {수(중새전체)}곳</p>
+    <p class="answer-sub">초등학교 {수(초전체)}곳 중 {퍼글(초새전체, 초전체)} · 중학교 {수(중전체)}곳 중 {퍼글(중새전체, 중전체)}</p>
+  </div>
+
+  <h2>시도별 최근 10년 새 학교</h2>
+  <div class="tablewrap">
+    <table>
+      <thead><tr><th>시·도</th><th>초등 새 학교</th><th>초등 비중</th><th>중 새 학교</th><th>중 비중</th><th>초·중 합친 비중</th></tr></thead>
+      <tbody>
+        {시도들.map((x) => (
+          <tr>
+            <th>{x.이름}</th>
+            <td class="num">{수(x.초새)}곳 / {수(x.초)}곳</td>
+            <td class="num">{퍼글(x.초새, x.초)}</td>
+            <td class="num">{수(x.중새)}곳 / {수(x.중)}곳</td>
+            <td class="num">{퍼글(x.중새, x.중)}</td>
+            <td class="num"><strong>{퍼글(합새(x), 합곳(x))}</strong></td>
+          </tr>
+        ))}
+      </tbody>
+    </table>
+  </div>
+
+  <h2>설립 연도별 새 학교 수</h2>
+  <div class="tablewrap">
+    <table>
+      <thead><tr><th>설립 연도</th><th>초등학교</th><th>중학교</th></tr></thead>
+      <tbody>
+        {해별.map((x) => (
+          <tr>
+            <th>{x.해}년</th>
+            <td class="num">{수(x.초)}곳</td>
+            <td class="num">{수(x.중)}곳</td>
+          </tr>
+        ))}
+      </tbody>
+    </table>
+  </div>
+
+  <h2>같은 표에서 읽히는 것</h2>
+  <ul>
+    <li>초·중을 합친 비중이 가장 높은 시도는 {맨위.이름} {퍼글(합새(맨위), 합곳(맨위))}({수(합새(맨위))}곳), 두 번째는 {둘째.이름} {퍼글(합새(둘째), 합곳(둘째))}입니다.</li>
+    <li>개수로는 {개수많은.이름}이 {수(합새(개수많은))}곳으로 가장 많습니다.</li>
+    <li>새 학교가 초·중 모두 0곳인 시도는 {한곳도없는.length === 0 ? '없습니다' : `${한곳도없는.map((x) => x.이름).join(', ')}입니다`}.</li>
+  </ul>
+
+  <h2>⚠ 이 자료로 말할 수 없는 것</h2>
+  <ul>
+    <li>설립 연도는 NEIS 값입니다. 학교가 스스로 세는 개교 연도와 다를 수 있고, 옮겨 지었거나 다른 학교와 합쳐 이름을 바꾼 학교가 새 학교로 잡혔는지는 확인하지 못했습니다.</li>
+    <li>지금 문을 연 학교만 있습니다. 같은 기간에 문을 닫거나 합쳐진 학교는 이 표에 없습니다.</li>
+    <li>설립 연도가 올해보다 뒤인 개교 예정 학교는 뺐습니다.</li>
+    <li>공시에 시도가 「평택시」「전라남도」로 적힌 초등학교 3곳은 각각 경기도, 전남광주통합특별시에 더했습니다.</li>
+    <li>새 학교가 많고 적은 이유는 이 자료에 없습니다.</li>
+  </ul>
+
+  <p class="note">
+    출처 — NEIS 교육정보 개방 포털 학교기본정보, 초등학교 {수(초전체)}곳·중학교 {수(중전체)}곳(2026년 기준).
+  </p>
+
+  <p class="note">
+    <a href="/school-founding-decade-elementary-middle">← 초·중 설립 연대별</a>
+    <br />
+    <a href="/elementary">→ 우리 동네 초등학교</a>
+  </p>
+
+  <HundredAgeWalk 키="new-schools-last-decade-by-province" />
+  <NextQuestionBrief 모은것="NEIS 초·중학교 설립 연도를 시도별로 센 실측" />
+</HundredYear>
+
+<style>
+  .num { text-align: right; font-variant-numeric: tabular-nums; }
+</style>
