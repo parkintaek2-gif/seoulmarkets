@@ -1,5 +1,5 @@
-# 잰날 2026-11-25
-# 오늘셈 35
+# 잰날 2026-11-27
+# 오늘셈 33
 # ⛔ 이 파일을 지우면 「오늘 새로 난 지면」을 하루 동안 못 센다
 https://klifemap.ai/
 https://klifemap.ai/content
@@ -58,6 +58,19 @@ https://klifemap.ai/cheongan-jiji.html
 https://klifemap.ai/sinnyeon-unse.html
 https://klifemap.ai/ilju/
 https://klifemap.ai/unse/
+https://klifemap.ai/unse/rat.html
+https://klifemap.ai/unse/ox.html
+https://klifemap.ai/unse/tiger.html
+https://klifemap.ai/unse/rabbit.html
+https://klifemap.ai/unse/dragon.html
+https://klifemap.ai/unse/snake.html
+https://klifemap.ai/unse/horse.html
+https://klifemap.ai/unse/goat.html
+https://klifemap.ai/unse/monkey.html
+https://klifemap.ai/unse/rooster.html
+https://klifemap.ai/unse/dog.html
+https://klifemap.ai/unse/pig.html
+https://klifemap.ai/guide-saju.html
 https://klifemap.ai/data/
 https://klifemap.ai/ilju/gapja.html
 https://klifemap.ai/ilju/eulchuk.html
@@ -144,6 +157,26 @@ https://klifemap.ai/articles/zh-3.html
 https://klifemap.ai/articles/zh-4.html
 https://klifemap.ai/articles/zh-5.html
 https://klifemap.ai/today
+https://klifemap.ai/content/saju-iljin-2031-june-mangjong-jun-6-month-pillar-change
+https://klifemap.ai/content/saju-iljin-2031-may-ipha-may-6-month-pillar-change
+https://klifemap.ai/content/saju-iljin-2031-april-cheongmyeong-apr-5-month-pillar-change
+https://klifemap.ai/content/saju-iljin-2031-march-gyeongchip-mar-6-month-pillar-change
+https://klifemap.ai/content/saju-iljin-2031-february-ipchun-feb-4-month-pillar-change
+https://klifemap.ai/content/saju-iljin-2031-january-sohan-jan-5-month-pillar-change
+https://klifemap.ai/content/ilzin-2026-11-27
+https://klifemap.ai/content/saju-iljin-2030-december-daeseol-dec-7-month-pillar-change
+https://klifemap.ai/content/saju-iljin-2030-november-ipdong-nov-7-month-pillar-change
+https://klifemap.ai/content/saju-iljin-2030-october-hanro-oct-8-month-pillar-change
+https://klifemap.ai/content/saju-iljin-2030-september-baekro-sep-7-month-pillar-change
+https://klifemap.ai/content/saju-iljin-2030-august-ipchu-aug-7-month-pillar-change
+https://klifemap.ai/content/saju-iljin-2030-july-soseo-jul-7-month-pillar-change
+https://klifemap.ai/content/ilzin-2026-11-26
+https://klifemap.ai/content/saju-iljin-2030-june-mangjong-jun-5-month-pillar-change
+https://klifemap.ai/content/saju-iljin-2030-may-ipha-may-5-month-pillar-change
+https://klifemap.ai/content/saju-iljin-2030-april-cheongmyeong-apr-5-month-pillar-change
+https://klifemap.ai/content/saju-iljin-2030-march-gyeongchip-mar-5-month-pillar-change
+https://klifemap.ai/content/saju-iljin-2030-february-ipchun-feb-4-year-month-pillar-change
+https://klifemap.ai/content/saju-iljin-2030-january-day-pillar-table-sohan-jan-5
 https://klifemap.ai/content/ilzin-2026-11-25
 https://klifemap.ai/content/saju-iljin-2029-december-daeseol-dec-7-month-pillar-change
 https://klifemap.ai/content/saju-iljin-2029-november-ipdong-nov-7-month-pillar-change
