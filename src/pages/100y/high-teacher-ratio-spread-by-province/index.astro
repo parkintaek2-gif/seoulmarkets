@@ -1,0 +1,212 @@
+---
+/**
+ * /100y/high-teacher-ratio-spread-by-province — 수업교원 1명당 학생 10명 이하·14명 이상 고등학교, 시도별·시군구별 (2024 공시)
+ *
+ * 출처  학교알리미 공개용데이터 「학년별·학급별 학생수」 2024 공시 — src/data/100yearmap/school-class-size.json (학교별 수업교원·학생)
+ *       NEIS 학교기본정보로 시도·시군구를 붙였다. 이 쪽에서 한 일은 학교 수를 센 것뿐이다.
+ * 같은 소재의 /teacher-ratio-by-area 는 시군구별 «평균»이다. 이 페이지은 «학교 수»를 센다.
+ * ⛔ 「수업교원」을 「교원 수」라고 쓰지 않는다 — 공표된 교원 수와 세는 것이 다르다. 10명·14명은 이 페이지가 정한 선이다.
+ * ⛔ 교육 여건이 좋다·나쁘다고 판단하지 않는다.
+ */
+import HundredYear from '../../../layouts/HundredYear.astro';
+import HundredAgeWalk from '../../../components/HundredAgeWalk.astro';
+import NextQuestionBrief from '../../../components/NextQuestionBrief.astro';
+import { 고교들, 공시표출처, 받은때, 수, 퍼글, 중앙, 시도로, 구로 } from '../../../lib/high-school-province';
+
+const 낮은선 = 10;
+const 높은선 = 14;
+const 학교들 = 고교들.filter((r) => r.교원당 != null);
+const 못이은 = 고교들.length - 학교들.length;
+const 낮은가 = (r: any) => r.교원당 <= 낮은선;
+const 높은가 = (r: any) => r.교원당 >= 높은선;
+const 낮은수 = 학교들.filter(낮은가).length;
+const 높은수 = 학교들.filter(높은가).length;
+const 가운데 = 중앙(학교들.map((r) => r.교원당))!;
+const 교원합 = 학교들.reduce((s, r) => s + (r.교원 ?? 0), 0);
+const 학생합 = 학교들.reduce((s, r) => s + (r.학생 ?? 0), 0);
+
+const 시도들 = 시도로(학교들, 낮은가).map((x) => {
+  const 해당 = 학교들.filter((r) => r.시도 === x.이름);
+  return { ...x, 낮은곳: x.센곳, 높은곳: 해당.filter(높은가).length, 가운데: 중앙(해당.map((r) => r.교원당))! };
+});
+const 구낮 = 구로(학교들, 낮은가, 5);
+const 곳들 = 구낮.올린곳;
+const 높은쪽 = 곳들.slice(0, 15);
+const 낮은곳없는곳 = 곳들.filter((r) => r.센곳 === 0).length;
+const 맨위 = 시도들[0];
+const 둘째 = 시도들[1];
+const 맨아래 = 시도들[시도들.length - 1];
+const 낮은많은시도 = [...시도들].sort((a, b) => b.낮은곳 - a.낮은곳)[0];
+const 높은률맨위 = [...시도들].sort((a, b) => b.높은곳 / b.곳 - a.높은곳 / a.곳)[0];
+const 구간 = [['8명 이하', 0, 8.99], ['9~10명', 9, 10.99], ['11~13명', 11, 13.99], ['14~16명', 14, 16.99], ['17명 이상', 17, 999]];
+const 구간수 = 구간.map(([이름, 낮, 높]: any) => ({ 이름, n: 학교들.filter((r) => r.교원당 >= 낮 && r.교원당 <= 높).length }));
+const 유형 = ['일반고', '특성화고', '자율고', '특목고'].map((g) => {
+  const 해당 = 학교들.filter((r) => r.유형 === g);
+  return { 이름: g, 곳: 해당.length, 낮은: 해당.filter(낮은가).length, 높은: 해당.filter(높은가).length, 가운데: 중앙(해당.map((r) => r.교원당)) };
+});
+
+const TITLE = `수업교원 1명당 학생 ${낮은선}명 이하 고등학교 ${수(낮은수)}곳(${퍼글(낮은수, 학교들.length)}), ${높은선}명 이상 ${수(높은수)}곳 — 시도별 ${낮은선}명 이하 비중은 ${맨위.이름} ${퍼글(맨위.낮은곳, 맨위.곳)}, ${둘째.이름} ${퍼글(둘째.낮은곳, 둘째.곳)}`;
+const desc =
+  `학교알리미 ${공시표출처.공시연도}년 공시를 이은 고등학교 ${수(학교들.length)}곳 가운데 수업교원 1명당 학생이 ${낮은선}명 이하인 학교는 ${수(낮은수)}곳, ${높은선}명 이상인 학교는 ${수(높은수)}곳입니다. ` +
+  `${낮은선}명 이하 비중이 가장 높은 시도는 ${맨위.이름} ${퍼글(맨위.낮은곳, 맨위.곳)}, 가장 낮은 시도는 ${맨아래.이름} ${퍼글(맨아래.낮은곳, 맨아래.곳)}입니다. 학교별 가운데값은 ${가운데.toFixed(1)}명입니다.`;
+
+const jsonLd = [
+  {
+    '@context': 'https://schema.org',
+    '@type': 'Dataset',
+    name: `수업교원 1명당 학생 ${낮은선}명 이하·${높은선}명 이상 고등학교 수 — 시도·시군구별`,
+    description: desc,
+    dateModified: 받은때,
+    creator: { '@type': 'Organization', name: '백년지도' },
+    sourceOrganization: { '@type': 'Organization', name: 공시표출처.이름 },
+    spatialCoverage: '대한민국 시·도, 시·군·구',
+    variableMeasured: ['고등학교 수', '수업교원 수', '수업교원 1명당 학생 수'],
+  },
+  {
+    '@context': 'https://schema.org',
+    '@type': 'FAQPage',
+    mainEntity: [
+      {
+        '@type': 'Question',
+        name: `수업교원 1명당 학생이 ${낮은선}명 이하인 고등학교는 몇 곳인가요?`,
+        acceptedAnswer: {
+          '@type': 'Answer',
+          text: `학교알리미 ${공시표출처.공시연도}년 공시를 이은 고등학교 ${수(학교들.length)}곳 가운데 ${수(낮은수)}곳(${퍼글(낮은수, 학교들.length)})입니다. 개수가 가장 많은 시도는 ${낮은많은시도.이름}으로 ${수(낮은많은시도.낮은곳)}곳입니다.`,
+        },
+      },
+      {
+        '@type': 'Question',
+        name: '고등학교 수업교원 1명당 학생 수는 학교마다 얼마나 다른가요?',
+        acceptedAnswer: {
+          '@type': 'Answer',
+          text: `학교별 가운데값은 ${가운데.toFixed(1)}명입니다. ${낮은선}명 이하인 학교가 ${수(낮은수)}곳, ${높은선}명 이상인 학교가 ${수(높은수)}곳입니다.`,
+        },
+      },
+    ],
+  },
+];
+---
+
+<HundredYear title={TITLE} description={desc} jsonLd={jsonLd}>
+  <h1>교원 1명당 학생이 10명 이하인 고등학교는<br class="pcbr" /> 어느 시도에 얼마나 있나요</h1>
+  <p class="sub">
+    학교알리미가 공개한 {공시표출처.공시연도}년 공시에서 고등학교 {수(학교들.length)}곳의 수업교원 1명당 학생 수를 학교별로 보고, {낮은선}명 이하인 학교와 {높은선}명 이상인 학교를 시도와 시군구로 셌습니다.
+  </p>
+
+  <div class="answer">
+    <p class="answer-label">수업교원 1명당 학생 {낮은선}명 이하 고등학교 — 공시를 이은 {수(학교들.length)}곳 가운데</p>
+    <p class="answer-num">{수(낮은수)}곳 · {퍼글(낮은수, 학교들.length)}</p>
+    <p class="answer-sub">{높은선}명 이상 {수(높은수)}곳({퍼글(높은수, 학교들.length)}) · 학교별 가운데값 {가운데.toFixed(1)}명 · 학생 {수(학생합)}명 ÷ 수업교원 {수(교원합)}명</p>
+  </div>
+
+  <p>
+    ⚠ <strong>{낮은선}명과 {높은선}명은 이 페이지에서 정한 기준입니다.</strong> 법이나 공표 통계의 구분이 아닙니다. 그리고 「수업교원」은 공시에 따로 적힌 값이라, 정부가 공표하는 교원 수와는 세는 것이 달라 숫자가 다릅니다.
+  </p>
+
+  <h2>시도별 수업교원 1명당 학생 {낮은선}명 이하·{높은선}명 이상 고등학교</h2>
+  <div class="tablewrap">
+    <table>
+      <thead><tr><th>시·도</th><th>고등학교</th><th>{낮은선}명 이하</th><th>비중</th><th>{높은선}명 이상</th><th>학교별 가운데값</th></tr></thead>
+      <tbody>
+        {시도들.map((x) => (
+          <tr>
+            <th>{x.이름}</th>
+            <td class="num">{수(x.곳)}곳</td>
+            <td class="num">{수(x.낮은곳)}곳</td>
+            <td class="num"><strong>{퍼글(x.낮은곳, x.곳)}</strong></td>
+            <td class="num">{수(x.높은곳)}곳 · {퍼글(x.높은곳, x.곳)}</td>
+            <td class="num">{x.가운데.toFixed(1)}명</td>
+          </tr>
+        ))}
+      </tbody>
+    </table>
+  </div>
+  <p class="note">비중은 {낮은선}명 이하 학교가 그 시도의 공시를 이은 고등학교에서 차지하는 몫이고, 표는 이 비중이 높은 순입니다. 전남과 광주는 NEIS의 지역 구분대로 따로 셌습니다.</p>
+
+  <h2>{낮은선}명 이하 비중이 높은 시군구 15곳</h2>
+  <p class="note">고등학교가 5곳 이상인 시군구 {곳들.length}곳 가운데입니다. 그보다 적은 {구낮.빠진곳}곳은 표에서 뺐습니다. {낮은선}명 이하 학교가 한 곳도 없는 시군구는 {수(낮은곳없는곳)}곳입니다.</p>
+  <div class="tablewrap">
+    <table>
+      <thead><tr><th>지역</th><th>고등학교</th><th>{낮은선}명 이하</th><th>비중</th></tr></thead>
+      <tbody>
+        {높은쪽.map((r) => (
+          <tr>
+            <th>{r.시도} {r.구}</th>
+            <td class="num">{r.곳}곳</td>
+            <td class="num">{r.센곳}곳</td>
+            <td class="num"><strong>{퍼글(r.센곳, r.곳)}</strong></td>
+          </tr>
+        ))}
+      </tbody>
+    </table>
+  </div>
+
+  <h2>수업교원 1명당 학생 수 구간별 고등학교</h2>
+  <div class="tablewrap">
+    <table>
+      <thead><tr><th>교원 1명당 학생 수</th><th>학교</th><th>몫</th></tr></thead>
+      <tbody>
+        {구간수.map((x) => (
+          <tr>
+            <th>{x.이름}</th>
+            <td class="num">{수(x.n)}곳</td>
+            <td class="num">{퍼글(x.n, 학교들.length)}</td>
+          </tr>
+        ))}
+      </tbody>
+    </table>
+  </div>
+
+  <h2>고등학교 종류별로 보면</h2>
+  <div class="tablewrap">
+    <table>
+      <thead><tr><th>종류</th><th>학교</th><th>{낮은선}명 이하</th><th>{높은선}명 이상</th><th>가운데값</th></tr></thead>
+      <tbody>
+        {유형.map((x) => (
+          <tr>
+            <th>{x.이름}</th>
+            <td class="num">{수(x.곳)}곳</td>
+            <td class="num">{수(x.낮은)}곳 · {퍼글(x.낮은, x.곳)}</td>
+            <td class="num">{수(x.높은)}곳 · {퍼글(x.높은, x.곳)}</td>
+            <td class="num">{x.가운데 == null ? '—' : `${x.가운데.toFixed(1)}명`}</td>
+          </tr>
+        ))}
+      </tbody>
+    </table>
+  </div>
+  <p class="note">종류는 NEIS 학교기본정보의 고교유형 칸입니다. 학과가 많은 학교는 교과마다 교원이 필요해서 숫자가 달라질 수 있는데, 이 표는 그 이유를 가르지 않습니다.</p>
+
+  <h2>같은 표에서 읽히는 것</h2>
+  <ul>
+    <li>{낮은선}명 이하 비중이 가장 높은 시도는 {맨위.이름} {퍼글(맨위.낮은곳, 맨위.곳)}({수(맨위.낮은곳)}곳), 두 번째는 {둘째.이름} {퍼글(둘째.낮은곳, 둘째.곳)}입니다. 가장 낮은 시도는 {맨아래.이름} {퍼글(맨아래.낮은곳, 맨아래.곳)}입니다.</li>
+    <li>개수로는 {낮은많은시도.이름}이 {낮은선}명 이하 학교 {수(낮은많은시도.낮은곳)}곳으로 가장 많습니다.</li>
+    <li>{높은선}명 이상 학교의 비중이 가장 높은 시도는 {높은률맨위.이름} {퍼글(높은률맨위.높은곳, 높은률맨위.곳)}입니다.</li>
+    <li>시도별 학교 가운데값은 {Math.min(...시도들.map((x) => x.가운데)).toFixed(1)}명부터 {Math.max(...시도들.map((x) => x.가운데)).toFixed(1)}명까지입니다.</li>
+  </ul>
+
+  <h2>⚠ 이 자료로 말할 수 없는 것</h2>
+  <ul>
+    <li>학교알리미 공시를 이은 고등학교는 {수(학교들.length)}곳이고, NEIS 학교 목록 {수(고교들.length)}곳 가운데 {수(못이은)}곳은 이어지지 않아 빠졌습니다. 이 {수(못이은)}곳의 값은 모르고, 0으로 채우지 않았습니다.</li>
+    <li>학생 수가 0명으로 공시된 곳은 뺐습니다.</li>
+    <li>교원 1명당 학생 수가 적다고 수업이 좋아진다는 근거는 이 자료에 없습니다.</li>
+    <li>기간제 교원과 정규 교원을 나눈 값은 이 표에 없습니다.</li>
+    <li>학생이 사는 곳이 아니라 학교가 있는 곳으로 셌습니다.</li>
+  </ul>
+
+  <p class="note">
+    출처 — {공시표출처.이름} 「{공시표출처.공시항목}」 {공시표출처.공시연도}년 공시, 고등학교. 이용허락범위: {공시표출처.이용허락범위}. 받은 날 {받은때}. 학교 목록·주소·고교유형은 NEIS 교육정보 개방 포털 학교기본정보입니다.
+  </p>
+
+  <p class="note">
+    <a href="/teacher-ratio-by-area">← 고등학교 교원 1명당 학생 수 지역별(시군구 평균)</a>
+    <br />
+    <a href="/students-per-teacher-2026">→ 교원 1명당 학생 수 2026, 학교급별</a>
+  </p>
+
+  <HundredAgeWalk 키="high-teacher-ratio-spread-by-province" />
+  <NextQuestionBrief 모은것="학교알리미 고등학교 수업교원·학생 공시를 학교 수로 시도·시군구별로 센 실측" />
+</HundredYear>
+
+<style>
+  .num { text-align: right; font-variant-numeric: tabular-nums; }
+</style>

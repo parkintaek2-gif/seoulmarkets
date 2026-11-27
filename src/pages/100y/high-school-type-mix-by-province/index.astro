@@ -1,0 +1,196 @@
+---
+/**
+ * /100y/high-school-type-mix-by-province — 일반고·특성화고·자율고·특목고, 설립 구분(공립·사립), 시도별·시군구별
+ *
+ * 출처  NEIS 교육정보 개방 포털 학교기본정보 — src/data/100yearmap/pages-school.json (고등학교의 고교유형·설립 칸).
+ *       이 쪽에서 한 일은 시도·시군구로 더하고 비중을 계산한 것뿐이다. 지금 문을 연 고등학교만 있다.
+ * 같은 소재의 /vocational-high-school-by-area·/private-high-school-by-area 등은 종류 하나씩이다. 이 페이지은 네 종류와 설립 구분을 한 표에 놓는다.
+ * ⛔ 어느 종류가 낫다는 판단을 쓰지 않는다. 취업률·진학률은 이 페이지에서 재지 않았다.
+ * ⚠ 마이스터고는 NEIS 고교유형에서 대부분 특목고로 잡힌다(이름에 「마이스터」가 든 학교로 센다).
+ */
+import HundredYear from '../../../layouts/HundredYear.astro';
+import HundredAgeWalk from '../../../components/HundredAgeWalk.astro';
+import NextQuestionBrief from '../../../components/NextQuestionBrief.astro';
+import { 고교들, 수, 퍼글 } from '../../../lib/high-school-province';
+
+const 종류들 = ['일반고', '특성화고', '자율고', '특목고'];
+const 학교들 = 고교들.filter((r) => 종류들.includes(r.유형));
+const 못가른 = 고교들.length - 학교들.length;
+const 일반 = (r: any) => r.유형 === '일반고';
+const 사립 = (r: any) => r.설립 === '사립';
+const 일반외 = (r: any) => !일반(r);
+
+const 시도맵 = new Map<string, any>();
+const 구맵 = new Map<string, { 시도: string; 구: string; 곳: number; 외: number }>();
+for (const r of 학교들) {
+  const a = 시도맵.get(r.시도) ?? { 이름: r.시도, 곳: 0, 일반고: 0, 특성화고: 0, 자율고: 0, 특목고: 0, 사립: 0 };
+  a.곳 += 1; a[r.유형] += 1; if (사립(r)) a.사립 += 1;
+  시도맵.set(r.시도, a);
+  if (r.구열쇠) {
+    const b = 구맵.get(r.구열쇠) ?? { 시도: r.시도, 구: r.구, 곳: 0, 외: 0 };
+    b.곳 += 1; if (일반외(r)) b.외 += 1;
+    구맵.set(r.구열쇠, b);
+  }
+}
+const 시도들 = [...시도맵.values()].sort((a, b) => b.일반고 / b.곳 - a.일반고 / a.곳);
+const 전체 = 시도들.reduce((s: any, x: any) => ({ 곳: s.곳 + x.곳, 일반고: s.일반고 + x.일반고, 특성화고: s.특성화고 + x.특성화고, 자율고: s.자율고 + x.자율고, 특목고: s.특목고 + x.특목고, 사립: s.사립 + x.사립 }), { 곳: 0, 일반고: 0, 특성화고: 0, 자율고: 0, 특목고: 0, 사립: 0 });
+const 일반외수 = 전체.곳 - 전체.일반고;
+const 최소 = 5;
+const 곳들 = [...구맵.values()].filter((r) => r.곳 >= 최소).sort((a, b) => b.외 / b.곳 - a.외 / a.곳 || b.외 - a.외);
+const 높은쪽 = 곳들.slice(0, 15);
+const 빠진곳 = 구맵.size - 곳들.length;
+const 일반만인곳 = 곳들.filter((r) => r.외 === 0).length;
+const 맨위 = 시도들[0];
+const 둘째 = 시도들[1];
+const 맨아래 = 시도들[시도들.length - 1];
+const 사립맨위 = [...시도들].sort((a, b) => b.사립 / b.곳 - a.사립 / a.곳)[0];
+const 사립맨아래 = [...시도들].sort((a, b) => a.사립 / a.곳 - b.사립 / b.곳)[0];
+const 특성화맨위 = [...시도들].sort((a, b) => b.특성화고 / b.곳 - a.특성화고 / a.곳)[0];
+const 자율있는시도 = 시도들.filter((x: any) => x.자율고 > 0).length;
+const 마이스터 = 학교들.filter((r) => /마이스터/.test(r.이름));
+const 마이스터특목 = 마이스터.filter((r) => r.유형 === '특목고').length;
+const 설립구분 = ['공립', '사립', '국립', '기타'].map((g) => ({ 이름: g, 수: 학교들.filter((r) => r.설립 === g).length }));
+
+const TITLE = `일반고 ${수(전체.일반고)}곳(${퍼글(전체.일반고, 전체.곳)}), 특성화고 ${수(전체.특성화고)}곳, 자율고 ${수(전체.자율고)}곳, 특목고 ${수(전체.특목고)}곳 — 시도별로 일반고 ${맨위.이름} ${퍼글(맨위.일반고, 맨위.곳)}에서 ${맨아래.이름} ${퍼글(맨아래.일반고, 맨아래.곳)}`;
+const desc =
+  `NEIS 학교기본정보로 고등학교 ${수(전체.곳)}곳을 일반고 ${수(전체.일반고)}곳, 특성화고 ${수(전체.특성화고)}곳, 자율고 ${수(전체.자율고)}곳, 특목고 ${수(전체.특목고)}곳으로 셌습니다. ` +
+  `일반고 비중이 가장 높은 시도는 ${맨위.이름} ${퍼글(맨위.일반고, 맨위.곳)}, 가장 낮은 시도는 ${맨아래.이름} ${퍼글(맨아래.일반고, 맨아래.곳)}입니다. 사립은 ${수(전체.사립)}곳(${퍼글(전체.사립, 전체.곳)})입니다.`;
+
+const jsonLd = [
+  {
+    '@context': 'https://schema.org',
+    '@type': 'Dataset',
+    name: '일반고·특성화고·자율고·특목고 수와 사립 고등학교 수 — 시도·시군구별',
+    description: desc,
+    creator: { '@type': 'Organization', name: '백년지도' },
+    sourceOrganization: { '@type': 'Organization', name: 'NEIS 교육정보 개방 포털' },
+    spatialCoverage: '대한민국 시·도, 시·군·구',
+    variableMeasured: ['고등학교 수', '일반고 수', '특성화고 수', '자율고 수', '특목고 수', '사립 고등학교 수'],
+  },
+  {
+    '@context': 'https://schema.org',
+    '@type': 'FAQPage',
+    mainEntity: [
+      {
+        '@type': 'Question',
+        name: '고등학교는 일반고·특성화고·자율고·특목고가 각각 몇 곳인가요?',
+        acceptedAnswer: {
+          '@type': 'Answer',
+          text: `NEIS 기준 고등학교 ${수(전체.곳)}곳 가운데 일반고 ${수(전체.일반고)}곳, 특성화고 ${수(전체.특성화고)}곳, 자율고 ${수(전체.자율고)}곳, 특목고 ${수(전체.특목고)}곳입니다.`,
+        },
+      },
+      {
+        '@type': 'Question',
+        name: '사립 고등학교 비중이 가장 높은 시도는 어디인가요?',
+        acceptedAnswer: {
+          '@type': 'Answer',
+          text: `${사립맨위.이름} ${퍼글(사립맨위.사립, 사립맨위.곳)}(${수(사립맨위.사립)}곳)이 가장 높고, 가장 낮은 시도는 ${사립맨아래.이름} ${퍼글(사립맨아래.사립, 사립맨아래.곳)}입니다. 전국은 ${퍼글(전체.사립, 전체.곳)}입니다.`,
+        },
+      },
+    ],
+  },
+];
+---
+
+<HundredYear title={TITLE} description={desc} jsonLd={jsonLd}>
+  <h1>일반고·특성화고·자율고·특목고는<br class="pcbr" /> 시도마다 얼마나 있나요</h1>
+  <p class="sub">
+    NEIS 학교기본정보에서 고등학교 {수(전체.곳)}곳의 고교유형과 설립 구분을 시도와 시군구로 더했습니다.
+  </p>
+
+  <div class="answer">
+    <p class="answer-label">일반고 — 고등학교 {수(전체.곳)}곳 가운데</p>
+    <p class="answer-num">{수(전체.일반고)}곳 · {퍼글(전체.일반고, 전체.곳)}</p>
+    <p class="answer-sub">특성화고 {수(전체.특성화고)}곳 · 자율고 {수(전체.자율고)}곳 · 특목고 {수(전체.특목고)}곳 · 사립 {수(전체.사립)}곳({퍼글(전체.사립, 전체.곳)})</p>
+  </div>
+
+  <h2>시도별 고교유형과 사립 고등학교</h2>
+  <div class="tablewrap">
+    <table>
+      <thead><tr><th>시·도</th><th>고등학교</th><th>일반고</th><th>특성화고</th><th>자율고</th><th>특목고</th><th>일반고 비중</th><th>사립</th></tr></thead>
+      <tbody>
+        {시도들.map((x: any) => (
+          <tr>
+            <th>{x.이름}</th>
+            <td class="num">{수(x.곳)}곳</td>
+            <td class="num">{수(x.일반고)}</td>
+            <td class="num">{수(x.특성화고)}</td>
+            <td class="num">{수(x.자율고)}</td>
+            <td class="num">{수(x.특목고)}</td>
+            <td class="num"><strong>{퍼글(x.일반고, x.곳)}</strong></td>
+            <td class="num">{수(x.사립)}곳 · {퍼글(x.사립, x.곳)}</td>
+          </tr>
+        ))}
+      </tbody>
+    </table>
+  </div>
+  <p class="note">표는 일반고 비중이 높은 순입니다. 전남과 광주는 NEIS의 지역 구분대로 따로 셌습니다.</p>
+
+  <h2>일반고가 아닌 고등학교 비중이 높은 시군구 15곳</h2>
+  <p class="note">고등학교가 {최소}곳 이상인 시군구 {곳들.length}곳 가운데입니다. 그보다 적은 {빠진곳}곳은 표에서 뺐습니다. 일반고만 있는 시군구는 {수(일반만인곳)}곳입니다. 「일반고가 아닌」은 특성화고·자율고·특목고를 합친 것입니다.</p>
+  <div class="tablewrap">
+    <table>
+      <thead><tr><th>지역</th><th>고등학교</th><th>일반고가 아닌 곳</th><th>비중</th></tr></thead>
+      <tbody>
+        {높은쪽.map((r) => (
+          <tr>
+            <th>{r.시도} {r.구}</th>
+            <td class="num">{r.곳}곳</td>
+            <td class="num">{r.외}곳</td>
+            <td class="num"><strong>{퍼글(r.외, r.곳)}</strong></td>
+          </tr>
+        ))}
+      </tbody>
+    </table>
+  </div>
+
+  <h2>설립 구분별 고등학교</h2>
+  <div class="tablewrap">
+    <table>
+      <thead><tr><th>설립</th><th>학교</th><th>몫</th></tr></thead>
+      <tbody>
+        {설립구분.map((x) => (
+          <tr>
+            <th>{x.이름}</th>
+            <td class="num">{수(x.수)}곳</td>
+            <td class="num">{퍼글(x.수, 학교들.length)}</td>
+          </tr>
+        ))}
+      </tbody>
+    </table>
+  </div>
+
+  <h2>같은 표에서 읽히는 것</h2>
+  <ul>
+    <li>일반고 비중이 가장 높은 시도는 {맨위.이름} {퍼글(맨위.일반고, 맨위.곳)}({수(맨위.일반고)}곳), 두 번째는 {둘째.이름} {퍼글(둘째.일반고, 둘째.곳)}입니다. 가장 낮은 시도는 {맨아래.이름} {퍼글(맨아래.일반고, 맨아래.곳)}입니다. 일반고가 아닌 고등학교는 전국 {수(일반외수)}곳입니다.</li>
+    <li>특성화고 비중이 가장 높은 시도는 {특성화맨위.이름} {퍼글(특성화맨위.특성화고, 특성화맨위.곳)}({수(특성화맨위.특성화고)}곳)입니다.</li>
+    <li>자율고가 있는 시도는 17곳 가운데 {수(자율있는시도)}곳입니다.</li>
+    <li>사립 비중이 가장 높은 시도는 {사립맨위.이름} {퍼글(사립맨위.사립, 사립맨위.곳)}, 가장 낮은 시도는 {사립맨아래.이름} {퍼글(사립맨아래.사립, 사립맨아래.곳)}입니다.</li>
+    <li>이름에 「마이스터」가 든 고등학교 {수(마이스터.length)}곳 가운데 {수(마이스터특목)}곳이 NEIS 고교유형에서 특목고로 잡혀 있습니다. 마이스터고를 특성화고로 세고 싶으면 이 표의 특성화고 수와 다를 수 있습니다.</li>
+  </ul>
+
+  <h2>⚠ 이 자료로 말할 수 없는 것</h2>
+  <ul>
+    <li>NEIS에 올라 있는, 지금 문을 연 고등학교만 셉니다.{못가른 > 0 ? ` 고교유형 칸이 네 종류가 아니어서 가르지 못한 ${수(못가른)}곳은 뺐습니다.` : ''}</li>
+    <li>학생이 아니라 «학교» 수입니다. 학생 수가 다른 학교가 같은 한 칸으로 계산됩니다.</li>
+    <li>종류를 서로 견주어 어느 쪽이 낫다고 말할 근거는 이 자료에 없습니다. 취업률·진학률은 이 페이지에서 재지 않았습니다.</li>
+    <li>사립이 많고 적은 이유는 이 자료에 없습니다.</li>
+  </ul>
+
+  <p class="note">
+    출처 — NEIS 교육정보 개방 포털 학교기본정보, 고등학교. 2026년 기준, 문을 연 학교만. 시군구 {수(구맵.size)}곳.
+  </p>
+
+  <p class="note">
+    <a href="/vocational-high-school-by-area">← 특성화고 비율 지역별</a>
+    <br />
+    <a href="/private-high-school-by-area">→ 사립 고등학교 비율 지역별</a>
+  </p>
+
+  <HundredAgeWalk 키="high-school-type-mix-by-province" />
+  <NextQuestionBrief 모은것="NEIS 고등학교 학교기본정보를 종류·설립 구분으로 시도·시군구별로 센 실측" />
+</HundredYear>
+
+<style>
+  .num { text-align: right; font-variant-numeric: tabular-nums; }
+</style>

@@ -436,6 +436,13 @@ export const GET: APIRoute = () => {
     { path: '/middle-small-schools-by-province', priority: '0.7', changefreq: 'yearly' },
     { path: '/middle-single-sex-by-province', priority: '0.7', changefreq: 'yearly' },
     { path: '/new-schools-last-decade-by-province', priority: '0.7', changefreq: 'yearly' },
+    /* 2026-11-27 — 고등학교 시도별 파생 지면 6장 */
+    { path: '/high-school-size-by-province', priority: '0.7', changefreq: 'yearly' },
+    { path: '/high-class-size-spread-by-province', priority: '0.7', changefreq: 'yearly' },
+    { path: '/high-teacher-ratio-spread-by-province', priority: '0.7', changefreq: 'yearly' },
+    { path: '/high-single-sex-by-province', priority: '0.7', changefreq: 'yearly' },
+    { path: '/high-school-founding-decade-by-province', priority: '0.7', changefreq: 'yearly' },
+    { path: '/high-school-type-mix-by-province', priority: '0.7', changefreq: 'yearly' },
     /* 2026-11-23 — 지역별고용조사 기혼여성 경력보유 2장 */
     { path: '/career-interrupted-by-child-age', priority: '0.7', changefreq: 'yearly' },
     { path: '/career-interrupted-reason-by-age', priority: '0.7', changefreq: 'yearly' },

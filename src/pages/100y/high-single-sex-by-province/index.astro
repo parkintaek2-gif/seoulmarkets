@@ -1,0 +1,195 @@
+---
+/**
+ * /100y/high-single-sex-by-province — 남고·여고·남녀공학 고등학교, 시도별·시군구별
+ *
+ * 출처  NEIS 교육정보 개방 포털 학교기본정보 — src/data/100yearmap/pages-school.json (고등학교의 공학 칸: 남여공학·남·여).
+ *       이 쪽에서 한 일은 시도·시군구로 더하고 비중을 계산한 것뿐이다. 지금 문을 연 고등학교만 있다.
+ * 같은 소재의 /coed-school-by-area 는 시군구별 «공학 비율»이다. 이 페이지은 남고와 여고를 따로 센다.
+ * ⛔ 「남녀공학이 낫다」「남고·여고가 낫다」 같은 판단을 쓰지 않는다. 수만 적는다.
+ */
+import HundredYear from '../../../layouts/HundredYear.astro';
+import HundredAgeWalk from '../../../components/HundredAgeWalk.astro';
+import NextQuestionBrief from '../../../components/NextQuestionBrief.astro';
+import { 고교들, 수, 퍼글 } from '../../../lib/high-school-province';
+
+const 학교들 = 고교들.filter((r) => /^(남여공학|남|여)$/.test(r.공학));
+const 못가른 = 고교들.length - 학교들.length;
+const 남 = (r: any) => r.공학 === '남';
+const 여 = (r: any) => r.공학 === '여';
+const 나뉜 = (r: any) => 남(r) || 여(r);
+
+const 시도맵 = new Map<string, { 이름: string; 곳: number; 남고: number; 여고: number; 공학: number }>();
+const 구맵 = new Map<string, { 시도: string; 구: string; 곳: number; 남고: number; 여고: number; 나뉜곳: number }>();
+for (const r of 학교들) {
+  const a = 시도맵.get(r.시도) ?? { 이름: r.시도, 곳: 0, 남고: 0, 여고: 0, 공학: 0 };
+  a.곳 += 1; if (남(r)) a.남고 += 1; else if (여(r)) a.여고 += 1; else a.공학 += 1;
+  시도맵.set(r.시도, a);
+  if (r.구열쇠) {
+    const b = 구맵.get(r.구열쇠) ?? { 시도: r.시도, 구: r.구, 곳: 0, 남고: 0, 여고: 0, 나뉜곳: 0 };
+    b.곳 += 1; if (남(r)) b.남고 += 1; if (여(r)) b.여고 += 1; if (나뉜(r)) b.나뉜곳 += 1;
+    구맵.set(r.구열쇠, b);
+  }
+}
+const 나뉜수 = (x: any) => x.남고 + x.여고;
+const 시도들 = [...시도맵.values()].sort((a, b) => 나뉜수(b) / b.곳 - 나뉜수(a) / a.곳);
+const 전체 = 시도들.reduce((s, x) => ({ 곳: s.곳 + x.곳, 남고: s.남고 + x.남고, 여고: s.여고 + x.여고, 공학: s.공학 + x.공학 }), { 곳: 0, 남고: 0, 여고: 0, 공학: 0 });
+const 최소 = 5;
+const 곳들 = [...구맵.values()].filter((r) => r.곳 >= 최소).sort((a, b) => b.나뉜곳 / b.곳 - a.나뉜곳 / a.곳 || b.나뉜곳 - a.나뉜곳);
+const 높은쪽 = 곳들.slice(0, 15);
+const 빠진곳 = 구맵.size - 곳들.length;
+const 공학만인곳 = 곳들.filter((r) => r.나뉜곳 === 0).length;
+const 맨위 = 시도들[0];
+const 둘째 = 시도들[1];
+const 맨아래 = 시도들[시도들.length - 1];
+const 많은시도 = [...시도들].sort((a, b) => 나뉜수(b) - 나뉜수(a))[0];
+const 남고많은 = [...시도들].sort((a, b) => b.남고 - a.남고)[0];
+const 여고많은 = [...시도들].sort((a, b) => b.여고 - a.여고)[0];
+const 남여같은시도 = 시도들.filter((x) => x.남고 === x.여고).length;
+const 유형 = ['일반고', '특성화고', '자율고', '특목고'].map((g) => {
+  const 해당 = 학교들.filter((r) => r.유형 === g);
+  return { 이름: g, 곳: 해당.length, 남고: 해당.filter(남).length, 여고: 해당.filter(여).length };
+});
+
+const TITLE = `남고·여고 ${수(나뉜수(전체))}곳, 고등학교 ${수(전체.곳)}곳의 ${퍼글(나뉜수(전체), 전체.곳)} — 시도별로 ${맨위.이름} ${퍼글(나뉜수(맨위), 맨위.곳)}, ${둘째.이름} ${퍼글(나뉜수(둘째), 둘째.곳)}`;
+const desc =
+  `NEIS 학교기본정보로 고등학교 ${수(전체.곳)}곳을 남고 ${수(전체.남고)}곳, 여고 ${수(전체.여고)}곳, 남녀공학 ${수(전체.공학)}곳으로 셌습니다. 남고·여고를 합친 비중이 가장 높은 시도는 ${맨위.이름} ${퍼글(나뉜수(맨위), 맨위.곳)}, 가장 낮은 시도는 ${맨아래.이름} ${퍼글(나뉜수(맨아래), 맨아래.곳)}입니다.`;
+
+const jsonLd = [
+  {
+    '@context': 'https://schema.org',
+    '@type': 'Dataset',
+    name: '남고·여고·남녀공학 고등학교 수 — 시도·시군구별',
+    description: desc,
+    creator: { '@type': 'Organization', name: '백년지도' },
+    sourceOrganization: { '@type': 'Organization', name: 'NEIS 교육정보 개방 포털' },
+    spatialCoverage: '대한민국 시·도, 시·군·구',
+    variableMeasured: ['고등학교 수', '남고 수', '여고 수', '남녀공학 수'],
+  },
+  {
+    '@context': 'https://schema.org',
+    '@type': 'FAQPage',
+    mainEntity: [
+      {
+        '@type': 'Question',
+        name: '남고와 여고는 전국에 몇 곳인가요?',
+        acceptedAnswer: {
+          '@type': 'Answer',
+          text: `NEIS 기준 고등학교 ${수(전체.곳)}곳 가운데 남고 ${수(전체.남고)}곳, 여고 ${수(전체.여고)}곳이고 나머지 ${수(전체.공학)}곳은 남녀공학입니다. 남고·여고를 합치면 ${퍼글(나뉜수(전체), 전체.곳)}입니다.`,
+        },
+      },
+      {
+        '@type': 'Question',
+        name: '남고·여고 비중이 가장 높은 시도는 어디인가요?',
+        acceptedAnswer: {
+          '@type': 'Answer',
+          text: `${시도들.slice(0, 3).map((x) => `${x.이름} ${퍼글(나뉜수(x), x.곳)}`).join(', ')} 순입니다. 개수로는 ${많은시도.이름}이 ${수(나뉜수(많은시도))}곳으로 가장 많습니다.`,
+        },
+      },
+    ],
+  },
+];
+---
+
+<HundredYear title={TITLE} description={desc} jsonLd={jsonLd}>
+  <h1>남고·여고는 어느 시도에<br class="pcbr" /> 얼마나 있나요</h1>
+  <p class="sub">
+    NEIS 학교기본정보에서 고등학교 {수(전체.곳)}곳의 남녀공학 구분을 시도와 시군구로 더했습니다. 남고와 여고를 따로 셌습니다.
+  </p>
+
+  <div class="answer">
+    <p class="answer-label">남고·여고 — 고등학교 {수(전체.곳)}곳 가운데</p>
+    <p class="answer-num">{수(나뉜수(전체))}곳 · {퍼글(나뉜수(전체), 전체.곳)}</p>
+    <p class="answer-sub">남고 {수(전체.남고)}곳 · 여고 {수(전체.여고)}곳 · 남녀공학 {수(전체.공학)}곳</p>
+  </div>
+
+  <h2>시도별 남고·여고·남녀공학 고등학교</h2>
+  <div class="tablewrap">
+    <table>
+      <thead><tr><th>시·도</th><th>고등학교</th><th>남고</th><th>여고</th><th>남녀공학</th><th>남고·여고 비중</th></tr></thead>
+      <tbody>
+        {시도들.map((x) => (
+          <tr>
+            <th>{x.이름}</th>
+            <td class="num">{수(x.곳)}곳</td>
+            <td class="num">{수(x.남고)}</td>
+            <td class="num">{수(x.여고)}</td>
+            <td class="num">{수(x.공학)}</td>
+            <td class="num"><strong>{퍼글(나뉜수(x), x.곳)}</strong></td>
+          </tr>
+        ))}
+      </tbody>
+    </table>
+  </div>
+  <p class="note">표는 남고·여고 비중이 높은 순입니다. 전남과 광주는 NEIS의 지역 구분대로 따로 셌습니다.</p>
+
+  <h2>남고·여고 비중이 높은 시군구 15곳</h2>
+  <p class="note">고등학교가 {최소}곳 이상인 시군구 {곳들.length}곳 가운데입니다. 그보다 적은 {빠진곳}곳은 표에서 뺐습니다. 남고·여고가 한 곳도 없는 시군구는 {수(공학만인곳)}곳입니다.</p>
+  <div class="tablewrap">
+    <table>
+      <thead><tr><th>지역</th><th>고등학교</th><th>남고</th><th>여고</th><th>비중</th></tr></thead>
+      <tbody>
+        {높은쪽.map((r) => (
+          <tr>
+            <th>{r.시도} {r.구}</th>
+            <td class="num">{r.곳}곳</td>
+            <td class="num">{r.남고}</td>
+            <td class="num">{r.여고}</td>
+            <td class="num"><strong>{퍼글(r.나뉜곳, r.곳)}</strong></td>
+          </tr>
+        ))}
+      </tbody>
+    </table>
+  </div>
+
+  <h2>고등학교 종류별로 보면</h2>
+  <div class="tablewrap">
+    <table>
+      <thead><tr><th>종류</th><th>학교</th><th>남고</th><th>여고</th><th>남고·여고 비중</th></tr></thead>
+      <tbody>
+        {유형.map((x) => (
+          <tr>
+            <th>{x.이름}</th>
+            <td class="num">{수(x.곳)}곳</td>
+            <td class="num">{수(x.남고)}</td>
+            <td class="num">{수(x.여고)}</td>
+            <td class="num"><strong>{퍼글(x.남고 + x.여고, x.곳)}</strong></td>
+          </tr>
+        ))}
+      </tbody>
+    </table>
+  </div>
+  <p class="note">종류는 NEIS 학교기본정보의 고교유형 칸입니다.</p>
+
+  <h2>같은 표에서 읽히는 것</h2>
+  <ul>
+    <li>비중이 가장 높은 시도는 {맨위.이름} {퍼글(나뉜수(맨위), 맨위.곳)}({수(나뉜수(맨위))}곳), 두 번째는 {둘째.이름} {퍼글(나뉜수(둘째), 둘째.곳)}입니다. 가장 낮은 시도는 {맨아래.이름} {퍼글(나뉜수(맨아래), 맨아래.곳)}입니다.</li>
+    <li>개수로는 {많은시도.이름}이 {수(나뉜수(많은시도))}곳으로 가장 많습니다. 남고가 가장 많은 시도는 {남고많은.이름} {수(남고많은.남고)}곳, 여고가 가장 많은 시도는 {여고많은.이름} {수(여고많은.여고)}곳입니다.</li>
+    <li>전국에서 남고는 {수(전체.남고)}곳, 여고는 {수(전체.여고)}곳으로 {전체.남고 === 전체.여고 ? '같습니다' : `여고가 ${수(Math.abs(전체.여고 - 전체.남고))}곳 ${전체.여고 > 전체.남고 ? '더 많습니다' : '더 적습니다'}`}. 시도 17곳 가운데 남고와 여고 수가 같은 곳은 {수(남여같은시도)}곳입니다.</li>
+  </ul>
+
+  <h2>⚠ 이 자료로 말할 수 없는 것</h2>
+  <ul>
+    <li>NEIS에 올라 있는, 지금 문을 연 고등학교만 셉니다.{못가른 > 0 ? ` 공학 칸이 비어 있어 가르지 못한 ${수(못가른)}곳은 뺐습니다.` : ''}</li>
+    <li>한 학교 안에서 학년이나 반을 나누어 운영하는 경우는 이 구분에 없습니다.</li>
+    <li>학교 크기가 다릅니다. 큰 남녀공학 한 곳과 작은 여고 한 곳이 같은 한 칸으로 계산됩니다.</li>
+    <li>남녀공학 비중이 높고 낮은 이유는 이 자료에 없습니다.</li>
+    <li>학생 수나 학업 결과는 이 자료에 없습니다.</li>
+  </ul>
+
+  <p class="note">
+    출처 — NEIS 교육정보 개방 포털 학교기본정보, 고등학교. 2026년 기준, 문을 연 학교만. 시군구 {수(구맵.size)}곳.
+  </p>
+
+  <p class="note">
+    <a href="/coed-school-by-area">← 남녀공학 고등학교 비율 지역별(시군구)</a>
+    <br />
+    <a href="/middle-single-sex-by-province">→ 남중·여중, 시도별</a>
+  </p>
+
+  <HundredAgeWalk 키="high-single-sex-by-province" />
+  <NextQuestionBrief 모은것="NEIS 고등학교 학교기본정보를 시도·시군구로 센 실측" />
+</HundredYear>
+
+<style>
+  .num { text-align: right; font-variant-numeric: tabular-nums; }
+</style>
