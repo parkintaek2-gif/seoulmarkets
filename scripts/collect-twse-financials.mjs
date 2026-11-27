@@ -487,7 +487,7 @@ if (process.argv.includes('--자가시험')) {
 
 /* ── 실제로 받는다 ────────────────────────────────────────── */
 {
-  const 적나 = process.argv.includes('--적는다');
+  const 적나 = (process.argv.includes('--적는다') || process.argv.includes('--write'));
   const 재보나 = process.argv.includes('--재본다');
   if (!적나 && !재보나) {
     console.log('⛔ --재본다 나 --적는다 를 붙인다.');

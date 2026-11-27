@@ -285,7 +285,7 @@ if (내가진입점) {
     const i = process.argv.indexOf(이름);
     return i > 0 && process.argv[i + 1] ? process.argv[i + 1] : 기본;
   };
-  const 적는다 = process.argv.includes('--적는다');
+  const 적는다 = (process.argv.includes('--적는다') || process.argv.includes('--write'));
   const 재본다 = process.argv.includes('--재본다');
   const 다시받는다 = process.argv.includes('--다시받는다');
 

@@ -196,7 +196,7 @@ async function 받아온다() {
 }
 
 async function 본일() {
-  const 적는다 = process.argv.includes('--적는다');
+  const 적는다 = (process.argv.includes('--적는다') || process.argv.includes('--write'));
   const 오늘 = new Date();
   const 오늘글 = 오늘.getFullYear() + String(오늘.getMonth() + 1).padStart(2, '0') + String(오늘.getDate()).padStart(2, '0');
 

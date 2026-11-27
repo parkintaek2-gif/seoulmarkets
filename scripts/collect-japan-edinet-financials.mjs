@@ -45,7 +45,7 @@ const 인자 = (이름, 기본 = null) => {
   const i = process.argv.indexOf(이름);
   return i > 0 && process.argv[i + 1] ? process.argv[i + 1] : 기본;
 };
-const 적는다 = process.argv.includes('--적는다');
+const 적는다 = (process.argv.includes('--적는다') || process.argv.includes('--write'));
 const 재본다 = process.argv.includes('--재본다');
 /* 🔴 [2026-09-22] 뽑는 «칸»을 늘리면 이미 받아 둔 파일은 그 칸이 비어 있다.
    그때 「이미 있다」로 건너뛰면 새 칸이 영영 안 찬다. --다시받는다 로 덮어쓴다.
