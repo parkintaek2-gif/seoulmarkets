@@ -30,7 +30,7 @@ import { 대표자가르기 } from '../src/lib/japan-exec-title.mjs';
 const 뿌리 = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
 const 자료방 = path.join(뿌리, 'archive', 'raw', 'japan-edinet-financials');
 const 낼곳 = path.join(뿌리, 'src', 'data', 'japan-financials-tape.json');
-const 적는다 = process.argv.includes('--적는다');
+const 적는다 = (process.argv.includes('--적는다') || process.argv.includes('--write'));
 
 /**
  * 🔴 [2026-09-22] **서류가 적어 낸 영문명에 HTML 기호가 그대로 들어 있다.**

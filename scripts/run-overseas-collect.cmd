@@ -27,6 +27,8 @@ echo --- 일본 EDINET --- >> "docs\고정업무-마커\해외자료-거둠.log"
 node scripts\collect-japan-edinet-financials.mjs --write >> "docs\고정업무-마커\해외자료-거둠.log" 2>&1
 node scripts\collect-japan-edinet-breaking.mjs --write >> "docs\고정업무-마커\해외자료-거둠.log" 2>&1
 node scripts\collect-twse-financials.mjs --write >> "docs\고정업무-마커\해외자료-거둠.log" 2>&1
+node scripts\build-japan-financials-tape.mjs --write >> "docs\고정업무-마커\해외자료-거둠.log" 2>&1
+node scripts\build-japan-disclosures-feed.mjs >> "docs\고정업무-마커\해외자료-거둠.log" 2>&1
 
 echo --- UAE ADX --- >> "docs\고정업무-마커\해외자료-거둠.log"
 node scripts\collect-uae-adx-financials.mjs >> "docs\고정업무-마커\해외자료-거둠.log" 2>&1

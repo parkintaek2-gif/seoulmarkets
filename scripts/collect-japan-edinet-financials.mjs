@@ -352,7 +352,7 @@ if (내가진입점) {
   })();
   if (!KEY) { console.error('🔴 .env 에 EDINET_KEY 가 없다'); process.exit(2); }
 
-  const 날들 = 인자('--날') ? [인자('--날')] : 최근평일(Number(인자('--며칠', '1')));
+  const 날들 = 인자('--날') ? [인자('--날')] : 최근평일(Number((인자('--days') ?? 인자('--며칠', '1'))));
   const 몇개 = Number(인자('--몇개', '0'));
   console.log('■ 일본 EDINET 재무제표 —', 날들.join(' · '), 적는다 ? '· 적는다' : '· 안 적는다(재보기)');
 
