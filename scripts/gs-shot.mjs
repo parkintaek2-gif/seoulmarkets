@@ -7,7 +7,7 @@ const [id, gid, out] = process.argv.slice(2);
 const wait = (ms) => new Promise((r) => setTimeout(r, ms));
 await 새탭에서('https://docs.google.com/spreadsheets/d/' + id + '/edit#gid=' + gid, async (c) => {
   await 자리잡기(c, { 최대: 60000 });
-  await wait(7000);
+  await wait(14000);
   const r = await c.보내기('Page.captureScreenshot', { format: 'png' }, 30000);
   fs.writeFileSync(out, Buffer.from(r.data, 'base64'));
 });
