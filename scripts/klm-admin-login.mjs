@@ -10,7 +10,11 @@ const out = await 새탭에서('https://klifemap.ai/login.html', async (c) => {
   await 자리잡기(c, { 최대: 45000 });
   await wait(3000);
   await c.보내기('Page.bringToFront', {}).catch(() => {});
+  await c.보내기('Emulation.setFocusEmulationEnabled', { enabled: true }).catch(() => {});
   const box = JSON.parse(String(await 재기(c, `(() => { const r = document.querySelector('#loginEmailInput').getBoundingClientRect(); return JSON.stringify({ x: r.x + r.width / 2, y: r.y + r.height / 2 }); })()`, 20000)));
+  for (const type of ['mousePressed', 'mouseReleased']) await c.보내기('Input.dispatchMouseEvent', { type, x: box.x, y: box.y, button: 'left', clickCount: 1 });
+  await wait(900);
+  /* second click: Chrome opens the saved-account list on a click in an already focused, empty field */
   for (const type of ['mousePressed', 'mouseReleased']) await c.보내기('Input.dispatchMouseEvent', { type, x: box.x, y: box.y, button: 'left', clickCount: 1 });
   await wait(1500);
   const s0 = String(await 재기(c, state, 20000));
