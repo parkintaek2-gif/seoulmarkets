@@ -20,7 +20,8 @@ const pairs = [];
 for (let r = head + 1; r < before.length - 1 && before[r][1] !== '합계'; r += 1) if (before[r][2] === '전체' && before[r][1] && before[r + 1][2] === '보도자료') pairs.push({ name: before[r][1], row: r - head + 1, a: before[r], b: before[r + 1] });
 const first = pairs[0].row, last = pairs[pairs.length - 1].row + 1;
 const contiguous = pairs.every((p, i) => p.row === first + 2 * i);
-const order = [...pairs].sort((x, y) => y.name.localeCompare(x.name, 'ko'));
+const asc = process.argv.includes('--asc');   // boss 2026-11-28 later: ga-na-da (ascending) order
+const order = [...pairs].sort((x, y) => (asc ? x.name.localeCompare(y.name, 'ko') : y.name.localeCompare(x.name, 'ko')));
 console.log('pairs ' + pairs.length + ' · rows ' + first + '..' + last + ' · contiguous ' + contiguous + ' · cols ' + before[head].length);
 console.log(order.map((p) => p.name).join(' '));
 if (!contiguous || new Set(pairs.map((p) => p.name)).size !== pairs.length) { console.log('STOP: rows are not contiguous pairs or a name repeats'); process.exit(1); }

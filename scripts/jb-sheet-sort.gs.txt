@@ -1,0 +1,80 @@
+/**
+ * 중부매일 뉴미디어국 시트 <기사-보도자료> 정렬 버튼 (사장님 2026-11-28 지시)
+ * G1 칸의 목록 버튼에서 정렬 방식을 고르면 기자 줄이 그 순서로 다시 배치된다.
+ * 기자 한 명은 두 줄(전체, 보도자료)이다. 두 줄을 한 묶음으로 옮기고, 번호·기자명·건수·글자색·바탕색이 같이 움직인다.
+ * 머리글 줄과 합계 줄은 움직이지 않는다.
+ */
+var SORT_SHEET = '기사-보도자료';
+var SORT_CELL = 'G1';
+
+function onEdit(e) {
+  if (!e || !e.range) return;
+  var sh = e.range.getSheet();
+  if (sh.getName() !== SORT_SHEET) return;
+  if (e.range.getA1Notation() !== SORT_CELL) return;
+  sortReporters_(sh);
+}
+
+function sortReporters_(sh) {
+  var choice = String(sh.getRange(SORT_CELL).getValue());
+  if (!choice) return;
+
+  // 머리글에서 달 열을 찾는다 (D열부터, 「N월」)
+  var head = sh.getRange(1, 1, 1, 6).getDisplayValues()[0];
+  var lastCol = 3;
+  for (var c = 3; c < head.length; c++) { if (/^\d{1,2}월$/.test(head[c])) lastCol = c + 1; }
+
+  // 고른 말 읽기
+  var keyCol = 1, second = false, numeric = false, desc = false, m;
+  if (choice === '기자명 가나다순') { keyCol = 1; }
+  else if (choice === '기자명 역순') { keyCol = 1; desc = true; }
+  else if (choice === '번호순') { keyCol = 0; numeric = true; }
+  else if ((m = choice.match(/^(\d{1,2}월) (전체|보도자료) (많은|적은) 순$/))) {
+    keyCol = head.indexOf(m[1]);
+    if (keyCol < 0) return;
+    second = (m[2] === '보도자료'); numeric = true; desc = (m[3] === '많은');
+  } else return;
+
+  // 기자 줄의 끝: B열이 「합계」인 줄의 바로 위
+  var colB = sh.getRange(1, 2, sh.getLastRow(), 1).getDisplayValues();
+  var totalRow = 0;
+  for (var r = 0; r < colB.length; r++) { if (colB[r][0] === '합계') { totalRow = r + 1; break; } }
+  if (!totalRow) return;
+  var first = 2, n = totalRow - first;
+  if (n < 2 || n % 2 !== 0) return;
+
+  var rng = sh.getRange(first, 1, n, lastCol);
+  var vals = rng.getValues(), forms = rng.getFormulas();
+  var props = [rng.getFontColors(), rng.getBackgrounds(), rng.getFontWeights(), rng.getHorizontalAlignments(), rng.getNumberFormats()];
+
+  var pairs = [];
+  for (var i = 0; i < n; i += 2) {
+    var v = vals[i + (second ? 1 : 0)][keyCol];
+    pairs.push({ i: i, name: String(vals[i][1]), v: v, blank: (v === '' || v === null) });
+  }
+  pairs.sort(function (x, y) {
+    if (numeric) {
+      if (x.blank !== y.blank) return x.blank ? 1 : -1;          // 빈 칸은 언제나 아래로
+      if (!x.blank && x.v !== y.v) return desc ? y.v - x.v : x.v - y.v;
+      return x.name.localeCompare(y.name, 'ko');
+    }
+    return desc ? y.name.localeCompare(x.name, 'ko') : x.name.localeCompare(y.name, 'ko');
+  });
+
+  // 새 순서로 다시 적는다 (수식이 있던 칸은 수식을 그대로 둔다)
+  var outVals = [], outProps = [[], [], [], [], []];
+  for (var k = 0; k < pairs.length; k++) {
+    for (var d = 0; d < 2; d++) {
+      var src = pairs[k].i + d, row = [];
+      for (var c2 = 0; c2 < lastCol; c2++) row.push(forms[src][c2] ? forms[src][c2] : vals[src][c2]);
+      outVals.push(row);
+      for (var p = 0; p < props.length; p++) outProps[p].push(props[p][src]);
+    }
+  }
+  rng.setValues(outVals);
+  rng.setFontColors(outProps[0]);
+  rng.setBackgrounds(outProps[1]);
+  rng.setFontWeights(outProps[2]);
+  rng.setHorizontalAlignments(outProps[3]);
+  rng.setNumberFormats(outProps[4]);
+}
