@@ -329,6 +329,8 @@ export const GET: APIRoute = async ({ params }) => {
       { loc: '/video', lastmod: newest, changefreq: 'weekly', priority: '0.7' },
       // 데이터 상품 지면들 — 기업이 살 「주소」다. 검색 유입이 곧 영업. 5장이 사이트맵에 0개였다(56316, 2026-08-09).
       { loc: '/data', changefreq: 'weekly', priority: '0.9' },
+      // MCP server page for AI agents: linked from /api and /pricing but was missing here (found by the sitemap check, 2026-11-28).
+      { loc: '/mcp', changefreq: 'monthly', priority: '0.6' },
       /* 🔴 [2026-11-16 · 5번] 업종별 전수 지면. 30일 AI 유입을 측정하니 /data 세 장이
          38%를 가져왔는데 「Korean <업종> companies」 물음을 받는 지면이 한 장도 없었다. */
       { loc: '/data/industry', changefreq: 'weekly', priority: '0.9' },
