@@ -31,6 +31,11 @@ await 새탭에서(url, async (c) => {
   }
   const plan = JSON.parse(fs.readFileSync(after('--fill', 2), 'utf8'));
   for (const step of plan) {
+    if (step.clickText) {
+      /* press the first visible button/link whose text is exactly this (for tab buttons that have no id) */
+      const ok = String(await 재기(c, `(() => { const b = [...document.querySelectorAll('button, a')].filter((x) => x.offsetWidth && (x.innerText || '').trim() === ${JSON.stringify(step.clickText)})[0]; if (b) b.click(); return !!b; })()`, 20000));
+      await wait(step.wait || 6000); console.log('clickText ' + step.clickText + ' ' + ok); continue;
+    }
     if (step.file) {
       const { root } = await c.보내기('DOM.getDocument', { depth: 0 });
       const { nodeId } = await c.보내기('DOM.querySelector', { nodeId: root.nodeId, selector: step.sel });
@@ -60,6 +65,7 @@ await 새탭에서(url, async (c) => {
     console.log('text ' + step.sel + ' ' + (now.replace(/\s+/g, ' ').trim() === step.text.replace(/\s+/g, ' ').trim() ? 'ok' : 'DIFF') + ' len ' + now.length + '/' + step.text.length);
   }
   await shot('form-filled.png');
+  if (arg('--then-probe')) { await wait(2500); console.log('now at ' + String(await 재기(c, 'location.href', 20000))); for (const k of JSON.parse(String(await 재기(c, probeJs, 20000)))) console.log(JSON.stringify(k)); }
   if (arg('--save')) {
     const re = after('--save');
     const b = JSON.parse(String(await 재기(c, `(() => { const re = new RegExp(${JSON.stringify(re)}); const e = [...document.querySelectorAll('button, input[type=submit], a.btn')].filter((x) => x.offsetWidth && !x.disabled && re.test(((x.innerText || x.value) || '').trim()))[0]; if (!e) return JSON.stringify({ none: true }); e.scrollIntoView({ block: 'center' }); const r = e.getBoundingClientRect(); return JSON.stringify({ x: r.x + r.width / 2, y: r.y + r.height / 2, text: ((e.innerText || e.value) || '').trim() }); })()`, 20000)));
