@@ -1,0 +1,10 @@
+[
+  { "sel": "[name='vendor[key_benefits_attributes][0][value]']", "text": "7,600+" },
+  { "sel": "[name='vendor[key_benefits_attributes][0][name]']", "text": "Listed companies covered" },
+  { "sel": "[name='vendor[key_benefits_attributes][1][value]']", "text": "4" },
+  { "sel": "[name='vendor[key_benefits_attributes][1][name]']", "text": "Markets, one schema" },
+  { "sel": "[name='vendor[key_benefits_attributes][2][value]']", "text": "21,785" },
+  { "sel": "[name='vendor[key_benefits_attributes][2][name]']", "text": "Korea 5% ownership filings" },
+  { "sel": "[name='vendor[key_benefits_attributes][3][value]']", "text": "100%" },
+  { "sel": "[name='vendor[key_benefits_attributes][3][name]']", "text": "From regulator filings" }
+]
