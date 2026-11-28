@@ -104,7 +104,7 @@ Open items in this table are tracked in section 11.
 
 | Item | Why it matters | Owner | Status |
 |---|---|---|---|
-| Confirm Google Ads/Analytics data processing terms are accepted; switch off Google signals and ads personalisation in GA4 | Supports "no sale or sharing" | Operating team | Open |
+| Confirm Google Ads/Analytics data processing terms are accepted in the GA4 account settings | Supports "no sale or sharing" | Operating team | Open. Google signals data collection was checked in the GA4 admin screen on 28 November 2026 and is not enabled; no Google Ads account is linked |
 | Confirm Google Workspace Cloud DPA acceptance | Art. 28 | Operating team | Open |
 | Ask Cloudtype for written processing terms | Art. 28 | Operating team | Open |
 | Datarade Publishing Policy 4.1 requires valid consent for products containing personal data | Our ownership, officer and workforce datasets cannot rely on consent | Operating team | Decision: those datasets are not listed on Datarade. The three Datarade products contain company-level data only. A written question to Datarade is optional |

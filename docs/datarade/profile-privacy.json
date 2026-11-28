@@ -1,4 +1,6 @@
 [
   { "sel": "#vendor__privacy_policy_link", "text": "https://seoulmarkets.com/privacy" },
-  { "sel": "#vendor__data_privacy", "text": "Our datasets are built from public regulatory filings and official statistics. They contain no consumer personal data. Names of company officers and major shareholders appear only where the law requires public disclosure in the filing itself. We are a Korean company and operate under the Personal Information Protection Act (PIPA) of South Korea." }
+  { "sel": "#vendor__data_privacy", "text": "Products listed here contain company-level data from public regulatory filings and no personal data. Our privacy notice follows GDPR Art. 13 and 14 and the CCPA disclosure rules. Visitors in the EEA, UK and Switzerland are not tracked, Global Privacy Control signals are honoured, and access, deletion and objection requests are answered within one month. We are below the CCPA business thresholds and honour the same rights voluntarily. We operate under Korea's PIPA." },
+  { "sel": "#vendor__gdpr_compliant-1", "check": true },
+  { "sel": "#vendor__ccpa_compliant-1", "check": true }
 ]
