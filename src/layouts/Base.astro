@@ -2,6 +2,7 @@
 import Masthead from '../components/Masthead.astro';
 import { 데이터세트채우기 } from '../lib/dataset-채운다';
 import Analytics from '../components/Analytics.astro';
+import PrivacyGate from '../components/PrivacyGate.astro';
 import Footer from '../components/Footer.astro';
 import PreferredSource from '../components/선호출처.astro';
 import { SITE, SITE_URL, PUBLISHER, ADS } from '../consts';
@@ -104,12 +105,18 @@ const orgLd = {
       ⛔ 「붙였다」를 「센다」로 읽지 않는다 — 라이브에서 wcs_do 가 실제로 도는지 잰다.
       ⛔ 이 태그를 지우지 않는다. 지우면 그날부터 손님 수가 통째로 빈다.
     */}
-    <script type="text/javascript" src="//wcs.pstatic.net/wcslog.js" is:inline></script>
+    {/* 2026-11-28 GDPR/CCPA: PrivacyGate first; the Naver tag loads only when the gate allows it (see PrivacyGate.astro). */}
+    <PrivacyGate />
     <script type="text/javascript" is:inline>
-      if(!wcs_add) var wcs_add = {};
-      wcs_add["wa"] = "127a65fcc0cbb30";
-      if(window.wcs) {
-        wcs_do();
+      if (!window.__privacyHold) {
+        var wcsTag = document.createElement('script');
+        wcsTag.src = 'https://wcs.pstatic.net/wcslog.js';
+        wcsTag.onload = function () {
+          if (!window.wcs_add) window.wcs_add = {};
+          window.wcs_add["wa"] = "127a65fcc0cbb30";
+          if (window.wcs) { wcs_do(); }
+        };
+        document.head.appendChild(wcsTag);
       }
     </script>
     {/*
@@ -175,11 +182,7 @@ const orgLd = {
           Auto Ads 가 스크립트만 보고 알아서 광고를 꽂을 수 있기 때문이다. */}
     {
       ADS.client !== '' && !광고끔 && (
-        <script
-          async
-          src={`https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=${ADS.client}`}
-          crossorigin="anonymous"
-        />
+        <script is:inline set:html={`if(!window.__privacyHold){var adTag=document.createElement('script');adTag.async=true;adTag.crossOrigin='anonymous';adTag.src='https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=${ADS.client}';document.head.appendChild(adTag);}`} />
       )
     }
     <Analytics />

@@ -1,0 +1,31 @@
+---
+/**
+ * PrivacyGate.astro — decides, before any third-party tag loads, whether this browser must be left untracked.
+ *
+ * Why (2026-11-28, boss: review GDPR and CCPA and apply them):
+ *   - ePrivacy Directive Art. 5(3) / GDPR: analytics and advertising cookies need prior consent from visitors in the
+ *     EEA, the UK and Switzerland. We have no consent banner, so for those visitors we load none of those tags at all.
+ *   - CCPA regulations s.7025: a Global Privacy Control signal must be honoured as an opt-out.
+ *
+ * How the region is recognised: by the browser's time zone, not by IP. No request is made and nothing is stored.
+ * A European time zone is treated as "in region" (this over-includes a few non-EEA countries, which is the safe side).
+ *
+ * The result is window.__privacyHold: '' (tags may load), 'gpc' or 'region'.
+ * Every third-party loader (Google Analytics, Naver Analytics, AdSense, Google preferred-source) reads it first.
+ * Must be placed in <head> BEFORE those loaders. Inline scripts ship to the browser as written, so the script below
+ * carries no comments and only ASCII names.
+ */
+---
+<script is:inline>
+  (function () {
+    var hold = '';
+    try {
+      if (navigator.globalPrivacyControl === true) hold = 'gpc';
+      else {
+        var zone = (Intl.DateTimeFormat().resolvedOptions().timeZone || '');
+        if (/^Europe\//.test(zone) || /^(Atlantic\/(Reykjavik|Canary|Madeira|Azores|Faroe|Jan_Mayen)|Arctic\/Longyearbyen|Asia\/(Nicosia|Famagusta)|Indian\/(Reunion|Mayotte)|America\/(Cayenne|Martinique|Guadeloupe|Marigot|St_Barthelemy))$/.test(zone)) hold = 'region';
+      }
+    } catch (e) { hold = ''; }
+    window.__privacyHold = hold;
+  })();
+</script>

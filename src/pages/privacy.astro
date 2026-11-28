@@ -1,27 +1,29 @@
 ---
 /**
- * SeoulMarkets — **쿠키와 접속기록을 밝히는 지면.** (`/privacy`)
+ * SeoulMarkets privacy notice (`/privacy`).
  *
- * ── 왜 만드나 ─────────────────────────────────────────────────
- * 2026-08-08 12:0x. 내가(2번) 네 사이트에 GA 를 심어 놓고 라이브를 재 봤더니
- * **서울마켓만 밝히는 지면이 없었다.** 백년지도는 3번이, K Culture Wire 는 5번이
- * 같은 커밋에 냈는데, 태그를 붙인 나만 안 냈다.
+ * 2026-11-28 rewrite (boss: review GDPR and CCPA and apply them).
+ * The August page said "no accounts, no payment, no ads". By November the site had accounts, API keys,
+ * PayPal checkout, trial requests, a newsletter list, comments and AdSense, so the page was simply wrong.
+ * This version is written against GDPR Art. 13 and Art. 14 and the CCPA privacy-policy contents
+ * (Civ. Code s.1798.130(a)(5), regulations s.7011).
  *
- * ⛔ 재는 것을 붙여 놓고 밝히는 것을 미루지 않는다. 미룬 만큼 몰래 잰 것이 된다.
- * ⛔ 없는 것을 있다고 적지 않는다 — 회원도 결제도 폼도 없다. 있는 것은 메일 한 통이다.
- * ⚠ 광고는 이 사이트에 **아직 없다.** 애드센스가 붙는 날 이 지면을 먼저 고친다.
- *
- * 5번이 쓴 `wikitip/privacy.astro` 와 **같은 사실**을 말한다. 두 지면이 어긋나면 안 되므로
- * 측정 ID·도메인 목록은 손으로 적지 않고 `Analytics.astro` 한 곳에서 가져온다.
+ * Rules for whoever edits this next:
+ *   - Do not state anything the site does not do. If a feature is added that touches personal data,
+ *     change this page in the same commit.
+ *   - The measurement ID and the linked-domain list come from Analytics.astro, never typed by hand.
+ *   - The region and Global Privacy Control behaviour described here is implemented in PrivacyGate.astro.
+ *   - Internal basis documents live in docs/privacy/.
  */
 import Base from '../layouts/Base.astro';
 import { 측정ID, 잇는곳 } from '../components/Analytics.astro';
 import { PUBLISHER, SITE_URL } from '../consts';
 
-const MAIL = 'parkintaek2@gmail.com';
-const TITLE = 'Cookies and what we log';
-const DESC = 'SeoulMarkets runs one analytics tag and nothing else. This page says what it stores, '
-  + 'who else can see it, and how to switch it off.';
+const MAIL = 'admin@klifedesign.net';
+const UPDATED = '28 November 2026';
+const TITLE = 'Privacy notice';
+const DESC = 'What personal data SeoulMarkets handles, why, who receives it, how long it is kept and how to use '
+  + 'your rights under GDPR and CCPA, including if your name appears in one of our datasets.';
 
 const jsonLd = {
   '@context': 'https://schema.org',
@@ -36,78 +38,206 @@ const jsonLd = {
 ---
 
 <Base title={TITLE} description={DESC} jsonLd={jsonLd}>
-  <h1>Cookies and what we log</h1>
+  <h1>Privacy notice</h1>
   <p class="lead">
-    This site has no accounts, no login, no payment and no comment box, so there is very little to
-    tell. There is one thing, and it started on <b>8 August 2026</b>: an analytics tag.
+    Last updated {UPDATED}. This page says what personal data we handle, why, who else receives it,
+    how long we keep it and how to ask us about it. It covers seoulmarkets.com, its API and the
+    datasets we license.
   </p>
 
   <section>
-    <h2>The one thing we run</h2>
+    <h2>Who we are</h2>
     <p>
-      <b>Google Analytics 4</b>, measurement ID <code>{측정ID}</code>. It sets cookies in your
-      browser and records that a page was opened — which page, roughly where in the world from, what
-      kind of device, and which link brought you. It is the same tag on all four of our sites
-      ({잇는곳.join(', ')}), so a visit that moves between them is counted as one person moving
-      rather than four separate arrivals.
-    </p>
-    <p class="note">
-      That last part is the honest reason it is one tag and not four: we want to know whether these
-      sites feed each other. It also means Google can associate your visits across them.
+      The controller is <b>{PUBLISHER.legalName}</b> ({PUBLISHER.address}), a company registered in
+      the Republic of Korea. For anything on this page write to
+      <a href={`mailto:${MAIL}`}>{MAIL}</a>. A person reads that inbox. We have not appointed a data
+      protection officer because the law does not require one for what we do.
     </p>
   </section>
 
   <section>
-    <h2>What we do not run</h2>
+    <h2>What we collect from you, and why</h2>
+    <table>
+      <thead><tr><th>When</th><th>What</th><th>Why, and legal basis (GDPR Art. 6)</th><th>Kept for</th></tr></thead>
+      <tbody>
+        <tr>
+          <td>You create an account</td>
+          <td>Email address, a one-way hash of your password, the list of what you bought</td>
+          <td>To give you access to what you bought. Contract (6(1)(b)).</td>
+          <td>Until you ask us to delete the account</td>
+        </tr>
+        <tr>
+          <td>You get an API key</td>
+          <td>A one-way hash of your email and of the key, the plan, request counts</td>
+          <td>To authenticate calls and apply plan limits. Contract (6(1)(b)).</td>
+          <td>Until the key is revoked or you ask for deletion</td>
+        </tr>
+        <tr>
+          <td>You pay</td>
+          <td>PayPal order ID, amount, product, time, the email on the order. We never see or store card numbers.</td>
+          <td>To deliver the purchase and keep accounts. Contract (6(1)(b)) and legal obligation (6(1)(c)).</td>
+          <td>Five years, as Korean commerce law requires for payment records</td>
+        </tr>
+        <tr>
+          <td>You request a trial or write to us</td>
+          <td>Email address and whatever you tell us (organisation, role, what you need)</td>
+          <td>To answer you. Steps before a contract (6(1)(b)) or our legitimate interest in answering enquiries (6(1)(f)).</td>
+          <td>Two years after the last message, or until you ask for deletion</td>
+        </tr>
+        <tr>
+          <td>You join the mailing list</td>
+          <td>Email address, the time, the page you signed up from</td>
+          <td>To send what you asked for. Consent (6(1)(a)); withdraw at any time by replying "stop".</td>
+          <td>Until you unsubscribe</td>
+        </tr>
+        <tr>
+          <td>You post a comment or vote</td>
+          <td>The display name and text you type. No IP address, cookie or session ID is stored with it.</td>
+          <td>To show the comment. Legitimate interest (6(1)(f)).</td>
+          <td>Until you ask us to remove it</td>
+        </tr>
+        <tr>
+          <td>You open a page</td>
+          <td>
+            Our server counts visits. It does not store your IP address. It stores a one-way hash that
+            changes every day, so the same visitor cannot be followed from one day to the next. Attack
+            protection reads IP addresses in memory; when it blocks an address it writes a partly
+            masked form of it to the server log.
+          </td>
+          <td>To count visitors and block attacks. Legitimate interest (6(1)(f)).</td>
+          <td>Daily hashes and counts are kept as statistics; they cannot be turned back into an IP address. Server logs: as long as the hosting provider retains them</td>
+        </tr>
+      </tbody>
+    </table>
+    <p class="note">
+      You are not obliged to give us any of this. Without an email address we cannot create an account
+      or deliver a purchase. We make no automated decisions about you and do no profiling.
+    </p>
+  </section>
+
+  <section id="cookies">
+    <h2>Cookies, analytics and advertising</h2>
+    <p>
+      Three third-party services can run on this site: <b>Google Analytics 4</b> (measurement ID
+      <code>{측정ID}</code>, shared across {잇는곳.join(', ')} so that a visit moving between them is
+      counted once), <b>Naver Analytics</b>, and <b>Google AdSense</b> advertising with the Google
+      preferred-source button. They set cookies and tell Google or Naver which page was opened, from
+      roughly where, on what kind of device.
+    </p>
+    <p>
+      <b>If you are in the European Economic Area, the United Kingdom or Switzerland, none of them is
+      loaded.</b> We recognise this from your browser's time zone, without looking up your IP address.
+      You will see the same pages without analytics or advertising cookies, so there is nothing to
+      consent to and no banner.
+    </p>
+    <p>
+      <b>If your browser sends a Global Privacy Control signal, none of them is loaded either</b>,
+      wherever you are. We treat the signal as an opt-out.
+    </p>
+    <p class="note">
+      Elsewhere you can still switch them off with your browser's tracking protection or Google's
+      opt-out add-on. Nothing on the site breaks. When you sign in, the site keeps a sign-in token in
+      your browser's local storage; it is needed for the account page to work and is removed when you
+      sign out.
+    </p>
+  </section>
+
+  <section>
+    <h2>Who receives personal data</h2>
     <ul>
-      <li><b>No accounts, no login, no password.</b> There is nothing to sign into.</li>
-      <li><b>No payment.</b> Data requests are handled by email; no card ever touches this site.</li>
-      <li>
-        <b>No forms.</b> The newsletter and contact links are <code>mailto:</code> links — the
-        message goes from your mail program to our inbox and never through this server.
-      </li>
-      <li><b>No comments, no uploads, no chat.</b></li>
-      <li>
-        <b>No advertising yet.</b> If we ever carry ads, ad cookies come with them. We will change
-        this page on the same day, not after.
-      </li>
+      <li><b>Google</b> (Ireland and United States): analytics and advertising as described above, and Google Workspace, which carries our email.</li>
+      <li><b>Naver</b> (Republic of Korea): analytics.</li>
+      <li><b>PayPal</b>: payments. PayPal acts as its own controller under its own privacy notice.</li>
+      <li><b>Cloudtype</b> (Republic of Korea): hosting.</li>
+      <li><b>Cloudflare</b> (United States): object storage for account, key and order records, encrypted in transit.</li>
+      <li><b>RapidAPI</b>: only if you subscribe through RapidAPI, which then handles your account and billing under its own notice.</li>
+    </ul>
+    <p>
+      We do not sell personal data and we do not share it for cross-context behavioural advertising.
+      We disclose it to authorities only when the law compels us.
+    </p>
+  </section>
+
+  <section>
+    <h2>Transfers outside your country</h2>
+    <p>
+      We are in the Republic of Korea, which the European Commission and the United Kingdom recognise
+      as providing adequate protection. When our providers process data in the United States, the
+      transfer relies on the provider's certification under the EU-U.S. Data Privacy Framework or on
+      standard contractual clauses in the provider's data processing terms.
+    </p>
+  </section>
+
+  <section id="named-in-data">
+    <h2>If your name appears in one of our datasets</h2>
+    <p>
+      Some datasets we license (company ownership filings, officer and major-shareholder filings and
+      workforce filings) contain the names of company officers and of shareholders who were legally
+      required to file. This notice is given under GDPR Art. 14. Writing to each person named is not
+      practicable, so we publish it here instead (Art. 14(5)(b)).
+    </p>
+    <ul>
+      <li><b>Source:</b> public regulatory disclosure systems only: DART (Financial Supervisory Service, Korea), EDINET (Financial Services Agency, Japan), the Taiwan Stock Exchange and the ADX and DFM exchanges in the UAE. We did not obtain the data from you.</li>
+      <li><b>What:</b> name, role or relationship to the company, shareholding and changes in it, and for some officers the compensation the company disclosed. Nothing beyond what the filing itself made public. No contact details, no national ID numbers, no special-category data.</li>
+      <li><b>Why:</b> so that investors and researchers can read mandatory corporate disclosures in English. Legal basis: our legitimate interest and that of our customers in the transparency of listed companies (Art. 6(1)(f)), which is the purpose the disclosure laws themselves serve.</li>
+      <li><b>Who receives it:</b> customers who license the datasets, such as asset managers, researchers and software developers.</li>
+      <li><b>How long:</b> for as long as the filing remains part of the public record.</li>
+      <li><b>Your rights:</b> you can ask for a copy of what we hold about you, ask us to correct it against the filing, or object. If you object and we have no overriding reason, we remove your name from future releases within one month.</li>
+    </ul>
+  </section>
+
+  <section id="rights">
+    <h2>Your rights, and how to use them</h2>
+    <p>
+      Wherever you live, you can ask us to tell you what we hold about you, give you a copy, correct
+      it, delete it, restrict or stop a use you object to, hand it to you in a portable format, or
+      withdraw a consent you gave. Write to <a href={`mailto:${MAIL}`}>{MAIL}</a> from the address
+      concerned, or tell us enough to find the record. There is no fee and no form.
+    </p>
+    <ul>
+      <li>We acknowledge every request within 10 business days.</li>
+      <li>We answer within one month. If a request is complex we may take up to two more months and will tell you why within the first month.</li>
+      <li>We will not treat you differently for using these rights.</li>
+      <li>If you are in the EEA, the UK or Switzerland you can also complain to your data protection authority. In Korea the authority is the Personal Information Protection Commission.</li>
+    </ul>
+  </section>
+
+  <section id="california">
+    <h2>California residents (CCPA)</h2>
+    <p>
+      We are below the thresholds that make a company a "business" under the California Consumer
+      Privacy Act, and we are not a data broker under California law. We give California residents the
+      same rights anyway.
+    </p>
+    <ul>
+      <li><b>Categories collected in the last 12 months:</b> identifiers (email address, hashed credentials); commercial information (what you bought); internet activity (pages opened, through the analytics described above); and the text of messages you sent us. Sources and purposes are in the table at the top of this page.</li>
+      <li><b>Sold or shared:</b> none. We do not sell personal information and do not share it for cross-context behavioural advertising. We honour Global Privacy Control signals.</li>
+      <li><b>Sensitive personal information:</b> we do not collect it.</li>
+      <li><b>Your rights:</b> to know, to delete, to correct, to opt out of sale or sharing, and not to be discriminated against for using them. Write to <a href={`mailto:${MAIL}`}>{MAIL}</a>; an authorised agent may write on your behalf with your signed permission. We confirm receipt within 10 business days and respond within 45 days.</li>
+      <li><b>Names in our datasets:</b> these come from mandatory public filings and are publicly available information. See the section above if your name appears.</li>
     </ul>
   </section>
 
   <section>
-    <h2>If you write to us</h2>
+    <h2>Security</h2>
     <p>
-      We keep the email. That is unavoidable — it is how we answer you — and we use it only to
-      answer, and to send you the pieces if you asked to be on the list. We do not sell it, rent it
-      or pass it to anyone. Reply <em>stop</em> to any message, or write saying delete me, and the
-      address goes.
+      Passwords and API keys are stored only as one-way hashes. Traffic is encrypted. Access to stored
+      records is limited to the people who run the service. If a breach
+      affecting your data occurs we will notify the competent authority within 72 hours where the law
+      requires it, and you without undue delay if the risk to you is high.
     </p>
   </section>
 
   <section>
-    <h2>How to switch the analytics off</h2>
+    <h2>Changes</h2>
     <p>
-      Use your browser's tracker blocking, an extension that blocks Google Analytics, or Google's
-      own opt-out add-on. Nothing here breaks when the tag is blocked — every page is plain HTML
-      with the numbers already in it, and none of it waits on the tag to load.
-    </p>
-    <p class="note">
-      We would rather say that than put a consent banner in front of the reading. If enough of you
-      block it, we will find out from the numbers, which seems like the right way round.
-    </p>
-  </section>
-
-  <section>
-    <h2>Who we are, and how to ask</h2>
-    <p>
-      {PUBLISHER.legalName}. Write to <a href={`mailto:${MAIL}`}>{MAIL}</a> to ask what we hold about
-      you, to have it deleted, or to complain about any of the above. It is one inbox and a person
-      reads it. There is no form, because a form would be a worse version of an email.
+      If what we do changes, this page changes on the same day and the date at the top moves.
     </p>
   </section>
 
   <p class="back">
     <a href="/about">How we make these numbers</a>
+    <span aria-hidden="true"> · </span><a href="/terms">Terms</a>
     <span aria-hidden="true"> · </span><a href="/">Front page</a>
   </p>
 </Base>
@@ -122,6 +252,9 @@ const jsonLd = {
   ul { padding-left: 1.15rem; font-size: .93rem; line-height: 1.75; margin: 0; }
   li { margin: 0 0 .45rem; }
   code { font-size: .9em; }
+  table { width: 100%; border-collapse: collapse; font-size: .85rem; line-height: 1.6; margin: 0 0 .9rem; display: block; overflow-x: auto; }
+  th, td { text-align: left; vertical-align: top; padding: .5rem .6rem; border-bottom: 1px solid color-mix(in srgb, currentColor 15%, transparent); min-width: 9rem; }
+  th { font-weight: 600; }
   .back { margin-top: 3rem; font-size: .9rem; }
   .back a { color: var(--muted); }
 </style>

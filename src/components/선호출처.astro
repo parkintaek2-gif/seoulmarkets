@@ -45,7 +45,9 @@ const 글 = lang === 'ko'
   <div google-add-preferred-source-btn></div>
 </div>
 
-<script is:inline async src="https://news.google.com/swg/js/v1/publisher.js"></script>
+<script is:inline>
+  if (!window.__privacyHold) { var swgTag = document.createElement('script'); swgTag.async = true; swgTag.src = 'https://news.google.com/swg/js/v1/publisher.js'; document.head.appendChild(swgTag); }
+</script>
 {/*
   🔴🔴 [2026-10-04 05:1x · 5번] **아래 조각의 한국어가 지면 15,330장에 실려 나가고 있었다.**
 
