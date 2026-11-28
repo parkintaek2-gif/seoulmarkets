@@ -1,0 +1,160 @@
+---
+/**
+ * /100y/high-class-size-by-school-size — 학생 수가 많은 고등학교일수록 학급당 학생이 많은가, 학교 규모 구간별 (2024 공시)
+ *
+ * 출처  학교알리미 2024 공시 「학년별·학급별 학생수」 — src/lib/high-school-province.ts 가 NEIS 학교 목록과 학교 코드로 잇는다.
+ *       학교를 학생 수 구간으로 나누고, 구간마다 학급당 학생(학생 ÷ 학급)·수업교원 1명당 학생의 하위 10%·중앙값·상위 10%를 낸다.
+ * 같은 소재의 /high-school-size-by-province 는 1,000명 이상·60명 이하 학교를 «시도별»로 센다. 이 페이지는 «규모와 학급당 학생 수의 관계»다.
+ * ⛔ 「큰 학교가 낫다·작은 학교가 낫다」 같은 판단과 원인 추측을 쓰지 않는다. 수만 적는다.
+ * ⛔ 「수업교원」을 「교원 수」라 쓰지 않는다.
+ */
+import HundredYear from '../../../layouts/HundredYear.astro';
+import HundredAgeWalk from '../../../components/HundredAgeWalk.astro';
+import NextQuestionBrief from '../../../components/NextQuestionBrief.astro';
+import { 값있는, 못이은, 합, 분위, 소수1, 수, 퍼글 } from '../../../lib/high-school-students';
+
+const 구간표 = [
+  { 이름: '100명 이하', 최소: 0, 최대: 100 },
+  { 이름: '101~300명', 최소: 101, 최대: 300 },
+  { 이름: '301~600명', 최소: 301, 최대: 600 },
+  { 이름: '601~900명', 최소: 601, 최대: 900 },
+  { 이름: '901~1,200명', 최소: 901, 최대: 1200 },
+  { 이름: '1,201명 이상', 최소: 1201, 최대: Infinity },
+];
+const 줄 = (이름: string, a: typeof 값있는) => {
+  const g = a.map((r) => r.학생 / r.학급);
+  const t = a.filter((r) => r.교원 !== null && (r.교원 as number) > 0).map((r) => r.학생 / (r.교원 as number));
+  return { 이름, 곳: a.length, 학생: 합(a, (r) => r.학생), g10: 분위(g, 0.1), g50: 분위(g, 0.5), g90: 분위(g, 0.9), t50: 분위(t, 0.5) };
+};
+const 구간들 = 구간표.map((c) => 줄(c.이름, 값있는.filter((r) => r.학생 >= c.최소 && r.학생 <= c.최대)));
+const 전체 = 줄('전체', 값있는);
+const 일반구간 = 구간표.map((c) => {
+  const a = 값있는.filter((r) => r.유형 === '일반고' && r.학생 >= c.최소 && r.학생 <= c.최대);
+  return { 이름: c.이름, 곳: a.length, p50: 분위(a.map((r) => r.학생 / r.학급), 0.5) };
+});
+const 작은 = 구간들[0];
+const 가장큰 = 구간들[구간들.length - 1];
+const 큰중앙 = [...구간들].filter((x) => x.곳 > 0).sort((a, b) => (b.g50 ?? 0) - (a.g50 ?? 0))[0];
+const 일천이상 = 값있는.filter((r) => r.학생 >= 1000);
+const 일천중앙 = 분위(일천이상.map((r) => r.학생 / r.학급), 0.5);
+const 육십이하 = 값있는.filter((r) => r.학생 <= 60);
+const 육십중앙 = 분위(육십이하.map((r) => r.학생 / r.학급), 0.5);
+
+const TITLE = `고등학교 학급당 학생 수, 학교 규모별 — 100명 이하 ${소수1(작은.g50)}명, 1,201명 이상 ${소수1(가장큰.g50)}명, 전체 중앙값 ${소수1(전체.g50)}명`;
+const desc = `학교알리미 2024 공시로 고등학교 ${수(전체.곳)}곳을 학생 수 구간 여섯으로 나눠 학급당 학생 수와 수업교원 1명당 학생 수의 중앙값을 냈습니다. 100명 이하 학교는 ${소수1(작은.g50)}명, 1,201명 이상 학교는 ${소수1(가장큰.g50)}명입니다.`;
+
+const jsonLd = [
+  {
+    '@context': 'https://schema.org',
+    '@type': 'Dataset',
+    name: '고등학교 규모별 학급당 학생 수',
+    description: desc,
+    creator: { '@type': 'Organization', name: '백년지도' },
+    sourceOrganization: { '@type': 'Organization', name: '학교알리미(한국교육학술정보원)' },
+    variableMeasured: ['학생 수 구간', '학급당 학생 수', '수업교원 1명당 학생 수'],
+  },
+  {
+    '@context': 'https://schema.org',
+    '@type': 'FAQPage',
+    mainEntity: [
+      {
+        '@type': 'Question',
+        name: '학생 수가 많은 고등학교는 학급당 학생도 많은가요?',
+        acceptedAnswer: {
+          '@type': 'Answer',
+          text: `학교알리미 2024 공시 기준 학급당 학생 수의 중앙값은 학생 100명 이하 학교 ${소수1(작은.g50)}명, 1,000명 이상 학교 ${소수1(일천중앙)}명, 전체 ${소수1(전체.g50)}명입니다. 구간별 값은 이 페이지의 표에 있습니다.`,
+        },
+      },
+      {
+        '@type': 'Question',
+        name: '학생 60명 이하의 작은 고등학교는 학급당 학생이 몇 명인가요?',
+        acceptedAnswer: {
+          '@type': 'Answer',
+          text: `학생 60명 이하 고등학교 ${수(육십이하.length)}곳의 학급당 학생 수 중앙값은 ${소수1(육십중앙)}명입니다. 60명 선은 이 사이트가 정한 구분입니다.`,
+        },
+      },
+    ],
+  },
+];
+---
+
+<HundredYear title={TITLE} description={desc} jsonLd={jsonLd}>
+  <h1>큰 고등학교는 한 반에<br class="pcbr" /> 학생이 더 많을까요</h1>
+  <p class="sub">
+    고등학교 {수(전체.곳)}곳을 학생 수 구간 여섯으로 나누고, 구간마다 학급당 학생 수와 수업교원 1명당 학생 수를 하위 10%·중앙값·상위 10%로 냈습니다. 학교알리미 2024 공시입니다.
+  </p>
+
+  <div class="answer">
+    <p class="answer-label">학급당 학생 수 중앙값 — 학교 규모별</p>
+    <p class="answer-num">{소수1(작은.g50)}명 ~ {소수1(큰중앙.g50)}명</p>
+    <p class="answer-sub">100명 이하 학교 {소수1(작은.g50)}명 · 1,201명 이상 학교 {소수1(가장큰.g50)}명 · 전체 {소수1(전체.g50)}명</p>
+  </div>
+
+  <h2>학교 규모 구간별 학급당 학생 수</h2>
+  <div class="tablewrap">
+    <table>
+      <thead><tr><th>학생 수</th><th>학교</th><th>학급당 하위 10%</th><th>학급당 중앙값</th><th>학급당 상위 10%</th><th>수업교원 1명당 중앙값</th></tr></thead>
+      <tbody>
+        {구간들.map((x) => (
+          <tr>
+            <th>{x.이름}</th>
+            <td class="num">{수(x.곳)}곳</td>
+            <td class="num">{소수1(x.g10)}명</td>
+            <td class="num"><strong>{소수1(x.g50)}명</strong></td>
+            <td class="num">{소수1(x.g90)}명</td>
+            <td class="num">{소수1(x.t50)}명</td>
+          </tr>
+        ))}
+      </tbody>
+    </table>
+  </div>
+  <p class="note">구간은 이 사이트가 나눈 것이며 공식 구분이 아닙니다. 학교 수가 적은 구간은 값이 흔들릴 수 있습니다.</p>
+
+  <h2>일반고만 따로 보면</h2>
+  <div class="tablewrap">
+    <table>
+      <thead><tr><th>학생 수</th><th>일반고</th><th>학급당 중앙값</th></tr></thead>
+      <tbody>
+        {일반구간.map((x) => (
+          <tr>
+            <th>{x.이름}</th>
+            <td class="num">{수(x.곳)}곳</td>
+            <td class="num"><strong>{소수1(x.p50)}명</strong></td>
+          </tr>
+        ))}
+      </tbody>
+    </table>
+  </div>
+  <p class="note">특성화고·특목고 등에는 규모가 작은 학교가 많아, 종류를 섞지 않은 일반고 값을 따로 냈습니다.</p>
+
+  <h2>같은 표에서 읽히는 것</h2>
+  <ul>
+    <li>학급당 학생 수 중앙값이 가장 큰 구간은 {큰중앙.이름}으로 {소수1(큰중앙.g50)}명입니다. 100명 이하 학교는 {소수1(작은.g50)}명입니다.</li>
+    <li>학생 1,000명 이상 학교 {수(일천이상.length)}곳({퍼글(일천이상.length, 전체.곳)})의 학급당 중앙값은 {소수1(일천중앙)}명, 학생 60명 이하 학교 {수(육십이하.length)}곳은 {소수1(육십중앙)}명입니다.</li>
+  </ul>
+
+  <h2>⚠ 이 자료로 말할 수 없는 것</h2>
+  <ul>
+    <li>학교알리미 2024 공시의 학생·학급·수업교원 수입니다. 학교 코드로 잇지 못했거나 학생 수가 0으로 온 {수(못이은)}곳은 뺐습니다.</li>
+    <li>수업교원은 공표 통계의 교원 수와 세는 범위가 다릅니다. 교장·교감·보건·상담 등은 들어 있지 않습니다.</li>
+    <li>학교가 커서 학급당 학생이 늘었는지, 그 반대인지 이 자료만으로는 알 수 없습니다. 같은 시점의 학교 하나하나를 비교한 것입니다.</li>
+    <li>학교 하나를 한 칸으로 센 값이라 학생 한 명이 겪는 값과 다를 수 있습니다.</li>
+  </ul>
+
+  <p class="note">
+    출처 — 학교알리미(한국교육학술정보원) 공개용데이터 「학년별·학급별 학생수」 2024 공시(공공누리 제1유형), NEIS 교육정보 개방 포털 학교기본정보 고등학교.
+  </p>
+
+  <p class="note">
+    <a href="/high-school-size-by-province">← 학생 1,000명 이상·60명 이하 학교, 시도별</a>
+    <br />
+    <a href="/high-class-size-by-school-type">→ 학급당 학생 수, 고교유형·설립별</a>
+  </p>
+
+  <HundredAgeWalk 키="high-class-size-by-school-size" />
+  <NextQuestionBrief 모은것="학교알리미 고등학교 학급당 학생 수를 학생 수 구간별 분위로 나눈 실측" />
+</HundredYear>
+
+<style>
+  .num { text-align: right; font-variant-numeric: tabular-nums; }
+</style>

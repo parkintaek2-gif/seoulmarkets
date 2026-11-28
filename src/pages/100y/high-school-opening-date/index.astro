@@ -1,0 +1,198 @@
+---
+/**
+ * /100y/high-school-opening-date — 고등학교는 몇 월 며칠에 문을 열었나, 설립일 칸의 월·날짜 분포
+ *
+ * 출처  NEIS 교육정보 개방 포털 학교기본정보 — src/data/100yearmap/pages-school.json 의 설립일 칸(YYYYMMDD) 고등학교.
+ *       이 쪽에서 한 일은 월·날짜로 세고 비중을 계산한 것뿐이다. 지금 문을 연 고등학교만 있다.
+ * 같은 소재의 /high-school-founding-decade-by-province 는 «연대·시도»별이다. 이 페이지는 «월과 날짜»다.
+ * ⚠ 설립일 칸이 실제 개교일인지 인가일인지는 NEIS 가 구분해 주지 않는다. 이 자료로 말하지 않는다.
+ * ⛔ 이유 추측(학년도가 3월에 시작해서 등)은 쓰지 않는다. 수만 적는다.
+ */
+import HundredYear from '../../../layouts/HundredYear.astro';
+import HundredAgeWalk from '../../../components/HundredAgeWalk.astro';
+import NextQuestionBrief from '../../../components/NextQuestionBrief.astro';
+import { 고교들, 수, 퍼글 } from '../../../lib/high-school-province';
+import 원본 from '../../../data/100yearmap/pages-school.json';
+
+const 학교 = (원본 as any[])
+  .filter((x) => x.종류 === '고등학교')
+  .map((x) => {
+    const d = String(x.설립일 ?? '');
+    return { 이름: x.title as string, 설립: String(x.설립 ?? ''), 연: Number(d.slice(0, 4)), 월: Number(d.slice(4, 6)), 일: Number(d.slice(6, 8)), 날: d.length === 8 ? d.slice(4, 8) : '' };
+  })
+  .filter((x) => x.날 && x.월 >= 1 && x.월 <= 12 && x.일 >= 1 && x.일 <= 31 && x.연 > 1800);
+const 못센 = 고교들.length - 학교.length;
+const 전체 = 학교.length;
+
+const 월별 = Array.from({ length: 12 }, (_, i) => ({ 월: i + 1, 곳: 학교.filter((x) => x.월 === i + 1).length }));
+const 삼월일일 = 학교.filter((x) => x.월 === 3 && x.일 === 1).length;
+const 삼월 = 월별[2].곳;
+const 맨많은월 = [...월별].sort((a, b) => b.곳 - a.곳)[0];
+const 맨적은월 = [...월별].sort((a, b) => a.곳 - b.곳)[0];
+
+const 날맵 = new Map<string, number>();
+for (const x of 학교) 날맵.set(x.날, (날맵.get(x.날) ?? 0) + 1);
+const 날들 = [...날맵.entries()].map(([날, 곳]) => ({ 날, 곳 })).sort((a, b) => b.곳 - a.곳 || a.날.localeCompare(b.날)).slice(0, 12);
+const 날글 = (d: string) => `${Number(d.slice(0, 2))}월 ${Number(d.slice(2, 4))}일`;
+
+const 연대표 = [1900, 1910, 1920, 1930, 1940, 1950, 1960, 1970, 1980, 1990, 2000, 2010, 2020].map((s) => {
+  const a = 학교.filter((x) => x.연 >= s && x.연 < s + 10);
+  return { 이름: s === 1900 ? '1900년대 이전~1909' : `${s}년대`, 곳: a.length, 삼일: a.filter((x) => x.월 === 3 && x.일 === 1).length };
+}).map((x, i) => (i === 0 ? { ...x, 곳: 학교.filter((y) => y.연 < 1910).length, 삼일: 학교.filter((y) => y.연 < 1910 && y.월 === 3 && y.일 === 1).length } : x)).filter((x) => x.곳 > 0);
+
+const 설립별 = ['공립', '사립', '국립'].map((g) => {
+  const a = 학교.filter((x) => x.설립 === g);
+  return { 이름: g, 곳: a.length, 삼일: a.filter((x) => x.월 === 3 && x.일 === 1).length, 삼월: a.filter((x) => x.월 === 3).length };
+}).filter((x) => x.곳 > 0);
+const 연말 = 학교.filter((x) => x.월 === 12).length;
+const 일월 = 학교.filter((x) => x.월 === 1).length;
+
+const TITLE = `고등학교 ${수(전체)}곳 가운데 ${수(삼월일일)}곳(${퍼글(삼월일일, 전체)})이 설립일 3월 1일 — 월별로는 ${맨많은월.월}월 ${수(맨많은월.곳)}곳, ${맨적은월.월}월 ${수(맨적은월.곳)}곳`;
+const desc = `NEIS 학교기본정보의 설립일 칸으로 지금 문을 연 고등학교 ${수(전체)}곳을 월과 날짜별로 셌습니다. 3월 1일이 ${수(삼월일일)}곳(${퍼글(삼월일일, 전체)}), 3월 전체는 ${수(삼월)}곳(${퍼글(삼월, 전체)})입니다.`;
+
+const jsonLd = [
+  {
+    '@context': 'https://schema.org',
+    '@type': 'Dataset',
+    name: '고등학교 설립일 월·날짜별 분포',
+    description: desc,
+    creator: { '@type': 'Organization', name: '백년지도' },
+    sourceOrganization: { '@type': 'Organization', name: 'NEIS 교육정보 개방 포털' },
+    spatialCoverage: '대한민국',
+    variableMeasured: ['설립일 월', '설립일 날짜', '고등학교 수'],
+  },
+  {
+    '@context': 'https://schema.org',
+    '@type': 'FAQPage',
+    mainEntity: [
+      {
+        '@type': 'Question',
+        name: '설립일이 3월 1일인 고등학교는 몇 곳인가요?',
+        acceptedAnswer: {
+          '@type': 'Answer',
+          text: `NEIS 학교기본정보 설립일 칸으로 셀 수 있는 고등학교 ${수(전체)}곳 가운데 3월 1일이 ${수(삼월일일)}곳, ${퍼글(삼월일일, 전체)}입니다. 3월 전체로는 ${수(삼월)}곳, ${퍼글(삼월, 전체)}입니다.`,
+        },
+      },
+      {
+        '@type': 'Question',
+        name: '고등학교 설립일이 가장 많이 몰린 날짜는 언제인가요?',
+        acceptedAnswer: {
+          '@type': 'Answer',
+          text: `${날들.slice(0, 4).map((x) => `${날글(x.날)} ${수(x.곳)}곳`).join(', ')} 순입니다. 설립일 칸이 실제 개교일인지 인가일인지는 자료에서 구분되지 않습니다.`,
+        },
+      },
+    ],
+  },
+];
+---
+
+<HundredYear title={TITLE} description={desc} jsonLd={jsonLd}>
+  <h1>고등학교는 몇 월 며칠에<br class="pcbr" /> 문을 열었을까요</h1>
+  <p class="sub">
+    NEIS 학교기본정보의 설립일 칸에서 지금 문을 연 고등학교 {수(전체)}곳을 월과 날짜로 셌습니다.
+  </p>
+
+  <div class="answer">
+    <p class="answer-label">설립일이 3월 1일인 고등학교 — {수(전체)}곳 가운데</p>
+    <p class="answer-num">{수(삼월일일)}곳 · {퍼글(삼월일일, 전체)}</p>
+    <p class="answer-sub">3월 전체 {수(삼월)}곳 · {퍼글(삼월, 전체)} · 12월 {수(연말)}곳 · 1월 {수(일월)}곳</p>
+  </div>
+
+  <h2>월별 설립 학교 수</h2>
+  <div class="tablewrap">
+    <table>
+      <thead><tr><th>월</th><th>학교</th><th>비중</th></tr></thead>
+      <tbody>
+        {월별.map((x) => (
+          <tr>
+            <th>{x.월}월</th>
+            <td class="num">{수(x.곳)}곳</td>
+            <td class="num"><strong>{퍼글(x.곳, 전체)}</strong></td>
+          </tr>
+        ))}
+      </tbody>
+    </table>
+  </div>
+
+  <h2>설립일이 가장 많이 몰린 날짜 12개</h2>
+  <div class="tablewrap">
+    <table>
+      <thead><tr><th>날짜</th><th>학교</th><th>비중</th></tr></thead>
+      <tbody>
+        {날들.map((x) => (
+          <tr>
+            <th>{날글(x.날)}</th>
+            <td class="num">{수(x.곳)}곳</td>
+            <td class="num"><strong>{퍼글(x.곳, 전체)}</strong></td>
+          </tr>
+        ))}
+      </tbody>
+    </table>
+  </div>
+
+  <h2>연대별로 3월 1일 비중을 보면</h2>
+  <div class="tablewrap">
+    <table>
+      <thead><tr><th>설립 연대</th><th>학교</th><th>3월 1일</th><th>3월 1일 비중</th></tr></thead>
+      <tbody>
+        {연대표.map((x) => (
+          <tr>
+            <th>{x.이름}</th>
+            <td class="num">{수(x.곳)}곳</td>
+            <td class="num">{수(x.삼일)}곳</td>
+            <td class="num"><strong>{퍼글(x.삼일, x.곳)}</strong></td>
+          </tr>
+        ))}
+      </tbody>
+    </table>
+  </div>
+
+  <h2>설립 구분별로 보면</h2>
+  <div class="tablewrap">
+    <table>
+      <thead><tr><th>설립</th><th>학교</th><th>3월 1일</th><th>3월 1일 비중</th><th>3월 전체 비중</th></tr></thead>
+      <tbody>
+        {설립별.map((x) => (
+          <tr>
+            <th>{x.이름}</th>
+            <td class="num">{수(x.곳)}곳</td>
+            <td class="num">{수(x.삼일)}곳</td>
+            <td class="num"><strong>{퍼글(x.삼일, x.곳)}</strong></td>
+            <td class="num">{퍼글(x.삼월, x.곳)}</td>
+          </tr>
+        ))}
+      </tbody>
+    </table>
+  </div>
+
+  <h2>같은 표에서 읽히는 것</h2>
+  <ul>
+    <li>설립일이 가장 많이 몰린 날짜는 {날글(날들[0].날)} {수(날들[0].곳)}곳, 다음은 {날글(날들[1].날)} {수(날들[1].곳)}곳, {날글(날들[2].날)} {수(날들[2].곳)}곳입니다.</li>
+    <li>월별로 학교가 가장 많은 달은 {맨많은월.월}월 {수(맨많은월.곳)}곳({퍼글(맨많은월.곳, 전체)}), 가장 적은 달은 {맨적은월.월}월 {수(맨적은월.곳)}곳({퍼글(맨적은월.곳, 전체)})입니다.</li>
+  </ul>
+
+  <h2>⚠ 이 자료로 말할 수 없는 것</h2>
+  <ul>
+    <li>NEIS에 올라 있는, 지금 문을 연 고등학교만 셉니다.{못센 > 0 ? ` 설립일 칸이 비었거나 날짜로 읽히지 않는 ${수(못센)}곳은 뺐습니다.` : ''}</li>
+    <li>설립일 칸이 실제 개교일인지, 설립 인가일인지, 교명이나 위치가 바뀐 날인지는 이 자료에서 구분되지 않습니다. 같은 날짜가 많은 이유는 이 자료에 없습니다.</li>
+    <li>폐교·통합으로 사라진 학교는 들어 있지 않습니다.</li>
+    <li>학교 이름이 바뀌거나 합쳐진 학교는 NEIS가 기록한 설립일을 그대로 따랐습니다.</li>
+  </ul>
+
+  <p class="note">
+    출처 — NEIS 교육정보 개방 포털 학교기본정보, 고등학교. 2026년 기준, 문을 연 학교만.
+  </p>
+
+  <p class="note">
+    <a href="/high-school-founding-decade-by-province">← 고등학교가 문을 연 연대, 시도별</a>
+    <br />
+    <a href="/century-old-high-schools-by-area">→ 개교 100년이 넘은 고등학교</a>
+  </p>
+
+  <HundredAgeWalk 키="high-school-opening-date" />
+  <NextQuestionBrief 모은것="NEIS 고등학교 설립일 칸을 월·날짜로 센 실측" />
+</HundredYear>
+
+<style>
+  .num { text-align: right; font-variant-numeric: tabular-nums; }
+</style>

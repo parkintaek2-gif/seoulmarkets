@@ -443,6 +443,13 @@ export const GET: APIRoute = () => {
     { path: '/high-single-sex-by-province', priority: '0.7', changefreq: 'yearly' },
     { path: '/high-school-founding-decade-by-province', priority: '0.7', changefreq: 'yearly' },
     { path: '/high-school-type-mix-by-province', priority: '0.7', changefreq: 'yearly' },
+    /* 2026-11-28 — 고등학교 학생 수 기준 지면 6장 */
+    { path: '/high-private-student-share-by-province', priority: '0.7', changefreq: 'yearly' },
+    { path: '/high-vocational-student-share-by-province', priority: '0.7', changefreq: 'yearly' },
+    { path: '/high-class-size-by-school-type', priority: '0.7', changefreq: 'yearly' },
+    { path: '/high-class-size-by-school-size', priority: '0.7', changefreq: 'yearly' },
+    { path: '/high-school-opening-date', priority: '0.7', changefreq: 'yearly' },
+    { path: '/high-students-teachers-by-province', priority: '0.7', changefreq: 'yearly' },
     /* 2026-11-23 — 지역별고용조사 기혼여성 경력보유 2장 */
     { path: '/career-interrupted-by-child-age', priority: '0.7', changefreq: 'yearly' },
     { path: '/career-interrupted-reason-by-age', priority: '0.7', changefreq: 'yearly' },

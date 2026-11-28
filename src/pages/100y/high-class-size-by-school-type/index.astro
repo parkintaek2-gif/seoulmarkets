@@ -1,0 +1,173 @@
+---
+/**
+ * /100y/high-class-size-by-school-type — 고등학교 학급당 학생 수, 고교유형·설립별 분포 (2024 공시)
+ *
+ * 출처  학교알리미 2024 공시 「학년별·학급별 학생수」 + NEIS 고교유형·설립 — src/lib/high-school-province.ts 가 학교 코드로 잇는다.
+ *       학교마다 학급당 학생(학생 ÷ 학급)을 구해 두고, 묶음마다 하위 10%·중앙값·상위 10%를 낸다. 평균 한 줄로 줄이지 않는다.
+ * 같은 소재의 /high-class-size-spread-by-province 는 28명 이상·20명 미만 학교를 «시도별»로 센다. 이 페이지는 «유형·설립별 분포»다.
+ * ⛔ 「적을수록 좋다」 같은 판단을 쓰지 않는다. 수만 적는다.
+ */
+import HundredYear from '../../../layouts/HundredYear.astro';
+import HundredAgeWalk from '../../../components/HundredAgeWalk.astro';
+import NextQuestionBrief from '../../../components/NextQuestionBrief.astro';
+import { 값있는, 못이은, 합, 분위, 소수1, 수 } from '../../../lib/high-school-students';
+
+const 줄 = (이름: string, a: typeof 값있는) => {
+  const v = a.map((r) => r.학생 / r.학급);
+  return { 이름, 곳: a.length, 학생: 합(a, (r) => r.학생), 학급: 합(a, (r) => r.학급), p10: 분위(v, 0.1), p50: 분위(v, 0.5), p90: 분위(v, 0.9) };
+};
+const 합친 = (x: any) => (x.학급 ? x.학생 / x.학급 : 0);
+const 유형들 = ['일반고', '특성화고', '자율고', '특목고'].map((g) => 줄(g, 값있는.filter((r) => r.유형 === g)));
+const 설립들 = ['공립', '사립', '국립'].map((g) => 줄(g, 값있는.filter((r) => r.설립 === g))).filter((x) => x.곳 > 0);
+const 교차 = [] as ReturnType<typeof 줄>[];
+for (const g of ['일반고', '특성화고', '자율고', '특목고']) {
+  for (const h of ['공립', '사립']) {
+    const a = 값있는.filter((r) => r.유형 === g && r.설립 === h);
+    if (a.length >= 10) 교차.push(줄(`${g} · ${h}`, a));
+  }
+}
+const 전체 = 줄('전체', 값있는);
+const 큰쪽 = [...유형들].sort((a, b) => (b.p50 ?? 0) - (a.p50 ?? 0))[0];
+const 작은쪽 = [...유형들].sort((a, b) => (a.p50 ?? 0) - (b.p50 ?? 0))[0];
+const 일반 = 유형들.find((x) => x.이름 === '일반고')!;
+const 특성 = 유형들.find((x) => x.이름 === '특성화고')!;
+
+const TITLE = `고등학교 학급당 학생 수 — 전체 중앙값 ${소수1(전체.p50)}명, ${큰쪽.이름} ${소수1(큰쪽.p50)}명·${작은쪽.이름} ${소수1(작은쪽.p50)}명, 유형·설립별 분포`;
+const desc = `학교알리미 2024 공시로 고등학교 ${수(전체.곳)}곳의 학급당 학생 수를 학교마다 구해 고교유형·설립별로 하위 10%, 중앙값, 상위 10%를 냈습니다. 일반고 중앙값은 ${소수1(일반.p50)}명, 특성화고는 ${소수1(특성.p50)}명입니다.`;
+
+const jsonLd = [
+  {
+    '@context': 'https://schema.org',
+    '@type': 'Dataset',
+    name: '고등학교 학급당 학생 수 분포 — 고교유형·설립별',
+    description: desc,
+    creator: { '@type': 'Organization', name: '백년지도' },
+    sourceOrganization: { '@type': 'Organization', name: '학교알리미(한국교육학술정보원)' },
+    variableMeasured: ['학급당 학생 수', '하위 10%', '중앙값', '상위 10%'],
+  },
+  {
+    '@context': 'https://schema.org',
+    '@type': 'FAQPage',
+    mainEntity: [
+      {
+        '@type': 'Question',
+        name: '고등학교 학급당 학생 수는 일반고와 특성화고가 얼마나 다른가요?',
+        acceptedAnswer: {
+          '@type': 'Answer',
+          text: `학교알리미 2024 공시 기준 학교별 학급당 학생 수의 중앙값은 일반고 ${소수1(일반.p50)}명, 특성화고 ${소수1(특성.p50)}명입니다. 학교의 하위 10%와 상위 10%는 일반고 ${소수1(일반.p10)}~${소수1(일반.p90)}명, 특성화고 ${소수1(특성.p10)}~${소수1(특성.p90)}명입니다.`,
+        },
+      },
+      {
+        '@type': 'Question',
+        name: '공립과 사립 고등학교의 학급당 학생 수는 다른가요?',
+        acceptedAnswer: {
+          '@type': 'Answer',
+          text: `중앙값은 ${설립들.map((x) => `${x.이름} ${소수1(x.p50)}명(${수(x.곳)}곳)`).join(', ')}입니다. 학교 수가 다른 묶음이라 단순 비교에는 한계가 있습니다.`,
+        },
+      },
+    ],
+  },
+];
+---
+
+<HundredYear title={TITLE} description={desc} jsonLd={jsonLd}>
+  <h1>고등학교 한 반에는<br class="pcbr" /> 학생이 몇 명일까요</h1>
+  <p class="sub">
+    학교마다 학급당 학생 수를 구한 뒤, 고교유형과 설립 구분별로 어디에 많이 몰려 있는지 하위 10%·중앙값·상위 10%로 나눴습니다. 학교알리미 2024 공시입니다.
+  </p>
+
+  <div class="answer">
+    <p class="answer-label">고등학교 {수(전체.곳)}곳 학급당 학생 수 — 중앙값</p>
+    <p class="answer-num">{소수1(전체.p50)}명</p>
+    <p class="answer-sub">하위 10% {소수1(전체.p10)}명 · 상위 10% {소수1(전체.p90)}명 · 학생·학급을 모두 더한 값은 {소수1(합친(전체))}명</p>
+  </div>
+
+  <h2>고교유형별 학급당 학생 수</h2>
+  <div class="tablewrap">
+    <table>
+      <thead><tr><th>종류</th><th>학교</th><th>하위 10%</th><th>중앙값</th><th>상위 10%</th><th>합산</th></tr></thead>
+      <tbody>
+        {유형들.map((x) => (
+          <tr>
+            <th>{x.이름}</th>
+            <td class="num">{수(x.곳)}곳</td>
+            <td class="num">{소수1(x.p10)}명</td>
+            <td class="num"><strong>{소수1(x.p50)}명</strong></td>
+            <td class="num">{소수1(x.p90)}명</td>
+            <td class="num">{소수1(합친(x))}명</td>
+          </tr>
+        ))}
+      </tbody>
+    </table>
+  </div>
+  <p class="note">합산은 학생 수 합을 학급 수 합으로 나눈 값입니다. 학교 하나를 한 칸으로 센 중앙값과 다를 수 있습니다.</p>
+
+  <h2>설립 구분별 학급당 학생 수</h2>
+  <div class="tablewrap">
+    <table>
+      <thead><tr><th>설립</th><th>학교</th><th>하위 10%</th><th>중앙값</th><th>상위 10%</th><th>합산</th></tr></thead>
+      <tbody>
+        {설립들.map((x) => (
+          <tr>
+            <th>{x.이름}</th>
+            <td class="num">{수(x.곳)}곳</td>
+            <td class="num">{소수1(x.p10)}명</td>
+            <td class="num"><strong>{소수1(x.p50)}명</strong></td>
+            <td class="num">{소수1(x.p90)}명</td>
+            <td class="num">{소수1(합친(x))}명</td>
+          </tr>
+        ))}
+      </tbody>
+    </table>
+  </div>
+
+  <h2>유형과 설립을 함께 비교하면</h2>
+  <div class="tablewrap">
+    <table>
+      <thead><tr><th>묶음</th><th>학교</th><th>하위 10%</th><th>중앙값</th><th>상위 10%</th></tr></thead>
+      <tbody>
+        {교차.map((x) => (
+          <tr>
+            <th>{x.이름}</th>
+            <td class="num">{수(x.곳)}곳</td>
+            <td class="num">{소수1(x.p10)}명</td>
+            <td class="num"><strong>{소수1(x.p50)}명</strong></td>
+            <td class="num">{소수1(x.p90)}명</td>
+          </tr>
+        ))}
+      </tbody>
+    </table>
+  </div>
+  <p class="note">학교가 10곳 미만인 묶음은 뺐습니다.</p>
+
+  <h2>같은 표에서 읽히는 것</h2>
+  <ul>
+    <li>학교별 중앙값이 가장 큰 유형은 {큰쪽.이름} {소수1(큰쪽.p50)}명, 가장 작은 유형은 {작은쪽.이름} {소수1(작은쪽.p50)}명입니다.</li>
+    <li>일반고는 하위 10%가 {소수1(일반.p10)}명, 상위 10%가 {소수1(일반.p90)}명으로 학교 사이 폭이 {소수1((일반.p90 ?? 0) - (일반.p10 ?? 0))}명입니다. 특성화고는 {소수1(특성.p10)}~{소수1(특성.p90)}명으로 폭이 {소수1((특성.p90 ?? 0) - (특성.p10 ?? 0))}명입니다.</li>
+  </ul>
+
+  <h2>⚠ 이 자료로 말할 수 없는 것</h2>
+  <ul>
+    <li>학교알리미 2024 공시의 학생·학급 수입니다. 학교 코드로 잇지 못했거나 학생 수가 0으로 온 {수(못이은)}곳은 뺐습니다.</li>
+    <li>학급 수에는 특수학급이나 학년별 학급 편성 방식이 나뉘어 있지 않습니다. 한 학교의 학년별 차이도 이 자료에 없습니다.</li>
+    <li>학교마다 학생 수가 달라 학교 하나를 한 칸으로 센 중앙값은 학생 한 명이 겪는 값과 다를 수 있습니다.</li>
+    <li>수업의 질이나 학업 결과는 이 자료에 없습니다.</li>
+  </ul>
+
+  <p class="note">
+    출처 — 학교알리미(한국교육학술정보원) 공개용데이터 「학년별·학급별 학생수」 2024 공시(공공누리 제1유형), NEIS 교육정보 개방 포털 학교기본정보 고등학교.
+  </p>
+
+  <p class="note">
+    <a href="/high-class-size-spread-by-province">← 학급당 학생 28명 이상·20명 미만 학교, 시도별</a>
+    <br />
+    <a href="/class-size-distribution">→ 학급당 학생 수 분포</a>
+  </p>
+
+  <HundredAgeWalk 키="high-class-size-by-school-type" />
+  <NextQuestionBrief 모은것="학교알리미 고등학교 학급당 학생 수를 고교유형·설립별 분위로 나눈 실측" />
+</HundredYear>
+
+<style>
+  .num { text-align: right; font-variant-numeric: tabular-nums; }
+</style>

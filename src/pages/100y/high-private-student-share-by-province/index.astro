@@ -1,0 +1,159 @@
+---
+/**
+ * /100y/high-private-student-share-by-province — 사립 고등학교에 다니는 학생 비중, 시도별 (2024 공시)
+ *
+ * 출처  NEIS 학교기본정보(설립 구분) + 학교알리미 2024 공시 「학년별·학급별 학생수」 — src/lib/high-school-province.ts 가 학교 코드로 잇는다.
+ *       이 쪽에서 한 일은 학생 수를 시도로 더하고 나눈 것뿐이다.
+ * 같은 소재의 /private-high-school-by-area 는 시군구별 «학교 수» 비율이다. 이 페이지는 «학생 수»로 센다.
+ * ⛔ 「사립이 좋다·나쁘다」 같은 판단을 쓰지 않는다. 수만 적는다.
+ */
+import HundredYear from '../../../layouts/HundredYear.astro';
+import HundredAgeWalk from '../../../components/HundredAgeWalk.astro';
+import NextQuestionBrief from '../../../components/NextQuestionBrief.astro';
+import { 값있는, 못이은, 합, 묶기, 수, 퍼글 } from '../../../lib/high-school-students';
+
+const 사립 = (r: any) => r.설립 === '사립';
+const 시도들 = [...묶기(값있는, (r) => r.시도).entries()]
+  .filter(([k]) => k)
+  .map(([이름, a]) => {
+    const 학생 = 합(a, (r) => r.학생);
+    const 사립학생 = 합(a.filter(사립), (r) => r.학생);
+    return { 이름, 곳: a.length, 사립곳: a.filter(사립).length, 학생, 사립학생 };
+  })
+  .sort((a, b) => b.사립학생 / b.학생 - a.사립학생 / a.학생);
+const 전체학생 = 합(값있는, (r) => r.학생);
+const 전체사립 = 합(값있는.filter(사립), (r) => r.학생);
+const 전체곳 = 값있는.length;
+const 전체사립곳 = 값있는.filter(사립).length;
+const 맨위 = 시도들[0];
+const 둘째 = 시도들[1];
+const 맨아래 = 시도들[시도들.length - 1];
+const 사립없는 = 시도들.filter((x) => x.사립학생 === 0);
+const 많은시도 = [...시도들].sort((a, b) => b.사립학생 - a.사립학생)[0];
+const 곳비중 = 퍼글(전체사립곳, 전체곳);
+const 유형 = ['일반고', '특성화고', '자율고', '특목고'].map((g) => {
+  const a = 값있는.filter((r) => r.유형 === g);
+  return { 이름: g, 곳: a.length, 학생: 합(a, (r) => r.학생), 사립학생: 합(a.filter(사립), (r) => r.학생) };
+});
+
+const TITLE = `사립 고등학교 학생 ${수(전체사립)}명, 전체 ${수(전체학생)}명의 ${퍼글(전체사립, 전체학생)} — 시도별로 ${맨위.이름} ${퍼글(맨위.사립학생, 맨위.학생)}, ${둘째.이름} ${퍼글(둘째.사립학생, 둘째.학생)}`;
+const desc = `학교알리미 2024 공시와 NEIS 설립 구분으로 고등학교 ${수(전체곳)}곳의 학생 ${수(전체학생)}명 가운데 사립학교에 다니는 학생을 시도별로 셌습니다. 가장 높은 시도는 ${맨위.이름} ${퍼글(맨위.사립학생, 맨위.학생)}, 가장 낮은 시도는 ${맨아래.이름} ${퍼글(맨아래.사립학생, 맨아래.학생)}입니다.`;
+
+const jsonLd = [
+  {
+    '@context': 'https://schema.org',
+    '@type': 'Dataset',
+    name: '사립 고등학교 학생 비중 — 시도별',
+    description: desc,
+    creator: { '@type': 'Organization', name: '백년지도' },
+    sourceOrganization: { '@type': 'Organization', name: '학교알리미(한국교육학술정보원)' },
+    spatialCoverage: '대한민국 시·도',
+    variableMeasured: ['고등학교 학생 수', '사립 고등학교 학생 수', '사립 학생 비중'],
+  },
+  {
+    '@context': 'https://schema.org',
+    '@type': 'FAQPage',
+    mainEntity: [
+      {
+        '@type': 'Question',
+        name: '사립 고등학교에 다니는 학생은 전체의 몇 퍼센트인가요?',
+        acceptedAnswer: {
+          '@type': 'Answer',
+          text: `학교알리미 2024 공시로 셀 수 있는 고등학교 ${수(전체곳)}곳의 학생 ${수(전체학생)}명 가운데 사립학교 학생은 ${수(전체사립)}명, ${퍼글(전체사립, 전체학생)}입니다. 학교 수로는 사립이 ${수(전체사립곳)}곳, ${곳비중}입니다.`,
+        },
+      },
+      {
+        '@type': 'Question',
+        name: '사립 고등학교 학생 비중이 가장 높은 시도는 어디인가요?',
+        acceptedAnswer: {
+          '@type': 'Answer',
+          text: `${시도들.slice(0, 3).map((x) => `${x.이름} ${퍼글(x.사립학생, x.학생)}`).join(', ')} 순입니다. 학생 수로는 ${많은시도.이름}이 ${수(많은시도.사립학생)}명으로 가장 많습니다.`,
+        },
+      },
+    ],
+  },
+];
+---
+
+<HundredYear title={TITLE} description={desc} jsonLd={jsonLd}>
+  <h1>사립 고등학교에는 학생이<br class="pcbr" /> 얼마나 다닐까요</h1>
+  <p class="sub">
+    학교 수가 아니라 학생 수로 센 사립 고등학교 비중입니다. 학교알리미 2024 공시의 학생 수를 NEIS 설립 구분(공립·사립·국립)으로 나눠 시도별로 더했습니다.
+  </p>
+
+  <div class="answer">
+    <p class="answer-label">사립 고등학교 학생 — 전체 {수(전체학생)}명 가운데</p>
+    <p class="answer-num">{수(전체사립)}명 · {퍼글(전체사립, 전체학생)}</p>
+    <p class="answer-sub">학교 수로는 {수(전체곳)}곳 가운데 사립 {수(전체사립곳)}곳 · {곳비중}</p>
+  </div>
+
+  <h2>시도별 사립 고등학교 학생 비중</h2>
+  <div class="tablewrap">
+    <table>
+      <thead><tr><th>시·도</th><th>학생</th><th>사립 학생</th><th>사립 학생 비중</th><th>사립 학교 수 비중</th></tr></thead>
+      <tbody>
+        {시도들.map((x) => (
+          <tr>
+            <th>{x.이름}</th>
+            <td class="num">{수(x.학생)}명</td>
+            <td class="num">{수(x.사립학생)}명</td>
+            <td class="num"><strong>{퍼글(x.사립학생, x.학생)}</strong></td>
+            <td class="num">{퍼글(x.사립곳, x.곳)}</td>
+          </tr>
+        ))}
+      </tbody>
+    </table>
+  </div>
+  <p class="note">표는 사립 학생 비중이 높은 순입니다. 전남과 광주는 NEIS의 지역 구분대로 따로 셌습니다.</p>
+
+  <h2>고등학교 종류별로 보면</h2>
+  <div class="tablewrap">
+    <table>
+      <thead><tr><th>종류</th><th>학교</th><th>학생</th><th>사립 학생</th><th>사립 학생 비중</th></tr></thead>
+      <tbody>
+        {유형.map((x) => (
+          <tr>
+            <th>{x.이름}</th>
+            <td class="num">{수(x.곳)}곳</td>
+            <td class="num">{수(x.학생)}명</td>
+            <td class="num">{수(x.사립학생)}명</td>
+            <td class="num"><strong>{퍼글(x.사립학생, x.학생)}</strong></td>
+          </tr>
+        ))}
+      </tbody>
+    </table>
+  </div>
+
+  <h2>같은 표에서 읽히는 것</h2>
+  <ul>
+    <li>사립 학생 비중이 가장 높은 시도는 {맨위.이름} {퍼글(맨위.사립학생, 맨위.학생)}, 두 번째는 {둘째.이름} {퍼글(둘째.사립학생, 둘째.학생)}입니다. 가장 낮은 시도는 {맨아래.이름} {퍼글(맨아래.사립학생, 맨아래.학생)}입니다.</li>
+    <li>학생 수로는 {많은시도.이름}이 사립 {수(많은시도.사립학생)}명으로 가장 많습니다.</li>
+    <li>전국에서 사립은 학교 수로 {곳비중}, 학생 수로 {퍼글(전체사립, 전체학생)}입니다. 사립학교의 학교당 학생 수는 {수(Math.round(전체사립 / 전체사립곳))}명, 전체 학교의 학교당 학생 수는 {수(Math.round(전체학생 / 전체곳))}명입니다.</li>
+    {사립없는.length > 0 && <li>사립 고등학교 학생이 한 명도 없는 시도는 {사립없는.map((x) => x.이름).join(', ')}입니다.</li>}
+  </ul>
+
+  <h2>⚠ 이 자료로 말할 수 없는 것</h2>
+  <ul>
+    <li>학교알리미 2024 공시의 학생 수입니다. NEIS의 현재 학교 목록과 학교 코드로 이었고, 잇지 못했거나 학생 수가 0으로 온 {수(못이은)}곳은 뺐습니다.</li>
+    <li>국립 고등학교 {수(값있는.filter((r) => r.설립 === '국립').length)}곳과 기타 설립은 사립이 아닌 쪽에 들어 있습니다.</li>
+    <li>사립학교에 배정되는 방식이나 학비는 이 자료에 없습니다.</li>
+    <li>학생 수는 재적 기준 공시값이며, 졸업·전학으로 지금과 다를 수 있습니다.</li>
+  </ul>
+
+  <p class="note">
+    출처 — 학교알리미(한국교육학술정보원) 공개용데이터 「학년별·학급별 학생수」 2024 공시(공공누리 제1유형), NEIS 교육정보 개방 포털 학교기본정보 고등학교.
+  </p>
+
+  <p class="note">
+    <a href="/private-high-school-by-area">← 사립 고등학교 비율, 시군구별(학교 수 기준)</a>
+    <br />
+    <a href="/high-school-type-mix-by-province">→ 일반고·특성화고·자율고·특목고, 시도별(학교 수 기준)</a>
+  </p>
+
+  <HundredAgeWalk 키="high-private-student-share-by-province" />
+  <NextQuestionBrief 모은것="학교알리미 고등학교 학생 수를 NEIS 설립 구분으로 시도별 합산한 실측" />
+</HundredYear>
+
+<style>
+  .num { text-align: right; font-variant-numeric: tabular-nums; }
+</style>
