@@ -83,7 +83,7 @@ Known limits, stated up front:
 
 - Internal use and derived research by the licensee's organisation. No redistribution of the raw files.
 - Citation of SeoulMarkets when figures derived from the data are published.
-- Use for training internal models is permitted under the same internal-use terms; redistribution of a model that reproduces the raw data is not.
+- Use of the data to train machine-learning models is not covered by the published terms; we agree it in writing case by case.
 - Public prices: one file 29 USD; single dataset 99 USD per month or 990 USD per year; all datasets 299 USD per month or 2,990 USD per year. Custom terms in writing on request.
 
 ## 8. Delivery and operations
