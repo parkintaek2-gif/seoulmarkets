@@ -14,7 +14,7 @@ await 새탭에서(url, async (c) => {
   const doc = inFrame ? `(document.querySelector('#studio-iframe') || {}).contentDocument` : 'document';
   const text = String(await 재기(c, `(() => { const d = ${doc}; if (!d) return 'NO FRAME DOCUMENT'; return (d.body.innerText || '').replace(/\\n{2,}/g, '\\n').slice(0, 7000); })()`, 20000));
   console.log('---- text ----\n' + text);
-  const links = String(await 재기(c, `(() => { const d = ${doc}; if (!d) return ''; return [...new Set([...d.querySelectorAll('a[href]')].map((a) => a.href).filter((h) => /studio|provider|hub|data_products/.test(h)))].slice(0, 40).join('\\n'); })()`, 20000));
+  const links = String(await 재기(c, `(() => { const d = ${doc}; if (!d) return ''; return [...new Set([...d.querySelectorAll('a[href]')].map((a) => a.href).filter((h) => /studio|provider|hub|data_products|searchadvisor/.test(h)))].slice(0, 40).join('\\n'); })()`, 20000));
   console.log('---- links ----\n' + links);
   if (shotAt > 0) {
     const r = await c.보내기('Page.captureScreenshot', { format: 'png' });
