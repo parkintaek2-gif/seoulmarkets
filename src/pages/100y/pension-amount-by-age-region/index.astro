@@ -1,0 +1,163 @@
+---
+/**
+ * /100y/pension-amount-by-age-region — 나이가 들수록 연금 수급액은 어떻게 달라지나, 나이대별 전국 줄과 지역 폭
+ *
+ * 출처  국민연금공단 수급현황(지역×연령), 공공데이터포털 15010381 — src/data/100yearmap/pension-recipients.json
+ *       의 avgFnlPrvsAmt(평균 월 수급액) 칸. 이 쪽에서 한 일은 나이대를 골라 가장 높은 지역·가장 낮은 지역과 배수를 계산한 것뿐이다.
+ * 같은 자료로 /pension 은 40~100세 전체를 표로 옮긴 검색 지면이다. 이 지면은 «나이대별 한눈 요약과 지역 폭»이다.
+ * ⚠ 노령·장애·유족연금을 합친 값. 같은 나이라도 사람마다 가입기간·소득이 달라 받는 금액은 다르다.
+ * ⛔ 나이가 들수록 줄어드는 이유(세대 차이 등)는 이 자료에 없으므로 쓰지 않는다. 숫자만 적는다.
+ */
+import HundredYear from '../../../layouts/HundredYear.astro';
+import HundredAgeWalk from '../../../components/HundredAgeWalk.astro';
+import NextQuestionBrief from '../../../components/NextQuestionBrief.astro';
+import 원본 from '../../../data/100yearmap/pension-recipients.json';
+
+const 자료 = 원본 as any;
+const 지역들 = Object.keys(자료.지역별) as string[];
+const 원 = (n: number) => `${Number(n).toLocaleString('ko-KR')}원`;
+const 만원 = (n: number) => `${(Math.round((n / 10000) * 10) / 10).toFixed(1)}만원`;
+const [나이시작, 나이끝] = 자료.나이범위 as [number, number];
+
+const 전국값 = (a: number) => 자료.전국[String(a)]?.avgFnlPrvsAmt as number | undefined;
+const 맨높은나이 = Array.from({ length: 나이끝 - 나이시작 + 1 }, (_, i) => 나이시작 + i)
+  .filter((a) => 전국값(a) != null)
+  .reduce((a, b) => (전국값(b)! > 전국값(a)! ? b : a));
+const 맨높은값 = 전국값(맨높은나이)!;
+
+const 고른나이 = [40, 50, 60, 63, 65, 70, 75, 80, 85, 90];
+const 나이표 = 고른나이.map((a) => ({ 나이: a, 값: 전국값(a)! }));
+
+const 폭나이 = [60, 65, 70, 75, 80, 85, 90];
+const 폭표 = 폭나이.map((a) => {
+  const v = 지역들
+    .map((r) => ({ 이름: r, 값: 자료.지역별[r][String(a)]?.avgFnlPrvsAmt as number | undefined }))
+    .filter((x) => x.값 != null) as { 이름: string; 값: number }[];
+  v.sort((x, y) => y.값 - x.값);
+  return { 나이: a, 개수: v.length, 높음: v[0], 낮음: v[v.length - 1], 배: v[0].값 / v[v.length - 1].값 };
+});
+const 육십오 = 폭표.find((x) => x.나이 === 65)!;
+const 팔십 = 폭표.find((x) => x.나이 === 80)!;
+const 사십 = 전국값(40)!;
+const 육십오값 = 전국값(65)!;
+const 팔십값 = 전국값(80)!;
+const 구십값 = 전국값(90)!;
+
+const TITLE = `국민연금 평균 월 수급액 — ${맨높은나이}세 ${만원(맨높은값)}으로 가장 높고 65세 ${만원(육십오값)}, 80세 ${만원(팔십값)}, 90세 ${만원(구십값)}`;
+const desc = `국민연금공단 수급현황(2026-08 수집, 노령·장애·유족 합계)의 나이별 평균 월 수급액을 나이대로 골라 놓았습니다. 65세는 지역 사이에 ${육십오.낮음.이름} ${만원(육십오.낮음.값)}부터 ${육십오.높음.이름} ${만원(육십오.높음.값)}까지 ${육십오.배.toFixed(2)}배 차이가 납니다.`;
+
+const jsonLd = [
+  {
+    '@context': 'https://schema.org',
+    '@type': 'Dataset',
+    name: '국민연금 평균 월 수급액, 나이대별과 지역 폭',
+    description: desc,
+    creator: { '@type': 'Organization', name: '백년지도' },
+    sourceOrganization: { '@type': 'Organization', name: '국민연금공단' },
+    spatialCoverage: '대한민국',
+    variableMeasured: ['나이', '지역', '평균 월 수급액'],
+    isBasedOn: 'https://www.data.go.kr/data/15010381/openapi.do',
+  },
+  {
+    '@context': 'https://schema.org',
+    '@type': 'FAQPage',
+    mainEntity: [
+      {
+        '@type': 'Question',
+        name: '국민연금 평균 월 수급액이 가장 높은 나이는 몇 세인가요?',
+        acceptedAnswer: {
+          '@type': 'Answer',
+          text: `국민연금공단 수급현황(2026-08 수집, 40~100세)의 전국 줄에서 평균 월 수급액이 가장 높은 나이는 ${맨높은나이}세로 ${원(맨높은값)}입니다. 65세는 ${원(육십오값)}, 80세는 ${원(팔십값)}, 90세는 ${원(구십값)}입니다. 노령·장애·유족연금을 합친 값입니다.`,
+        },
+      },
+      {
+        '@type': 'Question',
+        name: '65세 국민연금 수급액은 지역마다 얼마나 다른가요?',
+        acceptedAnswer: {
+          '@type': 'Answer',
+          text: `65세 평균 월 수급액은 ${육십오.낮음.이름} ${원(육십오.낮음.값)}에서 ${육십오.높음.이름} ${원(육십오.높음.값)}까지입니다. 가장 높은 지역은 가장 낮은 지역의 ${육십오.배.toFixed(2)}배입니다. 광주·전남은 자료가 한 줄이라 합쳐 있습니다.`,
+        },
+      },
+    ],
+  },
+];
+---
+
+<HundredYear title={TITLE} description={desc} jsonLd={jsonLd}>
+  <h1>국민연금 수급액은<br class="pcbr" /> 나이마다 얼마나 다를까요</h1>
+  <p class="sub">
+    국민연금공단 수급현황의 평균 월 수급액을 나이대로 골라 놓고, 지역마다 얼마나 벌어지는지 봅니다. 노령·장애·유족연금을 합친 값입니다.
+  </p>
+
+  <div class="answer">
+    <p class="answer-label">평균 월 수급액이 가장 높은 나이 — {맨높은나이}세</p>
+    <p class="answer-num">{원(맨높은값)}</p>
+    <p class="answer-sub">40세 {만원(사십)} · 65세 {만원(육십오값)} · 80세 {만원(팔십값)} · 90세 {만원(구십값)}</p>
+  </div>
+
+  <h2>나이별 전국 평균 월 수급액</h2>
+  <div class="tablewrap">
+    <table>
+      <thead><tr><th>나이</th><th>평균 월 수급액</th></tr></thead>
+      <tbody>
+        {나이표.map((x) => (
+          <tr>
+            <th>{x.나이}세</th>
+            <td class="num"><strong>{원(x.값)}</strong></td>
+          </tr>
+        ))}
+      </tbody>
+    </table>
+  </div>
+
+  <h2>같은 나이에서 지역 사이의 폭</h2>
+  <div class="tablewrap">
+    <table>
+      <thead><tr><th>나이</th><th>가장 높은 지역</th><th>가장 낮은 지역</th><th>높은 쪽이 낮은 쪽의</th></tr></thead>
+      <tbody>
+        {폭표.map((x) => (
+          <tr>
+            <th>{x.나이}세</th>
+            <td class="num">{x.높음.이름} {원(x.높음.값)}</td>
+            <td class="num">{x.낮음.이름} {원(x.낮음.값)}</td>
+            <td class="num"><strong>{x.배.toFixed(2)}배</strong></td>
+          </tr>
+        ))}
+      </tbody>
+    </table>
+  </div>
+
+  <h2>같은 표에서 읽히는 것</h2>
+  <ul>
+    <li>전국 줄에서 평균 월 수급액이 가장 높은 나이는 {맨높은나이}세 {원(맨높은값)}이고, 40세는 {원(사십)}, 90세는 {원(구십값)}입니다.</li>
+    <li>65세는 {육십오.높음.이름} {원(육십오.높음.값)}, {육십오.낮음.이름} {원(육십오.낮음.값)}으로 {육십오.배.toFixed(2)}배 차이이고, 80세는 {팔십.높음.이름} {원(팔십.높음.값)}, {팔십.낮음.이름} {원(팔십.낮음.값)}으로 {팔십.배.toFixed(2)}배 차이입니다.</li>
+  </ul>
+
+  <h2>⚠ 이 자료로 말할 수 없는 것</h2>
+  <ul>
+    <li>노령·장애·유족연금을 나누지 않고 합친 값이라 노령연금만의 금액이 아닙니다. 40세 미만은 자료에 없습니다.</li>
+    <li>나이별 평균이 다른 이유는 이 자료에 없습니다. 같은 나이의 평균이지 한 사람이 나이를 먹으며 받은 금액의 변화가 아닙니다.</li>
+    <li>국민연금공단이 공표하는 전국 평균 수급액과는 견주지 못했습니다. 공표치의 모집단 정의를 원문에서 확인하지 못했습니다.</li>
+    <li>광주와 전남은 자료가 한 줄이라 합쳐 있고, 강원·전북은 특별자치도 개편 이후 새 코드 줄만 썼습니다.</li>
+    <li>지역 폭 표는 값이 있는 지역만 비교했습니다. 비어 있는 칸은 0원으로 바꾸지 않았습니다.</li>
+  </ul>
+
+  <p class="note">
+    출처 — 국민연금공단 수급현황(지역×연령), 공공데이터포털 데이터셋 15010381. 이용허락범위 제한 없음. 받은 날 {자료.받은날}.
+  </p>
+
+  <p class="note">
+    <a href="/pension">← 국민연금 수급액, 나이·지역별 전체 표</a>
+    <br />
+    <a href="/pension-recipients-by-age">← 국민연금 수급자는 몇 살에 가장 많을까요</a>
+    <br />
+    <a href="/retire-income">→ 은퇴 후 소득은 얼마나 줄어들까요?</a>
+  </p>
+
+  <HundredAgeWalk 키="pension-amount-by-age-region" />
+  <NextQuestionBrief 모은것="국민연금공단 수급현황의 평균 월 수급액을 나이대·지역별로 정리한 실측" />
+</HundredYear>
+
+<style>
+  .num { text-align: right; font-variant-numeric: tabular-nums; }
+</style>

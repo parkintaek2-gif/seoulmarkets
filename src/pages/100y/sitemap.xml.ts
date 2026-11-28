@@ -443,6 +443,9 @@ export const GET: APIRoute = () => {
     { path: '/high-single-sex-by-province', priority: '0.7', changefreq: 'yearly' },
     { path: '/high-school-founding-decade-by-province', priority: '0.7', changefreq: 'yearly' },
     { path: '/high-school-type-mix-by-province', priority: '0.7', changefreq: 'yearly' },
+    /* 2026-11-28 — 국민연금 수급현황 지면 2장 */
+    { path: '/pension-recipients-by-age', priority: '0.7', changefreq: 'yearly' },
+    { path: '/pension-amount-by-age-region', priority: '0.7', changefreq: 'yearly' },
     /* 2026-11-28 — 고등학교 학생 수 기준 지면 6장 */
     { path: '/high-private-student-share-by-province', priority: '0.7', changefreq: 'yearly' },
     { path: '/high-vocational-student-share-by-province', priority: '0.7', changefreq: 'yearly' },
