@@ -1,0 +1,2375 @@
+{
+  "openapi": "3.0.3",
+  "info": {
+    "title": "SeoulMarkets: Korea, Japan, Taiwan and UAE Company Filings Data",
+    "version": "1.0.0",
+    "description": "Financials, valuation, 5% ownership filings and convertible bonds for 7,600+ listed companies in Korea, Japan, Taiwan and the UAE. Taken from regulator filings, returned in English JSON. Free tier, no card.",
+    "contact": {
+      "name": "SeoulMarkets",
+      "email": "admin@klifedesign.net",
+      "url": "https://seoulmarkets.com/api"
+    },
+    "license": {
+      "name": "Source data published by Korean agencies under an unrestricted-use licence",
+      "url": "https://seoulmarkets.com/about"
+    }
+  },
+  "servers": [
+    {
+      "url": "https://seoulmarkets.com/v1",
+      "description": "Production"
+    }
+  ],
+  "tags": [
+    {
+      "name": "Classification",
+      "description": "Resolve HS codes and country codes to English. Free, no key."
+    },
+    {
+      "name": "Reference",
+      "description": "Dictionaries that make the data readable outside Korea. Built while counting 20 years of reports; no public equivalent exists."
+    },
+    {
+      "name": "Research",
+      "description": "Every target price and rating issued by Korean brokerages, 2026-2026. 2,610 records. This is the only place the series exists in English."
+    },
+    {
+      "name": "Trade",
+      "description": "Korea's customs trade series."
+    },
+    {
+      "name": "Markets",
+      "description": "PER, PBR, ROE and debt-to-equity for listed Korean companies, with the price date and financial-statement vintage each multiple was computed from — so it can be recomputed against any other price date."
+    },
+    {
+      "name": "Meta",
+      "description": "Coverage, schema policy and collection status."
+    }
+  ],
+  "paths": {
+    "/financials": {
+      "get": {
+        "tags": [
+          "Markets"
+        ],
+        "operationId": "getFinancials",
+        "summary": "Filed annual financial statements for Korean listed companies, as filed to DART",
+        "description": "One row per company per fiscal year (fnlttSinglAcntAll, annual report). `measured:false` means DART had no annual statement on file for that company and year — those rows carry nulls, never zeros. `basis` says CFS (consolidated) or OFS (separate-only). This is what companies filed, not our estimate. `?ticker=` returns every year on file for one company; otherwise a filtered, paginated list.",
+        "parameters": [
+          {
+            "name": "ticker",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "pattern": "^\\d{6}$"
+            },
+            "description": "6-digit KRX short code, e.g. 005930."
+          },
+          {
+            "name": "year",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "integer"
+            },
+            "description": "Fiscal year, e.g. 2025."
+          },
+          {
+            "name": "market",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string"
+            },
+            "description": "KOSPI, KOSDAQ or KONEX."
+          },
+          {
+            "name": "name",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string"
+            },
+            "description": "English or Korean company name. Substring match."
+          },
+          {
+            "name": "measured",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "boolean"
+            },
+            "description": "true drops rows with no annual statement on file."
+          },
+          {
+            "name": "limit",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "integer"
+            },
+            "description": "Max rows; capped by plan."
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Financial-statement rows with source and coverage notes"
+          },
+          "404": {
+            "description": "ticker did not match any listed company.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "error": {
+                      "type": "object",
+                      "properties": {
+                        "code": {
+                          "type": "string",
+                          "description": "Machine-readable reason. Branch on this, not on message — messages are written for people and may be reworded.",
+                          "examples": [
+                            "collection_not_started",
+                            "invalid_hs_code",
+                            "unknown_endpoint"
+                          ]
+                        },
+                        "message": {
+                          "type": "string"
+                        },
+                        "hint": {
+                          "type": "string"
+                        }
+                      },
+                      "required": [
+                        "code",
+                        "message"
+                      ]
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "429": {
+            "description": "Free-tier rate limit exceeded (60 requests/minute/IP, enforced since 2026-08-17). Paid plans through the marketplace have no per-minute cap.",
+            "headers": {
+              "Retry-After": {
+                "schema": {
+                  "type": "integer"
+                },
+                "description": "Seconds until the current window resets."
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "error": {
+                      "type": "object",
+                      "properties": {
+                        "code": {
+                          "type": "string",
+                          "description": "Machine-readable reason. Branch on this, not on message — messages are written for people and may be reworded.",
+                          "examples": [
+                            "collection_not_started",
+                            "invalid_hs_code",
+                            "unknown_endpoint"
+                          ]
+                        },
+                        "message": {
+                          "type": "string"
+                        },
+                        "hint": {
+                          "type": "string"
+                        }
+                      },
+                      "required": [
+                        "code",
+                        "message"
+                      ]
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/valuation": {
+      "get": {
+        "tags": [
+          "Markets"
+        ],
+        "operationId": "getValuation",
+        "summary": "PER, PBR, ROE and debt-to-equity for listed Korean companies",
+        "description": "One row per listed company. Consolidated (CFS) financials are used when available, otherwise separate (OFS) — the `basis` field says which. PER is null when net income is not positive; PBR and ROE are null when total equity is not positive. No sector averages are computed. `?ticker=` returns one company by its 6-digit KRX short code; otherwise a filtered, paginated list.",
+        "parameters": [
+          {
+            "name": "ticker",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "pattern": "^\\d{6}$"
+            },
+            "description": "6-digit KRX short code, e.g. 005930."
+          },
+          {
+            "name": "industry",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string"
+            },
+            "description": "English or Korean industry name. Substring match."
+          },
+          {
+            "name": "measured",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "boolean"
+            },
+            "description": "true drops rows with no usable multiple (see `not_measured`)."
+          },
+          {
+            "name": "limit",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "integer"
+            },
+            "description": "Max rows; capped by plan."
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Valuation rows with source, price date and financial-statement vintage"
+          },
+          "404": {
+            "description": "ticker did not match any listed company.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "error": {
+                      "type": "object",
+                      "properties": {
+                        "code": {
+                          "type": "string",
+                          "description": "Machine-readable reason. Branch on this, not on message — messages are written for people and may be reworded.",
+                          "examples": [
+                            "collection_not_started",
+                            "invalid_hs_code",
+                            "unknown_endpoint"
+                          ]
+                        },
+                        "message": {
+                          "type": "string"
+                        },
+                        "hint": {
+                          "type": "string"
+                        }
+                      },
+                      "required": [
+                        "code",
+                        "message"
+                      ]
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "429": {
+            "description": "Free-tier rate limit exceeded (60 requests/minute/IP, enforced since 2026-08-17). Paid plans through the marketplace have no per-minute cap.",
+            "headers": {
+              "Retry-After": {
+                "schema": {
+                  "type": "integer"
+                },
+                "description": "Seconds until the current window resets."
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "error": {
+                      "type": "object",
+                      "properties": {
+                        "code": {
+                          "type": "string",
+                          "description": "Machine-readable reason. Branch on this, not on message — messages are written for people and may be reworded.",
+                          "examples": [
+                            "collection_not_started",
+                            "invalid_hs_code",
+                            "unknown_endpoint"
+                          ]
+                        },
+                        "message": {
+                          "type": "string"
+                        },
+                        "hint": {
+                          "type": "string"
+                        }
+                      },
+                      "required": [
+                        "code",
+                        "message"
+                      ]
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/japan-financials": {
+      "get": {
+        "tags": [
+          "Japan"
+        ],
+        "operationId": "getJapanFinancials",
+        "summary": "Latest annual accounts of Tokyo-listed companies, as filed with EDINET",
+        "description": "One row per company: the most recent annual securities report filed with the Financial Services Agency of Japan (EDINET, Public Data License 1.0). Assets, equity, revenue, operating and net profit, shares, BPS, EPS and the filed PER. `price_jpy` and `market_cap_jpy` are fiscal-year-end values implied by the filed PER x EPS, not live quotes. `market` is null for every row because the EDINET code list does not state the market segment. Empty cells are null, never zero.",
+        "parameters": [
+          {
+            "name": "code",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string"
+            },
+            "description": "Securities code or EDINET code, e.g. 7203 or E02144."
+          },
+          {
+            "name": "sector",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string"
+            },
+            "description": "Exact sector name, e.g. Transportation Equipment."
+          },
+          {
+            "name": "name",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string"
+            },
+            "description": "Part of the company name (English or Japanese)."
+          },
+          {
+            "name": "limit",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "integer"
+            },
+            "description": "Max rows; capped by plan."
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Annual-account rows with source and coverage notes"
+          },
+          "404": {
+            "description": "code did not match any filer.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "error": {
+                      "type": "object",
+                      "properties": {
+                        "code": {
+                          "type": "string",
+                          "description": "Machine-readable reason. Branch on this, not on message — messages are written for people and may be reworded.",
+                          "examples": [
+                            "collection_not_started",
+                            "invalid_hs_code",
+                            "unknown_endpoint"
+                          ]
+                        },
+                        "message": {
+                          "type": "string"
+                        },
+                        "hint": {
+                          "type": "string"
+                        }
+                      },
+                      "required": [
+                        "code",
+                        "message"
+                      ]
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "429": {
+            "description": "Free-tier rate limit exceeded (60 requests/minute/IP, enforced since 2026-08-17). Paid plans through the marketplace have no per-minute cap.",
+            "headers": {
+              "Retry-After": {
+                "schema": {
+                  "type": "integer"
+                },
+                "description": "Seconds until the current window resets."
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "error": {
+                      "type": "object",
+                      "properties": {
+                        "code": {
+                          "type": "string",
+                          "description": "Machine-readable reason. Branch on this, not on message — messages are written for people and may be reworded.",
+                          "examples": [
+                            "collection_not_started",
+                            "invalid_hs_code",
+                            "unknown_endpoint"
+                          ]
+                        },
+                        "message": {
+                          "type": "string"
+                        },
+                        "hint": {
+                          "type": "string"
+                        }
+                      },
+                      "required": [
+                        "code",
+                        "message"
+                      ]
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/taiwan-financials": {
+      "get": {
+        "tags": [
+          "Taiwan"
+        ],
+        "operationId": "getTaiwanFinancials",
+        "summary": "Latest quarterly accounts of TWSE-listed companies, from the TWSE OpenAPI",
+        "description": "One row per company: the most recent quarter published through the Taiwan Stock Exchange OpenAPI (Open Government Data License, Taiwan, version 1.0). Income-statement figures are cumulative from the start of the year, not a single quarter. Amounts are in New Taiwan dollars (units). Includes closing price with its date, PER, PBR and dividend yield as published by the exchange. Empty cells are null, never zero.",
+        "parameters": [
+          {
+            "name": "code",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string"
+            },
+            "description": "TWSE securities code, e.g. 2330."
+          },
+          {
+            "name": "industry",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string"
+            },
+            "description": "Exact English industry name or the two-digit industry code."
+          },
+          {
+            "name": "name",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string"
+            },
+            "description": "Part of the company name (English or Chinese)."
+          },
+          {
+            "name": "limit",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "integer"
+            },
+            "description": "Max rows; capped by plan."
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Quarterly-account rows with source and coverage notes"
+          },
+          "404": {
+            "description": "code did not match any listed company.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "error": {
+                      "type": "object",
+                      "properties": {
+                        "code": {
+                          "type": "string",
+                          "description": "Machine-readable reason. Branch on this, not on message — messages are written for people and may be reworded.",
+                          "examples": [
+                            "collection_not_started",
+                            "invalid_hs_code",
+                            "unknown_endpoint"
+                          ]
+                        },
+                        "message": {
+                          "type": "string"
+                        },
+                        "hint": {
+                          "type": "string"
+                        }
+                      },
+                      "required": [
+                        "code",
+                        "message"
+                      ]
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "429": {
+            "description": "Free-tier rate limit exceeded (60 requests/minute/IP, enforced since 2026-08-17). Paid plans through the marketplace have no per-minute cap.",
+            "headers": {
+              "Retry-After": {
+                "schema": {
+                  "type": "integer"
+                },
+                "description": "Seconds until the current window resets."
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "error": {
+                      "type": "object",
+                      "properties": {
+                        "code": {
+                          "type": "string",
+                          "description": "Machine-readable reason. Branch on this, not on message — messages are written for people and may be reworded.",
+                          "examples": [
+                            "collection_not_started",
+                            "invalid_hs_code",
+                            "unknown_endpoint"
+                          ]
+                        },
+                        "message": {
+                          "type": "string"
+                        },
+                        "hint": {
+                          "type": "string"
+                        }
+                      },
+                      "required": [
+                        "code",
+                        "message"
+                      ]
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/uae-financials": {
+      "get": {
+        "tags": [
+          "Gulf"
+        ],
+        "operationId": "getUaeFinancials",
+        "summary": "Revenue, net profit, EPS and (where reconciled) balance sheet for ADX and DFM filers",
+        "description": "ADX rows come from the exchange's own AI-extracted summary; DFM rows are parsed directly from the filed PDF. Not an audit — we did not re-check the filed figures. `total_assets_aed` is null unless `balance_sheet_reconciled:true` (assets = liabilities + equity checks out) or `liabilities_derived:true` (liabilities backed out from assets − equity, flagged, never hidden). `unit_hint` must be read together with the figures — some filers report in thousands.",
+        "parameters": [
+          {
+            "name": "symbol",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string"
+            },
+            "description": "ADX or DFM ticker symbol, e.g. ALDAR or EMAAR."
+          },
+          {
+            "name": "exchange",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "enum": [
+                "ADX",
+                "DFM"
+              ]
+            },
+            "description": "Filter to one exchange."
+          },
+          {
+            "name": "period",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string"
+            },
+            "description": "Exact filing period, e.g. \"Q2 2026\"."
+          },
+          {
+            "name": "balance_sheet",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "boolean"
+            },
+            "description": "true keeps only rows with a reconciled or derived balance sheet."
+          },
+          {
+            "name": "limit",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "integer"
+            },
+            "description": "Max rows; capped by plan."
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "UAE financial-highlight rows with source and coverage notes"
+          },
+          "404": {
+            "description": "symbol did not match any ADX or DFM filer.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "error": {
+                      "type": "object",
+                      "properties": {
+                        "code": {
+                          "type": "string",
+                          "description": "Machine-readable reason. Branch on this, not on message — messages are written for people and may be reworded.",
+                          "examples": [
+                            "collection_not_started",
+                            "invalid_hs_code",
+                            "unknown_endpoint"
+                          ]
+                        },
+                        "message": {
+                          "type": "string"
+                        },
+                        "hint": {
+                          "type": "string"
+                        }
+                      },
+                      "required": [
+                        "code",
+                        "message"
+                      ]
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "429": {
+            "description": "Free-tier rate limit exceeded (60 requests/minute/IP, enforced since 2026-08-17). Paid plans through the marketplace have no per-minute cap.",
+            "headers": {
+              "Retry-After": {
+                "schema": {
+                  "type": "integer"
+                },
+                "description": "Seconds until the current window resets."
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "error": {
+                      "type": "object",
+                      "properties": {
+                        "code": {
+                          "type": "string",
+                          "description": "Machine-readable reason. Branch on this, not on message — messages are written for people and may be reworded.",
+                          "examples": [
+                            "collection_not_started",
+                            "invalid_hs_code",
+                            "unknown_endpoint"
+                          ]
+                        },
+                        "message": {
+                          "type": "string"
+                        },
+                        "hint": {
+                          "type": "string"
+                        }
+                      },
+                      "required": [
+                        "code",
+                        "message"
+                      ]
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/ownership": {
+      "get": {
+        "tags": [
+          "Markets"
+        ],
+        "operationId": "getOwnership",
+        "summary": "Substantial-shareholding and officer/major-shareholder ownership filings",
+        "description": "DART ownership disclosures for Korean listed companies, as two filing types selected by `kind`. `kind=filings` (default) is substantial-shareholding (5%+) reports (majorstock) — one row per filing, with `holder_name` exactly as filed. `kind=executives` is officer/major-shareholder ownership status (elestock) — one row per filing, with `person_name` exactly as filed and `is_registered_officer` null when the filer is a major shareholder rather than an officer. Names are never romanized or translated; `reason_raw_ko` (filings only) is the original Korean filing reason, not summarized. Not a full float table — only holders required to file. `?filing_id=` returns one filing by its exact DART receipt number; otherwise a filtered, paginated list.",
+        "parameters": [
+          {
+            "name": "kind",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "enum": [
+                "filings",
+                "executives"
+              ]
+            },
+            "description": "Which table: filings (substantial shareholding, default) or executives (officer/major-shareholder ownership)."
+          },
+          {
+            "name": "filing_id",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string"
+            },
+            "description": "Exact DART filing id (rcept_no), e.g. \"20250416000481\"."
+          },
+          {
+            "name": "ticker",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string"
+            },
+            "description": "Exact KRX ticker (6 characters; some are alphanumeric)."
+          },
+          {
+            "name": "name",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string"
+            },
+            "description": "English or Korean company name. Substring match."
+          },
+          {
+            "name": "limit",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "integer"
+            },
+            "description": "Max rows; capped by plan."
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Ownership filing rows with source and coverage notes"
+          },
+          "400": {
+            "description": "kind was neither \"filings\" nor \"executives\".",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "error": {
+                      "type": "object",
+                      "properties": {
+                        "code": {
+                          "type": "string",
+                          "description": "Machine-readable reason. Branch on this, not on message — messages are written for people and may be reworded.",
+                          "examples": [
+                            "collection_not_started",
+                            "invalid_hs_code",
+                            "unknown_endpoint"
+                          ]
+                        },
+                        "message": {
+                          "type": "string"
+                        },
+                        "hint": {
+                          "type": "string"
+                        }
+                      },
+                      "required": [
+                        "code",
+                        "message"
+                      ]
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "filing_id did not match any filed record for the given kind.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "error": {
+                      "type": "object",
+                      "properties": {
+                        "code": {
+                          "type": "string",
+                          "description": "Machine-readable reason. Branch on this, not on message — messages are written for people and may be reworded.",
+                          "examples": [
+                            "collection_not_started",
+                            "invalid_hs_code",
+                            "unknown_endpoint"
+                          ]
+                        },
+                        "message": {
+                          "type": "string"
+                        },
+                        "hint": {
+                          "type": "string"
+                        }
+                      },
+                      "required": [
+                        "code",
+                        "message"
+                      ]
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "429": {
+            "description": "Free-tier rate limit exceeded (60 requests/minute/IP, enforced since 2026-08-17). Paid plans through the marketplace have no per-minute cap.",
+            "headers": {
+              "Retry-After": {
+                "schema": {
+                  "type": "integer"
+                },
+                "description": "Seconds until the current window resets."
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "error": {
+                      "type": "object",
+                      "properties": {
+                        "code": {
+                          "type": "string",
+                          "description": "Machine-readable reason. Branch on this, not on message — messages are written for people and may be reworded.",
+                          "examples": [
+                            "collection_not_started",
+                            "invalid_hs_code",
+                            "unknown_endpoint"
+                          ]
+                        },
+                        "message": {
+                          "type": "string"
+                        },
+                        "hint": {
+                          "type": "string"
+                        }
+                      },
+                      "required": [
+                        "code",
+                        "message"
+                      ]
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/mezzanine": {
+      "get": {
+        "tags": [
+          "Markets"
+        ],
+        "operationId": "getMezzanine",
+        "summary": "Convertible bond, bond-with-warrant and exchangeable bond filings",
+        "description": "DART filings for CB, BW and EB — coupon, maturity, strike and refixing-floor terms as filed. One row per filing. `refix_floor_price_krw` is null for EB by design (exchangeable bonds have no refixing floor) — `refix_floor_note` carries the filed reason when one exists; both null means we could not measure it. Not a dilution forecast or a signal — terms as filed only. `?filing_id=` returns one filing by its exact DART receipt number; otherwise a filtered, paginated list.",
+        "parameters": [
+          {
+            "name": "filing_id",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string"
+            },
+            "description": "Exact DART filing id (rcept_no), e.g. \"20200601000239\"."
+          },
+          {
+            "name": "ticker",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string"
+            },
+            "description": "Exact KRX ticker (6 characters; some are alphanumeric)."
+          },
+          {
+            "name": "type",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "enum": [
+                "CB",
+                "BW",
+                "EB"
+              ]
+            },
+            "description": "Instrument type."
+          },
+          {
+            "name": "name",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string"
+            },
+            "description": "English or Korean company name. Substring match."
+          },
+          {
+            "name": "limit",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "integer"
+            },
+            "description": "Max rows; capped by plan."
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Mezzanine filing rows with source and coverage notes"
+          },
+          "400": {
+            "description": "type was not one of CB, BW or EB.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "error": {
+                      "type": "object",
+                      "properties": {
+                        "code": {
+                          "type": "string",
+                          "description": "Machine-readable reason. Branch on this, not on message — messages are written for people and may be reworded.",
+                          "examples": [
+                            "collection_not_started",
+                            "invalid_hs_code",
+                            "unknown_endpoint"
+                          ]
+                        },
+                        "message": {
+                          "type": "string"
+                        },
+                        "hint": {
+                          "type": "string"
+                        }
+                      },
+                      "required": [
+                        "code",
+                        "message"
+                      ]
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "filing_id did not match any filed instrument.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "error": {
+                      "type": "object",
+                      "properties": {
+                        "code": {
+                          "type": "string",
+                          "description": "Machine-readable reason. Branch on this, not on message — messages are written for people and may be reworded.",
+                          "examples": [
+                            "collection_not_started",
+                            "invalid_hs_code",
+                            "unknown_endpoint"
+                          ]
+                        },
+                        "message": {
+                          "type": "string"
+                        },
+                        "hint": {
+                          "type": "string"
+                        }
+                      },
+                      "required": [
+                        "code",
+                        "message"
+                      ]
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "429": {
+            "description": "Free-tier rate limit exceeded (60 requests/minute/IP, enforced since 2026-08-17). Paid plans through the marketplace have no per-minute cap.",
+            "headers": {
+              "Retry-After": {
+                "schema": {
+                  "type": "integer"
+                },
+                "description": "Seconds until the current window resets."
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "error": {
+                      "type": "object",
+                      "properties": {
+                        "code": {
+                          "type": "string",
+                          "description": "Machine-readable reason. Branch on this, not on message — messages are written for people and may be reworded.",
+                          "examples": [
+                            "collection_not_started",
+                            "invalid_hs_code",
+                            "unknown_endpoint"
+                          ]
+                        },
+                        "message": {
+                          "type": "string"
+                        },
+                        "hint": {
+                          "type": "string"
+                        }
+                      },
+                      "required": [
+                        "code",
+                        "message"
+                      ]
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/people": {
+      "get": {
+        "tags": [
+          "Markets"
+        ],
+        "operationId": "getPeople",
+        "summary": "Workforce filings for listed Korean companies, by gender",
+        "description": "Headcount, tenure and pay by gender, as filed with the Financial Supervisory Service, joined to KRX closing price. One row per company. Ratio fields (`women_share_ratio`, `tenure_ratio_women_to_men`, `pay_ratio_women_to_men`) are raw 0-1 figures, not percentages. `pay_ratio_women_to_men` is null when a filing did not carry the figure — `pay_ratio_withheld_reason` distinguishes a filed reason (not applicable) from an unmeasured gap (also null). This is not a discrimination claim, a benchmark or a company ranking — see the coverage `not_this` notes. `?ticker=` returns one company by its exact KRX code; otherwise a filtered, paginated list.",
+        "parameters": [
+          {
+            "name": "ticker",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string"
+            },
+            "description": "Exact KRX ticker (6 characters; some are alphanumeric), e.g. \"005930\"."
+          },
+          {
+            "name": "market",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string"
+            },
+            "description": "Exact market name, e.g. \"KOSPI\" or \"KOSDAQ\"."
+          },
+          {
+            "name": "name",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string"
+            },
+            "description": "English or Korean company name. Substring match."
+          },
+          {
+            "name": "limit",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "integer"
+            },
+            "description": "Max rows; capped by plan."
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "People rows with source and coverage notes"
+          },
+          "404": {
+            "description": "ticker did not match any filed company.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "error": {
+                      "type": "object",
+                      "properties": {
+                        "code": {
+                          "type": "string",
+                          "description": "Machine-readable reason. Branch on this, not on message — messages are written for people and may be reworded.",
+                          "examples": [
+                            "collection_not_started",
+                            "invalid_hs_code",
+                            "unknown_endpoint"
+                          ]
+                        },
+                        "message": {
+                          "type": "string"
+                        },
+                        "hint": {
+                          "type": "string"
+                        }
+                      },
+                      "required": [
+                        "code",
+                        "message"
+                      ]
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "429": {
+            "description": "Free-tier rate limit exceeded (60 requests/minute/IP, enforced since 2026-08-17). Paid plans through the marketplace have no per-minute cap.",
+            "headers": {
+              "Retry-After": {
+                "schema": {
+                  "type": "integer"
+                },
+                "description": "Seconds until the current window resets."
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "error": {
+                      "type": "object",
+                      "properties": {
+                        "code": {
+                          "type": "string",
+                          "description": "Machine-readable reason. Branch on this, not on message — messages are written for people and may be reworded.",
+                          "examples": [
+                            "collection_not_started",
+                            "invalid_hs_code",
+                            "unknown_endpoint"
+                          ]
+                        },
+                        "message": {
+                          "type": "string"
+                        },
+                        "hint": {
+                          "type": "string"
+                        }
+                      },
+                      "required": [
+                        "code",
+                        "message"
+                      ]
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/account-dictionary": {
+      "get": {
+        "tags": [
+          "Markets"
+        ],
+        "operationId": "getAccountDictionary",
+        "summary": "Korean financial-statement account names mapped to standard English",
+        "description": "Hand-mapped from real DART fnlttSinglAcntAll filings to standard K-IFRS English terms — not machine translation. `?type=account` (default) returns line-item names; `?type=statement` returns the five financial-statement names. Account names not yet in this dictionary are not covered by this endpoint at all (there is no guessed entry) — resolve them client-side as `unmapped:<original>`.",
+        "parameters": [
+          {
+            "name": "type",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "enum": [
+                "account",
+                "statement"
+              ]
+            },
+            "description": "Which dictionary to return. Default: account."
+          },
+          {
+            "name": "q",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string"
+            },
+            "description": "Search the Korean or English text. Substring match."
+          },
+          {
+            "name": "limit",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "integer"
+            },
+            "description": "Max entries; capped by plan."
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Dictionary entries with source and coverage notes"
+          },
+          "400": {
+            "description": "type was neither \"account\" nor \"statement\".",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "error": {
+                      "type": "object",
+                      "properties": {
+                        "code": {
+                          "type": "string",
+                          "description": "Machine-readable reason. Branch on this, not on message — messages are written for people and may be reworded.",
+                          "examples": [
+                            "collection_not_started",
+                            "invalid_hs_code",
+                            "unknown_endpoint"
+                          ]
+                        },
+                        "message": {
+                          "type": "string"
+                        },
+                        "hint": {
+                          "type": "string"
+                        }
+                      },
+                      "required": [
+                        "code",
+                        "message"
+                      ]
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "429": {
+            "description": "Free-tier rate limit exceeded (60 requests/minute/IP, enforced since 2026-08-17). Paid plans through the marketplace have no per-minute cap.",
+            "headers": {
+              "Retry-After": {
+                "schema": {
+                  "type": "integer"
+                },
+                "description": "Seconds until the current window resets."
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "error": {
+                      "type": "object",
+                      "properties": {
+                        "code": {
+                          "type": "string",
+                          "description": "Machine-readable reason. Branch on this, not on message — messages are written for people and may be reworded.",
+                          "examples": [
+                            "collection_not_started",
+                            "invalid_hs_code",
+                            "unknown_endpoint"
+                          ]
+                        },
+                        "message": {
+                          "type": "string"
+                        },
+                        "hint": {
+                          "type": "string"
+                        }
+                      },
+                      "required": [
+                        "code",
+                        "message"
+                      ]
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/trade/exports": {
+      "get": {
+        "tags": [
+          "Trade"
+        ],
+        "operationId": "getTradeExports",
+        "summary": "Exports, imports and balance by partner country and month",
+        "description": "Monthly customs figures (thousand USD). National totals by default; `country` returns one partner, `since` (YYYY-MM) trims the window. Source: Korea Customs Service via KOSIS (table DT_1R11006). HS-code (product) granularity arrives when the direct customs item-trade feed is live; country totals here are authoritative.",
+        "parameters": [
+          {
+            "name": "country",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string"
+            },
+            "description": "English partner name, e.g. \"vietnam\", \"u.s.a\", \"china\". Substring match."
+          },
+          {
+            "name": "since",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "pattern": "^\\d{4}-\\d{2}$"
+            },
+            "description": "Return months on or after this YYYY-MM."
+          },
+          {
+            "name": "limit",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "integer"
+            },
+            "description": "Max rows; capped by plan."
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Monthly trade series with source, window and caveats"
+          },
+          "429": {
+            "description": "Free-tier rate limit exceeded (60 requests/minute/IP, enforced since 2026-08-17). Paid plans through the marketplace have no per-minute cap.",
+            "headers": {
+              "Retry-After": {
+                "schema": {
+                  "type": "integer"
+                },
+                "description": "Seconds until the current window resets."
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "error": {
+                      "type": "object",
+                      "properties": {
+                        "code": {
+                          "type": "string",
+                          "description": "Machine-readable reason. Branch on this, not on message — messages are written for people and may be reworded.",
+                          "examples": [
+                            "collection_not_started",
+                            "invalid_hs_code",
+                            "unknown_endpoint"
+                          ]
+                        },
+                        "message": {
+                          "type": "string"
+                        },
+                        "hint": {
+                          "type": "string"
+                        }
+                      },
+                      "required": [
+                        "code",
+                        "message"
+                      ]
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/hs": {
+      "get": {
+        "tags": [
+          "Classification"
+        ],
+        "operationId": "searchHs",
+        "summary": "Search the classification in English",
+        "description": "Singular and plural both work — `battery` finds `batteries`.",
+        "parameters": [
+          {
+            "name": "q",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "minLength": 2
+            },
+            "examples": {
+              "battery": {
+                "value": "battery"
+              },
+              "semiconductor": {
+                "value": "semiconductor"
+              },
+              "cosmetics": {
+                "value": "cosmetic"
+              }
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Matches, chapters first",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "query": {
+                      "type": "string"
+                    },
+                    "count": {
+                      "type": "integer"
+                    },
+                    "results": {
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "properties": {
+                          "code": {
+                            "type": "string"
+                          },
+                          "level": {
+                            "type": "integer",
+                            "enum": [
+                              2,
+                              4
+                            ]
+                          },
+                          "name": {
+                            "type": "string"
+                          }
+                        }
+                      }
+                    },
+                    "source": {
+                      "type": "object",
+                      "description": "Every response names where its facts come from.",
+                      "properties": {
+                        "agency": {
+                          "type": "string"
+                        },
+                        "system": {
+                          "type": "string"
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Query too short",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "error": {
+                      "type": "object",
+                      "properties": {
+                        "code": {
+                          "type": "string",
+                          "description": "Machine-readable reason. Branch on this, not on message — messages are written for people and may be reworded.",
+                          "examples": [
+                            "collection_not_started",
+                            "invalid_hs_code",
+                            "unknown_endpoint"
+                          ]
+                        },
+                        "message": {
+                          "type": "string"
+                        },
+                        "hint": {
+                          "type": "string"
+                        }
+                      },
+                      "required": [
+                        "code",
+                        "message"
+                      ]
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "429": {
+            "description": "Free-tier rate limit exceeded (60 requests/minute/IP, enforced since 2026-08-17). Paid plans through the marketplace have no per-minute cap.",
+            "headers": {
+              "Retry-After": {
+                "schema": {
+                  "type": "integer"
+                },
+                "description": "Seconds until the current window resets."
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "error": {
+                      "type": "object",
+                      "properties": {
+                        "code": {
+                          "type": "string",
+                          "description": "Machine-readable reason. Branch on this, not on message — messages are written for people and may be reworded.",
+                          "examples": [
+                            "collection_not_started",
+                            "invalid_hs_code",
+                            "unknown_endpoint"
+                          ]
+                        },
+                        "message": {
+                          "type": "string"
+                        },
+                        "hint": {
+                          "type": "string"
+                        }
+                      },
+                      "required": [
+                        "code",
+                        "message"
+                      ]
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/hs/{code}": {
+      "get": {
+        "tags": [
+          "Classification"
+        ],
+        "operationId": "getHsCode",
+        "summary": "Resolve an HS code to its English description",
+        "description": "Accepts 2, 4, 6 or 10 digits. Chapter names follow the WCO Harmonized System; headings cover the products that dominate Korean trade.",
+        "parameters": [
+          {
+            "name": "code",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "pattern": "^[0-9]{2,10}$"
+            },
+            "examples": {
+              "semiconductors": {
+                "value": "8542",
+                "summary": "Electronic integrated circuits"
+              },
+              "batteries": {
+                "value": "8507",
+                "summary": "Electric accumulators"
+              },
+              "albums": {
+                "value": "8523",
+                "summary": "Discs, tapes and solid-state storage"
+              }
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Resolved code. Check `resolved` before displaying `label`.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "code": {
+                      "type": "string"
+                    },
+                    "digits": {
+                      "type": "integer",
+                      "enum": [
+                        2,
+                        4,
+                        6,
+                        10
+                      ]
+                    },
+                    "chapter": {
+                      "type": "object",
+                      "properties": {
+                        "code": {
+                          "type": "string"
+                        },
+                        "name": {
+                          "type": "string",
+                          "nullable": true
+                        }
+                      }
+                    },
+                    "heading": {
+                      "type": "object",
+                      "nullable": true,
+                      "properties": {
+                        "code": {
+                          "type": "string"
+                        },
+                        "name": {
+                          "type": "string",
+                          "nullable": true
+                        }
+                      }
+                    },
+                    "label": {
+                      "type": "string",
+                      "nullable": true,
+                      "description": "Null when the code is not in our dictionary. We do not guess."
+                    },
+                    "resolved": {
+                      "type": "boolean"
+                    },
+                    "source": {
+                      "type": "object",
+                      "description": "Every response names where its facts come from.",
+                      "properties": {
+                        "agency": {
+                          "type": "string"
+                        },
+                        "system": {
+                          "type": "string"
+                        }
+                      }
+                    }
+                  }
+                },
+                "example": {
+                  "code": "8542",
+                  "digits": 4,
+                  "chapter": {
+                    "code": "85",
+                    "name": "Electrical machinery and equipment and parts thereof"
+                  },
+                  "heading": {
+                    "code": "8542",
+                    "name": "Electronic integrated circuits"
+                  },
+                  "label": "Electronic integrated circuits",
+                  "resolved": true,
+                  "source": {
+                    "agency": "World Customs Organization",
+                    "system": "Harmonized System"
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Malformed code",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "error": {
+                      "type": "object",
+                      "properties": {
+                        "code": {
+                          "type": "string",
+                          "description": "Machine-readable reason. Branch on this, not on message — messages are written for people and may be reworded.",
+                          "examples": [
+                            "collection_not_started",
+                            "invalid_hs_code",
+                            "unknown_endpoint"
+                          ]
+                        },
+                        "message": {
+                          "type": "string"
+                        },
+                        "hint": {
+                          "type": "string"
+                        }
+                      },
+                      "required": [
+                        "code",
+                        "message"
+                      ]
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "429": {
+            "description": "Free-tier rate limit exceeded (60 requests/minute/IP, enforced since 2026-08-17). Paid plans through the marketplace have no per-minute cap.",
+            "headers": {
+              "Retry-After": {
+                "schema": {
+                  "type": "integer"
+                },
+                "description": "Seconds until the current window resets."
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "error": {
+                      "type": "object",
+                      "properties": {
+                        "code": {
+                          "type": "string",
+                          "description": "Machine-readable reason. Branch on this, not on message — messages are written for people and may be reworded.",
+                          "examples": [
+                            "collection_not_started",
+                            "invalid_hs_code",
+                            "unknown_endpoint"
+                          ]
+                        },
+                        "message": {
+                          "type": "string"
+                        },
+                        "hint": {
+                          "type": "string"
+                        }
+                      },
+                      "required": [
+                        "code",
+                        "message"
+                      ]
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/countries": {
+      "get": {
+        "tags": [
+          "Classification"
+        ],
+        "operationId": "listCountries",
+        "summary": "Partner country codes with English names",
+        "responses": {
+          "200": {
+            "description": "ISO 3166-1 alpha-2 codes",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "count": {
+                      "type": "integer"
+                    },
+                    "results": {
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "properties": {
+                          "code": {
+                            "type": "string"
+                          },
+                          "name": {
+                            "type": "string"
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "429": {
+            "description": "Free-tier rate limit exceeded (60 requests/minute/IP, enforced since 2026-08-17). Paid plans through the marketplace have no per-minute cap.",
+            "headers": {
+              "Retry-After": {
+                "schema": {
+                  "type": "integer"
+                },
+                "description": "Seconds until the current window resets."
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "error": {
+                      "type": "object",
+                      "properties": {
+                        "code": {
+                          "type": "string",
+                          "description": "Machine-readable reason. Branch on this, not on message — messages are written for people and may be reworded.",
+                          "examples": [
+                            "collection_not_started",
+                            "invalid_hs_code",
+                            "unknown_endpoint"
+                          ]
+                        },
+                        "message": {
+                          "type": "string"
+                        },
+                        "hint": {
+                          "type": "string"
+                        }
+                      },
+                      "required": [
+                        "code",
+                        "message"
+                      ]
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/research": {
+      "get": {
+        "tags": [
+          "Research"
+        ],
+        "operationId": "listResearch",
+        "summary": "Brokerage target prices and ratings, 2007-2026",
+        "description": "Every target price and investment rating issued by Korean brokerages that we have\ncollected: 2,610 records across 20 years, normalised to English.\n\nThree normalisations matter, and each is exposed as an added field beside the raw one:\n\n- `brokerEntity` — a stable id per legal entity. Korean brokerages rename often, and one\n  firm appears under up to four Korean names in the archive. Group by this, not by `broker`.\n- `ratingNormalised` — 22 source spellings (Korean, English, mixed case, one typo, one\n  truncation) folded into 8 levels. `Outperform` is deliberately kept below `Buy`;\n  in Korea it is one notch down, not a synonym.\n- `subjectEn` — official English company name. A company sets its own spelling\n  (SK hynix, NCSOFT, AMOREPACIFIC), so this cannot be derived by rule.\n\nFields that are unknown are `null`. We never fill a gap with a plausible-looking value.\nReport text and PDFs are not collected, so nothing copyrighted is redistributed —\nthese are facts about what was published, not the publications.",
+        "parameters": [
+          {
+            "name": "broker",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            },
+            "description": "Korean name, English name, or entity id. All three resolve to the same firm, and a match returns every historical name of that entity — querying \"Mirae Asset\" also returns its Daewoo Securities-era reports.",
+            "examples": {
+              "english": {
+                "value": "Mirae Asset"
+              },
+              "entity": {
+                "value": "mirae-asset"
+              },
+              "korean": {
+                "value": "미래에셋"
+              }
+            }
+          },
+          {
+            "name": "subject",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            },
+            "description": "Company covered by the report. Korean name as filed."
+          },
+          {
+            "name": "since",
+            "in": "query",
+            "schema": {
+              "type": "string",
+              "format": "date"
+            },
+            "description": "Earliest report date, YYYY-MM-DD. Note the archive is sparse before 2014 — see GET /meta."
+          },
+          {
+            "name": "rating",
+            "in": "query",
+            "schema": {
+              "type": "string",
+              "enum": [
+                "buy",
+                "outperform",
+                "hold",
+                "neutral",
+                "marketperform",
+                "underperform",
+                "sell",
+                "unknown"
+              ]
+            },
+            "description": "Filter on the normalised level, not the broker wording. Unknown values return 400 with the valid list."
+          },
+          {
+            "name": "stance",
+            "in": "query",
+            "schema": {
+              "type": "string",
+              "enum": [
+                "positive",
+                "neutral",
+                "negative"
+              ]
+            },
+            "description": "Coarser than rating. Useful context: 94.1% of rated reports are positive and 0.16% negative — 89 negative records in 20 years."
+          },
+          {
+            "name": "limit",
+            "in": "query",
+            "schema": {
+              "type": "integer",
+              "default": 50,
+              "maximum": 200
+            },
+            "description": "Newest first."
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Matching reports. A filter that matches nothing is 200 with count 0 — not an error.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "count": {
+                      "type": "integer"
+                    },
+                    "as_of": {
+                      "type": "string"
+                    },
+                    "results": {
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "properties": {
+                          "date": {
+                            "type": "string",
+                            "format": "date"
+                          },
+                          "broker": {
+                            "type": "string",
+                            "description": "Korean name exactly as filed."
+                          },
+                          "brokerEn": {
+                            "type": "string",
+                            "nullable": true
+                          },
+                          "brokerEntity": {
+                            "type": "string",
+                            "nullable": true,
+                            "description": "Stable across renames. Group by this."
+                          },
+                          "brokerType": {
+                            "type": "string",
+                            "nullable": true,
+                            "enum": [
+                              "brokerage",
+                              "credit-rating",
+                              "ir-service"
+                            ],
+                            "description": "Explains a null target price: credit-rating and IR bodies publish analysis without one (4,164 records)."
+                          },
+                          "subject": {
+                            "type": "string"
+                          },
+                          "subjectEn": {
+                            "type": "string",
+                            "nullable": true,
+                            "description": "null when not yet in the dictionary."
+                          },
+                          "targetPrice": {
+                            "type": "integer",
+                            "nullable": true,
+                            "description": "KRW. null means no target was published — not zero."
+                          },
+                          "rating": {
+                            "type": "string",
+                            "nullable": true,
+                            "description": "The broker’s own wording."
+                          },
+                          "ratingNormalised": {
+                            "type": "object",
+                            "properties": {
+                              "code": {
+                                "type": "string"
+                              },
+                              "label": {
+                                "type": "string"
+                              },
+                              "score": {
+                                "type": "integer",
+                                "description": "Our ordering for aggregation. Not a number the broker assigned."
+                              },
+                              "stance": {
+                                "type": "string",
+                                "enum": [
+                                  "positive",
+                                  "neutral",
+                                  "negative"
+                                ]
+                              },
+                              "raw": {
+                                "type": "string",
+                                "nullable": true
+                              }
+                            }
+                          },
+                          "analyst": {
+                            "type": "string",
+                            "nullable": true
+                          },
+                          "detailFetched": {
+                            "type": "boolean",
+                            "description": "false means the target price was never fetched, not that none exists."
+                          },
+                          "source": {
+                            "type": "object",
+                            "description": "Every response names where its facts come from.",
+                            "properties": {
+                              "agency": {
+                                "type": "string"
+                              },
+                              "system": {
+                                "type": "string"
+                              }
+                            }
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Unknown rating or stance. The hint lists the valid values.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "error": {
+                      "type": "object",
+                      "properties": {
+                        "code": {
+                          "type": "string",
+                          "description": "Machine-readable reason. Branch on this, not on message — messages are written for people and may be reworded.",
+                          "examples": [
+                            "collection_not_started",
+                            "invalid_hs_code",
+                            "unknown_endpoint"
+                          ]
+                        },
+                        "message": {
+                          "type": "string"
+                        },
+                        "hint": {
+                          "type": "string"
+                        }
+                      },
+                      "required": [
+                        "code",
+                        "message"
+                      ]
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Index not available. Distinct from \"your filter matched nothing\".",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "error": {
+                      "type": "object",
+                      "properties": {
+                        "code": {
+                          "type": "string",
+                          "description": "Machine-readable reason. Branch on this, not on message — messages are written for people and may be reworded.",
+                          "examples": [
+                            "collection_not_started",
+                            "invalid_hs_code",
+                            "unknown_endpoint"
+                          ]
+                        },
+                        "message": {
+                          "type": "string"
+                        },
+                        "hint": {
+                          "type": "string"
+                        }
+                      },
+                      "required": [
+                        "code",
+                        "message"
+                      ]
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "429": {
+            "description": "Free-tier rate limit exceeded (60 requests/minute/IP, enforced since 2026-08-17). Paid plans through the marketplace have no per-minute cap.",
+            "headers": {
+              "Retry-After": {
+                "schema": {
+                  "type": "integer"
+                },
+                "description": "Seconds until the current window resets."
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "error": {
+                      "type": "object",
+                      "properties": {
+                        "code": {
+                          "type": "string",
+                          "description": "Machine-readable reason. Branch on this, not on message — messages are written for people and may be reworded.",
+                          "examples": [
+                            "collection_not_started",
+                            "invalid_hs_code",
+                            "unknown_endpoint"
+                          ]
+                        },
+                        "message": {
+                          "type": "string"
+                        },
+                        "hint": {
+                          "type": "string"
+                        }
+                      },
+                      "required": [
+                        "code",
+                        "message"
+                      ]
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/institutions": {
+      "get": {
+        "tags": [
+          "Reference"
+        ],
+        "operationId": "getInstitutions",
+        "summary": "Korean research institutions, in English",
+        "description": "Official English names, rename history and institution type. Korean brokerages rename often and our archive spans 2007-2026, so one firm appears under several names — group by `entity`, which is stable across renames. Not every institution is a brokerage: credit-rating and IR bodies publish company analysis without target prices, which is why some records have a null target price.",
+        "parameters": [
+          {
+            "name": "type",
+            "in": "query",
+            "schema": {
+              "type": "string",
+              "enum": [
+                "brokerage",
+                "credit-rating",
+                "ir-service"
+              ]
+            },
+            "description": "Filter by institution type"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Institution dictionary"
+          },
+          "429": {
+            "description": "Free-tier rate limit exceeded (60 requests/minute/IP, enforced since 2026-08-17). Paid plans through the marketplace have no per-minute cap.",
+            "headers": {
+              "Retry-After": {
+                "schema": {
+                  "type": "integer"
+                },
+                "description": "Seconds until the current window resets."
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "error": {
+                      "type": "object",
+                      "properties": {
+                        "code": {
+                          "type": "string",
+                          "description": "Machine-readable reason. Branch on this, not on message — messages are written for people and may be reworded.",
+                          "examples": [
+                            "collection_not_started",
+                            "invalid_hs_code",
+                            "unknown_endpoint"
+                          ]
+                        },
+                        "message": {
+                          "type": "string"
+                        },
+                        "hint": {
+                          "type": "string"
+                        }
+                      },
+                      "required": [
+                        "code",
+                        "message"
+                      ]
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/meta": {
+      "get": {
+        "tags": [
+          "Meta"
+        ],
+        "operationId": "getMeta",
+        "summary": "Coverage, schema policy and what has actually been collected",
+        "description": "Check `datasets[name].collected` before relying on a series. `contract` states the schema stability promise.",
+        "responses": {
+          "200": {
+            "description": "Service metadata"
+          },
+          "429": {
+            "description": "Free-tier rate limit exceeded (60 requests/minute/IP, enforced since 2026-08-17). Paid plans through the marketplace have no per-minute cap.",
+            "headers": {
+              "Retry-After": {
+                "schema": {
+                  "type": "integer"
+                },
+                "description": "Seconds until the current window resets."
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "error": {
+                      "type": "object",
+                      "properties": {
+                        "code": {
+                          "type": "string",
+                          "description": "Machine-readable reason. Branch on this, not on message — messages are written for people and may be reworded.",
+                          "examples": [
+                            "collection_not_started",
+                            "invalid_hs_code",
+                            "unknown_endpoint"
+                          ]
+                        },
+                        "message": {
+                          "type": "string"
+                        },
+                        "hint": {
+                          "type": "string"
+                        }
+                      },
+                      "required": [
+                        "code",
+                        "message"
+                      ]
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}
